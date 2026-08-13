@@ -82,11 +82,10 @@ Then all three certifications:
 - I do not use or transfer user data for purposes that are unrelated to my item's single purpose.
 - I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
-Privacy policy URL: `https://kazunori279.github.io/interpretab/PRIVACY.html` — GitHub Pages
-serving the repo root with Jekyll renders `PRIVACY.md` at that path. Enable Pages and **open the
-URL yourself** before submitting; a policy URL that 404s at review time is a rejection. If Pages
-is not wanted, `https://github.com/kazunori279/interpretab/blob/main/PRIVACY.md` is accepted and
-needs no setup.
+Privacy policy URL: `https://kazunori279.github.io/interpretab/PRIVACY.html` — live and
+returning 200 as of 13 August 2026. Pages is enabled on `main` at the repo root, and Jekyll
+renders `PRIVACY.md` at that path. Re-check it right before submitting anyway: a policy URL that
+404s at review time is a rejection, and this one only exists as long as Pages stays on.
 
 ---
 
@@ -105,7 +104,7 @@ carries audio and JSON, never code.
 - [ ] `npm run package` and confirm `manifest.json` is at the **root** of the ZIP, not inside a
       folder.
 - [ ] The ZIP contains no `.git`, no `tests/`, no `store/`, and no `package.json`.
-- [ ] The privacy policy URL resolves.
+- [ ] The privacy policy URL still resolves.
 - [ ] Screenshots are exactly 1280×800 and contain no real API key.
 - [ ] The version in `manifest.json` is higher than the last published one.
 - [ ] Load the ZIP's contents unpacked in a clean profile and run once end to end — a packaging
