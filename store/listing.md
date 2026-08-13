@@ -121,8 +121,10 @@ public channel or a Creative Commons clip is the safe choice.
 
 ## Promotional tile — 440×280
 
-Required for any chance at featuring. The icon plus "Hear any tab in your language" set large
-enough to read at tile size. No screenshot content — it renders too small.
+Required for any chance at featuring. No screenshot content — it renders too small. `promo-440x280.png`
+is the icon plus the name and "Live speech translation, spoken and subtitled.", and comes out of
+`store/icon-source.html` along with the four extension icons, so the wording is one edit away if
+"Hear any tab in your language" turns out to sell it better.
 
 ---
 

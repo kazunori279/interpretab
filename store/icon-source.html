@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Interpretab — icon source</title>
+<!--
+  The icons in `icons/` and the store's promo tile are drawn here rather than
+  kept only as PNGs, so a colour change or a nudge to the kana is an edit rather
+  than a redraw. Open this file in Chrome and press Download; it writes the four
+  icon PNGs and the tile straight from canvas, which is also how they were
+  produced in the first place.
+
+  Two decisions worth keeping:
+
+  - 128 and 48 carry the speech bubble; 32 and 16 drop it. At 16 px the bubble's
+    outline and the kana inside it merge into one grey lump, so at those sizes
+    the kana takes the whole tile. Chrome takes a separate file per size for
+    exactly this reason.
+  - The kana is drawn with canvas `fillText` rather than SVG `<text>`, because an
+    SVG loaded into an <img> for rasterisation does not reliably resolve system
+    fonts, and あ is not in any font this repo ships.
+-->
+<style>
+  body { font: 13px system-ui, sans-serif; margin: 24px; color: #202124; }
+  canvas { margin: 8px 6px; vertical-align: middle; }
+  .light { background: #f1f3f4; padding: 8px; display: inline-block; border-radius: 8px; }
+  .dark { background: #35363a; padding: 8px; display: inline-block; border-radius: 8px; }
+  button { font: inherit; padding: 0.4rem 0.8rem; border-radius: 0.3rem; border: 1px solid #dadce0; background: #fff; cursor: pointer; }
+</style>
+</head>
+<body>
+<p><button id="download">Download all</button> — then move the four icons into <code>icons/</code>.</p>
+<div id="preview"></div>
+
+<script>
+const BG = "#3F51B5"; // indigo
+const FG = "#ffffff"; // the bubble
+const KANA = '600 %SIZE%px "Hiragino Sans", "Noto Sans JP", sans-serif';
+
+// Body 14..114 × 20..88, tail dropping from the lower left.
+const BUBBLE =
+  "M28 20h72a14 14 0 0 1 14 14v40a14 14 0 0 1-14 14H62l-22 20V88H28a14 14 0 0 1-14-14V34a14 14 0 0 1 14-14z";
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+/** Everything is laid out in a 128-unit square and scaled to the output size. */
+function drawIcon(ctx, size, withBubble) {
+  const k = size / 128;
+  ctx.save();
+  ctx.scale(k, k);
+  ctx.fillStyle = BG;
+  roundRect(ctx, 0, 0, 128, 128, 28);
+  ctx.fill();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  if (withBubble) {
+    ctx.fillStyle = FG;
+    ctx.fill(new Path2D(BUBBLE));
+    ctx.fillStyle = BG;
+    ctx.font = KANA.replace("%SIZE%", 62);
+    ctx.fillText("あ", 64, 55);
+  } else {
+    ctx.fillStyle = FG;
+    ctx.font = KANA.replace("%SIZE%", 104);
+    ctx.fillText("あ", 64, 67);
+  }
+  ctx.restore();
+}
+
+function icon(size, withBubble) {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  drawIcon(c.getContext("2d"), size, withBubble);
+  return c;
+}
+
+/** The store's small promotional tile. */
+function promo() {
+  const c = document.createElement("canvas");
+  c.width = 440;
+  c.height = 280;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#F8F9FA";
+  ctx.fillRect(0, 0, 440, 280);
+  ctx.save();
+  ctx.translate(40, 72);
+  ctx.scale(136 / 128, 136 / 128);
+  drawIcon(ctx, 128, true);
+  ctx.restore();
+  ctx.fillStyle = "#202124";
+  ctx.font = '600 40px "Google Sans", system-ui, sans-serif';
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText("Interpretab", 204, 138);
+  ctx.fillStyle = "#5f6368";
+  ctx.font = '400 19px "Google Sans", system-ui, sans-serif';
+  ctx.fillText("Live speech translation,", 204, 172);
+  ctx.fillText("spoken and subtitled.", 204, 196);
+  return c;
+}
+
+const files = new Map();
+const preview = document.getElementById("preview");
+for (const [size, withBubble] of [[128, true], [48, true], [32, false], [16, false]]) {
+  const c = icon(size, withBubble);
+  files.set(`icon-${size}.png`, c);
+  preview.appendChild(c);
+}
+files.set("promo-440x280.png", promo());
+
+// The toolbar is the hard case: 16 px against both themes.
+for (const cls of ["light", "dark"]) {
+  const wrap = document.createElement("span");
+  wrap.className = cls;
+  wrap.appendChild(icon(16, false));
+  wrap.appendChild(icon(32, false));
+  preview.appendChild(wrap);
+}
+preview.appendChild(document.createElement("br"));
+preview.appendChild(files.get("promo-440x280.png"));
+
+document.getElementById("download").addEventListener("click", () => {
+  for (const [name, canvas] of files) {
+    const a = document.createElement("a");
+    a.download = name;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  }
+});
+</script>
+</body>
+</html>
