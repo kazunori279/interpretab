@@ -230,17 +230,22 @@ to the model's own response time.
 
 ### Session expiry
 
-Live sessions do not last indefinitely. The server warns with `{"goAway": {"timeLeft": "30s"}}`
-and then closes; in hour-long soaks of the [server-based
-version](https://github.com/kazunori279/live-translator) this happened about 30 times an hour.
-Reacting to it with a reconnect would mean a gap in the middle of a sentence, every few minutes,
+Live sessions do not last indefinitely. Measured, rather than assumed: a continuous tab
+translation ran **9 min 50 s**, was warned at 9 minutes with `{"goAway": {"timeLeft": "50s"}}`,
+and was closed on code **1008** exactly 50.4 seconds after that. Hour-long soaks of the
+[server-based version](https://github.com/kazunori279/live-translator) saw about 30 of these an
+hour. Reacting with a reconnect would mean a gap in the middle of a sentence every few minutes,
 so `lib/session-loop.js` does this instead:
 
 1. **On `goAway`, open the replacement immediately** — it is warm in ~200 ms — while the dying
    session keeps speaking and keeps receiving audio.
-2. **Swap** when the dying session sends `turnComplete`, or after 5 s of silence, or at the
-   `goAway` deadline, whichever comes first. Waiting out the whole deadline would be dead air the
-   listener hears in full.
+2. **Swap** when the dying session sends `turnComplete`, or after 5 s of silence, or one second
+   before the `goAway` deadline, whichever comes first. Waiting out the whole deadline would be
+   dead air the listener hears in full — and, for tab audio, the deadline is the only one of the
+   three that ever fires: simultaneous translation answers continuously, so it neither completes
+   a turn nor falls silent while the tab is playing. The one-second margin is there because the
+   server means the deadline literally; swapping level with it is a race against a close already
+   in flight.
 3. **Replay what was never answered.** A bounded ring keeps recent PCM frames with their arrival
    times; on a silent cutover, everything captured since the outgoing session last said anything
    is replayed into the replacement. Nothing was relayed after that point, so none of it has been

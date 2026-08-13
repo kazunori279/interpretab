@@ -10,7 +10,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { GOAWAY_IDLE_GRACE_MS, RETRY_BACKOFF_INIT_MS, SessionLoop } from "../lib/session-loop.js";
+import {
+  GOAWAY_DEADLINE_MARGIN_MS,
+  GOAWAY_IDLE_GRACE_MS,
+  RETRY_BACKOFF_INIT_MS,
+  SessionLoop,
+} from "../lib/session-loop.js";
 
 /** Stands in for LiveSession: records what it was sent, emits what it is told. */
 class FakeSession {
@@ -181,6 +186,28 @@ test("the goAway deadline forces the swap even while the session is talking", as
 
   assert.equal(h.sessions[0].closed, true);
   assert.equal(h.sessions.length, 2);
+  h.loop.close();
+});
+
+test("the swap comes in ahead of the deadline, not level with it", async () => {
+  // The server closes when it said it would — measured at 50.4 s against a
+  // `"50s"` warning. Swapping on the same tick is a race with a close already
+  // on the wire, so the drain ends GOAWAY_DEADLINE_MARGIN_MS early.
+  const h = harness();
+  h.loop.start();
+  await settle();
+  h.sessions[0].onEvent({ type: "goAway", timeLeft: 5000 });
+  await settle();
+
+  h.advance(5000 - GOAWAY_DEADLINE_MARGIN_MS - 250);
+  h.loop._checkDrain();
+  await settle();
+  assert.equal(h.sessions[0].closed, false, "swapped before the margin was reached");
+
+  h.advance(250);
+  h.loop._checkDrain();
+  await settle();
+  assert.equal(h.sessions[0].closed, true, "the margin, not the deadline, ends the drain");
   h.loop.close();
 });
 
