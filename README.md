@@ -350,6 +350,52 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
 
+### Soak results — 1 hour, microphone direction, en → ja
+
+`tests/soak_mic.report` is the run in full. The summary:
+
+```
+Duration: 3608s | Iterations: 281 | Passed: 279/281 (99.3%) | Avg score: 9.8/10 | Errors: 0
+Sessions: 7 opened, 7 ready, 0 failed | goAway: 6 | server closes: 0 | handovers mid-sentence: 5
+```
+
+Six `goAway`s, at 9:00, 18:00, 27:00, 36:00, 45:00 and 54:01 — the cadence does not drift, which
+means each replacement was adopted promptly enough to start its own nine minutes on time. **Not
+one session was closed by the server**: every one was retired by the loop before the deadline it
+had been given. Five iterations were speaking across a handover, and all five passed — 10, 9, 10,
+10, 10.
+
+Both failures were the grader marking translation quality, neither was infrastructure: `ACID
+transactions` heard as "asset transactions", and one sentence rendered in the desiderative where
+the original was flat.
+
+```
+Translation Score                Turn Complete (speech-end to full translation)
+      n=281                             n=281
+ 0-2  ······················   0.0%    <2s  ███████████████████···  85.1%
+ 3-4  ······················   0.7%   2-3s  ███···················  13.5%
+ 5-6  ······················   0.0%   3-4s  ······················   1.1%
+ 7-8  ······················   2.1%   4-5s  ······················   0.4%
+9-10  █████████████████████·  97.2%   5-7s  ······················   0.0%
+      avg=9.85  p50=10.00              avg=1.60  p50=1.53  p90=2.10  max=4.03
+```
+
+Against the relay's own hour on its non-simultaneous path — conversation mode, 201 iterations,
+99.5% pass, average score 9.9 — quality is unchanged. Latency is not: turn-complete went from
+**5.52 s average to 1.60 s**, and first response has a p50 of 0.10 s. Two things changed at once,
+though: the relay hop is gone, and the microphone direction runs a newer model than that soak
+did. These numbers cannot apportion the credit between them.
+
+**The glossary result is the one worth reading carefully.** Of 94 sentences built around a term:
+72 (77%) were captioned with the configured spelling, but only 28 (30%) were *spoken* with the
+configured pronunciation. The gap is not all failure. A term whose display column is its English
+spelling is captioned correctly by a model that ignored the glossary and simply said the English
+word, and several entries in `tests/soak-glossary.csv` are ordinary English words the sentence
+generator used in their ordinary sense — "the swift bird", "terraforming Mars", "people react",
+"the angle of the building" — where there is no term to render at all. What the numbers do
+support is narrower and still useful: the pronunciation instruction is a suggestion the model
+often declines, and the display-map column is what actually guarantees the caption.
+
 There is no build. The extension directory is what ships.
 
 ```bash
