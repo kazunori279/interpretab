@@ -6,7 +6,13 @@
  * here is uploaded anywhere — there is no server to upload it to.
  */
 
-import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import {
+  CAPTION_SIZE_MAX,
+  CAPTION_SIZE_MIN,
+  DEFAULTS,
+  loadSettings,
+  saveSettings,
+} from "./lib/settings.js";
 import { DEFAULT_VOICE, VOICES } from "./lib/languages.js";
 import {
   MAX_GLOSSARY_BYTES,
@@ -25,6 +31,7 @@ async function init() {
   settings = await loadSettings();
   el("apiKey").value = settings.apiKey;
   loadVoices();
+  loadCaptionSize();
   bind();
   renderKeyStatus();
   await refreshMicStatus();
@@ -38,6 +45,13 @@ function bind() {
   el("toggleKey").addEventListener("click", toggleKey);
   el("grantMic").addEventListener("click", grantMic);
   el("voice").addEventListener("change", () => saveSettings({ voice: el("voice").value }));
+  // `input`, not `change`: the overlay follows the store, so writing on every
+  // drag step is what makes the size adjustable against the live video.
+  el("captionSize").addEventListener("input", () => {
+    const px = Number(el("captionSize").value);
+    renderCaptionSize(px);
+    saveSettings({ captionSize: px });
+  });
   el("uploadGlossary").addEventListener("click", uploadGlossary);
   el("resetGlossary").addEventListener("click", resetGlossary);
 }
@@ -117,6 +131,28 @@ function loadVoices() {
     if (name === chosen) opt.selected = true;
     select.appendChild(opt);
   }
+}
+
+function loadCaptionSize() {
+  const slider = el("captionSize");
+  slider.min = CAPTION_SIZE_MIN;
+  slider.max = CAPTION_SIZE_MAX;
+  const px = Math.min(
+    CAPTION_SIZE_MAX,
+    Math.max(CAPTION_SIZE_MIN, Number(settings.captionSize) || DEFAULTS.captionSize)
+  );
+  slider.value = px;
+  renderCaptionSize(px);
+}
+
+/**
+ * The preview is the point of the slider: a pixel count means nothing until it
+ * is a line of text, and the same numbers are used here as in the overlay's own
+ * stylesheet so what is shown is what lands on the page.
+ */
+function renderCaptionSize(px) {
+  el("captionSizeOut").textContent = `${px} px`;
+  el("captionPreview").querySelector("span").style.fontSize = `${px}px`;
 }
 
 async function uploadGlossary() {

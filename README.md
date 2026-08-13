@@ -64,6 +64,13 @@ both on, the two share the page but not a line: each keeps its own rolling sente
 microphone's is marked with a blue edge. Toggling either applies immediately, without dropping
 the session; the side panel keeps the full transcript either way.
 
+**Options → Subtitle size** sets how tall they are, 16–64 px, with a preview against a dark
+background. It applies while a session is running — the overlay follows the stored value rather
+than being told once at Start — so the way to set it is to drag the slider while watching the
+video. The size is in pixels rather than `rem` on purpose: `all: initial` on the shadow host does
+not stop `rem` resolving against the *page's* root font size, so on any site that sets
+`html { font-size: 62.5% }` the subtitles used to come out a third smaller than everywhere else.
+
 With both directions running, the microphone is **gated while a translation is playing** — its
 audio is dropped rather than sent, so the interpreter never interprets itself.
 
@@ -108,7 +115,7 @@ service-worker.js     switchboard only. Action click → tabCapture.getMediaStre
 offscreen.js          the engine. Owns every MediaStream, AudioContext and WebSocket.
 sidepanel.js          controls and the transcript. Closing it does not stop capture.
 content/captions.js   subtitles in a closed shadow root, injected on demand.
-options.js            API key, voice, glossary CSV.
+options.js            API key, voice, subtitle size, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
 lib/languages.js      language and voice tables for both models.

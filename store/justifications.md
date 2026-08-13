@@ -37,7 +37,7 @@ The extension's entire user interface is a side panel: the language pickers, the
 ## `storage`
 
 ```
-Stores the user's own settings on their device: their Gemini API key, chosen languages, voice, subtitle switches, the ducking level, and their glossary CSV. chrome.storage.session additionally holds which tab is currently being captured, because a Manifest V3 service worker cannot keep that in a variable across its own restarts. Nothing in storage is transmitted anywhere except the API key, which is sent only to generativelanguage.googleapis.com to authenticate the user's own connection.
+Stores the user's own settings on their device: their Gemini API key, chosen languages, voice, subtitle switches, subtitle size, the ducking level, and their glossary CSV. chrome.storage.session additionally holds which tab is currently being captured, because a Manifest V3 service worker cannot keep that in a variable across its own restarts. Nothing in storage is transmitted anywhere except the API key, which is sent only to generativelanguage.googleapis.com to authenticate the user's own connection.
 ```
 
 ## `activeTab`

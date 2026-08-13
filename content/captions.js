@@ -14,6 +14,13 @@
  * so the extension needs no host permission for the sites it captions. That
  * also means it can be injected twice — the guard below makes the second one
  * a no-op rather than a duplicate overlay.
+ *
+ * Every length in the stylesheet is in `px` or `em`, never `rem`. `all: initial`
+ * on the host does not make `rem` safe: it still resolves against the *page's*
+ * `<html>` font size, so a site that sets `html { font-size: 62.5% }` — a common
+ * trick, and the reason the subtitles read as too small on some pages and not
+ * others — shrinks the captions by a third. `em` inside the overlay is fine,
+ * because it cascades from the size set here.
  */
 
 (() => {
@@ -24,6 +31,13 @@
   const MAX_LINES = 3;
   const FADE_DELAY_MS = 8000;
 
+  // Kept in step with DEFAULTS.captionSize and the bounds in lib/settings.js by
+  // tests/captions.test.js. They cannot be imported: this file is injected as a
+  // classic script, not a module, so it has no way to reach lib/.
+  const DEFAULT_SIZE_PX = 32;
+  const MIN_SIZE_PX = 16;
+  const MAX_SIZE_PX = 64;
+
   const host = document.createElement("div");
   host.id = "live-translator-captions";
   // The page's own stacking contexts routinely go into the millions.
@@ -32,16 +46,18 @@
   const root = host.attachShadow({ mode: "closed" });
   root.innerHTML = `
     <style>
-      :host { all: initial; --max-rows: 3; }
+      :host { all: initial; --max-rows: 3; --caption-size: 32px; }
       #lines {
         display: flex; flex-direction: column; align-items: center;
-        gap: 0.3rem; padding: 0 2rem 2.5rem; pointer-events: none;
+        gap: 0.25em; padding: 0 32px 40px; pointer-events: none;
         font-family: "Google Sans", "Noto Sans", "Noto Sans JP", sans-serif;
+        /* Set once here so everything below can size itself in em. */
+        font-size: var(--caption-size);
       }
       .line {
-        font-size: 1.6rem; line-height: 1.4; color: #fff;
+        line-height: 1.4; color: #fff;
         background: rgba(0, 0, 0, 0.72);
-        padding: 0.25rem 0.8rem; border-radius: 0.4rem;
+        padding: 0.16em 0.5em; border-radius: 0.25em;
         max-width: 90%; text-align: center; word-wrap: break-word;
         animation: line-in 0.25s ease-out;
         /* A single sentence still has to fit on someone's video. The cap is on
@@ -57,22 +73,44 @@
       /* With both directions subtitled, two lines are on screen at once and
          they are not interchangeable: one is the room, one is you. The accent
          says which without spending a line on a label. */
-      .line.mic { border-left: 0.2rem solid rgba(138, 180, 248, 0.9); }
+      .line.mic { border-left: 0.12em solid rgba(138, 180, 248, 0.9); }
       .line.fade-out { animation: line-out 0.8s ease-in forwards; }
       .dot {
-        display: inline-block; width: 0.5rem; height: 0.5rem;
+        display: inline-block; width: 0.3em; height: 0.3em;
         background: rgba(255, 255, 255, 0.7); border-radius: 50%;
-        margin-left: 0.3rem; vertical-align: middle;
+        margin-left: 0.2em; vertical-align: middle;
         animation: blink 0.8s infinite;
       }
       @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0.2 } }
-      @keyframes line-in { from { opacity: 0; transform: translateY(0.5rem) } to { opacity: 1; transform: none } }
+      @keyframes line-in { from { opacity: 0; transform: translateY(0.3em) } to { opacity: 1; transform: none } }
       @keyframes line-out { from { opacity: 1 } to { opacity: 0 } }
     </style>
     <div id="lines"></div>
   `;
   const linesEl = root.getElementById("lines");
   document.documentElement.appendChild(host);
+
+  /**
+   * Follow the size chosen in Options, now and whenever it changes.
+   *
+   * Read straight from storage rather than passed in with the transcripts: the
+   * overlay is injected once at Start and the size is adjusted by eye against
+   * the video it is sitting on, so it has to take effect while a session is
+   * running. Listening to the store gets that for the price of the read.
+   */
+  function applySize(px) {
+    const size = Number(px);
+    if (!Number.isFinite(size)) return;
+    const clamped = Math.min(MAX_SIZE_PX, Math.max(MIN_SIZE_PX, Math.round(size)));
+    host.style.setProperty("--caption-size", `${clamped}px`);
+  }
+  chrome.storage.local.get("captionSize").then(({ captionSize = DEFAULT_SIZE_PX }) => {
+    applySize(captionSize);
+  });
+  function onStorageChanged(changes, area) {
+    if (area === "local" && changes.captionSize) applySize(changes.captionSize.newValue);
+  }
+  chrome.storage.onChanged.addListener(onStorageChanged);
 
   // The line each direction is currently extending. Keyed by direction rather
   // than held as a single "current line": tab audio and the microphone are two
@@ -136,6 +174,7 @@
     host.remove();
     document.removeEventListener("fullscreenchange", onFullscreenChange);
     chrome.runtime.onMessage.removeListener(onMessage);
+    chrome.storage.onChanged.removeListener(onStorageChanged);
     delete window[MARK];
   }
 
