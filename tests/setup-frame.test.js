@@ -24,12 +24,16 @@ test("the tab direction configures simultaneous translation and no instruction",
   assert.equal(setup.model, `models/${SIMUL_MODEL}`);
   assert.equal(setup.systemInstruction, undefined);
 
+  // Transcription sits on `setup`, translation inside `generationConfig`. The
+  // live-translate guide shows both nested; the server rejects the nested
+  // transcription outright, so this split is load-bearing and not cosmetic.
+  assert.deepEqual(setup.inputAudioTranscription, {});
+  assert.deepEqual(setup.outputAudioTranscription, {});
+
   const gen = setup.generationConfig;
   assert.deepEqual(gen.responseModalities, ["AUDIO"]);
-  // All four of these are fields of generationConfig on the wire, even though
-  // the Python SDK flattens them onto its own connect config.
-  assert.deepEqual(gen.inputAudioTranscription, {});
-  assert.deepEqual(gen.outputAudioTranscription, {});
+  assert.equal(gen.inputAudioTranscription, undefined);
+  assert.equal(gen.outputAudioTranscription, undefined);
   assert.equal(gen.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName, "Kore");
   assert.deepEqual(gen.translationConfig, {
     targetLanguageCode: "ja",

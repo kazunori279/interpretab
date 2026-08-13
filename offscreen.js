@@ -134,8 +134,12 @@ async function start({ apiKey, streamId, settings, glossary }) {
 /**
  * The microphone.
  *
- * `audioCapture` in the manifest is what makes this work without a prompt —
- * an offscreen document has no UI to show one in. Echo cancellation is asked
+ * An offscreen document has no UI to show a permission prompt in, and there is
+ * no manifest permission that waives one: `audioCapture` is a packaged-app
+ * permission and Chrome warns if an extension declares it. What makes this
+ * call succeed silently is that the grant is per extension origin, so the
+ * "Grant microphone" button on the Options page — a page that *can* prompt —
+ * has already obtained it. Echo cancellation is asked
  * for explicitly rather than left to the spec default, for the same reason
  * `app/static/js/audio-recorder.js` does: it is the only thing between the
  * translated speech coming out of the speakers and the mic hearing it again.

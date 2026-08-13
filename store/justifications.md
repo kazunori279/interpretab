@@ -22,12 +22,6 @@ Interpretab translates speech in the user's browser in real time: it interprets 
 This is the feature. The extension captures the audio of the tab the user starts it on so that speech in that tab can be translated. On the Start click, the service worker calls chrome.tabCapture.getMediaStreamId({targetTabId}) for that tab only, and the resulting stream is used for two things: it is resampled to 16 kHz and sent to the Gemini Live API for translation, and it is played back to the user, because capturing a tab mutes it. No other tab can be captured, and capture ends when the user presses Stop.
 ```
 
-## `audioCapture`
-
-```
-Only used if the user turns on the optional "Microphone" direction, which translates what the user says into another language. The audio engine runs in an offscreen document, which cannot display a permission prompt, so the extension declares audioCapture and offers a "Grant microphone" button on the Options page. Microphone audio is captured only while a session with that direction enabled is running, is sent only to the Gemini Live API, and is never recorded or stored.
-```
-
 ## `offscreen`
 
 ```

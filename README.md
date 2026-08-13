@@ -167,10 +167,19 @@ processors rather than fetching them. They are 16 and 50 lines.
 ### Talking to the Live API directly
 
 Most examples of the Live API are written against the Python SDK, which flattens several fields
-onto its own connect config. On the wire they live inside `generationConfig`, and a
-misplaced field is **silent** — the API accepts the connection and ignores what it does not
-recognise, which surfaces half a minute later as "the translation is in the wrong language".
-`tests/setup-frame.test.js` exists to pin the exact shape:
+onto its own connect config, so the wire shape has to be reconstructed — and the documentation
+contradicts itself about it. The live-translate guide shows `inputAudioTranscription` and
+`outputAudioTranscription` nested inside `generationConfig`; the WebSockets API reference lists
+them as fields of `setup`. The reference is right, and the guide's version is not merely
+ignored, it is fatal:
+
+```
+Invalid JSON payload received. Unknown name "inputAudioTranscription"
+at 'setup.generation_config': Cannot find field.
+```
+
+`translationConfig`, meanwhile, really does belong inside `generationConfig`. So the frame is
+split, and the split is load-bearing:
 
 ```json
 {"setup": {
@@ -178,17 +187,35 @@ recognise, which surfaces half a minute later as "the translation is in the wron
   "generationConfig": {
     "responseModalities": ["AUDIO"],
     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": "Puck"}}},
-    "inputAudioTranscription": {},
-    "outputAudioTranscription": {},
     "translationConfig": {"targetLanguageCode": "ja", "echoTargetLanguage": false}
-  }
+  },
+  "inputAudioTranscription": {},
+  "outputAudioTranscription": {}
 }}
 ```
 
-`systemInstruction` really is a sibling of `generationConfig`, and the microphone direction adds
+`systemInstruction` is a sibling of `generationConfig` too, and the microphone direction adds
 it. `echoTargetLanguage: false` matters for the tab direction specifically: the translation
 comes out of the same speakers the tab is playing through, and echoing the source language back
 as well would put two voices over one video.
+
+`tests/setup-frame.test.js` pins that shape, but a unit test can only pin what someone already
+knew — the error above came from `tests/live-smoke.mjs`, which opens a real session with a real
+key and streams real speech through it. Anything about this protocol that was inferred rather
+than observed is worth distrusting until that script has run.
+
+Three more things it turned up, none of them in the docs:
+
+- **The agent model ends a turn with `generationComplete`, not `turnComplete`.** Twenty-odd
+  seconds of speech, a full spoken answer, `{"serverContent": {"generationComplete": true}}`, and
+  no `turnComplete` at any point. Keying only on the documented frame leaves the caption open for
+  ever and the session swap waiting on something that never comes, so `live-session.js` treats
+  `generationComplete`, `turnComplete` and `interrupted` as one event.
+- **Silence is input.** End-of-turn is the server's own voice-activity detection, and it detects
+  it in the audio you send. Stop sending when the speaker stops and the model waits indefinitely
+  — a microphone that streams its pauses is not padding, it is the signal.
+- **`sessionResumptionUpdate` arrives unasked.** The server volunteers resumption handles every
+  few seconds without `sessionResumption` in the setup frame.
 
 Uplink audio is base64 inside JSON, not the raw binary a socket of one's own would take:
 
@@ -231,10 +258,12 @@ preroll replay covers the common case. The Python implementation is in
 [`app/main.py`](https://github.com/kazunori279/live-translator/blob/main/app/main.py) if you
 want it back.
 
-Session resumption (`sessionResumption`, a handle valid for two hours) would be the better
-mechanism still, and is not used in v1.0: whether
-`gemini-3.5-live-translate-preview` accepts the field is unverified, and an unrecognised `setup`
-field risks a hard failure at connect for every user.
+Session resumption would be the better mechanism still, and is not used in v1.0 — though the
+argument against it got weaker once a real session was watched: the server sends
+`sessionResumptionUpdate` handles unprompted, so they cost nothing to collect and the only
+untested part is whether reconnecting with one actually restores the conversation. That is a
+worthwhile v1.1. It would not remove `session-loop.js`, which also has to cover the case where
+the socket dies without warning.
 
 ## Development
 
@@ -246,6 +275,22 @@ The suite covers the parts that are painful to test by hand: the exact `setup` w
 GoAway cutover against a fake session and a settable clock, socket lifecycle against a stub
 WebSocket, glossary CSV parsing, and a walk over every asset path the manifest and the HTML
 name.
+
+None of that talks to Google. What does is `tests/live-smoke.mjs`, which is deliberately outside
+`npm test` because it needs a key and spends quota:
+
+```bash
+say -v Kyoko -o /tmp/ja.wav --data-format=LEI16@16000 "こんにちは。本日は東京で…"
+node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction tab --raw
+node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction mic
+node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --minutes 20 --raw   # to see a real goAway
+```
+
+It prints what the model heard, what it said, and how much audio came back, so a wrong `setup`
+field or a mishandled frame shows up as an empty transcript rather than as a bug report. The key
+is read from a file so it stays out of the shell history and the process list. Run both
+directions: they use different models and differently shaped setup frames, and one passing says
+nothing about the other.
 
 There is no build. The extension directory is what ships.
 

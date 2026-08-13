@@ -157,6 +157,20 @@ test("an interrupted turn closes the caption the same way a finished one does", 
   assert.deepEqual(h.events, [{ type: "turnComplete" }]);
 });
 
+test("generationComplete ends a turn, because some models send nothing else", async () => {
+  // Observed against gemini-3.1-flash-live-preview: a whole spoken answer, then
+  // `generationComplete`, and no `turnComplete` ever. Waiting for the
+  // documented frame alone leaves the caption open and the swap stalled.
+  const h = session();
+  const opening = h.live.open();
+  h.ws().accept();
+  h.ws().deliver({ setupComplete: {} });
+  await opening;
+
+  await h.ws().deliver({ serverContent: { generationComplete: true } });
+  assert.deepEqual(h.events, [{ type: "turnComplete" }]);
+});
+
 test("goAway comes through with its Duration in milliseconds", async () => {
   const h = session();
   const opening = h.live.open();

@@ -26,8 +26,15 @@ const REQUIRED_PERMISSIONS = [
   "storage",
   "activeTab", // captions are injected under this rather than <all_urls>
   "scripting",
-  "audioCapture", // microphone without a prompt the offscreen doc cannot show
 ];
+
+/**
+ * Packaged-app permissions Chrome flags as warnings on an extension. The
+ * microphone one is the tempting mistake: it reads like the way to let the
+ * offscreen document capture without a prompt, does nothing, and earns a
+ * "only allowed for packaged apps" warning on the extensions page.
+ */
+const FORBIDDEN_PERMISSIONS = ["audioCapture", "videoCapture"];
 
 /**
  * Quoted relative paths, in HTML attributes and in JS strings alike. The
@@ -51,6 +58,12 @@ test("the manifest is v3 and declares every permission the code uses", () => {
   assert.equal(manifest.manifest_version, 3);
   for (const permission of REQUIRED_PERMISSIONS) {
     assert.ok(manifest.permissions.includes(permission), `missing permission: ${permission}`);
+  }
+  for (const permission of FORBIDDEN_PERMISSIONS) {
+    assert.ok(
+      !manifest.permissions.includes(permission),
+      `${permission} is packaged-apps-only and warns on an extension`
+    );
   }
 });
 
