@@ -1,0 +1,101 @@
+Kubernetes,クバネティス,Kubernetes
+Cloud Run,クラウドラン,Cloud Run
+Gemini,ジェミニ,Gemini
+Vertex AI,バーテックスエーアイ,Vertex AI
+TensorFlow,テンソルフロー,TensorFlow
+BigQuery,ビッグクエリ,BigQuery
+Firestore,ファイアストア,Firestore
+Cloud Spanner,クラウドスパナー,Cloud Spanner
+Pub/Sub,パブサブ,Pub/Sub
+Dataflow,データフロー,Dataflow
+Anthos,アンソス,Anthos
+Istio,イスティオ,Istio
+gRPC,ジーアールピーシー,gRPC
+Protocol Buffers,プロトコルバッファーズ,Protocol Buffers
+Docker,ドッカー,Docker
+Terraform,テラフォーム,Terraform
+Jenkins,ジェンキンズ,Jenkins
+GitHub Actions,ギットハブアクションズ,GitHub Actions
+Visual Studio Code,ビジュアルスタジオコード,VS Code
+IntelliJ,インテリジェイ,IntelliJ
+PostgreSQL,ポストグレスキューエル,PostgreSQL
+MongoDB,モンゴディービー,MongoDB
+Redis,レディス,Redis
+Elasticsearch,エラスティックサーチ,Elasticsearch
+Kafka,カフカ,Kafka
+RabbitMQ,ラビットエムキュー,RabbitMQ
+GraphQL,グラフキューエル,GraphQL
+REST API,レストエーピーアイ,REST API
+WebSocket,ウェブソケット,WebSocket
+OAuth,オーオース,OAuth
+JWT,ジェイダブリューティー,JWT
+SSL,エスエスエル,SSL
+DNS,ディーエヌエス,DNS
+CDN,シーディーエヌ,CDN
+load balancer,ロードバランサー,ロードバランサー
+microservices,マイクロサービス,マイクロサービス
+serverless,サーバーレス,サーバーレス
+CI/CD,シーアイシーディー,CI/CD
+DevOps,デブオプス,DevOps
+SRE,エスアールイー,SRE
+Agile,アジャイル,Agile
+Scrum,スクラム,Scrum
+Kanban,カンバン,Kanban
+sprint,スプリント,スプリント
+backlog,バックログ,バックログ
+React,リアクト,React
+Angular,アンギュラー,Angular
+Vue.js,ビュージェイエス,Vue.js
+Next.js,ネクストジェイエス,Next.js
+Node.js,ノードジェイエス,Node.js
+TypeScript,タイプスクリプト,TypeScript
+Python,パイソン,Python
+Golang,ゴーラング,Go
+Rust,ラスト,Rust
+Swift,スウィフト,Swift
+Kotlin,コトリン,Kotlin
+Flutter,フラッター,Flutter
+Dart,ダート,Dart
+machine learning,マシンラーニング,機械学習
+deep learning,ディープラーニング,深層学習
+neural network,ニューラルネットワーク,ニューラルネットワーク
+transformer,トランスフォーマー,Transformer
+fine-tuning,ファインチューニング,ファインチューニング
+embedding,エンベディング,エンベディング
+RAG,ラグ,RAG
+LLM,エルエルエム,LLM
+GPT,ジーピーティー,GPT
+Claude,クロード,Claude
+ChatGPT,チャットジーピーティー,ChatGPT
+Hugging Face,ハギングフェイス,Hugging Face
+PyTorch,パイトーチ,PyTorch
+JAX,ジャックス,JAX
+CUDA,クーダ,CUDA
+TPU,ティーピーユー,TPU
+GPU,ジーピーユー,GPU
+API gateway,エーピーアイゲートウェイ,APIゲートウェイ
+service mesh,サービスメッシュ,サービスメッシュ
+observability,オブザーバビリティ,オブザーバビリティ
+Prometheus,プロメテウス,Prometheus
+Grafana,グラファナ,Grafana
+OpenTelemetry,オープンテレメトリー,OpenTelemetry
+Helm,ヘルム,Helm
+Argo CD,アルゴシーディー,Argo CD
+Flux,フラックス,Flux
+GitOps,ギットオプス,GitOps
+infrastructure as code,インフラストラクチャーアズコード,IaC
+Pulumi,プルミ,Pulumi
+Ansible,アンシブル,Ansible
+Vault,ボルト,Vault
+Consul,コンサル,Consul
+Envoy,エンボイ,Envoy
+Nginx,エンジンエックス,Nginx
+Apache,アパッチ,Apache
+Linux,リナックス,Linux
+Ubuntu,ウブントゥ,Ubuntu
+Debian,デビアン,Debian
+Alpine,アルパイン,Alpine
+Bazel,バゼル,Bazel
+Webpack,ウェブパック,Webpack
+Vite,ヴィート,Vite
+ESLint,イーエスリント,ESLint
