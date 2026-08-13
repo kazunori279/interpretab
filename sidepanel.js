@@ -8,16 +8,16 @@
  * pressed, so the panel never has to hand its state over.
  */
 
-import { DEFAULTS, loadSettings, saveSettings, originPattern } from "./lib/settings.js";
+import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import {
+  LANGUAGES,
+  POPULAR_LANGUAGES,
+  SIMUL_LANGUAGES,
+  SIMUL_POPULAR_LANGUAGES,
+  simulLanguageCode,
+} from "./lib/languages.js";
 
 const el = (id) => document.getElementById(id);
-const LANG_FALLBACK = { en: "English", ja: "Japanese" };
-
-// The tab direction is always the simultaneous-translation model, whose codes
-// differ from the agent model's for a handful of languages. A target left in
-// storage by an earlier build — or shared with the microphone direction's
-// vocabulary — is translated across rather than dropped.
-const AGENT_TO_SIMUL = { zh: "zh-Hans", iw: "he", pt: "pt-BR" };
 
 let settings = { ...DEFAULTS };
 let running = false;
@@ -37,44 +37,10 @@ async function init() {
   render();
 }
 
-/**
- * Language and voice lists come from the relay, so it stays the single source
- * of truth the way it is for the web app.
- *
- * A failure here is not fatal — English/Japanese is enough to reach the Options
- * page — but the two reasons it fails need different messages. Before the
- * backend origin has been granted, Chrome blocks the fetch and reports it as an
- * ordinary network error, which reads as "the server is down" when in fact
- * nothing was ever sent. So the permission is checked first and the missing
- * grant is named for what it is.
- */
+/** The lists are bundled, so the dropdowns fill before the first paint. */
 async function populateLanguages() {
-  let data = null;
-  const origins = [originPattern(settings.backendUrl)].filter(Boolean);
-  const granted = origins.length && (await chrome.permissions.contains({ origins }));
-  if (!granted) {
-    showError(
-      `Access to ${settings.backendUrl} has not been granted yet. Press Start to ` +
-        `grant it, or use Grant access in Options.`
-    );
-  } else {
-    try {
-      const resp = await fetch(new URL("/api/languages", settings.backendUrl));
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      data = await resp.json();
-    } catch (err) {
-      showError(
-        `Could not reach ${settings.backendUrl} (${err.message}). Check the backend ` +
-          `in Options.`
-      );
-    }
-  }
-  const agent = { langs: data?.languages || LANG_FALLBACK, popular: data?.popular || [] };
-  const simul = {
-    langs: data?.simulLanguages || LANG_FALLBACK,
-    popular: data?.simulPopular || [],
-  };
-  await fillTabTarget(simul);
+  const agent = { langs: LANGUAGES, popular: POPULAR_LANGUAGES };
+  await fillTabTarget();
   fill(el("micSource"), agent, settings.micSource);
   fill(el("micTarget"), agent, settings.micTarget);
 }
@@ -84,10 +50,10 @@ async function populateLanguages() {
  * is not the code the agent model uses. Map before filling so a stored `zh`
  * lands on Chinese rather than silently resetting to the top of the list.
  */
-async function fillTabTarget(simul) {
+async function fillTabTarget() {
   let code = settings.tabTarget;
-  if (!(code in simul.langs) && code in AGENT_TO_SIMUL) code = AGENT_TO_SIMUL[code];
-  fill(el("tabTarget"), simul, code);
+  if (!(code in SIMUL_LANGUAGES)) code = simulLanguageCode(code);
+  fill(el("tabTarget"), { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES }, code);
   if (el("tabTarget").value !== settings.tabTarget) {
     settings.tabTarget = el("tabTarget").value;
     await saveSettings({ tabTarget: settings.tabTarget });
@@ -108,8 +74,7 @@ function fill(select, { langs, popular }, selected) {
     select.appendChild(optgroup("Popular", top, langs));
     select.appendChild(optgroup("All languages", codes, langs));
   } else {
-    // No list from the relay (offline, or the fallback pair) — a flat select
-    // reads better than one group holding everything.
+    // A flat select reads better than one group holding everything.
     for (const code of codes) select.appendChild(option(code, langs[code]));
   }
   // Assigning `value` picks the first option with that code, which is the
@@ -150,16 +115,21 @@ function bind() {
     update({ duckLevel: Number(el("duckLevel").value) / 100 });
   });
   el("toggle").addEventListener("click", onToggle);
-  el("openOptions").addEventListener("click", () => chrome.runtime.openOptionsPage());
+  for (const id of ["openOptions", "keyNoteOptions"]) {
+    el(id).addEventListener("click", (event) => {
+      event.preventDefault();
+      chrome.runtime.openOptionsPage();
+    });
+  }
 }
 
 async function update(patch) {
   Object.assign(settings, patch);
   await saveSettings(patch);
   render();
-  // Languages, direction and mode are all baked into the relay's session
-  // config, so a change to any of them only takes effect on reconnect. The duck
-  // level and the two subtitle switches are not part of that config — they are
+  // Languages, direction and mode are all baked into the Live session's setup
+  // frame, so a change to any of them only takes effect on reconnect. The duck
+  // level and the two subtitle switches are not part of that frame — they are
   // read live from storage — and cutting the audio to apply a checkbox would be
   // worse than the checkbox.
   const live = ["duckLevel", "tabCaptions", "micCaptions"];
@@ -183,9 +153,12 @@ function render() {
   el("micEnabled").closest(".direction").classList.toggle("off", !settings.micEnabled);
   el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled);
 
+  const hasKey = !!(settings.apiKey || "").trim();
+  el("keyNote").hidden = hasKey;
+
   el("toggle").textContent = running ? "Stop" : "Start";
   el("toggle").classList.toggle("running", running);
-  el("toggle").disabled = !settings.tabEnabled && !settings.micEnabled;
+  el("toggle").disabled = (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", "Idle");
 }
 
@@ -197,7 +170,6 @@ async function onToggle() {
       await send({ type: "stop" }, true);
       running = false;
     } else {
-      await ensureBackendPermission();
       await send({ type: "start" }, true);
       running = true;
       el("transcript").innerHTML = "";
@@ -216,34 +188,18 @@ async function restart() {
   await send({ type: "start" }, true);
 }
 
-/**
- * The backend origin is a runtime permission, not an install-time one.
- *
- * The URL is configurable, so it cannot be baked into the manifest; asking for
- * it at Start rather than at install keeps the install prompt down to the
- * capture permissions. `permissions.request` needs a user gesture, which the
- * Start click is.
- */
-async function ensureBackendPermission() {
-  const origins = [originPattern(settings.backendUrl)].filter(Boolean);
-  if (!origins.length) throw new Error("The backend URL in Options is not valid.");
-  if (await chrome.permissions.contains({ origins })) return;
-  const granted = await chrome.permissions.request({ origins });
-  if (!granted) throw new Error(`Access to ${settings.backendUrl} was declined.`);
-}
-
 async function send(message, throwOnError = false) {
   const reply = await chrome.runtime.sendMessage({ target: "sw", ...message });
   if (throwOnError && reply && !reply.ok) throw new Error(reply.error);
   return reply;
 }
 
-// The grant can arrive from the Options page, from the Start button, or from
-// chrome://extensions. Whichever it was, the language lists are now fetchable
-// and the panel should stop showing an error the user has already dealt with.
-chrome.permissions.onAdded.addListener(async () => {
-  clearError();
-  await populateLanguages();
+// The key is entered on the Options page, which is a different document, so the
+// panel only learns about it through storage.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local" || !changes.apiKey) return;
+  settings.apiKey = changes.apiKey.newValue;
+  if (settings.apiKey) clearError();
   render();
 });
 

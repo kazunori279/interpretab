@@ -1,16 +1,17 @@
 /**
- * Options: which relay to talk to, which voice, and the glossary.
+ * Options: the API key, the voice, and the glossary.
  *
- * The glossary lives in `chrome.storage.local` and is sent to the relay as the
- * first message of every session, exactly as the web app sends its
- * localStorage copy. The relay never persists it, so this browser's terms stay
- * this browser's.
+ * All three live in `chrome.storage.local`, which is the only store the side
+ * panel, the service worker and the offscreen document can all read. Nothing
+ * here is uploaded anywhere — there is no server to upload it to.
  */
 
-import { BACKENDS, DEFAULTS, loadSettings, saveSettings, originPattern } from "./lib/settings.js";
+import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import { DEFAULT_VOICE, VOICES } from "./lib/languages.js";
 import {
   MAX_GLOSSARY_BYTES,
   ensureGlossary,
+  loadDefaultGlossary,
   normalizeEntry,
   parseGlossaryCsv,
 } from "./lib/glossary.js";
@@ -22,73 +23,54 @@ init();
 
 async function init() {
   settings = await loadSettings();
-  fillPresets();
-  el("backendUrl").value = settings.backendUrl;
+  el("apiKey").value = settings.apiKey;
+  loadVoices();
   bind();
-  await Promise.all([refreshBackendStatus(), refreshMicStatus(), loadVoices()]);
-  renderGlossary(await ensureGlossary(settings.backendUrl));
-}
-
-function fillPresets() {
-  const select = el("preset");
-  select.innerHTML = "";
-  for (const [name, url] of Object.entries(BACKENDS)) {
-    const opt = document.createElement("option");
-    opt.value = url;
-    opt.textContent = `${name} — ${url}`;
-    select.appendChild(opt);
-  }
-  const custom = document.createElement("option");
-  custom.value = "";
-  custom.textContent = "Custom…";
-  select.appendChild(custom);
-  select.value = Object.values(BACKENDS).includes(settings.backendUrl)
-    ? settings.backendUrl
-    : "";
+  renderKeyStatus();
+  await refreshMicStatus();
+  renderGlossary(await ensureGlossary());
 }
 
 function bind() {
-  el("preset").addEventListener("change", async () => {
-    if (!el("preset").value) return;
-    el("backendUrl").value = el("preset").value;
-    await setBackend(el("preset").value);
-  });
-  el("backendUrl").addEventListener("change", () => setBackend(el("backendUrl").value.trim()));
-  el("grant").addEventListener("click", grantBackend);
+  // `change` rather than `input`: saving on every keystroke would write a
+  // trail of truncated keys through storage on the way to the real one.
+  el("apiKey").addEventListener("change", saveKey);
+  el("toggleKey").addEventListener("click", toggleKey);
   el("grantMic").addEventListener("click", grantMic);
   el("voice").addEventListener("change", () => saveSettings({ voice: el("voice").value }));
   el("uploadGlossary").addEventListener("click", uploadGlossary);
   el("resetGlossary").addEventListener("click", resetGlossary);
 }
 
-async function setBackend(url) {
-  if (!originPattern(url)) {
-    el("backendStatus").textContent = "That is not a valid URL.";
-    return;
+async function saveKey() {
+  settings.apiKey = el("apiKey").value.trim();
+  el("apiKey").value = settings.apiKey;
+  await saveSettings({ apiKey: settings.apiKey });
+  renderKeyStatus();
+}
+
+/**
+ * There is no way to check a key short of opening a session, and doing that
+ * here would bill the user for a connection they did not ask for. So this
+ * reports what it can see — a key is present and looks like one — and leaves
+ * the real verdict to the first Start, where a rejection is already reported.
+ */
+function renderKeyStatus() {
+  const node = el("apiKeyStatus");
+  if (!settings.apiKey) {
+    setStatus(node, "No key yet. Interpretab cannot start without one.");
+  } else if (!/^AIza[\w-]{30,}$/.test(settings.apiKey)) {
+    setStatus(node, "Saved, but this does not look like a Google API key.");
+  } else {
+    setStatus(node, "Key saved in this browser.", true);
   }
-  settings.backendUrl = url;
-  await saveSettings({ backendUrl: url });
-  fillPresets();
-  await refreshBackendStatus();
-  await loadVoices();
 }
 
-async function refreshBackendStatus() {
-  const origins = [originPattern(settings.backendUrl)].filter(Boolean);
-  const granted = origins.length && (await chrome.permissions.contains({ origins }));
-  el("grant").hidden = !!granted;
-  el("backendStatus").textContent = granted
-    ? "Access granted."
-    : "Access not granted yet — Start will ask for it, or grant it here.";
-  el("backendStatus").className = granted ? "note ok" : "note";
-}
-
-async function grantBackend() {
-  const origins = [originPattern(settings.backendUrl)].filter(Boolean);
-  if (!origins.length) return;
-  await chrome.permissions.request({ origins });
-  await refreshBackendStatus();
-  await loadVoices();
+function toggleKey() {
+  const field = el("apiKey");
+  const hidden = field.type === "password";
+  field.type = hidden ? "text" : "password";
+  el("toggleKey").textContent = hidden ? "Hide" : "Show";
 }
 
 /**
@@ -123,25 +105,17 @@ async function refreshMicStatus() {
   }
 }
 
-async function loadVoices() {
+/** The voice list is bundled — it is a whitelist the API enforces, not a menu. */
+function loadVoices() {
   const select = el("voice");
-  try {
-    const resp = await fetch(new URL("/api/languages", settings.backendUrl));
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-    const { voices, defaultVoice } = await resp.json();
-    const chosen = settings.voice || defaultVoice;
-    select.innerHTML = "";
-    for (const [name, tone] of Object.entries(voices || {})) {
-      const opt = document.createElement("option");
-      opt.value = name;
-      opt.textContent = `${name} — ${tone}`;
-      if (name === chosen) opt.selected = true;
-      select.appendChild(opt);
-    }
-    select.disabled = false;
-  } catch {
-    select.innerHTML = "<option>Unavailable — grant backend access first</option>";
-    select.disabled = true;
+  const chosen = settings.voice || DEFAULT_VOICE;
+  select.innerHTML = "";
+  for (const [name, tone] of Object.entries(VOICES)) {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = `${name} — ${tone}`;
+    if (name === chosen) opt.selected = true;
+    select.appendChild(opt);
   }
 }
 
@@ -167,10 +141,8 @@ async function uploadGlossary() {
 }
 
 async function resetGlossary() {
-  // Clearing first makes ensureGlossary re-seed from the relay rather than
-  // return the copy already in storage.
-  await chrome.storage.local.remove("glossary");
-  const pairs = await ensureGlossary(settings.backendUrl);
+  const pairs = await loadDefaultGlossary();
+  await chrome.storage.local.set({ glossary: pairs });
   renderGlossary(pairs);
   setStatus(el("glossaryStatus"), `Reset to ${pairs.length} default entries.`, true);
 }

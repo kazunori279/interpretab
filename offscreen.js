@@ -11,9 +11,12 @@
  * per-direction layout needs five:
  *
  *   tabStream ─┬─► ctxPass (native) ─► duckGain ─► speakers
- *              └─► ctxUp (16 kHz) ─► recorder worklet ─► tab socket
- *   micStream ───► ctxUp (16 kHz) ─► recorder worklet ─► mic socket
- *   both sockets' audio ─► ctxDown (24 kHz) ─► one player worklet each ─► speakers
+ *              └─► ctxUp (16 kHz) ─► recorder worklet ─► tab session
+ *   micStream ───► ctxUp (16 kHz) ─► recorder worklet ─► mic session
+ *   both sessions' audio ─► ctxDown (24 kHz) ─► one player worklet each ─► speakers
+ *
+ * The two directions are two entirely independent Gemini Live sessions: two
+ * WebSockets, two models, no shared state — and the API cost of both.
  *
  * ctxPass is not optional: capturing a tab mutes it for the user, and this is
  * the graph that gives the sound back. It runs at the stream's native rate
@@ -21,13 +24,11 @@
  * resample it down and audibly dull anything musical.
  */
 
-import { LiveSession } from "./lib/live-client.js";
+import { buildSetup, UPLINK_RATE } from "./lib/live-session.js";
+import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
-import { webSocketUrl } from "./lib/settings.js";
 
-const UPLINK_RATE = 16000; // what the relay forwards to Gemini
 const DOWNLINK_RATE = 24000; // what Gemini returns
-const USER_ID = "chrome-extension";
 
 // Ducking. The ramp is short enough to be under the first syllable and long
 // enough not to click; the release keeps the original down through the gaps
@@ -44,6 +45,9 @@ const SIMUL_IDLE_MS = 2000;
 
 const state = {
   settings: null,
+  // Held only for the life of a run, and only so a reconnect can reopen the
+  // socket without waking the service worker for the key again.
+  apiKey: null,
   displayMap: [],
   ctxPass: null,
   ctxUp: null,
@@ -97,13 +101,12 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-async function start({ streamId, settings, glossary }) {
+async function start({ apiKey, streamId, settings, glossary }) {
   await ensureContexts();
   await stop();
   state.settings = settings;
+  state.apiKey = apiKey;
   state.displayMap = buildDisplayMap(glossary);
-
-  const setup = () => ({ glossary: glossary || [], voice: settings.voice || undefined });
 
   if (settings.tabEnabled) {
     if (!streamId) throw new Error("No tab stream id.");
@@ -113,24 +116,14 @@ async function start({ streamId, settings, glossary }) {
       },
     });
     startPassthrough(state.tabStream);
-    state.tab = openDirection(
-      "tab",
-      state.tabStream,
-      setup,
-      { simul: "true", target: settings.tabTarget },
-      true
-    );
+    // Simultaneous translation, which never sends turnComplete.
+    state.tab = openDirection("tab", state.tabStream, glossary, true);
   }
 
   if (settings.micEnabled) {
     state.micStream = await getMicStream();
-    state.mic = openDirection(
-      "mic",
-      state.micStream,
-      setup,
-      { source: settings.micSource, target: settings.micTarget },
-      false // agent mode, which does send turnComplete
-    );
+    // Agent mode, which does.
+    state.mic = openDirection("mic", state.micStream, glossary, false);
   }
 
   startDuckLoop();
@@ -179,22 +172,17 @@ function startPassthrough(stream) {
   state.duckGain.connect(state.ctxPass.destination);
 }
 
-/** Wire one capture stream to one relay socket, and its replies to a speaker. */
-function openDirection(name, stream, setup, params, simul) {
+/** Wire one capture stream to its own Live session, and the replies to a speaker. */
+function openDirection(name, stream, glossary, simul) {
   const player = makePlayer();
   const acc = { input: "", output: "", simul, idle: null };
-  const session = new LiveSession({
-    url: () =>
-      webSocketUrl(
-        state.settings.backendUrl,
-        `/ws/${USER_ID}/${name}-${Math.random().toString(36).slice(2, 9)}`,
-        params
-      ),
-    setup,
+  const session = new SessionLoop({
+    apiKey: state.apiKey,
+    setup: buildSetup(name, state.settings, glossary || []),
     onStatus: (status, detail) => post({ type: "status", direction: name, status, detail }),
     onEvent: (ev) => onEvent(name, ev, player, acc),
   });
-  session.connect();
+  session.start();
   const node = makeRecorder(stream, (pcm) => {
     // The mic must not hear the interpreter. While a translated voice is
     // playing its frames are dropped rather than sent, which is only possible
@@ -250,7 +238,7 @@ function endTurn(direction, acc) {
   post({ type: "turnComplete", direction });
 }
 
-/** 16 kHz uplink: mono-downmixed PCM16, the format the relay forwards as-is. */
+/** 16 kHz uplink: mono-downmixed PCM16, the format the Live API takes. */
 function makeRecorder(stream, onPcm) {
   const ctx = state.ctxUp;
   const node = new AudioWorkletNode(ctx, "pcm-recorder-processor", {
@@ -335,6 +323,7 @@ async function stop() {
   }
   state.playoutEndsAt = 0;
   state.ducked = false;
+  state.apiKey = null;
   // `start` calls this first to clear any previous run. Announcing a stop that
   // never followed a start would flip the side panel's button to Start for the
   // instant between the two.

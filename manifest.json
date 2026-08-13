@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Live Translator",
-  "version": "0.1.0",
-  "description": "Real-time interpretation of tab audio and your microphone, powered by the Gemini Live API.",
+  "name": "Interpretab",
+  "version": "1.0.0",
+  "description": "Real-time interpretation of tab audio and your microphone, with subtitles. Your own Gemini API key, no server in between.",
   "minimum_chrome_version": "116",
   "permissions": [
     "tabCapture",
@@ -13,16 +13,15 @@
     "scripting",
     "audioCapture"
   ],
-  "optional_host_permissions": [
-    "https://*/*",
-    "http://localhost/*"
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*"
   ],
   "background": {
     "service_worker": "service-worker.js",
     "type": "module"
   },
   "action": {
-    "default_title": "Live Translator",
+    "default_title": "Interpretab",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

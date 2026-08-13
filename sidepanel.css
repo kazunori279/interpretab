@@ -40,6 +40,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   line-height: 1.4;
 }
 .banner.error { background: #fce8e6; color: #c5221f; }
+/* The plain banner is the one-time setup prompt, not a failure — it stays
+   informational so a fresh install does not open on a wall of red. */
+#keyNote { background: #e8f0fe; color: #174ea6; font-size: 12px; }
+#keyNote a { color: inherit; }
 
 .direction {
   border: 1px solid var(--border);

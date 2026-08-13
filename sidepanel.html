@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Live Translator</title>
+    <title>Interpretab</title>
     <link rel="stylesheet" href="sidepanel.css" />
   </head>
   <body>
     <header>
-      <h1>Live Translator</h1>
+      <h1>Interpretab</h1>
       <div class="status">
         <span id="statusDot" class="dot disconnected"></span>
         <span id="statusText">Idle</span>
@@ -15,6 +15,13 @@
     </header>
 
     <div id="error" class="banner error" hidden></div>
+
+    <div id="keyNote" class="banner" hidden>
+      Interpretab talks to Gemini with <b>your own API key</b>. Get a free one at
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
+        >aistudio.google.com/apikey</a
+      >, then paste it into <a href="#" id="keyNoteOptions">Options</a>.
+    </div>
 
     <section class="direction">
       <label class="row heading">

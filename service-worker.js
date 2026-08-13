@@ -11,7 +11,7 @@
  * minting a tab-capture stream id, and creating the offscreen document.
  */
 
-import { loadSettings } from "./lib/settings.js";
+import { loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 
 const OFFSCREEN_URL = "offscreen.html";
@@ -85,6 +85,9 @@ async function start() {
   if (!settings.tabEnabled && !settings.micEnabled) {
     throw new Error("Enable at least one direction first.");
   }
+  // Checked before anything is captured, so a missing key costs the user a
+  // message rather than a tab-capture prompt followed by silence.
+  const apiKey = requireApiKey(settings);
 
   let streamId = null;
   let tabId = null;
@@ -97,20 +100,18 @@ async function start() {
       // The one failure users actually hit: the extension was never invoked on
       // this tab, or the invocation lapsed when the tab navigated.
       throw new Error(
-        `Click the Live Translator toolbar icon on the tab you want to translate, ` +
+        `Click the Interpretab toolbar icon on the tab you want to translate, ` +
           `then press Start again. (${err.message})`
       );
     }
   }
 
-  // Fetched here rather than in the offscreen document so a missing host
-  // permission surfaces as a Start-button error the user can act on, instead
-  // of a silent empty glossary inside a context with no UI.
-  const glossary = await ensureGlossary(settings.backendUrl);
+  const glossary = await ensureGlossary();
 
   await ensureOffscreen();
   const started = await toOffscreen({
     type: "start",
+    apiKey,
     streamId,
     settings,
     glossary,
@@ -209,7 +210,7 @@ async function ensureOffscreen() {
     // which is the whole point of putting the engine there.
     reasons: ["USER_MEDIA", "AUDIO_PLAYBACK"],
     justification:
-      "Capture tab and microphone audio, stream it to the translation relay, " +
+      "Capture tab and microphone audio, stream it to the Gemini Live API, " +
       "and play the translated speech back.",
   });
 }
