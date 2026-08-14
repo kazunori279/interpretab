@@ -402,6 +402,57 @@ There is no build. The extension directory is what ships.
 npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
+Verified 2026-08-14: 31 files, 153 KB, `manifest.json` at the root, nothing from `.git`, `tests/`,
+`store/` or `package.json`. `README.md` does ship — 24 KB of developer documentation going to
+every user, harmless but trimmable.
+
+## Before the store submission
+
+What is left between here and a listing, in the order it blocks.
+
+**1. Five screenshots, 1280×800.** The only hard blocker, and the content is still undecided.
+`store/listing.md` says what each of the five should show and why the order matters. The rules
+they must obey, from `store/justifications.md`: no real API key in frame (use `AIza…` placeholder
+text), no identifiable meeting participant, no recognisable copyrighted video frame — a talk on a
+public conference channel or a Creative Commons clip is the safe choice. `store/promo-440x280.png`
+already exists and needs nothing.
+
+**2. The manual checklist in Chrome.** Nothing automated covers any of this, and each one is a
+plausible way to fail a review:
+
+- close the side panel mid-capture and reopen it — the translation must keep running
+- fullscreen the video — the captions must follow it
+- both directions at once on headphones — the duplex gate, i.e. the microphone muting itself
+  while a translation plays
+- an invalid key — the error must name the key, not the network
+- drag the subtitle-size slider while a session is live — the overlay must resize under it
+
+Note for whoever automates part of this: chrome-devtools MCP never lists `chrome-extension://`
+targets, so the extension's own pages cannot be driven through it. It *can* evaluate on
+`chrome://extensions` and walk that page's shadow DOM, which is how the unpacked extension gets
+reloaded; `screencapture` plus `sips` is the fallback for anything visual.
+
+**3. An hour-long soak in the tab direction.** Only the microphone direction has been soaked (see
+above). Tab is the direction most people will use, runs a different model down a different code
+path, and has a direct comparison waiting in the relay's simultaneous-mode hour — 90.1% pass,
+turn-complete 0.52 s average.
+
+```bash
+node tests/soak.mjs /tmp/key.txt --direction tab --source ja --target en --voice Kyoko \
+  --duration 3600 --log soak_tab.jsonl
+```
+
+Unattended, one hour, and it spends an hour of quota. Handle the key the way every run here has:
+write it to a temp file, never echo it, delete it afterwards — the Live API takes the key as a
+query parameter, so anything that dumps a handshake URL leaks it.
+
+**4. Registration and submission.** The $5 developer registration and the dashboard itself need
+the author's Google account.
+
+**Optional, not blocking.** The icon's dark tile with amber kana (candidate E5) is still a
+two-line change in `store/icon-source.html` plus a re-run of its Download button, if it is worth
+seeing against the indigo before a listing freezes it.
+
 ## Privacy
 
 See [PRIVACY.md](PRIVACY.md). The short version: audio, transcripts and your API key go from
