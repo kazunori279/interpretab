@@ -16,7 +16,9 @@
  *   both sessions' audio ─► ctxDown (24 kHz) ─► one player worklet each ─► speakers
  *
  * The two directions are two entirely independent Gemini Live sessions: two
- * WebSockets, two models, no shared state — and the API cost of both.
+ * WebSockets, no shared state, and the API cost of both — running two different
+ * models, unless the microphone is left on its default simultaneous mode, in
+ * which case both sessions are the same model aimed at different languages.
  *
  * ctxPass is not optional: capturing a tab mutes it for the user, and this is
  * the graph that gives the sound back. It runs at the stream's native rate
@@ -24,7 +26,7 @@
  * resample it down and audibly dull anything musical.
  */
 
-import { buildSetup, UPLINK_RATE } from "./lib/live-session.js";
+import { buildSetup, isSimul, UPLINK_RATE } from "./lib/live-session.js";
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
 
@@ -116,14 +118,15 @@ async function start({ apiKey, streamId, settings, glossary }) {
       },
     });
     startPassthrough(state.tabStream);
-    // Simultaneous translation, which never sends turnComplete.
+    // Always simultaneous translation, which never sends turnComplete.
     state.tab = openDirection("tab", state.tabStream, glossary, true);
   }
 
   if (settings.micEnabled) {
     state.micStream = await getMicStream();
-    // Agent mode, which does.
-    state.mic = openDirection("mic", state.micStream, glossary, false);
+    // Simultaneous or conversation, whichever the user picked. Conversation
+    // mode is the agent model, which does send turnComplete.
+    state.mic = openDirection("mic", state.micStream, glossary, isSimul("mic", settings));
   }
 
   startDuckLoop();

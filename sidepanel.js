@@ -10,12 +10,16 @@
 
 import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
 import {
+  agentLanguageCode,
   LANGUAGES,
   POPULAR_LANGUAGES,
   SIMUL_LANGUAGES,
   SIMUL_POPULAR_LANGUAGES,
   simulLanguageCode,
 } from "./lib/languages.js";
+
+const AGENT_LANGUAGES = { langs: LANGUAGES, popular: POPULAR_LANGUAGES };
+const SIMUL = { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES };
 
 const el = (id) => document.getElementById(id);
 
@@ -39,10 +43,10 @@ async function init() {
 
 /** The lists are bundled, so the dropdowns fill before the first paint. */
 async function populateLanguages() {
-  const agent = { langs: LANGUAGES, popular: POPULAR_LANGUAGES };
   await fillTabTarget();
-  fill(el("micSource"), agent, settings.micSource);
-  fill(el("micTarget"), agent, settings.micTarget);
+  await fillMicTarget();
+  // Only conversation mode reads it, and conversation mode is the agent model.
+  fill(el("micSource"), AGENT_LANGUAGES, settings.micSource);
 }
 
 /**
@@ -53,10 +57,35 @@ async function populateLanguages() {
 async function fillTabTarget() {
   let code = settings.tabTarget;
   if (!(code in SIMUL_LANGUAGES)) code = simulLanguageCode(code);
-  fill(el("tabTarget"), { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES }, code);
+  fill(el("tabTarget"), SIMUL, code);
   if (el("tabTarget").value !== settings.tabTarget) {
     settings.tabTarget = el("tabTarget").value;
     await saveSettings({ tabTarget: settings.tabTarget });
+  }
+}
+
+/**
+ * The same problem as `fillTabTarget`, except the microphone changes code space
+ * under the user: its two modes run different models, and the two models name a
+ * handful of languages differently — `zh` against `zh-Hans`, `pt` against
+ * `pt-BR`, `iw` against `he`. One stored `micTarget` serves both, so it is
+ * translated into whichever space the current mode needs and written back, on
+ * load and on every mode change.
+ *
+ * A language one model has and the other does not — Welsh in conversation mode,
+ * Javanese in simultaneous — has nowhere to land and falls back to the top of
+ * the list, which is at least visible in the dropdown rather than a target the
+ * server would reject at connect.
+ */
+async function fillMicTarget() {
+  const simul = settings.micMode !== "conversation";
+  const table = simul ? SIMUL : AGENT_LANGUAGES;
+  let code = settings.micTarget;
+  if (!(code in table.langs)) code = simul ? simulLanguageCode(code) : agentLanguageCode(code);
+  fill(el("micTarget"), table, code);
+  if (el("micTarget").value !== settings.micTarget) {
+    settings.micTarget = el("micTarget").value;
+    await saveSettings({ micTarget: settings.micTarget });
   }
 }
 
@@ -109,6 +138,14 @@ function bind() {
   for (const id of ["tabTarget", "micSource", "micTarget"]) {
     el(id).addEventListener("change", () => update({ [id]: el(id).value }));
   }
+  el("micMode").addEventListener("change", async () => {
+    // The two modes run different models with different language tables, so the
+    // target list is rebuilt — and the stored code moved into the new space —
+    // before `update` restarts the session with it.
+    settings.micMode = el("micMode").value;
+    await fillMicTarget();
+    await update({ micMode: settings.micMode });
+  });
   el("duckLevel").addEventListener("input", () => {
     // Applied live by the offscreen document via storage.onChanged, so the
     // slider can be dragged while listening.
@@ -144,10 +181,21 @@ function render() {
   el("micEnabled").checked = settings.micEnabled;
   el("micCaptions").checked = settings.micCaptions;
   el("tabTarget").value = settings.tabTarget;
+  el("micMode").value = settings.micMode;
   el("micSource").value = settings.micSource;
   el("micTarget").value = settings.micTarget;
   el("duckLevel").value = Math.round(settings.duckLevel * 100);
   el("duckLevelOut").textContent = `${Math.round(settings.duckLevel * 100)}%`;
+
+  // Simultaneous detects the source, so naming one would be a control with
+  // nothing behind it; conversation needs both halves of the pair.
+  const micSimul = settings.micMode !== "conversation";
+  el("micInto").hidden = !micSimul;
+  el("micDetected").hidden = !micSimul;
+  el("micNoteSimul").hidden = !micSimul;
+  el("micSource").hidden = micSimul;
+  el("micArrow").hidden = micSimul;
+  el("micNoteConversation").hidden = micSimul;
 
   el("tabEnabled").closest(".direction").classList.toggle("off", !settings.tabEnabled);
   el("micEnabled").closest(".direction").classList.toggle("off", !settings.micEnabled);

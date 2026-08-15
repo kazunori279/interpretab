@@ -42,7 +42,11 @@ The translation is spoken over the video AND written on it — bottom-centre, th
 
 ▍ BOTH DIRECTIONS, AT THE SAME TIME
 
-Tab audio into your language, and your microphone into theirs. Speak English, be heard in Japanese by the people in the room with you; hear their Japanese back in English. The two run as independent sessions, so either can be switched off, and while a translation is playing your microphone is muted automatically — the interpreter never interprets itself.
+Tab audio into your language, and your microphone into theirs. Speak English, be heard in Japanese by the people in the room with you; hear their Japanese back in English. The two run as independent sessions, so either can be switched off, and while your own translation is playing your microphone is muted automatically — the interpreter never interprets itself.
+
+▍ ONE MICROPHONE, TWO PEOPLE
+
+The microphone has a second mode. Set English ⇄ Japanese, put the laptop between you, and Interpretab interprets whichever of the two it hears into the other — no button to press, no switching sides. A desk, a counter, a hotel front desk, a taxi. Simultaneous mode, the default, interprets you alone and doesn't wait for you to finish a sentence.
 
 ▍ A GLOSSARY THAT GETS YOUR TERMS RIGHT
 
@@ -62,7 +66,7 @@ Get a free key at aistudio.google.com/apikey and paste it into Options.
 
 Tab audio: source auto-detected — a tab plays whoever it plays, and a video that cuts to a second speaker shouldn't need you to change a setting. 78 target languages.
 
-Microphone: source and target both chosen, from 97 languages. 30 voices to pick from.
+Microphone: in Simultaneous mode, the source is detected too and you choose from the same 78 targets. In Two-way conversation mode you name both languages of the pair, from 97. 30 voices to pick from, either way.
 
 ▍ HOW TO USE IT
 
@@ -77,8 +81,8 @@ Closing the side panel does not stop the translation.
 Honest limits, up front:
 
 • The translation of YOUR voice comes out of your own speakers. Getting it into a Meet or Zoom microphone needs a virtual audio device (BlackHole, VB-Cable) — no extension can route audio into another app.
-• Running both directions on speakers invites an echo loop. Use headphones.
-• The glossary applies to the microphone direction only. Tab audio uses Google's simultaneous-translation model, which accepts no glossary.
+• Running both directions on speakers invites an echo loop. Use headphones. In Two-way conversation mode, where speaking out loud is the point, keep the microphone away from the speakers instead.
+• The glossary applies to the microphone's Two-way conversation mode only. Everything else uses Google's simultaneous-translation model, which accepts no glossary.
 • Two directions means two concurrent Gemini sessions, so roughly double the API usage on your key.
 • Chrome does not allow extensions to draw on its own pages, the Web Store, or PDFs, so subtitles won't appear there. The audio and the side-panel transcript still work.
 
@@ -110,7 +114,9 @@ it by, so it must show the differentiator, not the settings.
 3. **The Options page, glossary table filled** with terms that are obviously domain jargon, and
    a visible difference between the pronunciation column and the transcript column.
 4. **The side panel alone**, close, showing the two direction cards, the language pickers, the
-   ducking slider, and Start.
+   ducking slider, and Start. Set the microphone to **Two-way conversation** for this one, so the
+   `en ⇄ ja` pair and the mode dropdown are both legible — it is the only frame in the set where
+   the second mode is visible at all, and nothing in the category has an equivalent.
 5. **The API key field on Options**, with the "no server, your key, goes only to Google" note
    legible. The privacy claim is a selling point; make it readable rather than leaving it to the
    description.

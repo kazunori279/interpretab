@@ -64,16 +64,20 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 .small, .note { color: var(--muted); }
 .note { margin: 0; line-height: 1.45; font-size: 12px; }
 
-select.lang, input[type="range"] {
+select.lang, select.mode, input[type="range"] {
   font: inherit;
   background: var(--input-bg);
 }
-select.lang {
+select.lang, select.mode {
   border: 1px solid var(--border);
   border-radius: 0.3rem;
   padding: 0.2rem 0.3rem;
-  max-width: 11rem;
 }
+/* Two of these sit side by side in conversation mode, in a panel the user can
+   drag as narrow as they like. */
+select.lang { max-width: 11rem; }
+/* The mode names are sentences rather than words, so this one takes the row. */
+select.mode { flex: 1; min-width: 0; }
 input[type="range"] { flex: 1; min-width: 4rem; }
 output { min-width: 2.4rem; text-align: right; }
 

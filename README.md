@@ -11,7 +11,8 @@ go to Google and nowhere else.
 | Direction | What it hears | Model | You choose |
 |---|---|---|---|
 | **Tab audio** | whatever the current tab is playing | `gemini-3.5-live-translate-preview` — simultaneous translation, source auto-detected | the target language only |
-| **Microphone** | you | `gemini-3.1-flash-live-preview` — one-way agent mode, so the [glossary](#glossary) applies | source and target |
+| **Microphone** — *Simultaneous* (default) | you, as you speak | the same simultaneous model | the target language only |
+| **Microphone** — *Two-way conversation* | two people sharing one microphone | `gemini-3.1-flash-live-preview` with a bidirectional instruction, so the [glossary](#glossary) applies | both languages of the pair |
 
 Either direction can be switched off; both can run at once.
 
@@ -20,6 +21,23 @@ plays whoever it plays — a video cuts to a second speaker, a call hands over t
 so naming a source language up front is a promise the listener cannot keep. Auto-detect is the
 only setting that survives contact with real tab audio, which is why there is no source-language
 picker on that side.
+
+### The microphone's two modes
+
+**Simultaneous** is the default and the same model the tab direction runs: you talk, it
+interprets over you into one target language, and it never waits for you to finish a sentence.
+The source is detected rather than declared, so there is nothing to set but the target.
+
+**Two-way conversation** is for one microphone between two people — a desk, a counter, a taxi.
+Declare both languages and it routes each utterance to the other one: it hears English, it says
+Japanese; it hears Japanese, it says English. That needs a system instruction, which is what
+makes it the only mode a [glossary](#glossary) can reach — and also what makes it the slower of
+the two, because the agent model waits for a turn to end before it speaks.
+
+Switching modes reopens the session, so do it between utterances rather than mid-sentence. The
+target language is remembered across the switch where the two models agree on a name for it; the
+handful they disagree about (`zh` against `zh-Hans`, `pt` against `pt-BR`, `iw` against `he`) are
+mapped, and a language only one of them has falls back to the top of the list.
 
 ## Install
 
@@ -89,8 +107,10 @@ The second column is what the model is *told to say*; the optional third is what
 show instead**. Without that split, forcing the pronunciation also forces it into the subtitles,
 and a reader who knows the term sees it spelled phonetically.
 
-The glossary applies to the **microphone direction only**. Tab audio always runs the
-simultaneous-translation model, which supports neither a glossary nor system instructions.
+The glossary applies to the **microphone in Two-way conversation mode only**. Everything else —
+tab audio, and the microphone's default Simultaneous mode — runs the simultaneous-translation
+model, which supports neither a glossary nor system instructions. If a glossary is the reason
+you are here, that is the trade the mode switch is making.
 
 ## Limitations
 
@@ -98,9 +118,12 @@ simultaneous-translation model, which supports neither a glossary nor system ins
   into a Meet or Zoom microphone needs a virtual audio device (BlackHole, VB-Cable); no
   extension can do it. For a call, that direction is useful for subtitles and for people
   physically in the room — not for the remote party.
-- **Running both directions on speakers invites an echo loop.** Echo cancellation and the duplex
-  gate help; headphones are the real answer.
-- **The tab direction takes no glossary**, for the reason above.
+- **Running both directions on speakers invites an echo loop.** Echo cancellation and the
+  instruction's echo guard help; the duplex gate does not, because it deliberately ignores the
+  tab direction's voice. Headphones are the real answer. Two-way conversation mode is the awkward
+  case — the whole point is that the room hears the interpretation out loud — so put distance
+  between the microphone and the speakers there.
+- **Only Two-way conversation mode takes a glossary**, for the reason above.
 - **Two directions means two concurrent Live sessions**, so roughly double the API cost.
 - Chrome refuses script injection on its own pages, the Web Store, and PDFs, so subtitles do not
   appear there. Capture and the side-panel transcript still work.
@@ -119,7 +142,7 @@ options.js            API key, voice, subtitle size, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
 lib/languages.js      language and voice tables for both models.
-lib/instructions.js   the system instruction the microphone direction sends.
+lib/instructions.js   the system instruction Two-way conversation mode sends.
 ```
 
 **Why an offscreen document.** An MV3 service worker is torn down after ~30 seconds idle, and a
@@ -154,8 +177,9 @@ line that grows until it covers the video. A 2 s gap in the increments closes th
 instead. Independently, a caption line is capped at three wrapped rows and bottom-aligned inside
 the clip, so a long sentence loses its already-read head rather than its newest words.
 
-**Two directions are two independent sessions, all the way down.** Different models, different
-setup frames, no shared state, and the API cost of both. They share exactly one page overlay, so
+**Two directions are two independent sessions, all the way down.** Different setup frames, no
+shared state, the API cost of both, and — unless the microphone is left on Simultaneous —
+different models too. They share exactly one page overlay, so
 the caption path carries a `direction` and everything downstream is keyed by it: the offscreen
 document filters the fan-out against that direction's *Subtitles on the page* switch, and the
 content script keeps one open line per direction rather than a single current line. Without that
@@ -306,14 +330,16 @@ a key and spend quota.
 say -v Kyoko -o /tmp/ja.wav --data-format=LEI16@16000 "こんにちは。本日は東京で…"
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction tab --raw
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction mic
+node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction mic --mic-mode conversation
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --minutes 12    # to see a real goAway
 ```
 
 It prints what the model heard, what it said, and how much audio came back, so a wrong `setup`
 field or a mishandled frame shows up as an empty transcript rather than as a bug report. The key
-is read from a file so it stays out of the shell history and the process list. Run both
-directions: they use different models and differently shaped setup frames, and one passing says
-nothing about the other.
+is read from a file so it stays out of the shell history and the process list. There are three
+setup frames, not two, and one passing says nothing about the others: the two simultaneous ones
+differ only in which language they aim at, but conversation mode is a different model carrying a
+system instruction and a glossary.
 
 It drives `SessionLoop`, not a bare `LiveSession`, which is what makes `--minutes 12` worth the
 twelve minutes: the cutover path can only be exercised by a server that decides on its own that a
@@ -326,17 +352,20 @@ assumption has moved and someone should know.
 **`tests/soak.mjs` — does it still work an hour later?**
 
 ```bash
-node tests/soak.mjs /tmp/key.txt --direction mic --duration 3600 --log soak_mic.jsonl
+node tests/soak.mjs /tmp/key.txt --direction mic --mic-mode conversation \
+  --duration 3600 --log soak_mic.jsonl
 node tests/soak.mjs /tmp/key.txt --direction tab --duration 3600 --target en --voice Kyoko \
   --source ja --log soak_tab.jsonl
 ```
 
 An hour of sentences, each one generated by a model, spoken by `say`, streamed in at the speed of
-speech, and scored 0–10 against the original by a model. Every third sentence in the microphone
-direction is built around a term from `tests/soak-glossary.csv`, and the transcript is checked
-both for the pronunciation the glossary asked for and for the spelling the caption is supposed to
-show — two different questions, and a model that ignores the glossary and says the English term
-verbatim passes the second while failing the first.
+speech, and scored 0–10 against the original by a model. Every third sentence in a run that can
+carry a glossary — which is conversation mode and nothing else — is built around a term from
+`tests/soak-glossary.csv`, and the transcript is checked both for the pronunciation the glossary
+asked for and for the spelling the caption is supposed to show: two different questions, and a
+model that ignores the glossary and says the English term verbatim passes the second while
+failing the first. `--mic-mode` defaults to what ships, which is `simul`; the run above names
+`conversation` explicitly because that is the mode the report below was taken in.
 
 It is a port of `tests/test_long.py` from the [server version](https://github.com/kazunori279/live-translator),
 and writes the same report format on purpose, so that repo's `tests/chart_soak.py` charts a run
@@ -351,6 +380,12 @@ What the original could not report, this does: the session count and the handove
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
 
 ### Soak results — 1 hour, microphone direction, en → ja
+
+Taken before the microphone gained a mode switch, so it measures the agent model under the
+one-way instruction that Two-way conversation grew out of: same model, same glossary handling,
+same session machinery, a differently worded system instruction. The numbers stand for that
+lineage and not for the Simultaneous mode that now ships as the microphone's default — which has
+never been soaked in this direction, and shares its model with the tab run instead.
 
 `tests/soak_mic.report` is the run in full. The summary:
 
@@ -380,8 +415,9 @@ Translation Score                Turn Complete (speech-end to full translation)
       avg=9.85  p50=10.00              avg=1.60  p50=1.53  p90=2.10  max=4.03
 ```
 
-Against the relay's own hour on its non-simultaneous path — conversation mode, 201 iterations,
-99.5% pass, average score 9.9 — quality is unchanged. Latency is not: turn-complete went from
+Against the relay's own hour on its non-simultaneous path — what *that* project called
+conversation mode, no relation to the one in this side panel: 201 iterations, 99.5% pass, average
+score 9.9 — quality is unchanged. Latency is not: turn-complete went from
 **5.52 s average to 1.60 s**, and first response has a p50 of 0.10 s. Two things changed at once,
 though: the relay hop is gone, and the microphone direction runs a newer model than that soak
 did. These numbers cannot apportion the credit between them.
@@ -424,6 +460,10 @@ plausible way to fail a review:
 - fullscreen the video — the captions must follow it
 - both directions at once on headphones — the duplex gate, i.e. the microphone muting itself
   while a translation plays
+- **Two-way conversation** mode — set en ⇄ ja, say something in each, and check that each one
+  comes back in the other language and neither is echoed back in its own
+- switch the microphone's mode while a session is live — it must reconnect, and the target
+  language must survive the switch rather than snapping to English
 - an invalid key — the error must name the key, not the network
 - drag the subtitle-size slider while a session is live — the overlay must resize under it
 
@@ -432,14 +472,22 @@ targets, so the extension's own pages cannot be driven through it. It *can* eval
 `chrome://extensions` and walk that page's shadow DOM, which is how the unpacked extension gets
 reloaded; `screencapture` plus `sips` is the fallback for anything visual.
 
-**3. An hour-long soak in the tab direction.** Only the microphone direction has been soaked (see
-above). Tab is the direction most people will use, runs a different model down a different code
-path, and has a direct comparison waiting in the relay's simultaneous-mode hour — 90.1% pass,
-turn-complete 0.52 s average.
+**3. An hour-long soak in the tab direction.** Only the microphone has been soaked (see above),
+and only in what is now conversation mode. Tab is the direction most people will use, runs a
+different model down a different code path, and has a direct comparison waiting in the relay's
+simultaneous-mode hour — 90.1% pass, turn-complete 0.52 s average.
 
 ```bash
 node tests/soak.mjs /tmp/key.txt --direction tab --source ja --target en --voice Kyoko \
   --duration 3600 --log soak_tab.jsonl
+```
+
+The microphone's own Simultaneous mode is now the default and has never been soaked either. It is
+the same model as the tab run against a different audio source, so the tab hour covers most of
+the risk — but if there is quota for a second hour, this is where it goes:
+
+```bash
+node tests/soak.mjs /tmp/key.txt --direction mic --mic-mode simul --duration 3600
 ```
 
 Unattended, one hour, and it spends an hour of quota. Handle the key the way every run here has:

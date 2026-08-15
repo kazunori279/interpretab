@@ -136,6 +136,29 @@ test("every referenced asset path resolves", () => {
   assert.ok(checked > 20, "the walk found suspiciously few paths to check");
 });
 
+test("every element the panel and the options page reach for exists", () => {
+  // Both documents are entirely id-driven, and `el()` hands back null for a
+  // name that is not there. The failure is a TypeError inside `render()`, which
+  // aborts the rest of it — so one typo in a checkbox id blanks the panel from
+  // that line down, with nothing on screen to say why.
+  const missing = [];
+  for (const [script, markup] of [
+    ["sidepanel.js", "sidepanel.html"],
+    ["options.js", "options.html"],
+  ]) {
+    const code = fs.readFileSync(path.join(ROOT, script), "utf8");
+    const html = fs.readFileSync(path.join(ROOT, markup), "utf8");
+    const declared = new Set([...html.matchAll(/\bid="([\w-]+)"/g)].map((m) => m[1]));
+    // Literal `el("x")` only. The handful of ids the bind loops reach through a
+    // variable are not covered here — every one of them is also named literally
+    // in `render()`, which is what keeps the gap from mattering.
+    for (const [, id] of code.matchAll(/\bel\(\s*"([\w-]+)"\s*\)/g)) {
+      if (!declared.has(id)) missing.push(`${script} -> #${id}`);
+    }
+  }
+  assert.deepEqual(missing, []);
+});
+
 test("the bundled glossary the options page resets to is parseable", async () => {
   const { parseGlossaryCsv } = await import("../lib/glossary.js");
   const csv = fs.readFileSync(path.join(ROOT, "data", "default-glossary.csv"), "utf8");

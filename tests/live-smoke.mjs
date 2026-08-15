@@ -21,18 +21,20 @@
  *   say -v Kyoko -o /tmp/ja16k.wav --data-format=LEI16@16000 "こんにちは。…"
  *
  * Usage:
- *   node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic] [--minutes N] [--raw]
+ *   node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic]
+ *                             [--mic-mode simul|conversation] [--minutes N] [--raw]
  *
  * The key comes from a file rather than an argument so it stays out of the shell
- * history and the process list. Both directions are worth running: they send
- * different models and differently shaped `setup` frames, so one passing says
- * nothing about the other. `--minutes` loops the audio to hold the stream open
+ * history and the process list. There are three distinct `setup` frames to
+ * cover, not two — tab, mic in simultaneous mode, and mic in conversation mode
+ * — and only the last of them sends a system instruction and a glossary, so one
+ * passing says nothing about the others. `--minutes` loops the audio to hold the stream open
  * past the ~10 minute expiry, which is the only way to see a real `goAway`;
  * `--raw` prints every frame the server sends, minus the audio payloads that
  * would drown the log.
  */
 
-import { buildSetup } from "../lib/live-session.js";
+import { buildSetup, isSimul } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
 import { DEFAULTS } from "../lib/settings.js";
 import {
@@ -50,11 +52,18 @@ import {
 const [keyFile, wavFile] = process.argv.slice(2);
 const minutes = Number(argOf("--minutes", 0));
 const direction = argOf("--direction", "tab");
+const micMode = argOf("--mic-mode", DEFAULTS.micMode);
 const raw = hasFlag("--raw");
 
-if (!keyFile || !wavFile || !["tab", "mic"].includes(direction)) {
+if (
+  !keyFile ||
+  !wavFile ||
+  !["tab", "mic"].includes(direction) ||
+  !["simul", "conversation"].includes(micMode)
+) {
   console.error(
-    "usage: node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic] [--minutes N] [--raw]"
+    "usage: node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic] " +
+      "[--mic-mode simul|conversation] [--minutes N] [--raw]"
   );
   process.exit(2);
 }
@@ -80,7 +89,8 @@ let measuringGaps = false;
 // whether the glossary reached the session or was quietly ignored.
 const GLOSSARY = [{ source: "リアルタイム翻訳", target: "Interpretab live relay" }];
 
-const settings = { ...DEFAULTS, tabTarget: "en", micSource: "ja", micTarget: "en" };
+const settings = { ...DEFAULTS, micMode, tabTarget: "en", micSource: "ja", micTarget: "en" };
+const useGlossary = !isSimul(direction, settings);
 
 const { SessionClass, counts } = trackedSessionClass(log, raw);
 
@@ -91,9 +101,10 @@ const ready = new Promise((resolve) => {
 
 const loop = new SessionLoop({
   apiKey,
-  // tab: simultaneous translation, source detected, no glossary possible.
-  // mic: agent mode, source declared, system instruction and glossary applied.
-  setup: buildSetup(direction, settings, direction === "mic" ? GLOSSARY : []),
+  // Simultaneous translation — the tab direction and the microphone's default
+  // mode — detects the source and can carry no glossary. Conversation mode
+  // declares both languages and applies the system instruction and glossary.
+  setup: buildSetup(direction, settings, useGlossary ? GLOSSARY : []),
   SessionClass,
   // The loop defaults to performance.now(); Date.now() keeps its clock and this
   // script's log stamps on the same origin.
@@ -133,7 +144,8 @@ await ready;
 const speechSec = pcm.length / 2 / 16000;
 const passes = minutes ? Math.ceil((minutes * 60_000) / (speechSec * 1000)) : 1;
 log(
-  `${direction}: streaming ${speechSec.toFixed(1)}s of speech` +
+  `${direction}${direction === "mic" ? ` (${micMode})` : ""}: ` +
+    `streaming ${speechSec.toFixed(1)}s of speech` +
     (passes > 1 ? ` × ${passes} passes ≈ ${minutes} min` : "")
 );
 

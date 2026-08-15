@@ -51,12 +51,20 @@
     <section class="direction">
       <label class="row heading">
         <input type="checkbox" id="micEnabled" />
-        <span><b>Microphone</b> — you, into their language</span>
+        <span><b>Microphone</b> — the room, interpreted out loud</span>
       </label>
       <div class="row indent">
-        <select id="micSource" class="lang"></select>
-        <span class="small">→</span>
+        <select id="micMode" class="mode" title="How the microphone is interpreted">
+          <option value="simul">Simultaneous — you, as you speak</option>
+          <option value="conversation">Two-way conversation</option>
+        </select>
+      </div>
+      <div class="row indent">
+        <span class="small" id="micInto">into</span>
+        <select id="micSource" class="lang" title="The language you speak"></select>
+        <span class="small" id="micArrow">⇄</span>
         <select id="micTarget" class="lang"></select>
+        <span class="small" id="micDetected">— source auto-detected</span>
       </div>
       <div class="row indent">
         <label class="inline">
@@ -64,11 +72,19 @@
           Subtitles on the page
         </label>
       </div>
-      <p class="note indent" id="micNote">
+      <p class="note indent" id="micNoteSimul">
         The translation comes out of <b>your speakers</b>. Getting it into a Meet or
         Zoom microphone needs a virtual audio device — an extension cannot do it.
         With both directions on, wear headphones: speakers feed the translation
         straight back into the mic.
+      </p>
+      <p class="note indent" id="micNoteConversation" hidden>
+        For two people sharing this microphone: whichever of the two languages it
+        hears, it speaks the other. Out loud, through <b>your speakers</b>, which is
+        the point — but it means the interpreter can hear itself, so keep the
+        microphone away from them. This mode waits for each turn to finish, so it
+        is a little slower than Simultaneous, and it is the only one the
+        <b>glossary</b> applies to.
       </p>
     </section>
 

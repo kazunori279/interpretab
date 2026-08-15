@@ -36,10 +36,15 @@
  * Usage:
  *   node tests/soak.mjs <key-file> [options]
  *
- *     --direction mic|tab   mic (default) declares the source and applies the
- *                           glossary; tab detects the source and cannot.
+ *     --direction mic|tab   which of the two directions to open.
+ *     --mic-mode …          simul (the shipping default) or conversation. Only
+ *                           conversation declares a source language to the model
+ *                           and can carry a glossary; the tab direction is
+ *                           always simultaneous and never can.
  *     --duration 3600       seconds
- *     --source en           spoken language (mic direction only)
+ *     --source en           the language actually spoken. Always used to pick
+ *                           what to say; only declared to the model in
+ *                           conversation mode.
  *     --target ja           translate into
  *     --voice Samantha      a `say` voice that speaks --source
  *     --glossary <csv>      default tests/soak-glossary.csv
@@ -47,7 +52,7 @@
  */
 
 import fs from "node:fs";
-import { buildSetup } from "../lib/live-session.js";
+import { buildSetup, isSimul } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
 import { DEFAULTS } from "../lib/settings.js";
 import { applyDisplayMap, buildDisplayMap, normalizeEntry, parseGlossaryCsv } from "../lib/glossary.js";
@@ -115,27 +120,45 @@ if (!keyFile || keyFile.startsWith("--")) {
 }
 
 const direction = argOf("--direction", "mic");
+const micMode = argOf("--mic-mode", DEFAULTS.micMode);
 const durationSec = Number(argOf("--duration", 3600));
 const source = argOf("--source", "en");
 const target = argOf("--target", "ja");
 const voice = argOf("--voice", "Samantha");
 const glossaryFile = argOf("--glossary", new URL("soak-glossary.csv", import.meta.url).pathname);
-const logPath = argOf("--log", `soak_${direction}.jsonl`);
+// The microphone's two modes are two different models, so their logs are two
+// different runs and must not land on the same file by default.
+const logPath = argOf("--log", `soak_${direction === "mic" ? `mic_${micMode}` : direction}.jsonl`);
 
 if (!["mic", "tab"].includes(direction)) {
   console.error(`--direction must be mic or tab, got ${direction}`);
   process.exit(2);
 }
+if (!["simul", "conversation"].includes(micMode)) {
+  console.error(`--mic-mode must be simul or conversation, got ${micMode}`);
+  process.exit(2);
+}
 
 const apiKey = readKey(keyFile);
 
-// The tab direction runs the simultaneous-translation model, which takes no
-// system instruction and therefore has nowhere to put a glossary. Loading one
-// and reporting on it would be measuring nothing.
+const settings = {
+  ...DEFAULTS,
+  micMode,
+  tabTarget: target,
+  micSource: source,
+  micTarget: target,
+};
+
+// Three of the four combinations run the simultaneous-translation model, which
+// takes no system instruction and therefore has nowhere to put a glossary.
+// Loading one and reporting on it would be measuring nothing. It is also the
+// model that never sends `turnComplete`, which is what the finalize-on-silence
+// branch further down exists for.
+const simul = isSimul(direction, settings);
 const glossary = parseGlossaryCsv(fs.readFileSync(glossaryFile, "utf8"))
   .map(normalizeEntry)
   .filter(Boolean);
-const useGlossary = direction === "mic";
+const useGlossary = !simul;
 const displayMap = buildDisplayMap(useGlossary ? glossary : []);
 
 const t0 = Date.now();
@@ -172,8 +195,6 @@ let onReady;
 const ready = new Promise((resolve) => {
   onReady = resolve;
 });
-
-const settings = { ...DEFAULTS, tabTarget: target, micSource: source, micTarget: target };
 
 const loop = new SessionLoop({
   apiKey,
@@ -335,8 +356,8 @@ async function runIteration(index, entry) {
     await sleep(100);
     // No turn boundary is coming for simultaneous translation, so the
     // transcript falling quiet ends it — back-dated to the last text, which
-    // keeps the latency figure comparable with the other direction's.
-    if (direction === "tab" && turn.lastTextAt && Date.now() - turn.lastTextAt >= SIMUL_IDLE_FINALIZE_MS) {
+    // keeps the latency figure comparable with a conversation-mode run's.
+    if (simul && turn.lastTextAt && Date.now() - turn.lastTextAt >= SIMUL_IDLE_FINALIZE_MS) {
       turn.turnCompleteAt = turn.lastTextAt;
       break;
     }
@@ -391,8 +412,17 @@ async function runIteration(index, entry) {
 
 // ---------------------------------------------------------------------- start
 
-log(`${direction}: ${source} → ${target}, ${durationSec}s, voice ${voice}`);
-log(`glossary: ${useGlossary ? `${glossary.length} entries from ${glossaryFile}` : "not applicable to tab audio"}`);
+log(
+  `${direction}${direction === "mic" ? ` (${micMode})` : ""}: ` +
+    `${source} → ${target}, ${durationSec}s, voice ${voice}`
+);
+log(
+  `glossary: ${
+    useGlossary
+      ? `${glossary.length} entries from ${glossaryFile}`
+      : "not applicable to the simultaneous-translation model"
+  }`
+);
 loop.start();
 await ready;
 
