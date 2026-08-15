@@ -89,15 +89,21 @@ video. The size is in pixels rather than `rem` on purpose: `all: initial` on the
 not stop `rem` resolving against the *page's* root font size, so on any site that sets
 `html { font-size: 62.5% }` the subtitles used to come out a third smaller than everywhere else.
 
-The microphone is **gated while its own translation is playing** — its audio is dropped rather
-than sent, so the interpreter never interprets itself.
+In **Two-way conversation** mode the microphone is **gated while its own translation is
+playing** — its audio is dropped rather than sent, so the interpreter never interprets itself.
+That mode declares both languages, so its own voice coming back off the speakers is a
+well-formed utterance in a language it interprets, and following it round is an endless loop:
+A becomes B, B becomes A. The gate is the hard stop; the instruction's echo guard is the soft
+one.
 
-Only its own. Until this was fixed the gate read one play-out deadline shared with the tab
-direction, and simultaneous translation of a video speaks almost without a pause: with both
-directions on, the microphone was held shut for the whole session and produced nothing at all —
-no speech, no transcript, no subtitles. What stands between the *tab* translation and the
-microphone is echo cancellation and the instruction's echo guard, as it always was. Headphones
-are still the real answer.
+**Nothing else is gated**, and both exceptions are deliberate. The tab feed is a digital tap and
+never hears the speakers. The simultaneous microphone is *supposed* to be answered while it is
+still talking — that is what simultaneous means — so a gate on its own voice would shut the
+microphone on the first phrase and hold it shut for as long as the speaker kept going. Both of
+those were learned the hard way: gating the microphone on the tab direction's voice produced no
+speech at all with both directions on, and gating simultaneous mode on its own voice translated
+the first word and then nothing. What stands in place of a gate is browser echo cancellation —
+and headphones, which are the real answer in every mode.
 
 ## Glossary
 
@@ -125,11 +131,12 @@ you are here, that is the trade the mode switch is making.
   into a Meet or Zoom microphone needs a virtual audio device (BlackHole, VB-Cable); no
   extension can do it. For a call, that direction is useful for subtitles and for people
   physically in the room — not for the remote party.
-- **Running both directions on speakers invites an echo loop.** Echo cancellation and the
-  instruction's echo guard help; the duplex gate does not, because it deliberately ignores the
+- **Running the microphone on speakers invites an echo loop.** Echo cancellation is what handles
+  it in Simultaneous mode, because the duplex gate deliberately does not run there — nor on the
   tab direction's voice. Headphones are the real answer. Two-way conversation mode is the awkward
-  case — the whole point is that the room hears the interpretation out loud — so put distance
-  between the microphone and the speakers there.
+  case — the whole point is that the room hears the interpretation out loud — so it keeps the
+  gate and the instruction's echo guard, and still wants distance between the microphone and the
+  speakers.
 - **Only Two-way conversation mode takes a glossary**, for the reason above.
 - **Two directions means two concurrent Live sessions**, so roughly double the API cost.
 - Chrome refuses script injection on its own pages, the Web Store, and PDFs, so subtitles do not
@@ -191,9 +198,10 @@ faster than realtime, so "is a voice speaking right now" cannot be answered by "
 arrive". Each arriving buffer extends a play-out deadline by `byteLength / 2 / 24000` seconds,
 and both features read a deadline plus a 400 ms release — but there is one deadline *per
 direction*, and they read different ones. Ducking wants either voice: whichever direction is
-speaking, it is speaking over the tab. The microphone gate wants only the microphone's own, for
-the reason in [What you hear](#what-you-hear). `duckGain` moves on a `setTargetAtTime` ramp so it
-does not click.
+speaking, it is speaking over the tab. The gate wants only the microphone's own, and only in
+conversation mode, for the reasons in [What you hear](#what-you-hear); `usesDuplexGate` in
+`lib/live-session.js` is where that question is answered, so it is answered in one place and
+covered by a test. `duckGain` moves on a `setTargetAtTime` ramp so it does not click.
 
 **Transcripts are segmented by a silence gap, not by a turn.** Simultaneous translation never
 sends `turnComplete` — there are no turns in a continuous feed — so the accumulator that joins
@@ -506,8 +514,12 @@ plausible way to fail a review:
 - both directions at once on headphones — the microphone must keep producing speech, a
   transcript and subtitles *while the tab direction is talking over it*. This is the case that
   was broken: one shared play-out deadline had the gate mute the mic for the whole session.
-- the duplex gate itself, which is a mic-only test now — speak, and while your own translation is
-  playing back, keep speaking; the words spoken over it must not be interpreted a second time
+- **Simultaneous** mode, on a long unbroken paragraph — it must keep translating all the way
+  through, not stop after the first phrase. The gate does not run in this mode for exactly this
+  reason, so this is the test that it stayed off.
+- the duplex gate itself, which is a conversation-mode test only — speak, and while your own
+  translation is playing back, keep speaking; the words spoken over it must not be interpreted a
+  second time
 - **Two-way conversation** mode — set en ⇄ ja, say something in each, and check that each one
   comes back in the other language and neither is echoed back in its own
 - switch the microphone's mode while a session is live — it must reconnect, and the target

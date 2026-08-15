@@ -16,7 +16,14 @@ import {
   resolveVoice,
   simulLanguageCode,
 } from "../lib/languages.js";
-import { buildSetup, endpointUrl, isSimul, parseDuration, arrayToBase64 } from "../lib/live-session.js";
+import {
+  buildSetup,
+  endpointUrl,
+  isSimul,
+  parseDuration,
+  usesDuplexGate,
+  arrayToBase64,
+} from "../lib/live-session.js";
 import { buildConversationInstruction } from "../lib/instructions.js";
 import { DEFAULTS } from "../lib/settings.js";
 
@@ -106,6 +113,25 @@ test("simul is the microphone's default, and anything but conversation means sim
   assert.equal(isSimul("mic", {}), true);
   // The tab direction has no say in it.
   assert.equal(isSimul("tab", { micMode: "conversation" }), true);
+});
+
+test("only the conversation microphone gates itself while it speaks", () => {
+  // Gating a simultaneous session is self-defeating: it answers while the
+  // speaker is still talking, so a gate on its own voice shuts the microphone
+  // on the first phrase and keeps it shut for as long as the user goes on. What
+  // that looked like was one word translated and silence after it.
+  assert.equal(usesDuplexGate("mic", { ...DEFAULTS, micMode: "simul" }), false);
+  assert.equal(usesDuplexGate("mic", { ...DEFAULTS, micMode: "conversation" }), true);
+  // The tab feed is a digital tap: it cannot hear the speakers, in either mode.
+  assert.equal(usesDuplexGate("tab", { ...DEFAULTS, micMode: "conversation" }), false);
+  assert.equal(usesDuplexGate("tab", { ...DEFAULTS, micMode: "simul" }), false);
+  // Still switchable off for the one case the gate hurts: a speaker who is
+  // interpreted on headphones and wants no dropped audio at all.
+  assert.equal(
+    usesDuplexGate("mic", { ...DEFAULTS, micMode: "conversation", duplexGate: false }),
+    false
+  );
+  assert.equal(DEFAULTS.duplexGate, true);
 });
 
 test("the mic's target maps between the two models' code spaces", () => {

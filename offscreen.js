@@ -26,7 +26,7 @@
  * resample it down and audibly dull anything musical.
  */
 
-import { buildSetup, isSimul, UPLINK_RATE } from "./lib/live-session.js";
+import { buildSetup, isSimul, usesDuplexGate, UPLINK_RATE } from "./lib/live-session.js";
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
 
@@ -213,17 +213,19 @@ function openDirection(name, stream, glossary, simul) {
     onEvent: (ev) => onEvent(name, ev, player, acc),
   });
   session.start();
+  // Conversation mode's microphone only — see `usesDuplexGate`. Two directions
+  // are deliberately left ungated: the tab feed, which is a digital tap and
+  // never hears the speakers, and the simultaneous microphone, which is
+  // supposed to be answered while it is still talking.
+  const gated = usesDuplexGate(name, state.settings);
   const node = makeRecorder(stream, (pcm) => {
-    // The mic must not hear itself being interpreted. While *this* direction's
-    // translated voice is playing its frames are dropped rather than sent,
+    // The mic must not hear itself being interpreted. While this direction's
+    // own translated voice is playing its frames are dropped rather than sent,
     // which is only possible because this document owns both ends of that loop.
-    // Deliberately not gated on the tab direction's voice as well: that one
-    // speaks continuously, so doing so would close the microphone for the whole
-    // session. Browser echo cancellation and the instruction's echo guard are
-    // what stand between the tab translation and the microphone; headphones are
-    // the real answer, as they always were. The tab feed needs no gate at all —
-    // it is a digital tap and never hears the speakers.
-    if (name === "mic" && state.settings.duplexGate && speaking("mic")) return;
+    // Its own, and not the tab direction's as well: that one speaks
+    // continuously, so reading it here would close the microphone for the whole
+    // session.
+    if (gated && speaking("mic")) return;
     session.send(pcm);
   });
   return { session, player, node, acc };
