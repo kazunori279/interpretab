@@ -159,6 +159,22 @@ test("every element the panel and the options page reach for exists", () => {
   assert.deepEqual(missing, []);
 });
 
+test("the offscreen document reaches for no extension API but chrome.runtime", () => {
+  // An offscreen document is granted the messaging API and nothing else. Every
+  // other namespace is `undefined` there, so `chrome.storage.onChanged` is not
+  // a no-op — it is a TypeError at module scope. And it is a uniquely quiet
+  // one: it throws *after* the message listener is registered, and every
+  // function below it is hoisted, so start, stop and the whole audio graph go
+  // on working and only the statements after the throw are lost. That cost a
+  // long hunt for a caption bug that was really this.
+  const code = fs
+    .readFileSync(path.join(ROOT, "offscreen.js"), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  const used = new Set([...code.matchAll(/\bchrome\.(\w+)/g)].map((m) => m[1]));
+  assert.deepEqual([...used].sort(), ["runtime"]);
+});
+
 test("the bundled glossary the options page resets to is parseable", async () => {
   const { parseGlossaryCsv } = await import("../lib/glossary.js");
   const csv = fs.readFileSync(path.join(ROOT, "data", "default-glossary.csv"), "utf8");

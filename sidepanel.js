@@ -147,8 +147,7 @@ function bind() {
     await update({ micMode: settings.micMode });
   });
   el("duckLevel").addEventListener("input", () => {
-    // Applied live by the offscreen document via storage.onChanged, so the
-    // slider can be dragged while listening.
+    // A live key, so the slider can be dragged while listening.
     update({ duckLevel: Number(el("duckLevel").value) / 100 });
   });
   el("toggle").addEventListener("click", onToggle);
@@ -160,17 +159,24 @@ function bind() {
   }
 }
 
+// Not part of the Live session's setup frame, so they can be changed without
+// reopening the socket: the duck level is a gain node, the two subtitle
+// switches are a filter on what the offscreen document forwards.
+const LIVE_KEYS = ["duckLevel", "tabCaptions", "micCaptions"];
+
 async function update(patch) {
   Object.assign(settings, patch);
   await saveSettings(patch);
   render();
-  // Languages, direction and mode are all baked into the Live session's setup
-  // frame, so a change to any of them only takes effect on reconnect. The duck
-  // level and the two subtitle switches are not part of that frame — they are
-  // read live from storage — and cutting the audio to apply a checkbox would be
-  // worse than the checkbox.
-  const live = ["duckLevel", "tabCaptions", "micCaptions"];
-  if (running && !Object.keys(patch).every((key) => live.includes(key))) {
+  if (!running) return;
+  // Languages, direction and mode are all baked into the setup frame, so a
+  // change to any of them only takes effect on reconnect. Cutting the audio to
+  // apply a checkbox would be worse than the checkbox, so the rest are handed
+  // over as a message instead — the offscreen document has no access to
+  // `chrome.storage` and cannot pick them up on its own.
+  if (Object.keys(patch).every((key) => LIVE_KEYS.includes(key))) {
+    await send({ type: "live", patch });
+  } else {
     await restart();
   }
 }
@@ -221,6 +227,7 @@ async function onToggle() {
       await send({ type: "start" }, true);
       running = true;
       el("transcript").innerHTML = "";
+      el("captionNote").hidden = true;
       openLines.clear();
     }
   } catch (err) {
@@ -264,8 +271,32 @@ chrome.runtime.onMessage.addListener((msg) => {
     for (const key of [...openLines.keys()]) {
       if (key.startsWith(msg.direction)) openLines.delete(key);
     }
+  } else if (msg.type === "captions") {
+    onCaptionStatus(msg);
   }
 });
+
+/**
+ * Whether the subtitles are reaching the page, in the panel rather than in a
+ * console nobody has open.
+ *
+ * The checkbox says subtitles are on; whether Chrome let us put them there is a
+ * different question, and until now the answer was only ever visible to
+ * whoever thought to open the service worker's console.
+ */
+function onCaptionStatus({ status, detail }) {
+  const note = el("captionNote");
+  if (status === "ok" || status === "off") {
+    note.hidden = true;
+    return;
+  }
+  const lead =
+    status === "unavailable"
+      ? "Subtitles can't be shown on this page."
+      : "Subtitles stopped reaching this page.";
+  note.textContent = detail ? `${lead} ${detail}` : lead;
+  note.hidden = false;
+}
 
 function onStatus({ status, detail }) {
   if (status === "connected") setStatus("", "Connected");

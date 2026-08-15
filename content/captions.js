@@ -12,8 +12,9 @@
  *
  * Injected on demand with `chrome.scripting.executeScript` under `activeTab`,
  * so the extension needs no host permission for the sites it captions. That
- * also means it can be injected twice — the guard below makes the second one
- * a no-op rather than a duplicate overlay.
+ * also means it can be injected twice, and the second injection has to replace
+ * the first rather than either duplicating it or standing down — see the marker
+ * below.
  *
  * Every length in the stylesheet is in `px` or `em`, never `rem`. `all: initial`
  * on the host does not make `rem` safe: it still resolves against the *page's*
@@ -25,8 +26,34 @@
 
 (() => {
   const MARK = "__liveTranslatorCaptions";
-  if (window[MARK]) return;
-  window[MARK] = true;
+  const HOST_ID = "live-translator-captions";
+
+  /**
+   * Replace any previous instance instead of standing down in front of it.
+   *
+   * This used to be `if (window[MARK]) return`, which is wrong in the one case
+   * that happens constantly: reloading the extension. A reload orphans the
+   * content script in every page it was injected into — the marker and the
+   * overlay stay in the page, but the script's link back to the extension is
+   * severed, so it will never be handed another transcript. Bailing out on the
+   * marker meant the fresh injection stood down in favour of a corpse, and the
+   * tab produced no subtitles at all for the rest of its life, however many
+   * times Start was pressed. Nothing surfaced: the sends succeed, and the side
+   * panel transcript keeps filling, so it reads as a caption bug rather than an
+   * injection one.
+   *
+   * The same replacement covers the ordinary double injection, at the cost of
+   * whatever line was on screen at that moment.
+   */
+  try {
+    window[MARK]?.teardown?.();
+  } catch {
+    // An orphan throws partway through its own teardown — `chrome.runtime` is
+    // gone with the context that owned it. Its listeners died with that
+    // context, so there is nothing left to unregister; only the overlay it
+    // left in the DOM matters, and that is dealt with next.
+  }
+  document.getElementById(HOST_ID)?.remove();
 
   const MAX_LINES = 3;
   const FADE_DELAY_MS = 8000;
@@ -39,7 +66,7 @@
   const MAX_SIZE_PX = 64;
 
   const host = document.createElement("div");
-  host.id = "live-translator-captions";
+  host.id = HOST_ID;
   // The page's own stacking contexts routinely go into the millions.
   host.style.cssText =
     "position:fixed;inset:auto 0 0 0;z-index:2147483647;pointer-events:none;";
@@ -170,12 +197,15 @@
     }, FADE_DELAY_MS);
   }
 
+  // Ordered so that an orphan running this gets as far as possible before the
+  // first `chrome.*` call throws: the marker and the overlay are what a
+  // replacement instance cares about, the listeners are already dead.
   function teardown() {
+    delete window[MARK];
     host.remove();
     document.removeEventListener("fullscreenchange", onFullscreenChange);
     chrome.runtime.onMessage.removeListener(onMessage);
     chrome.storage.onChanged.removeListener(onStorageChanged);
-    delete window[MARK];
   }
 
   // Only the fullscreen element and its descendants are rendered, so a caption
@@ -197,4 +227,7 @@
     }
   }
   chrome.runtime.onMessage.addListener(onMessage);
+  // Live and reachable. The handle, rather than a bare `true`, is what lets the
+  // next injection take this instance's place cleanly.
+  window[MARK] = { teardown };
 })();

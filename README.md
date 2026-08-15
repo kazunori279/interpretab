@@ -158,6 +158,21 @@ created with `USER_MEDIA` + `AUDIO_PLAYBACK` has a lifetime independent of both,
 engine there removes the need for any keepalive hack. The service worker keeps what little state
 it has in `chrome.storage.session`, never in a module variable.
 
+**An offscreen document gets `chrome.runtime` and nothing else.** It looks like an extension page
+and it is not one: every other namespace is `undefined` there, `chrome.storage` included. That is
+worth stating plainly because of how the mistake presents. `chrome.storage.onChanged` at module
+scope is a TypeError, thrown *after* the message listener above it is registered and with every
+function below it already hoisted — so the document is created, `start` and `stop` are delivered,
+the whole audio graph runs, and the only thing lost is the statements after the throw. The
+extension works. What it stops doing is whatever that listener was for: here, the three settings
+that are supposed to apply without a reconnect (`duckLevel`, `tabCaptions`, `micCaptions`), so
+ticking *Subtitles on the page* mid-session did nothing whatsoever and nothing anywhere said so.
+Chrome logs it on `chrome://extensions` under the extension's **Errors** button, which is the
+first place to look when a feature is missing rather than broken; nothing surfaces in the side
+panel or in a page console. Those three now arrive as a `live` message, panel → worker →
+offscreen, and `tests/assets.test.js` fails the build if anything in `offscreen.js` reaches past
+`chrome.runtime` again.
+
 **Three AudioContexts, shared by sample rate rather than by direction.** Chrome caps contexts
 per document at around six and the per-direction layout needs five:
 
@@ -201,6 +216,26 @@ clicked on — `activeTab` covers that one either way.
 subtitles are injected with `chrome.scripting.executeScript` under `activeTab`, which the
 toolbar click already grants. The one host permission is the Gemini API, and there are no
 optional ones — widening the reach would require a manifest change anyone can see in the diff.
+
+**An injected overlay outlives the extension that injected it.** Reloading the extension — which
+is every second minute during development, and what a Web Store update does to everyone else —
+orphans the content script in every page it was ever injected into. The overlay and its
+`window.__liveTranslatorCaptions` marker stay in the page; the link back to the extension does
+not, so that copy will never be handed another transcript. The marker used to make the next
+injection stand down in favour of it, and the symptom was as quiet as it is misleading: audio
+translated fine, the side-panel transcript filled, every message send *succeeded*, and that tab
+simply never showed a subtitle again no matter how many times Start was pressed. So the marker
+now carries a teardown handle and a fresh injection takes the old one's place, catching the
+`chrome.runtime`-is-gone throw on the way — plus a plain `getElementById` sweep, because an
+orphan from a build that stored a bare `true` has no teardown to call.
+
+The same silence covers the other way to lose the content script, a page reload or a navigation
+mid-session: the tab id in `chrome.storage.session` stays valid, `chrome.tabs.sendMessage` starts
+rejecting, and the catch swallowed it. A failed send now puts the overlay back and re-delivers,
+at most once every 3 s so a page that genuinely refuses injection is not re-attempted for every
+increment. A same-origin reload keeps the `activeTab` grant and recovers; a cross-origin
+navigation revokes it and the re-injection fails, which is the correct answer — the page the user
+granted access to is gone.
 
 **Bundled worklets.** MV3 forbids remote code, so `audio/` carries the two AudioWorklet
 processors rather than fetching them. They are 16 and 50 lines.
@@ -477,8 +512,19 @@ plausible way to fail a review:
   comes back in the other language and neither is echoed back in its own
 - switch the microphone's mode while a session is live — it must reconnect, and the target
   language must survive the switch rather than snapping to English
+- **reload the extension, then press Start on a tab that already had subtitles on it** without
+  reloading that page. The subtitles must come back. This is the one that made them look broken
+  when they were not: the orphaned overlay's marker turned the new injection into a no-op.
+- reload the page mid-session — the subtitles must reappear within a few seconds, on the same
+  session, without pressing Stop
+- tick and untick both *Subtitles on the page* boxes **while a session is running** — each must
+  take effect on the next sentence, without a reconnect. This is what the missing `chrome.storage`
+  in the offscreen document broke.
 - an invalid key — the error must name the key, not the network
 - drag the subtitle-size slider while a session is live — the overlay must resize under it
+- finally, open `chrome://extensions` and check the extension's **Errors** button is absent. A
+  throw at module scope in the offscreen document leaves everything visibly working and only
+  shows up there.
 
 Note for whoever automates part of this: chrome-devtools MCP never lists `chrome-extension://`
 targets, so the extension's own pages cannot be driven through it. It *can* evaluate on

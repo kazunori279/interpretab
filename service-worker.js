@@ -52,6 +52,11 @@ async function handle(msg, sender) {
       // Relayed from the offscreen document, which has no tab of its own.
       await sendToCaptions(msg.payload);
       return {};
+    case "live":
+      // Relayed to the offscreen document, which cannot read storage for
+      // itself — see `applyLive` there.
+      if (await hasOffscreen()) await toOffscreen({ type: "live", patch: msg.patch });
+      return {};
     default:
       throw new Error(`Unknown message type: ${msg.type}`);
   }
@@ -118,7 +123,9 @@ async function start() {
   });
   if (!started.ok) throw new Error(started.error);
 
-  await chrome.storage.session.set({ running: true, capturedTabId: tabId });
+  // captionStatus is cleared so this run re-announces it rather than being
+  // deduplicated against whatever the last one ended on.
+  await chrome.storage.session.set({ running: true, capturedTabId: tabId, captionStatus: null });
   await ensureCaptionTab(settings);
   return { capturedTabId: tabId };
 }
@@ -140,14 +147,40 @@ function wantsCaptions(settings) {
  * choice and the only one `activeTab` lets us inject into.
  */
 async function ensureCaptionTab(settings) {
-  if (!wantsCaptions(settings)) return;
+  if (!wantsCaptions(settings)) return reportCaptions("off");
   const existing = (await chrome.storage.session.get("captionTabId")).captionTabId;
   if (existing != null) return;
   const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
   const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
-  if (tabId == null) return;
+  if (tabId == null) {
+    return reportCaptions("unavailable", "No page to put them on.");
+  }
   await chrome.storage.session.set({ captionTabId: tabId });
   await injectCaptions(tabId);
+}
+
+/**
+ * Tell the side panel whether subtitles are actually being delivered.
+ *
+ * Every way this path fails is silent by construction: injection is refused in
+ * a `catch` that only reaches the service worker's own console, and a delivery
+ * to a tab with no listener rejects with the same "Receiving end does not
+ * exist" whether the overlay was never injected or has since been torn out.
+ * Meanwhile the audio keeps translating and the side panel keeps filling, so
+ * the extension looks entirely healthy while doing none of what the checkbox
+ * says. Three separate causes hid behind that, one after another. Nothing is
+ * allowed to fail invisibly here again.
+ *
+ * Deduplicated through session storage rather than a module variable, because
+ * this worker is torn down between transcripts and would otherwise re-announce
+ * the same state forever.
+ */
+async function reportCaptions(status, detail = "") {
+  const line = detail ? `${status}: ${detail}` : status;
+  const { captionStatus } = await chrome.storage.session.get("captionStatus");
+  if (captionStatus === line) return;
+  await chrome.storage.session.set({ captionStatus: line });
+  chrome.runtime.sendMessage({ target: "ui", type: "captions", status, detail }).catch(() => {});
 }
 
 // Both subtitle switches apply mid-session — the offscreen document just stops
@@ -189,6 +222,8 @@ async function stop() {
     running: false,
     capturedTabId: null,
     captionTabId: null,
+    captionRetryAt: 0,
+    captionStatus: null,
   });
   return {};
 }
@@ -221,22 +256,59 @@ async function injectCaptions(tabId) {
       target: { tabId },
       files: ["content/captions.js"],
     });
+    await reportCaptions("ok");
+    return true;
   } catch (err) {
-    // Chrome's own pages, the Web Store, and PDF viewers refuse injection.
-    // Captions are a nicety; the side panel still shows the transcript.
+    // Chrome's own pages, the Web Store, and PDF viewers refuse injection, and
+    // so does any tab the toolbar icon was not clicked on. Captions are a
+    // nicety — the side panel still shows the transcript — but which of those
+    // it was is the user's business, so it goes on screen and not just here.
     console.warn("Captions unavailable on this page:", err.message);
+    await reportCaptions("unavailable", err.message);
+    return false;
   }
 }
+
+// A page that refuses injection refuses every attempt, and transcripts arrive
+// several times a second — so a failed delivery may only put the overlay back
+// this often.
+const REINJECT_INTERVAL_MS = 3000;
 
 async function sendToCaptions(payload) {
   const { captionTabId } = await chrome.storage.session.get("captionTabId");
   if (captionTabId == null) return;
+  const message = { target: "captions", ...payload };
   try {
-    await chrome.tabs.sendMessage(captionTabId, { target: "captions", ...payload });
+    await chrome.tabs.sendMessage(captionTabId, message);
   } catch {
-    // No content script on that tab (injection refused, or the page navigated
-    // out from under it). Nothing to do — the side panel has the transcript.
+    // Nothing is listening on that tab. Mid-session the cause is almost always
+    // that the page was reloaded or navigated, which takes the content script
+    // with it while this worker goes on addressing the same tab id — quietly,
+    // for the rest of the session, because the side panel transcript keeps
+    // filling and nothing else looks wrong. Put the overlay back and deliver.
+    //
+    // A same-origin reload keeps the `activeTab` grant, so this usually works;
+    // a cross-origin navigation revokes it and the injection below fails, which
+    // is the honest answer — the user granted access to a page that is gone.
+    if (!(await reinjectDue())) return;
+    if (!(await injectCaptions(captionTabId))) return;
+    try {
+      await chrome.tabs.sendMessage(captionTabId, message);
+    } catch (err) {
+      // Injected, and still nothing listening. The overlay's own script threw
+      // before it registered its listener — the one failure mode that leaves
+      // no trace anywhere else at all.
+      await reportCaptions("undelivered", err.message);
+    }
   }
+}
+
+async function reinjectDue() {
+  const { captionRetryAt = 0 } = await chrome.storage.session.get("captionRetryAt");
+  const now = Date.now();
+  if (now - captionRetryAt < REINJECT_INTERVAL_MS) return false;
+  await chrome.storage.session.set({ captionRetryAt: now });
+  return true;
 }
 
 // A captured tab that goes away takes its stream with it, and the offscreen

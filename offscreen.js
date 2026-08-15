@@ -89,25 +89,42 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const fail = (err) => sendResponse({ ok: false, error: String(err?.message || err) });
   if (msg.type === "start") start(msg).then(done).catch(fail);
   else if (msg.type === "stop") stop().then(done).catch(fail);
-  else return false;
+  else if (msg.type === "live") {
+    try {
+      applyLive(msg.patch);
+      done({});
+    } catch (err) {
+      fail(err);
+    }
+  } else return false;
   return true;
 });
 
-// The duck level is the one setting worth applying mid-session: it is a knob
-// people reach for while listening, and a reconnect to change it would cut the
-// audio they are adjusting.
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" || !state.settings) return;
-  if (changes.duckLevel) {
-    state.settings.duckLevel = changes.duckLevel.newValue;
-    applyDuck(state.ducked, true);
+/**
+ * The settings that take effect without reopening the sessions.
+ *
+ * The duck level is a knob people reach for while listening, and the two
+ * subtitle switches are a filter on the fan-out at the bottom of this file —
+ * reconnecting to apply either would cut the audio the user is adjusting.
+ *
+ * They are pushed in over `chrome.runtime` rather than read out of storage,
+ * which is not a style choice. **An offscreen document is granted the messaging
+ * API and nothing else: `chrome.storage` is undefined here.** This used to be a
+ * `chrome.storage.onChanged` listener at module scope, and it threw on every
+ * evaluation of this file — after the message listener above was registered and
+ * with every function below it hoisted, so start/stop and all the audio worked
+ * and the only casualty was the listener itself. The symptom was that ticking
+ * *Subtitles on the page* mid-session did nothing at all, for the rest of the
+ * session, in silence. `tests/assets.test.js` now fails the build if anything
+ * in this file reaches past `chrome.runtime` again.
+ */
+function applyLive(patch = {}) {
+  if (!state.settings) return;
+  for (const key of ["duckLevel", "tabCaptions", "micCaptions"]) {
+    if (key in patch) state.settings[key] = patch[key];
   }
-  // The subtitle switches are a filter on the fan-out below, nothing more, so
-  // they can be honoured mid-session without touching the audio graph.
-  for (const key of ["tabCaptions", "micCaptions"]) {
-    if (changes[key]) state.settings[key] = changes[key].newValue;
-  }
-});
+  if ("duckLevel" in patch) applyDuck(state.ducked, true);
+}
 
 async function start({ apiKey, streamId, settings, glossary }) {
   await ensureContexts();
