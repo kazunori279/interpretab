@@ -493,84 +493,34 @@ npm run package    # interpretab.zip, ready for the Web Store dashboard
 
 Verified 2026-08-14: 31 files, 153 KB, `manifest.json` at the root, nothing from `.git`, `tests/`,
 `store/` or `package.json`. `README.md` does ship — 24 KB of developer documentation going to
-every user, harmless but trimmable.
+every user, which is harmless.
 
 ## Before the store submission
 
-What is left between here and a listing, in the order it blocks.
+What is left between here and a listing is tracked in
+[issues](https://github.com/kazunori279/interpretab/issues) rather than here, so that its state
+is visible without reading a README diff. In the order it blocks:
 
-**1. Five screenshots, 1280×800.** The only hard blocker, and the content is still undecided.
-`store/listing.md` says what each of the five should show and why the order matters. The rules
-they must obey, from `store/justifications.md`: no real API key in frame (use `AIza…` placeholder
-text), no identifiable meeting participant, no recognisable copyrighted video frame — a talk on a
-public conference channel or a Creative Commons clip is the safe choice. `store/promo-440x280.png`
-already exists and needs nothing.
+1. [Five screenshots, 1280×800](https://github.com/kazunori279/interpretab/issues/1) — the only
+   hard blocker. `store/listing.md` says what each of the five should show and why the order
+   matters.
+2. [The manual checklist in Chrome](https://github.com/kazunori279/interpretab/issues/2) —
+   nothing automated covers any of it, and each item on it is a plausible way to fail a review.
+3. [An hour-long soak in the tab direction](https://github.com/kazunori279/interpretab/issues/3),
+   and [one of the microphone's Simultaneous
+   mode](https://github.com/kazunori279/interpretab/issues/4) if there is quota for a second
+   hour. The microphone's conversation-mode hour is [above](#soak-results--1-hour-microphone-direction-en--ja).
+4. [Registration and submission](https://github.com/kazunori279/interpretab/issues/5) — the $5
+   developer registration and the dashboard both need the author's Google account, and
+   `store/justifications.md` holds the answers the dashboard asks for.
 
-**2. The manual checklist in Chrome.** Nothing automated covers any of this, and each one is a
-plausible way to fail a review:
+Beyond the listing, [#8](https://github.com/kazunori279/interpretab/issues/8) is the interesting
+one: what it would take to get the microphone's translated voice into Meet, Zoom and the rest,
+which is the top item in [Limitations](#limitations).
 
-- close the side panel mid-capture and reopen it — the translation must keep running
-- fullscreen the video — the captions must follow it
-- both directions at once on headphones — the microphone must keep producing speech, a
-  transcript and subtitles *while the tab direction is talking over it*. This is the case that
-  was broken: one shared play-out deadline had the gate mute the mic for the whole session.
-- **Simultaneous** mode, on a long unbroken paragraph — it must keep translating all the way
-  through, not stop after the first phrase. The gate does not run in this mode for exactly this
-  reason, so this is the test that it stayed off.
-- the duplex gate itself, which is a conversation-mode test only — speak, and while your own
-  translation is playing back, keep speaking; the words spoken over it must not be interpreted a
-  second time
-- **Two-way conversation** mode — set en ⇄ ja, say something in each, and check that each one
-  comes back in the other language and neither is echoed back in its own
-- switch the microphone's mode while a session is live — it must reconnect, and the target
-  language must survive the switch rather than snapping to English
-- **reload the extension, then press Start on a tab that already had subtitles on it** without
-  reloading that page. The subtitles must come back. This is the one that made them look broken
-  when they were not: the orphaned overlay's marker turned the new injection into a no-op.
-- reload the page mid-session — the subtitles must reappear within a few seconds, on the same
-  session, without pressing Stop
-- tick and untick both *Subtitles on the page* boxes **while a session is running** — each must
-  take effect on the next sentence, without a reconnect. This is what the missing `chrome.storage`
-  in the offscreen document broke.
-- an invalid key — the error must name the key, not the network
-- drag the subtitle-size slider while a session is live — the overlay must resize under it
-- finally, open `chrome://extensions` and check the extension's **Errors** button is absent. A
-  throw at module scope in the offscreen document leaves everything visibly working and only
-  shows up there.
-
-Note for whoever automates part of this: chrome-devtools MCP never lists `chrome-extension://`
-targets, so the extension's own pages cannot be driven through it. It *can* evaluate on
-`chrome://extensions` and walk that page's shadow DOM, which is how the unpacked extension gets
-reloaded; `screencapture` plus `sips` is the fallback for anything visual.
-
-**3. An hour-long soak in the tab direction.** Only the microphone has been soaked (see above),
-and only in what is now conversation mode. Tab is the direction most people will use, runs a
-different model down a different code path, and has a direct comparison waiting in the relay's
-simultaneous-mode hour — 90.1% pass, turn-complete 0.52 s average.
-
-```bash
-node tests/soak.mjs /tmp/key.txt --direction tab --source ja --target en --voice Kyoko \
-  --duration 3600 --log soak_tab.jsonl
-```
-
-The microphone's own Simultaneous mode is now the default and has never been soaked either. It is
-the same model as the tab run against a different audio source, so the tab hour covers most of
-the risk — but if there is quota for a second hour, this is where it goes:
-
-```bash
-node tests/soak.mjs /tmp/key.txt --direction mic --mic-mode simul --duration 3600
-```
-
-Unattended, one hour, and it spends an hour of quota. Handle the key the way every run here has:
-write it to a temp file, never echo it, delete it afterwards — the Live API takes the key as a
-query parameter, so anything that dumps a handshake URL leaks it.
-
-**4. Registration and submission.** The $5 developer registration and the dashboard itself need
-the author's Google account.
-
-**Optional, not blocking.** The icon's dark tile with amber kana (candidate E5) is still a
-two-line change in `store/icon-source.html` plus a re-run of its Download button, if it is worth
-seeing against the indigo before a listing freezes it.
+A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
+temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,
+so anything that dumps a handshake URL leaks it.
 
 ## Privacy
 
