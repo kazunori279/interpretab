@@ -84,6 +84,10 @@ const state = {
   playoutEndsAt: { tab: 0, mic: 0 },
   duckTimer: null,
   ducked: false,
+  // When the microphone last carried anything above the noise floor, and the
+  // interval watching for it never having done so — see `watchMicSilence`.
+  micHeardAt: 0,
+  micSilenceTimer: null,
   active: false,
 };
 
@@ -182,6 +186,57 @@ async function openDirections(settings, streamId, glossary) {
     // mode is the agent model, which does send turnComplete.
     const out = await micOutputContext();
     state.mic = openDirection("mic", state.micStream, glossary, isSimul("mic", settings), out);
+    watchMicSilence(state.micStream);
+  }
+}
+
+/** Below this, a sample is the noise floor of a live input rather than speech. */
+const MIC_SILENCE_FLOOR = 0.002;
+
+/** How long the microphone may carry nothing at all before that is reported. */
+const MIC_SILENCE_MS = 8000;
+
+/**
+ * Say when the microphone is open and delivering silence.
+ *
+ * This failure is indistinguishable from a broken extension. The permission is
+ * granted, `getUserMedia` resolves, the session reaches Connected, the status
+ * dot is green — and no transcript ever appears, because the device Chrome
+ * picked is not the one being spoken into. Chrome takes the *system* default
+ * input and never names it anywhere the user can see, so a laptop left pointing
+ * at a virtual cable, a disconnected headset or an HDMI display looks exactly
+ * like a bug in here.
+ *
+ * Reported once per run and only after a real stretch of nothing, so a quiet
+ * few seconds before anyone speaks does not raise it. It cannot be an error:
+ * silence is also what a microphone waiting to be spoken into sounds like.
+ */
+function watchMicSilence(stream) {
+  const label = stream.getAudioTracks()[0]?.label;
+  state.micHeardAt = performance.now();
+  clearInterval(state.micSilenceTimer);
+  state.micSilenceTimer = setInterval(() => {
+    if (performance.now() - state.micHeardAt < MIC_SILENCE_MS) return;
+    clearInterval(state.micSilenceTimer);
+    state.micSilenceTimer = null;
+    post({
+      type: "micSilence",
+      detail:
+        `No sound has reached the microphone since Start. Chrome is recording ` +
+        `from ${label ? `“${label}”` : "your system's default input"} — if that ` +
+        `is not what you are speaking into, change the input device in your ` +
+        `system's sound settings and press Start again.`,
+    });
+  }, 1000);
+}
+
+/** Note that the microphone carried something, for `watchMicSilence`. */
+function noteMicLevel(samples) {
+  for (let i = 0; i < samples.length; i++) {
+    if (Math.abs(samples[i]) >= MIC_SILENCE_FLOOR) {
+      state.micHeardAt = performance.now();
+      return;
+    }
   }
 }
 
@@ -284,7 +339,10 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
   // never hears the speakers, and the simultaneous microphone, which is
   // supposed to be answered while it is still talking.
   const gated = usesDuplexGate(name, state.settings);
-  const node = makeRecorder(stream, (pcm) => {
+  const node = makeRecorder(stream, (pcm, samples) => {
+    // Before the gate, deliberately: what is being watched for is a device that
+    // never carries anything, and a gate that dropped the frame still heard it.
+    if (name === "mic") noteMicLevel(samples);
     // The mic must not hear itself being interpreted. While this direction's
     // own translated voice is playing its frames are dropped rather than sent,
     // which is only possible because this document owns both ends of that loop.
@@ -351,7 +409,9 @@ function makeRecorder(stream, onPcm) {
     channelCountMode: "explicit",
     channelInterpretation: "speakers",
   });
-  node.port.onmessage = (event) => onPcm(floatToPcm16(event.data));
+  // The floats go through as well as the PCM16: the level watch wants the
+  // samples as captured, and converting back to measure them would be silly.
+  node.port.onmessage = (event) => onPcm(floatToPcm16(event.data), event.data);
   ctx.createMediaStreamSource(stream).connect(node);
   return node;
 }
@@ -409,6 +469,8 @@ function applyDuck(shouldDuck, force = false) {
 async function stop() {
   clearInterval(state.duckTimer);
   state.duckTimer = null;
+  clearInterval(state.micSilenceTimer);
+  state.micSilenceTimer = null;
   for (const dir of [state.tab, state.mic]) {
     if (!dir) continue;
     clearTimeout(dir.acc.idle);

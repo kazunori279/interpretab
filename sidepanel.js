@@ -229,6 +229,7 @@ async function onToggle() {
       el("transcript").innerHTML = "";
       el("captionNote").hidden = true;
       el("outputNote").hidden = true;
+      el("micNote").hidden = true;
       openLines.clear();
     }
   } catch (err) {
@@ -280,6 +281,12 @@ chrome.runtime.onMessage.addListener((msg) => {
     // transcript keeps filling, and the only symptom is at the far end of a call.
     el("outputNote").textContent = msg.detail;
     el("outputNote").hidden = false;
+  } else if (msg.type === "micSilence") {
+    // The opposite case, and the one that reads as a broken extension: the
+    // microphone is open and connected and carrying nothing, so the panel is
+    // green and empty. Everything the user needs to fix it is in the message.
+    el("micNote").textContent = msg.detail;
+    el("micNote").hidden = false;
   }
 });
 
