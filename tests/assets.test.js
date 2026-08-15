@@ -175,6 +175,65 @@ test("the offscreen document reaches for no extension API but chrome.runtime", (
   assert.deepEqual([...used].sort(), ["runtime"]);
 });
 
+/**
+ * What `npm run package` would put in the ZIP, worked out from the script's own
+ * `-x` list rather than by running `zip`.
+ *
+ * The globs are matched the way zip matches them, which is the part worth
+ * stating: its `*` crosses directory separators, so `store/*` takes the whole
+ * subtree and `.*` takes every dotfile and dot-directory at once.
+ */
+function packagedFiles() {
+  const script = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")).scripts
+    .package;
+  const excludes = [...script.matchAll(/'([^']+)'/g)].map(
+    ([, glob]) =>
+      new RegExp(`^${glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`)
+  );
+  const out = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const rel = path.relative(ROOT, path.join(dir, entry.name));
+      if (excludes.some((re) => re.test(rel))) continue;
+      if (entry.isDirectory()) walk(path.join(dir, entry.name));
+      else out.push(rel);
+    }
+  };
+  walk(ROOT);
+  return new Set(out);
+}
+
+test("the package script ships the extension and nothing else", () => {
+  const zipped = packagedFiles();
+
+  // Everything Chrome loads has to be in there, named exactly as the manifest
+  // names it. A missing entry here is an extension that installs and is broken.
+  for (const reference of [
+    "manifest.json",
+    manifest.background?.service_worker,
+    manifest.side_panel?.default_path,
+    manifest.options_page,
+    ...Object.values(manifest.icons || {}),
+    ...(manifest.web_accessible_resources || []).flatMap((entry) => entry.resources || []),
+  ].filter(Boolean)) {
+    assert.ok(zipped.has(reference), `the ZIP is missing ${reference}`);
+  }
+  // The licence and the privacy policy are documents users are entitled to, and
+  // they are two files and a few KB.
+  assert.ok(zipped.has("LICENSE"));
+  assert.ok(zipped.has("PRIVACY.md"));
+
+  // The developer README is 24 KB — a quarter of the package — and it is the one
+  // file no user or reviewer opens. The rest is repository furniture.
+  for (const excluded of ["README.md", "package.json", ".gitignore"]) {
+    assert.ok(!zipped.has(excluded), `${excluded} does not belong in the ZIP`);
+  }
+  for (const dir of ["tests", "store", ".git", "node_modules"]) {
+    const leaked = [...zipped].filter((file) => file.startsWith(`${dir}/`));
+    assert.deepEqual(leaked, [], `${dir}/ leaked into the ZIP`);
+  }
+});
+
 test("the bundled glossary the options page resets to is parseable", async () => {
   const { parseGlossaryCsv } = await import("../lib/glossary.js");
   const csv = fs.readFileSync(path.join(ROOT, "data", "default-glossary.csv"), "utf8");
