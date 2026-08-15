@@ -15,6 +15,13 @@
  *   micStream ───► ctxUp (16 kHz) ─► recorder worklet ─► mic session
  *   both sessions' audio ─► ctxDown (24 kHz) ─► one player worklet each ─► speakers
  *
+ * A fourth appears only when the microphone's translated voice is sent to a
+ * chosen output device — the meeting case, where it goes to a virtual cable the
+ * call is listening to. It cannot share ctxDown, because a sink is a property of
+ * the context and the tab direction's translation has to stay on the speakers:
+ *
+ *   mic session's audio ─► ctxMicOut (24 kHz, sinkId) ─► player worklet ─► cable
+ *
  * The two directions are two entirely independent Gemini Live sessions: two
  * WebSockets, no shared state, and the API cost of both — running two different
  * models, unless the microphone is left on its default simultaneous mode, in
@@ -54,6 +61,11 @@ const state = {
   ctxPass: null,
   ctxUp: null,
   ctxDown: null,
+  // Built per run, and only when `micOutput` names a device. Unlike the three
+  // above it is closed on stop rather than kept: those hold no device or the
+  // system default, this one holds a device the user chose, and leaving it open
+  // between runs would keep a virtual cable busy for a session that has ended.
+  ctxMicOut: null,
   duckGain: null,
   tabStream: null,
   micStream: null,
@@ -142,14 +154,15 @@ async function start({ apiKey, streamId, settings, glossary }) {
     });
     startPassthrough(state.tabStream);
     // Always simultaneous translation, which never sends turnComplete.
-    state.tab = openDirection("tab", state.tabStream, glossary, true);
+    state.tab = openDirection("tab", state.tabStream, glossary, true, state.ctxDown);
   }
 
   if (settings.micEnabled) {
     state.micStream = await getMicStream();
     // Simultaneous or conversation, whichever the user picked. Conversation
     // mode is the agent model, which does send turnComplete.
-    state.mic = openDirection("mic", state.micStream, glossary, isSimul("mic", settings));
+    const out = await micOutputContext();
+    state.mic = openDirection("mic", state.micStream, glossary, isSimul("mic", settings), out);
   }
 
   startDuckLoop();
@@ -192,6 +205,44 @@ async function getMicStream() {
   }
 }
 
+/**
+ * The context the microphone's translated voice plays into.
+ *
+ * `ctxDown` — the speakers — unless a device has been chosen, which in practice
+ * means a virtual cable with a meeting listening to the other end of it. A sink
+ * belongs to the context, not to the node, so this cannot be a second output of
+ * the shared one: the tab direction's translation is playing there and has to
+ * keep playing there.
+ *
+ * A device unplugged since it was picked rejects here. That falls back to the
+ * speakers rather than failing the run — the interpretation is still worth
+ * something to whoever is in the room — and the panel is told, in as many words,
+ * that the call cannot hear it. Silently falling back would be the bad version:
+ * the symptom is at the far end, where the user cannot see it.
+ */
+async function micOutputContext() {
+  const wanted = (state.settings.micOutput || "").trim();
+  if (!wanted) return state.ctxDown;
+  const ctx = new AudioContext({ sampleRate: DOWNLINK_RATE });
+  try {
+    await ctx.setSinkId(wanted);
+    await ctx.audioWorklet.addModule("audio/pcm-player-processor.js");
+  } catch (err) {
+    await ctx.close().catch(() => {});
+    post({
+      type: "output",
+      detail:
+        `The audio output chosen in Options is not available ` +
+        `(${err?.name || err}), so your translated voice is coming out of the ` +
+        `speakers — a meeting cannot hear it. Pick another one in Options.`,
+    });
+    return state.ctxDown;
+  }
+  resume(ctx);
+  state.ctxMicOut = ctx;
+  return ctx;
+}
+
 /** Restore the captured tab's audibility, through the gain node that ducks it. */
 function startPassthrough(stream) {
   state.ctxPass = new AudioContext();
@@ -203,8 +254,8 @@ function startPassthrough(stream) {
 }
 
 /** Wire one capture stream to its own Live session, and the replies to a speaker. */
-function openDirection(name, stream, glossary, simul) {
-  const player = makePlayer();
+function openDirection(name, stream, glossary, simul, outputCtx) {
+  const player = makePlayer(outputCtx);
   const acc = { input: "", output: "", simul, idle: null };
   const session = new SessionLoop({
     apiKey: state.apiKey,
@@ -290,9 +341,9 @@ function makeRecorder(stream, onPcm) {
   return node;
 }
 
-function makePlayer() {
-  const node = new AudioWorkletNode(state.ctxDown, "pcm-player-processor");
-  node.connect(state.ctxDown.destination);
+function makePlayer(ctx) {
+  const node = new AudioWorkletNode(ctx, "pcm-player-processor");
+  node.connect(ctx.destination);
   return node;
 }
 
@@ -362,6 +413,10 @@ async function stop() {
     await state.ctxPass.close().catch(() => {});
     state.ctxPass = null;
     state.duckGain = null;
+  }
+  if (state.ctxMicOut) {
+    await state.ctxMicOut.close().catch(() => {});
+    state.ctxMicOut = null;
   }
   state.playoutEndsAt = { tab: 0, mic: 0 };
   state.ducked = false;

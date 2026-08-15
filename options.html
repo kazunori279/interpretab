@@ -12,6 +12,9 @@
       th, td { text-align: left; border-bottom: 1px solid var(--border); padding: 0.25rem 0.4rem; }
       th { color: var(--muted); font-weight: 500; }
       #glossaryList { max-height: 16rem; overflow-y: auto; border: 1px solid var(--border); border-radius: 0.3rem; }
+      /* Device labels are sentences — "MacBook Pro Speakers (Built-in)" — and the
+         side panel's 11rem cap would cut every one of them off. */
+      #micOutput { max-width: 26rem; }
       .ok { color: #188038; }
       /* A stand-in for the page behind the subtitles, so the size is judged
          against a dark video frame rather than against this white page. */
@@ -88,6 +91,30 @@
     <div class="row">
       <button id="grantMic" class="ghost">Grant microphone</button>
       <span class="note" id="micStatus"></span>
+    </div>
+
+    <h2>Audio output</h2>
+    <p class="note">
+      Where the <b>microphone</b> direction's translated voice is played. The tab
+      direction's translation always stays on the system output — that is the one
+      you are listening to. Applies the next time you press Start.
+    </p>
+    <!-- Deliberately no links to the two products named below. Every URL in this
+         extension's HTML and JS is asserted to be the Gemini API, which is what
+         makes "your audio goes to Google and nowhere else" checkable by grep as
+         well as by reading; two convenience links are not worth weakening it. -->
+    <p class="note">
+      This is how a meeting hears you. An extension cannot register a microphone,
+      so the translated voice has to reach Meet, Zoom or Teams through a virtual
+      audio device: install one — BlackHole on macOS, VB-Cable on Windows — pick
+      it here, and select that same device as the microphone inside the meeting.
+      You will not hear your own translation while it goes there; route it
+      through a macOS Multi-Output Device, or the cable's own repeater on
+      Windows, if you want to monitor it.
+    </p>
+    <div class="row">
+      <select id="micOutput" class="lang"></select>
+      <span class="note" id="micOutputStatus"></span>
     </div>
 
     <h2>Glossary</h2>

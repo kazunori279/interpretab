@@ -42,7 +42,11 @@ The translation is spoken over the video AND written on it — bottom-centre, th
 
 ▍ BOTH DIRECTIONS, AT THE SAME TIME
 
-Tab audio into your language, and your microphone into theirs. Speak English, be heard in Japanese by the people in the room with you; hear their Japanese back in English. The two run as independent sessions, so either can be switched off, and while your own translation is playing your microphone is muted automatically — the interpreter never interprets itself.
+Tab audio into your language, and your microphone into theirs. Speak English, be heard in Japanese by the people in the room with you; hear their Japanese back in English. The two run as independent sessions, so either can be switched off. In Two-way conversation mode the microphone is muted while its own translation plays, so the interpreter never interprets itself; Simultaneous mode answers while you are still talking — that is what makes it simultaneous — so wear headphones.
+
+▍ MEET, ZOOM AND TEAMS
+
+One click sets a call up: the meeting tab interpreted into your language with subtitles, your microphone interpreted into theirs, and a check of the things that would go wrong — both directions aimed at the same language, the wrong microphone mode, no output device. Hearing the remote side works immediately. Being heard by them needs a virtual audio device (see WHAT IT CANNOT DO), which Interpretab plays your translated voice into while the remote side's translation stays on your speakers.
 
 ▍ ONE MICROPHONE, TWO PEOPLE
 
@@ -80,7 +84,7 @@ Closing the side panel does not stop the translation.
 
 Honest limits, up front:
 
-• The translation of YOUR voice comes out of your own speakers. Getting it into a Meet or Zoom microphone needs a virtual audio device (BlackHole, VB-Cable) — no extension can route audio into another app.
+• The translation of YOUR voice reaches a Meet or Zoom microphone only through a virtual audio device (BlackHole, VB-Cable) — no extension can register itself as a microphone. Options → Audio output plays it into one, and the side panel's meeting setup checks the rest; installing the device is still on you.
 • Running both directions on speakers invites an echo loop. Use headphones. In Two-way conversation mode, where speaking out loud is the point, keep the microphone away from the speakers instead.
 • The glossary applies to the microphone's Two-way conversation mode only. Everything else uses Google's simultaneous-translation model, which accepts no glossary.
 • Two directions means two concurrent Gemini sessions, so roughly double the API usage on your key.

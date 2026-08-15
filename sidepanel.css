@@ -55,6 +55,13 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 }
 .direction.off { opacity: 0.55; }
 
+/* The meeting section is a heading, a paragraph and a button, so its heading row
+   has to push the button to the end rather than leave it against the text. */
+#meeting .row.heading { justify-content: space-between; }
+#meeting button { padding: 0.2rem 0.7rem; font-size: 12px; }
+#meeting ul { margin: 0; padding-left: 1rem; }
+#meeting li + li { margin-top: 0.3rem; }
+
 .row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 .row.heading { font-weight: 400; }
 .row.indent { padding-left: 1.35rem; }

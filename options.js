@@ -35,6 +35,7 @@ async function init() {
   bind();
   renderKeyStatus();
   await refreshMicStatus();
+  await loadOutputs();
   renderGlossary(await ensureGlossary());
 }
 
@@ -52,6 +53,11 @@ function bind() {
     renderCaptionSize(px);
     saveSettings({ captionSize: px });
   });
+  el("micOutput").addEventListener("change", saveOutput);
+  // Plugging in the virtual cable is often the step before opening this page,
+  // and a device list that needed a reload to notice would be the first thing
+  // to go wrong in a workflow whose whole point is a device that appears.
+  navigator.mediaDevices?.addEventListener?.("devicechange", loadOutputs);
   el("uploadGlossary").addEventListener("click", uploadGlossary);
   el("resetGlossary").addEventListener("click", resetGlossary);
 }
@@ -105,6 +111,9 @@ async function grantMic() {
     return;
   }
   await refreshMicStatus();
+  // Device labels arrive with the grant, so the list built before it is a set of
+  // anonymous ids until this runs.
+  await loadOutputs();
 }
 
 async function refreshMicStatus() {
@@ -117,6 +126,70 @@ async function refreshMicStatus() {
   } catch {
     el("micStatus").textContent = "";
   }
+}
+
+/**
+ * The output devices, for sending the microphone's translated voice somewhere
+ * other than the speakers — which in practice means a virtual cable a meeting is
+ * listening to.
+ *
+ * Two things make this list less straightforward than it looks. Labels are
+ * withheld until the origin has a media permission, so before the microphone is
+ * granted this is a list of anonymous ids and worth saying so rather than
+ * showing "Device 2". And a saved device that is no longer connected simply is
+ * not in the list: dropping it silently would reset the setting to the speakers
+ * without telling anyone, so it is kept, marked, and left selected.
+ */
+async function loadOutputs() {
+  const select = el("micOutput");
+  const status = el("micOutputStatus");
+  let devices = [];
+  let failure = "";
+  try {
+    devices = (await navigator.mediaDevices.enumerateDevices()).filter(
+      (device) => device.kind === "audiooutput"
+    );
+  } catch (err) {
+    failure = `Could not list output devices: ${err.name}.`;
+  }
+
+  select.innerHTML = "";
+  select.appendChild(new Option("System default — the speakers you are using", ""));
+  for (const device of devices) {
+    // "default" is the same thing as the empty option above, under a name that
+    // invites the user to wonder what the difference is.
+    if (!device.deviceId || device.deviceId === "default") continue;
+    const label = device.label || `Output ${device.deviceId.slice(0, 8)}…`;
+    select.appendChild(new Option(label, device.deviceId));
+  }
+  const saved = settings.micOutput || "";
+  const missing = saved && !devices.some((device) => device.deviceId === saved);
+  if (missing) select.appendChild(new Option("Saved device — not connected right now", saved));
+  select.value = saved;
+
+  if (failure) {
+    setStatus(status, failure);
+  } else if (!devices.length) {
+    setStatus(status, "No output devices visible.");
+  } else if (devices.every((device) => !device.label)) {
+    setStatus(status, "Grant the microphone above to see device names.");
+  } else if (missing) {
+    setStatus(status, "That device is not connected, so the speakers will be used instead.");
+  } else {
+    setStatus(status, "");
+  }
+}
+
+async function saveOutput() {
+  settings.micOutput = el("micOutput").value;
+  await saveSettings({ micOutput: settings.micOutput });
+  setStatus(
+    el("micOutputStatus"),
+    settings.micOutput
+      ? "Saved. Applies on next Start — and the meeting has to be told to listen to it."
+      : "Saved. The translated voice will play on the speakers.",
+    true
+  );
 }
 
 /** The voice list is bundled — it is a whitelist the API enforces, not a menu. */

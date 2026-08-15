@@ -9,6 +9,7 @@
  */
 
 import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import { MEETING_PRESET, isMeetingLayout, meetingIssues } from "./lib/meeting.js";
 import {
   agentLanguageCode,
   LANGUAGES,
@@ -146,6 +147,14 @@ function bind() {
     await fillMicTarget();
     await update({ micMode: settings.micMode });
   });
+  el("meetingPreset").addEventListener("click", async () => {
+    // The preset moves the microphone to Simultaneous, so the target list is
+    // rebuilt in the other model's code space first — the same dance the mode
+    // dropdown does, for the same reason.
+    settings.micMode = MEETING_PRESET.micMode;
+    await fillMicTarget();
+    await update({ ...MEETING_PRESET });
+  });
   el("duckLevel").addEventListener("input", () => {
     // A live key, so the slider can be dragged while listening.
     update({ duckLevel: Number(el("duckLevel").value) / 100 });
@@ -206,6 +215,7 @@ function render() {
   el("tabEnabled").closest(".direction").classList.toggle("off", !settings.tabEnabled);
   el("micEnabled").closest(".direction").classList.toggle("off", !settings.micEnabled);
   el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled);
+  renderMeeting();
 
   const hasKey = !!(settings.apiKey || "").trim();
   el("keyNote").hidden = hasKey;
@@ -214,6 +224,30 @@ function render() {
   el("toggle").classList.toggle("running", running);
   el("toggle").disabled = (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", "Idle");
+}
+
+/**
+ * The meeting section: dimmed until both directions are on, and once they are,
+ * a list of everything about the current settings that would make the call go
+ * wrong.
+ *
+ * Warnings rather than a refusal to start. Every configuration `meetingIssues`
+ * reports does run — it is just that the far end hears the wrong language, or
+ * nothing at all, and finding that out from the far end takes ten minutes.
+ */
+function renderMeeting() {
+  const on = isMeetingLayout(settings);
+  el("meeting").classList.toggle("off", !on);
+  const list = el("meetingIssues");
+  list.innerHTML = "";
+  const issues = meetingIssues(settings);
+  for (const { id, text } of issues) {
+    const li = document.createElement("li");
+    li.dataset.issue = id;
+    li.textContent = text;
+    list.appendChild(li);
+  }
+  list.hidden = !issues.length;
 }
 
 async function onToggle() {
@@ -228,6 +262,7 @@ async function onToggle() {
       running = true;
       el("transcript").innerHTML = "";
       el("captionNote").hidden = true;
+      el("outputNote").hidden = true;
       openLines.clear();
     }
   } catch (err) {
@@ -249,12 +284,18 @@ async function send(message, throwOnError = false) {
   return reply;
 }
 
-// The key is entered on the Options page, which is a different document, so the
-// panel only learns about it through storage.
+// The key and the output device are set on the Options page, which is a
+// different document, so the panel only learns about them through storage. The
+// output device matters here because the meeting warning about it is in this
+// panel, and it should stop nagging the moment the user acts on it.
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" || !changes.apiKey) return;
-  settings.apiKey = changes.apiKey.newValue;
-  if (settings.apiKey) clearError();
+  if (area !== "local") return;
+  if (!changes.apiKey && !changes.micOutput) return;
+  if (changes.apiKey) {
+    settings.apiKey = changes.apiKey.newValue;
+    if (settings.apiKey) clearError();
+  }
+  if (changes.micOutput) settings.micOutput = changes.micOutput.newValue;
   render();
 });
 
@@ -273,6 +314,12 @@ chrome.runtime.onMessage.addListener((msg) => {
     }
   } else if (msg.type === "captions") {
     onCaptionStatus(msg);
+  } else if (msg.type === "output") {
+    // The translated voice went somewhere other than where it was sent. Nothing
+    // else in the panel would show it: the session is connected and the
+    // transcript keeps filling, and the only symptom is at the far end of a call.
+    el("outputNote").textContent = msg.detail;
+    el("outputNote").hidden = false;
   }
 });
 

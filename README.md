@@ -125,12 +125,51 @@ tab audio, and the microphone's default Simultaneous mode — runs the simultane
 model, which supports neither a glossary nor system instructions. If a glossary is the reason
 you are here, that is the trade the mode switch is making.
 
+## Meetings
+
+A call wants both directions at once, aimed in opposite languages, and the side panel's **In a
+meeting? → Set up** does that in one click: tab audio on with subtitles, microphone on in
+Simultaneous mode. It deliberately does not touch the two language dropdowns — which language you
+want to hear and which one they should hear are the two things a preset cannot guess, and
+guessing them wrong is worse than leaving them alone. What it does instead is check the result,
+and say so in the panel when something would make the call go wrong:
+
+- both directions aimed at the same language, which is what the defaults give you and means the
+  remote side hears their own words paraphrased back;
+- Two-way conversation mode, which is for two people at one microphone — in a call the other side
+  arrives on the tab, already interpreted by the other direction;
+- no output device chosen, which is the next paragraph.
+
+**Hearing them works out of the box. Being heard needs a virtual audio device.** An extension has
+no API that registers an audio *input*, and Manifest V3 has nothing planned, so the translated
+voice cannot be handed to Meet as a microphone — it can only be played somewhere Meet is already
+listening:
+
+1. Install a virtual cable: [BlackHole](https://existential.audio/blackhole/) (macOS),
+   [VB-Cable](https://vb-audio.com/Cable/) (Windows).
+2. **Options → Audio output** → pick it. This routes the *microphone* direction's translated voice
+   there and nothing else; the tab direction's translation stays on your speakers, because that is
+   the one you are listening to. The panel says so loudly if the device has gone away since.
+3. In the meeting, select the same device as your microphone.
+4. Headphones. On speakers the microphone hears the call, the call hears the room, and the two
+   directions interpret each other — three hops, and browser echo cancellation is not looking at
+   the synthetic side of it.
+
+You will not hear your own translated voice while it is going down the cable. Route it through a
+macOS Multi-Output Device or VB-Cable's repeater if you want to monitor it.
+
+**Native Zoom and Teams clients are out of reach entirely** — a separate process with no tab to
+capture and no page to inject into, and `getDisplayMedia` captures system audio only on Windows
+and ChromeOS. The virtual-device recipe above is the only thing that reaches them, and it reaches
+them completely.
+
 ## Limitations
 
-- **The microphone direction's translated speech can only reach your own speakers.** Getting it
-  into a Meet or Zoom microphone needs a virtual audio device (BlackHole, VB-Cable); no
-  extension can do it. For a call, that direction is useful for subtitles and for people
-  physically in the room — not for the remote party.
+- **The microphone direction's translated speech reaches a call only through a virtual audio
+  device.** No extension can register a microphone, so the last hop is the user's: install
+  [BlackHole](https://existential.audio/blackhole/) or
+  [VB-Cable](https://vb-audio.com/Cable/), point **Options → Audio output** at it, and select it
+  as the microphone in the meeting. See [Meetings](#meetings).
 - **Running the microphone on speakers invites an echo loop.** Echo cancellation is what handles
   it in Simultaneous mode, because the duplex gate deliberately does not run there — nor on the
   tab direction's voice. Headphones are the real answer. Two-way conversation mode is the awkward
@@ -152,11 +191,12 @@ service-worker.js     switchboard only. Action click → tabCapture.getMediaStre
 offscreen.js          the engine. Owns every MediaStream, AudioContext and WebSocket.
 sidepanel.js          controls and the transcript. Closing it does not stop capture.
 content/captions.js   subtitles in a closed shadow root, injected on demand.
-options.js            API key, voice, subtitle size, glossary CSV.
+options.js            API key, voice, subtitle size, output device, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
 lib/languages.js      language and voice tables for both models.
 lib/instructions.js   the system instruction Two-way conversation mode sends.
+lib/meeting.js        the meeting preset, and what is wrong with a call's setup.
 ```
 
 **Why an offscreen document.** An MV3 service worker is torn down after ~30 seconds idle, and a
@@ -192,6 +232,13 @@ both sessions' audio ─► ctxDown (24 kHz) ─► pcm-player-processor ─► 
 
 `ctxPass` runs at the stream's native rate on purpose: pushing 48 kHz tab audio through the
 24 kHz player context would resample it down and audibly dull anything musical.
+
+A fourth appears only when **Options → Audio output** names a device — the meeting case, where
+the microphone's translated voice goes to a virtual cable instead of the speakers. It cannot be a
+second output of `ctxDown`, because a sink belongs to the context and not to the node, and the
+tab direction's translation has to keep playing where you can hear it. So the microphone gets
+`ctxMicOut` (24 kHz, `setSinkId`), built at Start and closed at Stop rather than kept like the
+other three: it holds a device the user chose, and an ended session should not keep a cable busy.
 
 **Ducking and the duplex gate share a mechanism, not a deadline.** Model audio arrives far
 faster than realtime, so "is a voice speaking right now" cannot be answered by "did a frame just
@@ -564,16 +611,17 @@ is visible without reading a README diff. In the order it blocks:
 2. [The manual checklist in Chrome](https://github.com/kazunori279/interpretab/issues/2) —
    nothing automated covers any of it, and each item on it is a plausible way to fail a review.
 3. [An hour-long soak in the tab direction](https://github.com/kazunori279/interpretab/issues/3),
-   and [one of the microphone's Simultaneous
-   mode](https://github.com/kazunori279/interpretab/issues/4) if there is quota for a second
-   hour. The microphone's conversation-mode hour is [above](#soak-results--1-hour-microphone-direction-en--ja).
+   the last of the three. Both microphone hours are above:
+   [Simultaneous](#soak-results--1-hour-microphone-simultaneous-en--ja), which is what ships, and
+   [the conversation model](#soak-results--1-hour-microphone-the-conversation-model-en--ja).
 4. [Registration and submission](https://github.com/kazunori279/interpretab/issues/5) — the $5
    developer registration and the dashboard both need the author's Google account, and
    `store/justifications.md` holds the answers the dashboard asks for.
 
-Beyond the listing, [#8](https://github.com/kazunori279/interpretab/issues/8) is the interesting
-one: what it would take to get the microphone's translated voice into Meet, Zoom and the rest,
-which is the top item in [Limitations](#limitations).
+Beyond the listing, [#9](https://github.com/kazunori279/interpretab/issues/9) is the interesting
+one: getting the microphone's translated voice into a call without asking the user to install a
+virtual audio device first. [Meetings](#meetings) is what ships instead, and it is the whole
+feature apart from that one hop.
 
 A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
 temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,

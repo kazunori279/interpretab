@@ -89,6 +89,21 @@
       </p>
     </section>
 
+    <section class="direction" id="meeting">
+      <div class="row heading">
+        <span><b>In a meeting?</b> — Meet, Zoom, Teams, in the browser</span>
+        <button id="meetingPreset" class="ghost">Set up</button>
+      </div>
+      <p class="note indent">
+        Both directions at once: the call interpreted into your language with
+        subtitles, and you interpreted into theirs. Point the two dropdowns at
+        different languages, and <b>wear headphones</b> — on speakers the
+        microphone hears the call, the call hears the room, and both directions
+        interpret each other.
+      </p>
+      <ul class="note warn indent" id="meetingIssues" hidden></ul>
+    </section>
+
     <section class="row buttons">
       <button id="toggle" class="primary">Start</button>
       <button id="openOptions" class="ghost" title="Options">Options</button>
@@ -100,6 +115,8 @@
     </p>
 
     <p class="note warn" id="captionNote" hidden></p>
+
+    <p class="note warn" id="outputNote" hidden></p>
 
     <div id="transcript"></div>
 
