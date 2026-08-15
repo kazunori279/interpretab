@@ -59,11 +59,17 @@ const state = {
   micStream: null,
   tab: null, // {session, player, node, source}
   mic: null,
-  // Wall-clock second at which the last enqueued translated audio finishes
-  // playing. Audio arrives from the model far faster than realtime, so "are we
-  // speaking right now" cannot be answered by "did a frame just arrive" — it
-  // has to be tracked as a play-out deadline.
-  playoutEndsAt: 0,
+  // Wall-clock second at which each direction's last enqueued translated audio
+  // finishes playing. Audio arrives from the model far faster than realtime, so
+  // "are we speaking right now" cannot be answered by "did a frame just arrive"
+  // — it has to be tracked as a play-out deadline.
+  //
+  // Per direction, not one shared deadline. Ducking wants either voice; the
+  // microphone gate wants only the microphone's own. Sharing one number made
+  // the gate read the tab translation as well, and simultaneous translation of
+  // a video speaks almost without pause — so with both directions on, the mic
+  // was held shut for the whole session and produced nothing at all.
+  playoutEndsAt: { tab: 0, mic: 0 },
   duckTimer: null,
   ducked: false,
   active: false,
@@ -191,11 +197,16 @@ function openDirection(name, stream, glossary, simul) {
   });
   session.start();
   const node = makeRecorder(stream, (pcm) => {
-    // The mic must not hear the interpreter. While a translated voice is
-    // playing its frames are dropped rather than sent, which is only possible
-    // because this document owns both ends of the loop. The tab feed needs no
-    // such gate: it is a digital tap and never hears the speakers.
-    if (name === "mic" && state.settings.duplexGate && speaking()) return;
+    // The mic must not hear itself being interpreted. While *this* direction's
+    // translated voice is playing its frames are dropped rather than sent,
+    // which is only possible because this document owns both ends of that loop.
+    // Deliberately not gated on the tab direction's voice as well: that one
+    // speaks continuously, so doing so would close the microphone for the whole
+    // session. Browser echo cancellation and the instruction's echo guard are
+    // what stand between the tab translation and the microphone; headphones are
+    // the real answer, as they always were. The tab feed needs no gate at all —
+    // it is a digital tap and never hears the speakers.
+    if (name === "mic" && state.settings.duplexGate && speaking("mic")) return;
     session.send(pcm);
   });
   return { session, player, node, acc };
@@ -213,7 +224,7 @@ function openDirection(name, stream, glossary, simul) {
 function onEvent(direction, ev, player, acc) {
   if (ev.type === "audio") {
     player.port.postMessage(ev.buffer);
-    noteVoiceAudio(ev.buffer.byteLength);
+    noteVoiceAudio(direction, ev.buffer.byteLength);
     return;
   }
   if (ev.type === "turnComplete") {
@@ -272,15 +283,19 @@ function floatToPcm16(input) {
   return pcm16.buffer;
 }
 
-/** Extend the play-out deadline by the duration of the audio just enqueued. */
-function noteVoiceAudio(byteLength) {
+/** Extend a direction's play-out deadline by the audio just enqueued. */
+function noteVoiceAudio(direction, byteLength) {
   const seconds = byteLength / 2 / DOWNLINK_RATE;
   const now = performance.now() / 1000;
-  state.playoutEndsAt = Math.max(state.playoutEndsAt, now) + seconds;
+  const ends = state.playoutEndsAt;
+  ends[direction] = Math.max(ends[direction] || 0, now) + seconds;
 }
 
-function speaking() {
-  return performance.now() / 1000 < state.playoutEndsAt + VOICE_RELEASE_SEC;
+/** Is *direction* speaking — or, with no direction, is either of them? */
+function speaking(direction) {
+  const ends = state.playoutEndsAt;
+  const deadline = direction ? ends[direction] || 0 : Math.max(ends.tab, ends.mic);
+  return performance.now() / 1000 < deadline + VOICE_RELEASE_SEC;
 }
 
 /**
@@ -292,6 +307,7 @@ function speaking() {
  */
 function startDuckLoop() {
   clearInterval(state.duckTimer);
+  // Either voice: whichever direction is speaking, it is speaking over the tab.
   state.duckTimer = setInterval(() => applyDuck(speaking()), 100);
 }
 
@@ -328,7 +344,7 @@ async function stop() {
     state.ctxPass = null;
     state.duckGain = null;
   }
-  state.playoutEndsAt = 0;
+  state.playoutEndsAt = { tab: 0, mic: 0 };
   state.ducked = false;
   state.apiKey = null;
   // `start` calls this first to clear any previous run. Announcing a stop that

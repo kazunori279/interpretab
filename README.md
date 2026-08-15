@@ -89,8 +89,15 @@ video. The size is in pixels rather than `rem` on purpose: `all: initial` on the
 not stop `rem` resolving against the *page's* root font size, so on any site that sets
 `html { font-size: 62.5% }` the subtitles used to come out a third smaller than everywhere else.
 
-With both directions running, the microphone is **gated while a translation is playing** — its
-audio is dropped rather than sent, so the interpreter never interprets itself.
+The microphone is **gated while its own translation is playing** — its audio is dropped rather
+than sent, so the interpreter never interprets itself.
+
+Only its own. Until this was fixed the gate read one play-out deadline shared with the tab
+direction, and simultaneous translation of a video speaks almost without a pause: with both
+directions on, the microphone was held shut for the whole session and produced nothing at all —
+no speech, no transcript, no subtitles. What stands between the *tab* translation and the
+microphone is echo cancellation and the instruction's echo guard, as it always was. Headphones
+are still the real answer.
 
 ## Glossary
 
@@ -164,11 +171,14 @@ both sessions' audio ─► ctxDown (24 kHz) ─► pcm-player-processor ─► 
 `ctxPass` runs at the stream's native rate on purpose: pushing 48 kHz tab audio through the
 24 kHz player context would resample it down and audibly dull anything musical.
 
-**Ducking and the duplex gate share one signal.** Model audio arrives far faster than realtime,
-so "is a voice speaking right now" cannot be answered by "did a frame just arrive". Each
-arriving buffer extends a play-out deadline by `byteLength / 2 / 24000` seconds; ducking and the
-microphone gate both read that deadline (plus a 400 ms release), and `duckGain` moves on a
-`setTargetAtTime` ramp so it does not click.
+**Ducking and the duplex gate share a mechanism, not a deadline.** Model audio arrives far
+faster than realtime, so "is a voice speaking right now" cannot be answered by "did a frame just
+arrive". Each arriving buffer extends a play-out deadline by `byteLength / 2 / 24000` seconds,
+and both features read a deadline plus a 400 ms release — but there is one deadline *per
+direction*, and they read different ones. Ducking wants either voice: whichever direction is
+speaking, it is speaking over the tab. The microphone gate wants only the microphone's own, for
+the reason in [What you hear](#what-you-hear). `duckGain` moves on a `setTargetAtTime` ramp so it
+does not click.
 
 **Transcripts are segmented by a silence gap, not by a turn.** Simultaneous translation never
 sends `turnComplete` — there are no turns in a continuous feed — so the accumulator that joins
@@ -458,8 +468,11 @@ plausible way to fail a review:
 
 - close the side panel mid-capture and reopen it — the translation must keep running
 - fullscreen the video — the captions must follow it
-- both directions at once on headphones — the duplex gate, i.e. the microphone muting itself
-  while a translation plays
+- both directions at once on headphones — the microphone must keep producing speech, a
+  transcript and subtitles *while the tab direction is talking over it*. This is the case that
+  was broken: one shared play-out deadline had the gate mute the mic for the whole session.
+- the duplex gate itself, which is a mic-only test now — speak, and while your own translation is
+  playing back, keep speaking; the words spoken over it must not be interpreted a second time
 - **Two-way conversation** mode — set en ⇄ ja, say something in each, and check that each one
   comes back in the other language and neither is echoed back in its own
 - switch the microphone's mode while a session is live — it must reconnect, and the target
