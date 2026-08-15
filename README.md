@@ -127,18 +127,13 @@ you are here, that is the trade the mode switch is making.
 
 ## Meetings
 
-A call wants both directions at once, aimed in opposite languages, and the side panel's **In a
-meeting? → Set up** does that in one click: tab audio on with subtitles, microphone on in
-Simultaneous mode. It deliberately does not touch the two language dropdowns — which language you
-want to hear and which one they should hear are the two things a preset cannot guess, and
-guessing them wrong is worse than leaving them alone. What it does instead is check the result,
-and say so in the panel when something would make the call go wrong:
-
-- both directions aimed at the same language, which is what the defaults give you and means the
-  remote side hears their own words paraphrased back;
-- Two-way conversation mode, which is for two people at one microphone — in a call the other side
-  arrives on the tab, already interpreted by the other direction;
-- no output device chosen, which is the next paragraph.
+A call wants both directions at once, aimed in opposite languages: **Tab audio** on with
+subtitles, pointed at your language, and **Microphone** on in Simultaneous mode, pointed at
+theirs. Two things to get right, because nothing checks them for you. Both dropdowns aimed at the
+same language is the one the defaults hand you, and it means the remote side hears their own
+words paraphrased back. And Two-way conversation is the wrong microphone mode here — it is for
+two people at one microphone, and in a call the other side arrives on the tab, already
+interpreted by the other direction.
 
 **Hearing them works out of the box. Being heard needs a virtual audio device.** An extension has
 no API that registers an audio *input*, and Manifest V3 has nothing planned, so the translated
@@ -196,7 +191,6 @@ lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
 lib/languages.js      language and voice tables for both models.
 lib/instructions.js   the system instruction Two-way conversation mode sends.
-lib/meeting.js        the meeting preset, and what is wrong with a call's setup.
 ```
 
 **Why an offscreen document.** An MV3 service worker is torn down after ~30 seconds idle, and a

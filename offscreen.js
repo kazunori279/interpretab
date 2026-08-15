@@ -145,6 +145,25 @@ async function start({ apiKey, streamId, settings, glossary }) {
   state.apiKey = apiKey;
   state.displayMap = buildDisplayMap(glossary);
 
+  // Half a run is worse than none. The microphone is the half that fails —
+  // a refused permission is the common one — and it fails *after* the tab
+  // direction is capturing, speaking and holding a socket. Without this the
+  // side panel reports the error and goes back to Idle while the tab keeps
+  // translating out loud, with no button that admits it is running.
+  try {
+    await openDirections(settings, streamId, glossary);
+  } catch (err) {
+    await stop();
+    throw err;
+  }
+
+  startDuckLoop();
+  state.active = true;
+  post({ type: "state", running: true });
+}
+
+/** Whichever of the two directions is switched on, each with its own session. */
+async function openDirections(settings, streamId, glossary) {
   if (settings.tabEnabled) {
     if (!streamId) throw new Error("No tab stream id.");
     state.tabStream = await navigator.mediaDevices.getUserMedia({
@@ -164,10 +183,6 @@ async function start({ apiKey, streamId, settings, glossary }) {
     const out = await micOutputContext();
     state.mic = openDirection("mic", state.micStream, glossary, isSimul("mic", settings), out);
   }
-
-  startDuckLoop();
-  state.active = true;
-  post({ type: "state", running: true });
 }
 
 /**

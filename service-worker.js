@@ -264,9 +264,35 @@ async function injectCaptions(tabId) {
     // nicety — the side panel still shows the transcript — but which of those
     // it was is the user's business, so it goes on screen and not just here.
     console.warn("Captions unavailable on this page:", err.message);
-    await reportCaptions("unavailable", err.message);
+    await reportCaptions("unavailable", explainInjection(err.message));
     return false;
   }
+}
+
+/**
+ * Chrome's refusals, in words the user can act on.
+ *
+ * "Cannot access contents of the page. Extension manifest must request
+ * permission to access the respective host." is what a missing `activeTab`
+ * grant looks like, and read literally it asks the user to edit a manifest they
+ * do not have. The grant is per tab and is dropped the moment that tab
+ * navigates, so the common way to see this is entirely ordinary: click the
+ * icon, press Start, follow a link. What the user has to do about it — click
+ * the icon again — appears nowhere in the message.
+ *
+ * The same string also comes back for pages no click can ever unlock, so both
+ * possibilities are named rather than guessed between: `chrome.tabs.get` cannot
+ * tell them apart either, since the URL it would need is withheld by the very
+ * permission that is missing.
+ */
+function explainInjection(message) {
+  if (!/cannot access|request permission|cannot be scripted/i.test(message)) return message;
+  return (
+    "Click the Interpretab toolbar icon on that tab and press Start again — " +
+    "Chrome only lets an extension draw on a page it was invoked on, and drops " +
+    "that the moment the page navigates. Some pages never allow it: chrome:// " +
+    "pages, the Web Store, and PDFs."
+  );
 }
 
 // A page that refuses injection refuses every attempt, and transcripts arrive
