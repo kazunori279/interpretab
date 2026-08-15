@@ -105,6 +105,14 @@ speech at all with both directions on, and gating simultaneous mode on its own v
 the first word and then nothing. What stands in place of a gate is browser echo cancellation —
 and headphones, which are the real answer in every mode.
 
+**Which microphone**, if the default is the wrong one, is **Options → Audio input**. Left unset,
+Chrome resolves "the default input" itself and names the result nowhere the user can see, so a
+machine pointing at a virtual cable, an unplugged headset or an HDMI display connects, goes
+green, and transcribes nothing — a failure with no symptom other than the absence of one. Eight
+seconds of nothing above the noise floor now puts the device actually being captured on screen,
+by name, and points at that setting. A device named there and then unplugged falls back to the
+default and says so, rather than resurrecting the silence the setting exists to end.
+
 ## Glossary
 
 Product names, people's names, and jargon are what a general model gets wrong, and getting them
@@ -186,7 +194,7 @@ service-worker.js     switchboard only. Action click → tabCapture.getMediaStre
 offscreen.js          the engine. Owns every MediaStream, AudioContext and WebSocket.
 sidepanel.js          controls and the transcript. Closing it does not stop capture.
 content/captions.js   subtitles in a closed shadow root, injected on demand.
-options.js            API key, voice, subtitle size, output device, glossary CSV.
+options.js            API key, voice, subtitle size, audio devices, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
 lib/languages.js      language and voice tables for both models.

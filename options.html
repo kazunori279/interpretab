@@ -14,7 +14,7 @@
       #glossaryList { max-height: 16rem; overflow-y: auto; border: 1px solid var(--border); border-radius: 0.3rem; }
       /* Device labels are sentences — "MacBook Pro Speakers (Built-in)" — and the
          side panel's 11rem cap would cut every one of them off. */
-      #micOutput { max-width: 26rem; }
+      #micInput, #micOutput { max-width: 26rem; }
       .ok { color: #188038; }
       /* A stand-in for the page behind the subtitles, so the size is judged
          against a dark video frame rather than against this white page. */
@@ -91,6 +91,20 @@
     <div class="row">
       <button id="grantMic" class="ghost">Grant microphone</button>
       <span class="note" id="micStatus"></span>
+    </div>
+
+    <h2>Audio input</h2>
+    <p class="note">
+      Which microphone the <b>microphone</b> direction listens to. Left on the
+      system default, Chrome picks whatever your computer currently calls the
+      input — which may be a headset you have unplugged, a monitor, or a virtual
+      cable installed for the Audio output below. That failure is silent: the
+      session connects, the panel goes green, and nothing is ever transcribed.
+      Name the device here if that happens. Applies the next time you press Start.
+    </p>
+    <div class="row">
+      <select id="micInput" class="lang"></select>
+      <span class="note" id="micInputStatus"></span>
     </div>
 
     <h2>Audio output</h2>

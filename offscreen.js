@@ -201,11 +201,12 @@ const MIC_SILENCE_MS = 8000;
  *
  * This failure is indistinguishable from a broken extension. The permission is
  * granted, `getUserMedia` resolves, the session reaches Connected, the status
- * dot is green — and no transcript ever appears, because the device Chrome
- * picked is not the one being spoken into. Chrome takes the *system* default
- * input and never names it anywhere the user can see, so a laptop left pointing
- * at a virtual cable, a disconnected headset or an HDMI display looks exactly
- * like a bug in here.
+ * dot is green — and no transcript ever appears, because the device being
+ * captured is not the one being spoken into. **Options → Audio input** is the
+ * fix and this is what points at it: left on the system default, Chrome resolves
+ * that itself and names the result nowhere the user can see, so a machine
+ * pointing at a virtual cable, a disconnected headset or an HDMI display looks
+ * exactly like a bug in here.
  *
  * Reported once per run and only after a real stretch of nothing, so a quiet
  * few seconds before anyone speaks does not raise it. It cannot be an error:
@@ -220,12 +221,12 @@ function watchMicSilence(stream) {
     clearInterval(state.micSilenceTimer);
     state.micSilenceTimer = null;
     post({
-      type: "micSilence",
+      type: "micNote",
       detail:
-        `No sound has reached the microphone since Start. Chrome is recording ` +
-        `from ${label ? `“${label}”` : "your system's default input"} — if that ` +
-        `is not what you are speaking into, change the input device in your ` +
-        `system's sound settings and press Start again.`,
+        `No sound has reached the microphone since Start. It is recording from ` +
+        `${label ? `“${label}”` : "your system's default input"} — if that is not ` +
+        `what you are speaking into, name the right one under Audio input in ` +
+        `Options and press Start again.`,
     });
   }, 1000);
 }
@@ -248,22 +249,15 @@ function noteMicLevel(samples) {
  * permission and Chrome warns if an extension declares it. What makes this
  * call succeed silently is that the grant is per extension origin, so the
  * "Grant microphone" button on the Options page — a page that *can* prompt —
- * has already obtained it. Echo cancellation is asked
- * for explicitly rather than left to the spec default, for the same reason
- * `app/static/js/audio-recorder.js` does: it is the only thing between the
- * translated speech coming out of the speakers and the mic hearing it again.
- * AGC stays off so the speaker's dynamics survive into the translation.
+ * has already obtained it.
+ *
+ * Which device that grant is spent on is `micInput`, or the system default when
+ * it is unset; the processing asked of it is in `micConstraints`.
  */
 async function getMicStream() {
+  const wanted = (state.settings.micInput || "").trim();
   try {
-    return await navigator.mediaDevices.getUserMedia({
-      audio: {
-        channelCount: 1,
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: false,
-      },
-    });
+    return await navigator.mediaDevices.getUserMedia(micConstraints(wanted));
   } catch (err) {
     if (err.name === "NotAllowedError") {
       throw new Error(
@@ -271,8 +265,40 @@ async function getMicStream() {
           "grant the microphone once, then try again."
       );
     }
-    throw err;
+    // The device named in Options has gone: unplugged, or renamed by an OS
+    // update. Falling back to the default keeps the run alive, but silently
+    // doing so is how this setting comes to exist in the first place.
+    if (!wanted) throw err;
+    post({
+      type: "micNote",
+      detail:
+        `The microphone chosen in Options is not available (${err?.name || err}), ` +
+        `so your system's default input is being used instead.`,
+    });
+    return await navigator.mediaDevices.getUserMedia(micConstraints(""));
   }
+}
+
+/**
+ * `exact`, not a preference: a device id that no longer resolves has to fail
+ * loudly here rather than quietly hand back the default input, which is the
+ * exact silence this setting exists to end.
+ *
+ * Echo cancellation is asked for explicitly rather than left to the spec
+ * default, for the same reason `app/static/js/audio-recorder.js` does: it is the
+ * only thing between the translated speech coming out of the speakers and the
+ * mic hearing it again. AGC stays off so the speaker's dynamics survive into the
+ * translation.
+ */
+function micConstraints(deviceId) {
+  const audio = {
+    channelCount: 1,
+    echoCancellation: true,
+    noiseSuppression: true,
+    autoGainControl: false,
+  };
+  if (deviceId) audio.deviceId = { exact: deviceId };
+  return { audio };
 }
 
 /**

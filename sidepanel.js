@@ -281,7 +281,7 @@ chrome.runtime.onMessage.addListener((msg) => {
     // transcript keeps filling, and the only symptom is at the far end of a call.
     el("outputNote").textContent = msg.detail;
     el("outputNote").hidden = false;
-  } else if (msg.type === "micSilence") {
+  } else if (msg.type === "micNote") {
     // The opposite case, and the one that reads as a broken extension: the
     // microphone is open and connected and carrying nothing, so the panel is
     // green and empty. Everything the user needs to fix it is in the message.

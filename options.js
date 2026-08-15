@@ -1,7 +1,7 @@
 /**
- * Options: the API key, the voice, and the glossary.
+ * Options: the API key, the voice, the audio devices, and the glossary.
  *
- * All three live in `chrome.storage.local`, which is the only store the side
+ * All of it lives in `chrome.storage.local`, which is the only store the side
  * panel, the service worker and the offscreen document can all read. Nothing
  * here is uploaded anywhere — there is no server to upload it to.
  */
@@ -35,7 +35,7 @@ async function init() {
   bind();
   renderKeyStatus();
   await refreshMicStatus();
-  await loadOutputs();
+  await loadDevices();
   renderGlossary(await ensureGlossary());
 }
 
@@ -53,11 +53,13 @@ function bind() {
     renderCaptionSize(px);
     saveSettings({ captionSize: px });
   });
-  el("micOutput").addEventListener("change", saveOutput);
-  // Plugging in the virtual cable is often the step before opening this page,
-  // and a device list that needed a reload to notice would be the first thing
-  // to go wrong in a workflow whose whole point is a device that appears.
-  navigator.mediaDevices?.addEventListener?.("devicechange", loadOutputs);
+  el("micInput").addEventListener("change", () => saveDevice(INPUT));
+  el("micOutput").addEventListener("change", () => saveDevice(OUTPUT));
+  // Plugging in the headset or the virtual cable is often the step before
+  // opening this page, and a device list that needed a reload to notice would be
+  // the first thing to go wrong in a workflow whose whole point is a device that
+  // appears.
+  navigator.mediaDevices?.addEventListener?.("devicechange", loadDevices);
   el("uploadGlossary").addEventListener("click", uploadGlossary);
   el("resetGlossary").addEventListener("click", resetGlossary);
 }
@@ -113,7 +115,7 @@ async function grantMic() {
   await refreshMicStatus();
   // Device labels arrive with the grant, so the list built before it is a set of
   // anonymous ids until this runs.
-  await loadOutputs();
+  await loadDevices();
 }
 
 async function refreshMicStatus() {
@@ -129,40 +131,82 @@ async function refreshMicStatus() {
 }
 
 /**
- * The output devices, for sending the microphone's translated voice somewhere
- * other than the speakers — which in practice means a virtual cable a meeting is
- * listening to.
+ * The two device pickers: which microphone is captured, and where the
+ * microphone direction's translated voice is played.
  *
- * Two things make this list less straightforward than it looks. Labels are
- * withheld until the origin has a media permission, so before the microphone is
- * granted this is a list of anonymous ids and worth saying so rather than
- * showing "Device 2". And a saved device that is no longer connected simply is
- * not in the list: dropping it silently would reset the setting to the speakers
- * without telling anyone, so it is kept, marked, and left selected.
+ * They are the same list-building problem twice, so they are one function and
+ * two descriptions. Both exist for the same reason, from opposite ends: Chrome
+ * resolves "the default device" on its own and tells nobody which one it chose,
+ * and being wrong about either is silent — a microphone that carries nothing, or
+ * a translated voice a meeting cannot hear.
  */
-async function loadOutputs() {
-  const select = el("micOutput");
-  const status = el("micOutputStatus");
+const INPUT = {
+  kind: "audioinput",
+  select: "micInput",
+  status: "micInputStatus",
+  key: "micInput",
+  systemLabel: "System default — whichever microphone your computer is using",
+  anonymous: "Microphone",
+  none: "No microphones visible.",
+  missing: "That microphone is not connected, so the system default will be used.",
+  saved: "Saved. Applies the next time you press Start.",
+  cleared: "Saved. The system default microphone will be used.",
+};
+
+const OUTPUT = {
+  kind: "audiooutput",
+  select: "micOutput",
+  status: "micOutputStatus",
+  key: "micOutput",
+  systemLabel: "System default — the speakers you are using",
+  anonymous: "Output",
+  none: "No output devices visible.",
+  missing: "That device is not connected, so the speakers will be used instead.",
+  saved: "Saved. Applies on next Start — and the meeting has to be told to listen to it.",
+  cleared: "Saved. The translated voice will play on the speakers.",
+};
+
+async function loadDevices() {
   let devices = [];
   let failure = "";
   try {
-    devices = (await navigator.mediaDevices.enumerateDevices()).filter(
-      (device) => device.kind === "audiooutput"
-    );
+    devices = await navigator.mediaDevices.enumerateDevices();
   } catch (err) {
-    failure = `Could not list output devices: ${err.name}.`;
+    failure = `Could not list audio devices: ${err.name}.`;
   }
+  for (const spec of [INPUT, OUTPUT]) {
+    fillDevices(
+      spec,
+      devices.filter((device) => device.kind === spec.kind),
+      failure
+    );
+  }
+}
+
+/**
+ * Two things make this less straightforward than it looks. Labels are withheld
+ * until the origin has a media permission, so before the microphone is granted
+ * this is a list of anonymous ids and worth saying so rather than showing
+ * "Device 2". And a saved device that is no longer connected simply is not in
+ * the list: dropping it silently would reset the setting to the default without
+ * telling anyone, so it is kept, marked, and left selected.
+ */
+function fillDevices(spec, devices, failure) {
+  const select = el(spec.select);
+  const status = el(spec.status);
 
   select.innerHTML = "";
-  select.appendChild(new Option("System default — the speakers you are using", ""));
+  select.appendChild(new Option(spec.systemLabel, ""));
   for (const device of devices) {
-    // "default" is the same thing as the empty option above, under a name that
-    // invites the user to wonder what the difference is.
+    // "default" is the same thing as the empty option above under a name that
+    // invites the user to wonder what the difference is, and "communications" is
+    // a second alias for it that Windows adds.
     if (!device.deviceId || device.deviceId === "default") continue;
-    const label = device.label || `Output ${device.deviceId.slice(0, 8)}…`;
+    if (device.deviceId === "communications") continue;
+    const label = device.label || `${spec.anonymous} ${device.deviceId.slice(0, 8)}…`;
     select.appendChild(new Option(label, device.deviceId));
   }
-  const saved = settings.micOutput || "";
+  const saved = settings[spec.key] || "";
   const missing = saved && !devices.some((device) => device.deviceId === saved);
   if (missing) select.appendChild(new Option("Saved device — not connected right now", saved));
   select.value = saved;
@@ -170,26 +214,20 @@ async function loadOutputs() {
   if (failure) {
     setStatus(status, failure);
   } else if (!devices.length) {
-    setStatus(status, "No output devices visible.");
+    setStatus(status, spec.none);
   } else if (devices.every((device) => !device.label)) {
     setStatus(status, "Grant the microphone above to see device names.");
   } else if (missing) {
-    setStatus(status, "That device is not connected, so the speakers will be used instead.");
+    setStatus(status, spec.missing);
   } else {
     setStatus(status, "");
   }
 }
 
-async function saveOutput() {
-  settings.micOutput = el("micOutput").value;
-  await saveSettings({ micOutput: settings.micOutput });
-  setStatus(
-    el("micOutputStatus"),
-    settings.micOutput
-      ? "Saved. Applies on next Start — and the meeting has to be told to listen to it."
-      : "Saved. The translated voice will play on the speakers.",
-    true
-  );
+async function saveDevice(spec) {
+  settings[spec.key] = el(spec.select).value;
+  await saveSettings({ [spec.key]: settings[spec.key] });
+  setStatus(el(spec.status), settings[spec.key] ? spec.saved : spec.cleared, true);
 }
 
 /** The voice list is bundled — it is a whitelist the API enforces, not a menu. */
