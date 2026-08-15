@@ -418,7 +418,8 @@ carry a glossary — which is conversation mode and nothing else — is built ar
 asked for and for the spelling the caption is supposed to show: two different questions, and a
 model that ignores the glossary and says the English term verbatim passes the second while
 failing the first. `--mic-mode` defaults to what ships, which is `simul`; the run above names
-`conversation` explicitly because that is the mode the report below was taken in.
+`conversation` explicitly because the microphone has been soaked in both modes and they are
+reported separately below.
 
 It is a port of `tests/test_long.py` from the [server version](https://github.com/kazunori279/live-translator),
 and writes the same report format on purpose, so that repo's `tests/chart_soak.py` charts a run
@@ -432,13 +433,13 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
 
-### Soak results — 1 hour, microphone direction, en → ja
+### Soak results — 1 hour, microphone, the conversation model, en → ja
 
 Taken before the microphone gained a mode switch, so it measures the agent model under the
 one-way instruction that Two-way conversation grew out of: same model, same glossary handling,
 same session machinery, a differently worded system instruction. The numbers stand for that
-lineage and not for the Simultaneous mode that now ships as the microphone's default — which has
-never been soaked in this direction, and shares its model with the tab run instead.
+lineage and not for the Simultaneous mode that now ships as the microphone's default, which is
+soaked separately below.
 
 `tests/soak_mic.report` is the run in full. The summary:
 
@@ -484,6 +485,58 @@ generator used in their ordinary sense — "the swift bird", "terraforming Mars"
 "the angle of the building" — where there is no term to render at all. What the numbers do
 support is narrower and still useful: the pronunciation instruction is a suggestion the model
 often declines, and the display-map column is what actually guarantees the caption.
+
+### Soak results — 1 hour, microphone, Simultaneous, en → ja
+
+The mode that actually ships as the microphone's default, soaked after the duplex gate was taken
+off it. `tests/soak_mic_simul.report` is the run in full:
+
+```
+node tests/soak.mjs /tmp/key.txt --direction mic --mic-mode simul --duration 3600 \
+  --source en --target ja --voice Samantha --log soak_mic_simul.jsonl
+```
+
+```
+Duration: 3611s | Iterations: 198 | Passed: 183/198 (92.4%) | Avg score: 9.3/10 | Errors: 0
+Sessions: 7 opened, 7 ready, 0 failed | goAway: 6 | server closes: 0 | handovers mid-sentence: 4
+```
+
+The session machinery behaves exactly as it does on the other model: `goAway` at 9:00, 18:00,
+27:00, 36:00, 45:00 and 54:00, not one second of drift across the hour, no session closed by the
+server, no errors. Four iterations spoke across a handover and three of them scored 9 or 10; the
+fourth scored 2, having lost most of its sentence at the seam. One in four is a small sample and
+the conversation run's five-for-five is a small sample too, so the honest reading is that a
+mid-sentence handover is usually invisible and occasionally is not.
+
+**First response is 0.00 s in all 198 iterations**, which is the metric hitting its floor rather
+than a measurement: it is clocked from the end of the spoken sentence, and this mode had already
+started answering. That is the whole point of the mode, and it is also the regression witness for
+the duplex-gate bug — under that bug the microphone shut after the first phrase and the rest of
+the sentence was never sent.
+
+Quality is the cost. 92.4% against the conversation model's 99.3%, average 9.3 against 9.8, and
+the failures are not a long tail of near-misses: three iterations scored 2. They divide into
+mis-hearings that were already wrong in the input transcription — "garlic" as "coffee", "diverse
+landscapes" as "diverse languages" — and content the translation simply dropped or swapped with
+the input transcribed correctly: "art and music" arriving as dance and music, "a balanced diet"
+gone from the sentence. Five of the fifteen failures were the former, ten the latter. Input
+transcription scored 9.86 on average and was below 9 seven times, so this model hears about as
+well as the other one and translates less carefully — which is the trade a simultaneous model
+makes, and it is worth knowing that the default mode makes it.
+
+```
+Translation Score                Turn Complete (speech-end to full translation)
+      n=198                             n=198
+ 0-2  ······················   1.5%    <2s  █████████████████████·  93.4%
+ 3-4  ······················   2.0%   2-3s  █·····················   6.6%
+ 5-6  █·····················   2.5%   3-4s  ······················   0.0%
+ 7-8  █·····················   5.1%   4-5s  ······················   0.0%
+9-10  ████████████████████··  88.9%   5-7s  ······················   0.0%
+      avg=9.33  p50=10.00              avg=0.98  p50=0.94  p90=1.85  max=2.51
+```
+
+No glossary line here: the simultaneous model takes no system instruction, so the harness skips
+glossary sentences for every simul run.
 
 There is no build. The extension directory is what ships.
 
