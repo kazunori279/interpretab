@@ -162,7 +162,7 @@ const OUTPUT = {
   anonymous: "Output",
   none: "No output devices visible.",
   missing: "That device is not connected, so the speakers will be used instead.",
-  saved: "Saved. Applies on next Start — and the meeting has to be told to listen to it.",
+  saved: "Saved. Applies on next Start — and whatever listens to that device has to be told to.",
   cleared: "Saved. The translated voice will play on the speakers.",
 };
 

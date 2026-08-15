@@ -330,7 +330,7 @@ async function micOutputContext() {
       detail:
         `The audio output chosen in Options is not available ` +
         `(${err?.name || err}), so your translated voice is coming out of the ` +
-        `speakers — a meeting cannot hear it. Pick another one in Options.`,
+        `speakers instead. Pick another one in Options.`,
     });
     return state.ctxDown;
   }
