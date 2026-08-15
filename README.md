@@ -182,7 +182,8 @@ them completely.
 - **Only Two-way conversation mode takes a glossary**, for the reason above.
 - **Two directions means two concurrent Live sessions**, so roughly double the API cost.
 - Chrome refuses script injection on its own pages, the Web Store, and PDFs, so subtitles do not
-  appear there. Capture and the side-panel transcript still work.
+  appear there — starting from a new tab is the everyday way to meet this. Capture and the
+  side-panel transcript still work, and the panel says to open an ordinary page and start again.
 - **A session cutover is short, not lossless.** See [Session expiry](#session-expiry).
 
 ## How it works

@@ -153,7 +153,11 @@ async function ensureCaptionTab(settings) {
   const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
   const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
   if (tabId == null) {
-    return reportCaptions("unavailable", "No page to put them on.");
+    return reportCaptions(
+      "unavailable",
+      "No page to put them on. Open a website, click the Interpretab toolbar " +
+        "icon there, and press Start again."
+    );
   }
   await chrome.storage.session.set({ captionTabId: tabId });
   await injectCaptions(tabId);
@@ -284,8 +288,23 @@ async function injectCaptions(tabId) {
  * possibilities are named rather than guessed between: `chrome.tabs.get` cannot
  * tell them apart either, since the URL it would need is withheld by the very
  * permission that is missing.
+ *
+ * Chrome's own pages are the exception, and worth separating because the most
+ * ordinary start there is: open a new tab, click the icon, press Start. That
+ * run works — the microphone is translating and the panel is filling — and the
+ * subtitles have nowhere to go, forever, no matter how many times the icon is
+ * clicked. Chrome says so in a different string, which is the only signal
+ * available: the URL is withheld here too.
  */
 function explainInjection(message) {
+  if (/chrome:\/\/ URL|chrome-untrusted|extensions gallery/i.test(message)) {
+    return (
+      "It is one of Chrome's own — a new tab, the settings, or the Web Store — " +
+      "and they need an ordinary web page to draw on. Open any website, click " +
+      "the Interpretab toolbar icon there, and press Start again. The translation " +
+      "itself carries on either way, and the transcript is here in the panel."
+    );
+  }
   if (!/cannot access|request permission|cannot be scripted/i.test(message)) return message;
   return (
     "Click the Interpretab toolbar icon on that tab and press Start again — " +
