@@ -181,6 +181,9 @@ them completely.
   speakers.
 - **Only Two-way conversation mode takes a glossary**, for the reason above.
 - **Two directions means two concurrent Live sessions**, so roughly double the API cost.
+- **Quality depends on the language pair, not just the model.** An hour of tab audio scored 64%
+  translating Japanese into English and 92% going the other way. See [Soak
+  results](#soak-results--1-hour-tab-audio-ja--en).
 - Chrome refuses script injection on its own pages, the Web Store, and PDFs, so subtitles do not
   appear there — starting from a new tab is the everyday way to meet this. Capture and the
   side-panel transcript still work, and the panel says to open an ordinary page and start again.
@@ -596,6 +599,60 @@ Translation Score                Turn Complete (speech-end to full translation)
 
 No glossary line here: the simultaneous model takes no system instruction, so the harness skips
 glossary sentences for every simul run.
+
+### Soak results — 1 hour, tab audio, ja → en
+
+The direction most people will use, and the first hour run on it. `tests/soak_tab.report` is the
+run in full:
+
+```
+node tests/soak.mjs /tmp/key.txt --direction tab --source ja --target en --voice Kyoko \
+  --duration 3600 --log soak_tab.jsonl
+```
+
+```
+Duration: 3600s | Iterations: 200 | Passed: 128/200 (64.0%) | Avg score: 7.8/10 | Errors: 0
+Sessions: 7 opened, 7 ready, 0 failed | goAway: 6 | server closes: 0 | handovers mid-sentence: 3
+```
+
+**The session machinery is the same on this path as on the other two.** `goAway` at 9:00, 18:00,
+27:00, 36:00, 45:00 and 54:00 — no drift across the hour, no session closed by the server, no
+errors. Three iterations spoke across a handover and scored 8, 3 and 10. Latency is the best of
+the three runs: turn-complete averages **0.23 s** against the microphone's 0.98 s, and first
+response is 0.00 s in all 200 iterations, which is this mode answering before the sentence ends
+rather than a stopwatch failing to start.
+
+**Quality is not.** 64.0% and 7.76 average, against 92.4% and 9.33 for the same simultaneous model
+on the microphone. Nothing about the shape of the hour explains it: pass rate by ten-minute block
+runs 68, 45, 62, 73, 65, 72 — noise, not decay — and the handovers are three iterations out of
+two hundred. The failures are ordinary wrong translations. Causation reversed: 自然の法則は科学の
+探求によって解き明かされる ("the laws of nature are revealed by scientific inquiry") came back as
+"the laws of nature are the foundation of scientific inquiry", twice. Words swapped for
+near-neighbours: 適度な運動 (moderate exercise) as "handmade exercise". Input transcription
+averaged 9.52, and split by outcome it was 9.88 on the sentences that passed against 8.86 on the
+ones that failed — mishearing contributes, but most failures were heard correctly and translated
+loosely. One iteration was transcribed as a sentence from earlier in the same session rather than
+the one being spoken, which is the only cross-turn contamination in the hour.
+
+**This is the language pair, not the tab path.** A 15-minute control on the same direction with
+the pair reversed — `--source en --target ja --voice Samantha`, `tests/soak_tab_control.report` —
+scored 92.2% over 51 iterations, average 9.31: the microphone's simultaneous hour to two decimal
+places. So the tab direction's code costs nothing, and Japanese into English is simply harder for
+this model than English into Japanese. Two caveats on how far that reading goes. The Japanese
+input is `say -v Kyoko`, synthetic speech with flat prosody, which is a harder listen than the
+human speech in a video; and 200 sentences of one pair is one sample of one direction, not a
+ranking of the fifty-odd languages the picker offers.
+
+```
+Translation Score                Turn Complete (speech-end to full translation)
+      n=200                             n=200
+ 0-2  █·····················   5.0%    <2s  ██████████████████████ 100.0%
+ 3-4  ██····················   8.5%   2-3s  ······················   0.0%
+ 5-6  ██····················   9.0%   3-4s  ······················   0.0%
+ 7-8  ██████················  26.0%   4-5s  ······················   0.0%
+9-10  ███████████···········  51.5%   5-7s  ······················   0.0%
+      avg=7.76  p50=9.00               avg=0.23  p50=0.03  p90=0.73  max=1.32
+```
 
 There is no build. The extension directory is what ships.
 
