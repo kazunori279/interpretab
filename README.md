@@ -126,6 +126,13 @@ The sound button stops both directions and every destination, including a microp
 listening to that device hears nothing either. Only the microphone button is greyed out, and
 only when that direction is off.
 
+**Switching the microphone into Simultaneous mutes it**, and switching into Two-way conversation
+unmutes it. The speakers mean opposite things in the two modes: simultaneous cannot gate the
+microphone while it talks, so its own voice out loud is heard again on the next frame and the
+translation degrades from there, while two-way is two people in one room and being heard is the
+whole point. It is a default and not a rule — it is applied on the way into a mode and never
+re-applied while you stay in it, so unmuting simultaneous to listen on headphones sticks.
+
 ## Glossary
 
 Product names, people's names, and jargon are what a general model gets wrong, and getting them

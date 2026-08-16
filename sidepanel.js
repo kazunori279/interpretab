@@ -131,11 +131,14 @@ function bind() {
   for (const [id, key] of [
     ["tabEnabled", "tabEnabled"],
     ["tabCaptions", "tabCaptions"],
-    ["micEnabled", "micEnabled"],
     ["micCaptions", "micCaptions"],
   ]) {
     el(id).addEventListener("change", () => update({ [key]: el(id).checked }));
   }
+  el("micEnabled").addEventListener("change", () => {
+    const on = el("micEnabled").checked;
+    update({ micEnabled: on, ...soundDefault(on, settings.micMode) });
+  });
   for (const id of ["tabTarget", "micSource", "micTarget"]) {
     el(id).addEventListener("change", () => update({ [id]: el(id).value }));
   }
@@ -145,7 +148,10 @@ function bind() {
     // before `update` restarts the session with it.
     settings.micMode = el("micMode").value;
     await fillMicTarget();
-    await update({ micMode: settings.micMode });
+    await update({
+      micMode: settings.micMode,
+      ...soundDefault(settings.micEnabled, settings.micMode),
+    });
   });
   el("duckLevel").addEventListener("input", () => {
     // A live key, so the slider can be dragged while listening.
@@ -164,6 +170,25 @@ function bind() {
       chrome.runtime.openOptionsPage();
     });
   }
+}
+
+/**
+ * What the Sound button should be set to on the way into a microphone mode.
+ *
+ * The speakers mean opposite things in the two of them. Simultaneous cannot
+ * gate the microphone while it talks — that is what simultaneous means — so its
+ * own voice, played out loud, is heard again on the next frame and the
+ * translation degrades from there. Two-way conversation is the other way round:
+ * it is two people in one room sharing a microphone, and its whole point is
+ * that both of them hear it.
+ *
+ * Applied when entering a mode, and never re-applied while the user stays in
+ * it: this is a default, not a rule, and an unmute has to survive the next
+ * checkbox. Switching the microphone off unmutes, because the reason for the
+ * mute went with it — the tab direction's translation is nobody's echo.
+ */
+function soundDefault(micEnabled, micMode) {
+  return { soundMuted: micEnabled && micMode !== "conversation" };
 }
 
 async function update(patch) {
@@ -201,6 +226,8 @@ function render() {
   el("micInto").hidden = !micSimul;
   el("micDetected").hidden = !micSimul;
   el("micNoteSimul").hidden = !micSimul;
+  // The rest of that note is the headphones warning, which is true either way.
+  el("micNoteSimulMuted").hidden = !settings.soundMuted;
   el("micSource").hidden = micSimul;
   el("micArrow").hidden = micSimul;
   el("micNoteConversation").hidden = micSimul;
