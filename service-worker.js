@@ -38,22 +38,33 @@ chrome.sidePanel.setOptions({ enabled: false }).catch(() => {});
 // `tabCapture` is gated on exactly that grant. Opening the side panel has to
 // happen inside the click handler too — `sidePanel.open()` requires a user
 // gesture and a message from the panel is not one.
-chrome.action.onClicked.addListener(async (tab) => {
-  try {
-    // Enabled first: with the global default off, this tab has no panel to open
-    // until it is given one. Awaited inside the gesture — `setOptions` is fast
-    // and `open` still counts as user-initiated after it.
-    await chrome.sidePanel.setOptions({ tabId: tab.id, path: PANEL_URL, enabled: true });
-    await chrome.sidePanel.open({ tabId: tab.id });
-  } catch (err) {
+chrome.action.onClicked.addListener((tab) => {
+  // Nothing may be awaited before `open()`. A service worker's user gesture is
+  // not the page's transient activation — it lasts for the synchronous run of
+  // this listener and no longer — so the first `await` here spends it and the
+  // click stops opening anything at all. That is exactly what an awaited
+  // `setOptions` in front of it did.
+  //
+  // The enable still has to come first, because with the global default off
+  // this tab has no panel to open yet. So it is issued and not awaited: both
+  // calls leave this worker in the order they are written and the browser
+  // handles them in that order, which is enough for `open` to find a panel.
+  chrome.sidePanel
+    .setOptions({ tabId: tab.id, path: PANEL_URL, enabled: true })
+    .catch((err) => console.warn("Could not enable the side panel here:", err));
+  chrome.sidePanel.open({ tabId: tab.id }).catch((err) => {
     console.warn("Could not open the side panel:", err);
-  }
+  });
+  onIconClick(tab.id).catch((err) => console.warn("Icon click:", err));
+});
+
+async function onIconClick(tabId) {
   // Remember which tab the user invoked us on. The side panel's Start button
   // needs a target tab, and by then the active tab may well be a different one
   // — the user clicks through to the panel, or switches away while it loads.
-  await chrome.storage.session.set({ invokedTabId: tab.id });
-  await adoptCaptionTab(tab.id);
-});
+  await chrome.storage.session.set({ invokedTabId: tabId });
+  await adoptCaptionTab(tabId);
+}
 
 /**
  * Move a running session's subtitles onto the tab just clicked.

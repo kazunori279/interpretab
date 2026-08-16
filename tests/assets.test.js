@@ -166,11 +166,20 @@ test("the side panel is scoped to a tab, and to the path the manifest names", ()
   // is passed again there because a per-tab `setOptions` replaces the whole
   // option set — a copy of `default_path`, and a blank panel when it drifts.
   const code = fs.readFileSync(path.join(ROOT, "service-worker.js"), "utf8");
-  assert.match(code, /sidePanel\.setOptions\(\{\s*enabled:\s*false\s*\}\)/);
-  const perTab = code.match(/sidePanel\.setOptions\(\{\s*tabId[^}]*path:\s*(\w+)/);
+  assert.match(code, /setOptions\(\{\s*enabled:\s*false\s*\}\)/);
+  const perTab = code.match(/setOptions\(\{\s*tabId[^}]*path:\s*(\w+)/);
   assert.ok(perTab, "no per-tab setOptions with a path");
   const url = code.match(new RegExp(`${perTab[1]}\\s*=\\s*"([^"]+)"`));
   assert.equal(url?.[1], manifest.side_panel.default_path);
+
+  // And none of it may be awaited. A service worker's user gesture lasts for
+  // the synchronous run of the click listener, not for a transient-activation
+  // window, so the first `await` in there spends it and `sidePanel.open()`
+  // starts refusing — the icon simply stops opening the panel, with the error
+  // only in the worker's own console. Every sidePanel call in this file is
+  // inside that listener or at module scope; none of them has anything to wait
+  // for, and the enable in front of `open` is ordered by being issued first.
+  assert.doesNotMatch(code, /await\s+chrome\.sidePanel/);
 });
 
 test("the offscreen document reaches for no extension API but chrome.runtime", () => {
