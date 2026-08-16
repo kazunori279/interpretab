@@ -121,10 +121,10 @@ after it. Both apply to a running session without reopening it: a mute that reco
 let through the sentence it was pressed for. Neither touches the transcript — with the sound off
 the translation still arrives in the panel and in the subtitles.
 
-The sound button is about what *you* hear, so it leaves a microphone direction that Audio output
-has routed to a device of its own alone: that voice is going to whatever is listening to the
-device, and silencing it is the microphone button's job. When there is nothing on the speakers
-to silence, the button is greyed and says why.
+The sound button stops both directions and every destination, including a microphone voice that
+**Options → Audio output** has routed to a device of its own — so while it is on, a call
+listening to that device hears nothing either. Only the microphone button is greyed out, and
+only when that direction is off.
 
 ## Glossary
 

@@ -26,11 +26,6 @@ const el = (id) => document.getElementById(id);
 
 let settings = { ...DEFAULTS };
 let running = false;
-// Set when the chosen audio output turned out not to be available and the
-// microphone's voice fell back to the speakers. That makes it something the
-// Sound button can silence after all, which the setting alone would say it is
-// not — see `render`.
-let micFellBackToSpeakers = false;
 // The bubble currently being appended to, per direction and side, so streamed
 // increments extend a line instead of starting a new one.
 const openLines = new Map();
@@ -217,11 +212,10 @@ function render() {
   const hasKey = !!(settings.apiKey || "").trim();
   el("keyNote").hidden = hasKey;
 
-  // Nothing to mute when the direction behind the button is switched off, and
-  // nothing for the sound button to silence when the only direction running is
-  // a microphone playing into a device of its own.
-  const micOnSpeakers = settings.micEnabled && (!settings.micOutput || micFellBackToSpeakers);
-  const audible = settings.tabEnabled || micOnSpeakers;
+  // Nothing to mute when the direction behind the button is switched off. The
+  // sound button stops every translated voice there is, wherever it is being
+  // played, so the only state that leaves it with nothing to do is both
+  // directions off — which is also when Start itself is disabled.
   renderMute(
     "micMute",
     settings.micMuted,
@@ -232,12 +226,9 @@ function render() {
   renderMute(
     "soundMute",
     settings.soundMuted,
-    audible,
+    settings.tabEnabled || settings.micEnabled,
     "the translated voice",
-    settings.micEnabled
-      ? "The microphone's translation goes to the output device set in Options, " +
-          "not to your speakers."
-      : "Neither direction is on."
+    "Neither direction is on."
   );
 
   el("toggle").textContent = running ? "Stop" : "Start";
@@ -282,7 +273,6 @@ async function onToggle() {
       el("captionNote").hidden = true;
       el("outputNote").hidden = true;
       el("micNote").hidden = true;
-      micFellBackToSpeakers = false;
       openLines.clear();
       await send({ type: "start" }, true);
       running = true;
@@ -336,8 +326,6 @@ chrome.runtime.onMessage.addListener((msg) => {
     // transcript keeps filling, and the only symptom is at the far end of a call.
     el("outputNote").textContent = msg.detail;
     el("outputNote").hidden = false;
-    micFellBackToSpeakers = true;
-    render();
   } else if (msg.type === "micNote") {
     // The opposite case, and the one that reads as a broken extension: the
     // microphone is open and connected and carrying nothing, so the panel is

@@ -162,9 +162,8 @@ function applyLive(patch = {}) {
  */
 function dropQueuedVoice() {
   for (const name of ["tab", "mic"]) {
-    const dir = state[name];
-    if (!dir?.audible) continue;
-    dir.player.port.postMessage({ command: "endOfAudio" });
+    if (!state[name]) continue;
+    state[name].player.port.postMessage({ command: "endOfAudio" });
     state.playoutEndsAt[name] = 0;
   }
 }
@@ -388,16 +387,11 @@ function startPassthrough(stream) {
 function openDirection(name, stream, glossary, simul, outputCtx) {
   const player = makePlayer(outputCtx);
   const acc = { input: "", output: "", simul, idle: null };
-  // Whether this direction's voice comes out of the user's own speakers. It
-  // does unless `micOutput` gave the microphone a context of its own, in which
-  // case its translation is going to whatever is listening to that device — and
-  // the Sound button, which is about what the user hears, leaves it alone.
-  const audible = outputCtx === state.ctxDown;
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
     onStatus: (status, detail) => post({ type: "status", direction: name, status, detail }),
-    onEvent: (ev) => onEvent(name, ev, player, acc, audible),
+    onEvent: (ev) => onEvent(name, ev, player, acc),
   });
   session.start();
   // Conversation mode's microphone only — see `usesDuplexGate`. Two directions
@@ -423,7 +417,7 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
     if (name === "mic" && state.settings?.micMuted) return;
     session.send(pcm);
   });
-  return { session, player, node, acc, audible };
+  return { session, player, node, acc };
 }
 
 /**
@@ -435,12 +429,18 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
  * page captions both receive whole sentences and neither has to keep its own
  * copy of the state.
  */
-function onEvent(direction, ev, player, acc, audible) {
+function onEvent(direction, ev, player, acc) {
   if (ev.type === "audio") {
     // Only the audio is dropped. The transcript of the same sentence goes on
     // arriving, so the sound can be switched off and the translation still read
     // — in the panel and, if they are on, in the subtitles on the page.
-    if (audible && state.settings?.soundMuted) return;
+    //
+    // Every direction, including a microphone playing into the device named by
+    // `micOutput`: one button that silences the translation wherever it is
+    // going beats one that silences some of it. Which does mean that a call
+    // listening to that device hears nothing while it is on — the same as the
+    // microphone button, and the same as any other mute.
+    if (state.settings?.soundMuted) return;
     player.port.postMessage(ev.buffer);
     noteVoiceAudio(direction, ev.buffer.byteLength);
     return;
