@@ -224,13 +224,20 @@ async function onToggle() {
       await send({ type: "stop" }, true);
       running = false;
     } else {
-      await send({ type: "start" }, true);
-      running = true;
+      // Cleared before the run, not after it. `start()` reports the subtitle
+      // status from inside itself — a page that refuses injection is known
+      // before it returns — so clearing on the way out raced that message and
+      // usually won, wiping the one note the user needed. Nothing re-sends it:
+      // the report is deduplicated against session storage, so every later
+      // attempt on the same page is suppressed as a repeat of what was, by
+      // then, already hidden.
       el("transcript").innerHTML = "";
       el("captionNote").hidden = true;
       el("outputNote").hidden = true;
       el("micNote").hidden = true;
       openLines.clear();
+      await send({ type: "start" }, true);
+      running = true;
     }
   } catch (err) {
     showError(err.message);
