@@ -115,8 +115,10 @@ and headphones, which are the real answer in every mode.
 Chrome resolves "the default input" itself and names the result nowhere the user can see, so a
 machine pointing at a virtual cable, an unplugged headset or an HDMI display connects, goes
 green, and transcribes nothing — a failure with no symptom other than the absence of one. Eight
-seconds of nothing above the noise floor now puts the device actually being captured on screen,
-by name, and points at that setting. A device named there and then unplugged falls back to the
+seconds from Start with nothing above the noise floor now puts the device actually being captured
+on screen, by name, and points at that setting. Only the opening stretch: the first sound of any
+kind ends the watch for the rest of the run, or a pause after a few translated words would be
+reported as the wrong microphone. A device named there and then unplugged falls back to the
 default and says so, rather than resurrecting the silence the setting exists to end.
 
 **Two mute buttons** sit beside Start. The microphone one drops its frames before they are sent,

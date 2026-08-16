@@ -95,9 +95,10 @@ const state = {
   playoutEndsAt: { tab: 0, mic: 0 },
   duckTimer: null,
   ducked: false,
-  // When the microphone last carried anything above the noise floor, and the
-  // interval watching for it never having done so — see `watchMicSilence`.
-  micHeardAt: 0,
+  // Since when the microphone has carried nothing above the noise floor, and
+  // the interval watching for it never having carried anything at all. Both are
+  // dropped for the rest of the run at the first sound — see `watchMicSilence`.
+  micSilentSince: 0,
   micSilenceTimer: null,
   // The transcript, kept here because this is the only context that outlives
   // both the side panel and the service worker — see `noteLine`.
@@ -244,13 +245,19 @@ const MIC_SILENCE_MS = 8000;
  * pointing at a virtual cable, a disconnected headset or an HDMI display looks
  * exactly like a bug in here.
  *
- * Reported once per run and only after a real stretch of nothing, so a quiet
- * few seconds before anyone speaks does not raise it. It cannot be an error:
- * silence is also what a microphone waiting to be spoken into sounds like.
+ * Asked once per run and only about the opening stretch of it: the question is
+ * whether this device ever carries anything, so the first sound answers it for
+ * good and the watch is dropped. It used to be a rolling eight seconds instead,
+ * which said "no sound has reached the microphone since Start" to someone who
+ * had been translated a moment earlier and then stopped talking — a warning
+ * that the wrong device was selected, raised by the right one being quiet.
+ *
+ * It cannot be an error either way: silence is also what a microphone waiting
+ * to be spoken into sounds like.
  */
 function watchMicSilence(stream) {
   const label = stream.getAudioTracks()[0]?.label;
-  state.micHeardAt = performance.now();
+  state.micSilentSince = performance.now();
   clearInterval(state.micSilenceTimer);
   state.micSilenceTimer = setInterval(() => {
     // A muted microphone is silent on purpose, and being told that the device
@@ -258,12 +265,11 @@ function watchMicSilence(stream) {
     // shut. The clock is pushed forward rather than paused, so the count starts
     // again from the unmute.
     if (state.settings?.micMuted) {
-      state.micHeardAt = performance.now();
+      state.micSilentSince = performance.now();
       return;
     }
-    if (performance.now() - state.micHeardAt < MIC_SILENCE_MS) return;
-    clearInterval(state.micSilenceTimer);
-    state.micSilenceTimer = null;
+    if (performance.now() - state.micSilentSince < MIC_SILENCE_MS) return;
+    stopMicSilenceWatch();
     post({
       type: "micNote",
       detail:
@@ -275,14 +281,22 @@ function watchMicSilence(stream) {
   }, 1000);
 }
 
-/** Note that the microphone carried something, for `watchMicSilence`. */
+/**
+ * Note that the microphone carried something, for `watchMicSilence`.
+ *
+ * One sound is the whole answer, so this stops looking at the samples for the
+ * rest of the run — which also takes a per-frame loop out of the hot path.
+ */
 function noteMicLevel(samples) {
+  if (!state.micSilenceTimer) return;
   for (let i = 0; i < samples.length; i++) {
-    if (Math.abs(samples[i]) >= MIC_SILENCE_FLOOR) {
-      state.micHeardAt = performance.now();
-      return;
-    }
+    if (Math.abs(samples[i]) >= MIC_SILENCE_FLOOR) return stopMicSilenceWatch();
   }
+}
+
+function stopMicSilenceWatch() {
+  clearInterval(state.micSilenceTimer);
+  state.micSilenceTimer = null;
 }
 
 /**
@@ -554,8 +568,7 @@ function applyDuck(shouldDuck, force = false) {
 async function stop() {
   clearInterval(state.duckTimer);
   state.duckTimer = null;
-  clearInterval(state.micSilenceTimer);
-  state.micSilenceTimer = null;
+  stopMicSilenceWatch();
   for (const dir of [state.tab, state.mic]) {
     if (!dir) continue;
     clearTimeout(dir.acc.idle);
