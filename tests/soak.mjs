@@ -55,6 +55,7 @@ import fs from "node:fs";
 import { buildSetup, isSimul } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
 import { DEFAULTS } from "../lib/settings.js";
+import { LANGUAGES, SIMUL_LANGUAGES } from "../lib/languages.js";
 import { applyDisplayMap, buildDisplayMap, normalizeEntry, parseGlossaryCsv } from "../lib/glossary.js";
 import {
   SCORE_BUCKETS,
@@ -140,6 +141,18 @@ if (!["simul", "conversation"].includes(micMode)) {
 }
 
 const apiKey = readKey(keyFile);
+
+/**
+ * The judge is a text model and reads its prompt as prose, so it needs the name
+ * of a language rather than a code. `--source ja` produced an hour of Norwegian:
+ * "Generate exactly one natural ja sentence" is a sentence in which "ja" is a
+ * Danish or Norwegian word, and the run then spoke it with a Japanese voice and
+ * scored the result against Japanese. Nothing failed — the numbers were simply
+ * measuring gibberish.
+ */
+const named = (code) => LANGUAGES[code] || SIMUL_LANGUAGES[code] || code;
+const sourceName = named(source);
+const targetName = named(target);
 
 const settings = {
   ...DEFAULTS,
@@ -245,9 +258,9 @@ const loop = new SessionLoop({
 
 async function generateSentence(index, term) {
   const prompt = term
-    ? `Generate exactly one natural ${source} sentence (10-20 words) that uses the term ` +
+    ? `Generate exactly one natural ${sourceName} sentence (10-20 words) that uses the term ` +
       `"${term}" naturally. Output only the sentence, no quotes or explanation.`
-    : `Generate exactly one natural ${source} sentence (10-20 words) about ` +
+    : `Generate exactly one natural ${sourceName} sentence (10-20 words) about ` +
       `${TOPICS[index % TOPICS.length]}. Output only the sentence, no quotes or explanation.`;
   return (await judge(apiKey, prompt)).replace(/^["']|["']$/g, "").trim();
 }
@@ -255,10 +268,10 @@ async function generateSentence(index, term) {
 async function verifyTranslation(original, translated) {
   const text = await judge(
     apiKey,
-    `You are a translation quality evaluator. Compare the original ${source} sentence ` +
-      `with its ${target} translation.\n\n` +
-      `Original (${source}): ${original}\n` +
-      `Translation (${target}): ${translated}\n\n` +
+    `You are a translation quality evaluator. Compare the original ${sourceName} sentence ` +
+      `with its ${targetName} translation.\n\n` +
+      `Original (${sourceName}): ${original}\n` +
+      `Translation (${targetName}): ${translated}\n\n` +
       `Score the semantic accuracy from 0 to 10 (10 = perfect). Reply in exactly this format:\n` +
       `SCORE: <number>\nPASS: <yes/no>\nREASON: <one sentence>`
   );
