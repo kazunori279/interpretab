@@ -30,7 +30,43 @@ chrome.action.onClicked.addListener(async (tab) => {
   // needs a target tab, and by then the active tab may well be a different one
   // — the user clicks through to the panel, or switches away while it loads.
   await chrome.storage.session.set({ invokedTabId: tab.id });
+  await adoptCaptionTab(tab.id);
 });
+
+/**
+ * Move a running session's subtitles onto the tab just clicked.
+ *
+ * Subtitles that had nowhere to go — started from a new tab, or from a page that
+ * has since navigated — used to need a Stop and a Start to come back, which is a
+ * reconnect and a gap in the translation to fix something that is only drawing.
+ * The click that grants `activeTab` is the whole of what was missing, so it is
+ * also the whole of the fix: from the user's side, click the icon on the page
+ * they want subtitles on and they appear there.
+ *
+ * A click is not always a request to move them, though — the icon is also how
+ * the side panel is reopened. So subtitles that are working stay where they are
+ * unless the clicked tab can actually take them, and a refusal is swallowed
+ * rather than replacing "they are on that page over there" with a failure.
+ */
+async function adoptCaptionTab(tabId) {
+  const { running, captionTabId, captionStatus } = await chrome.storage.session.get([
+    "running",
+    "captionTabId",
+    "captionStatus",
+  ]);
+  if (!running || !wantsCaptions(await loadSettings())) return;
+  const working = captionStatus === "ok";
+  if (working && tabId === captionTabId) return;
+  if (!(await injectCaptions(tabId, !working))) return;
+  // Whatever was on the old page stops there rather than sitting in the corner
+  // of it for the rest of the session, frozen on the last line it received.
+  if (captionTabId != null && captionTabId !== tabId) {
+    await chrome.tabs
+      .sendMessage(captionTabId, { target: "captions", type: "teardown" })
+      .catch(() => {});
+  }
+  await chrome.storage.session.set({ captionTabId: tabId });
+}
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg?.target !== "sw") return false;
@@ -153,11 +189,7 @@ async function ensureCaptionTab(settings) {
   const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
   const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
   if (tabId == null) {
-    return reportCaptions(
-      "unavailable",
-      "No page to put them on. Open a website, click the Interpretab toolbar " +
-        "icon there, and press Start again."
-    );
+    return reportCaptions("unavailable", "Open a website and click the toolbar icon there.");
   }
   await chrome.storage.session.set({ captionTabId: tabId });
   await injectCaptions(tabId);
@@ -254,7 +286,7 @@ async function ensureOffscreen() {
   });
 }
 
-async function injectCaptions(tabId) {
+async function injectCaptions(tabId, reportFailure = true) {
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
@@ -268,7 +300,7 @@ async function injectCaptions(tabId) {
     // nicety — the side panel still shows the transcript — but which of those
     // it was is the user's business, so it goes on screen and not just here.
     console.warn("Captions unavailable on this page:", err.message);
-    await reportCaptions("unavailable", explainInjection(err.message));
+    if (reportFailure) await reportCaptions("unavailable", explainInjection(err.message));
     return false;
   }
 }
@@ -292,26 +324,20 @@ async function injectCaptions(tabId) {
  * Chrome's own pages are the exception, and worth separating because the most
  * ordinary start there is: open a new tab, click the icon, press Start. That
  * run works — the microphone is translating and the panel is filling — and the
- * subtitles have nowhere to go, forever, no matter how many times the icon is
- * clicked. Chrome says so in a different string, which is the only signal
- * available: the URL is withheld here too.
+ * subtitles have nowhere to go until the user is somewhere else entirely, which
+ * "click the toolbar icon on that page" would never tell them. Chrome says so in
+ * a different string, which is the only signal available: the URL is withheld
+ * here too.
+ *
+ * Both instructions are a click and nothing more, because a click is now enough
+ * — see `adoptCaptionTab`.
  */
 function explainInjection(message) {
   if (/chrome:\/\/ URL|chrome-untrusted|extensions gallery/i.test(message)) {
-    return (
-      "It is one of Chrome's own — a new tab, the settings, or the Web Store — " +
-      "and they need an ordinary web page to draw on. Open any website, click " +
-      "the Interpretab toolbar icon there, and press Start again. The translation " +
-      "itself carries on either way, and the transcript is here in the panel."
-    );
+    return "Chrome's own pages can't take them. Open a website and click the toolbar icon there.";
   }
   if (!/cannot access|request permission|cannot be scripted/i.test(message)) return message;
-  return (
-    "Click the Interpretab toolbar icon on that tab and press Start again — " +
-    "Chrome only lets an extension draw on a page it was invoked on, and drops " +
-    "that the moment the page navigates. Some pages never allow it: chrome:// " +
-    "pages, the Web Store, and PDFs."
-  );
+  return "Click the toolbar icon on that page.";
 }
 
 // A page that refuses injection refuses every attempt, and transcripts arrive
