@@ -295,6 +295,15 @@ increment. A same-origin reload keeps the `activeTab` grant and recovers; a cros
 navigation revokes it and the re-injection fails, which is the correct answer — the page the user
 granted access to is gone.
 
+**Getting them back costs a click, not a restart.** Both of the ways subtitles end up with
+nowhere to go — a run started from a new tab, and a caption tab navigated away from — are fixed
+by the same thing, an `activeTab` grant, and that is exactly what a toolbar click is. So a click
+during a running session moves the subtitles onto the tab clicked, rather than only being read as
+"open the side panel". Stop-and-Start would have done it too, at the price of a reconnect and a
+gap in the translation, to repair something that only draws. A click on a page that still cannot
+take them leaves a working overlay where it is: reopening the panel from a chrome:// page is a
+click as well.
+
 **Bundled worklets.** MV3 forbids remote code, so `audio/` carries the two AudioWorklet
 processors rather than fetching them. They are 16 and 50 lines.
 
