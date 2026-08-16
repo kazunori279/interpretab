@@ -262,3 +262,23 @@ test("the bundled glossary the options page resets to is parseable", async () =>
   const csv = fs.readFileSync(path.join(ROOT, "data", "default-glossary.csv"), "utf8");
   assert.ok(parseGlossaryCsv(csv).length > 0);
 });
+
+/** Width and height out of a PNG's IHDR, which is always its first chunk. */
+function pngSize(file) {
+  const buf = fs.readFileSync(file);
+  assert.equal(buf.toString("ascii", 12, 16), "IHDR", `${path.basename(file)} is not a PNG`);
+  return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+}
+
+test("the store artwork is the size the store demands", () => {
+  // The upload form rejects anything else outright, and it rejects it after the
+  // rest of the listing has been filled in. Cheaper to catch here.
+  const dir = path.join(ROOT, "store");
+  const shots = fs.readdirSync(dir).filter((f) => /^screenshot-.*\.png$/.test(f));
+  assert.ok(shots.length > 0, "no store screenshots to check");
+  assert.ok(shots.length <= 5, `the store takes five screenshots, not ${shots.length}`);
+  for (const shot of shots) {
+    assert.deepEqual(pngSize(path.join(dir, shot)), [1280, 800], `${shot} is the wrong size`);
+  }
+  assert.deepEqual(pngSize(path.join(dir, "promo-440x280.png")), [440, 280]);
+});

@@ -129,6 +129,17 @@ Avoid: a key that is real (use `AIza…` placeholder text), any identifiable mee
 and any copyrighted video frame that is recognisable enough to be a problem. A conference talk on a
 public channel or a Creative Commons clip is the safe choice.
 
+Shot so far: `screenshot-3-glossary.png`, `screenshot-4-panel.png`, `screenshot-5-api-key.png`.
+1 and 2 need a live session on a playing video, so they are shot off the screen rather than out of
+the browser — the side panel and the tab strip are browser UI, and nothing inside the page can
+photograph them.
+
+The three that are pure extension UI were taken by loading the page into a 1280×800 iframe on an
+extension page and setting `zoom` on it: the window is whatever size it is, and a screenshot of it
+is neither the right shape nor legible once the store scales it down. The key in 5 is a fake
+written into the field, never saved — `saveKey` runs on `change`, which a script setting `.value`
+does not fire. `tests/assets.test.js` checks the dimensions of everything in here.
+
 ## Promotional tile — 440×280
 
 Required for any chance at featuring. No screenshot content — it renders too small. `promo-440x280.png`

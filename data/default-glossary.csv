@@ -1,4 +1,9 @@
 Kubernetes,クバネティス,Kubernetes
+k8s,クバネティス,Kubernetes
 Cloud Run,クラウドラン,Cloud Run
 Gemini,ジェミニ,Gemini
 Vertex AI,バーテックスエーアイ,Vertex AI
+BigQuery,ビッグクエリ,BigQuery
+GKE,ジーケーイー,Google Kubernetes Engine
+gRPC,ジーアールピーシー,gRPC
+OAuth,オーオース,OAuth
