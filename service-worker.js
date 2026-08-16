@@ -18,6 +18,16 @@ const OFFSCREEN_URL = "offscreen.html";
 const PANEL_URL = "sidepanel.html";
 
 /**
+ * The glyph each direction puts in front of the translating tab's title.
+ *
+ * A speech balloon for the tab being interpreted, a red dot for the microphone
+ * being recorded — the two say different things, and a run with both says both.
+ * `content/tab-marker.js` carries the same pair in the pattern it strips them
+ * with; `tests/tab-marker.test.js` keeps the two in step.
+ */
+const TAB_MARKS = { tab: "💬", mic: "🔴" };
+
+/**
  * The panel belongs to the tab it was opened on, not to the window.
  *
  * Chrome's default is the other one: a side panel with a `default_path` is
@@ -63,6 +73,7 @@ async function onIconClick(tabId) {
   // needs a target tab, and by then the active tab may well be a different one
   // — the user clicks through to the panel, or switches away while it loads.
   await chrome.storage.session.set({ invokedTabId: tabId });
+  await remarkTab(tabId);
   await adoptCaptionTab(tabId);
 }
 
@@ -210,8 +221,58 @@ async function start() {
   // captionStatus is cleared so this run re-announces it rather than being
   // deduplicated against whatever the last one ended on.
   await chrome.storage.session.set({ running: true, capturedTabId: tabId, captionStatus: null });
+  await markTab(settings);
   await ensureCaptionTab(settings);
   return { capturedTabId: tabId };
+}
+
+/**
+ * Say in the tab strip which tab this run belongs to.
+ *
+ * The captured tab if there is one; otherwise the tab the icon was clicked on,
+ * which for a microphone-only run is where the side panel lives — the same tab
+ * and the same reasoning as the subtitles, and the same `activeTab` grant is
+ * what allows either.
+ */
+async function markTab(settings) {
+  const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
+  const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
+  if (tabId == null) return;
+  const prefix =
+    (settings.tabEnabled ? TAB_MARKS.tab : "") + (settings.micEnabled ? TAB_MARKS.mic : "") + " ";
+  await chrome.storage.session.set({ markedTabId: tabId, tabMarkPrefix: prefix });
+  await applyTabMark(tabId, prefix);
+}
+
+async function applyTabMark(tabId, prefix) {
+  try {
+    await chrome.scripting.executeScript({ target: { tabId }, files: ["content/tab-marker.js"] });
+    await chrome.tabs.sendMessage(tabId, { target: "tabMark", type: "mark", prefix });
+  } catch (err) {
+    // Refused by the same pages that refuse subtitles, and unlike the subtitles
+    // it is not reported: this is a signpost rather than a feature, and the run
+    // it points at is running whether or not the tab says so.
+    console.warn("Could not mark the tab:", err.message);
+  }
+}
+
+/**
+ * Put the mark back on the click that grants the access to do it.
+ *
+ * A navigation takes the mark with the document it was written into, and the
+ * `activeTab` grant that would let us write it again went with it. So the mark
+ * is restored the way the subtitles are: by clicking the icon on that tab. Only
+ * on that tab — the grant is per tab, and the mark belongs to the one being
+ * translated rather than to whichever one was clicked last.
+ */
+async function remarkTab(tabId) {
+  const { running, markedTabId, tabMarkPrefix } = await chrome.storage.session.get([
+    "running",
+    "markedTabId",
+    "tabMarkPrefix",
+  ]);
+  if (!running || tabId !== markedTabId || !tabMarkPrefix) return;
+  await applyTabMark(tabId, tabMarkPrefix);
 }
 
 /** Are subtitles wanted by either of the directions that are actually running? */
@@ -302,12 +363,20 @@ async function stop() {
     await chrome.offscreen.closeDocument();
   }
   await sendToCaptions({ type: "teardown" }).catch(() => {});
+  const { markedTabId } = await chrome.storage.session.get("markedTabId");
+  if (markedTabId != null) {
+    await chrome.tabs
+      .sendMessage(markedTabId, { target: "tabMark", type: "teardown" })
+      .catch(() => {});
+  }
   await chrome.storage.session.set({
     running: false,
     capturedTabId: null,
     captionTabId: null,
     captionRetryAt: 0,
     captionStatus: null,
+    markedTabId: null,
+    tabMarkPrefix: null,
   });
   return {};
 }

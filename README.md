@@ -59,6 +59,12 @@ your mail. Switch back and it returns with its transcript. Clicking the toolbar 
 other tab brings the panel there too, so **Stop** is always one click away, and it hands the
 subtitles to that tab while it is at it.
 
+While a run is going, that tab says so in the tab strip: **💬** in front of its title for the tab
+audio being interpreted, **🔴** for the microphone being recorded, both when both are on. The
+title is the only part of a tab an extension can write — the strip is browser UI — and it is put
+back at Stop. A navigation takes the mark with the document it was written into; clicking
+the icon on that tab again restores it, the same click that brings the subtitles back.
+
 Chrome 116 or newer.
 
 ### About the key
@@ -227,6 +233,7 @@ offscreen.js          the engine. Owns every MediaStream, AudioContext and WebSo
 sidepanel.js          controls and the transcript. Scoped to one tab; closing it,
                       or leaving that tab, does not stop capture.
 content/captions.js   subtitles in a closed shadow root, injected on demand.
+content/tab-marker.js a glyph per running direction in front of the tab's title.
 options.js            API key, voice, subtitle size, audio devices, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
 lib/session-loop.js   the succession — GoAway, pre-open, drain, preroll replay.
