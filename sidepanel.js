@@ -205,8 +205,8 @@ function render() {
   el("micArrow").hidden = micSimul;
   el("micNoteConversation").hidden = micSimul;
 
-  el("tabEnabled").closest(".direction").classList.toggle("off", !settings.tabEnabled);
-  el("micEnabled").closest(".direction").classList.toggle("off", !settings.micEnabled);
+  renderDirection("tabEnabled", settings.tabEnabled);
+  renderDirection("micEnabled", settings.micEnabled);
   el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled);
 
   const hasKey = !!(settings.apiKey || "").trim();
@@ -235,6 +235,25 @@ function render() {
   el("toggle").classList.toggle("running", running);
   el("toggle").disabled = (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", "Idle");
+}
+
+/**
+ * A direction's own switch, and the settings that only mean anything once it is
+ * on.
+ *
+ * The switch keeps its full weight and stays clickable whatever the state; the
+ * languages, the slider and the subtitle checkbox under it go grey and are
+ * really disabled, not merely faded. Dimming the whole box was the version
+ * before this one, and a greyed-out checkbox is how a browser says "you cannot
+ * have this" — the wrong sentence for the one control that turns the rest back
+ * on.
+ */
+function renderDirection(checkboxId, on) {
+  const section = el(checkboxId).closest(".direction");
+  section.classList.toggle("off", !on);
+  for (const control of section.querySelectorAll("input, select")) {
+    if (control.id !== checkboxId) control.disabled = !on;
+  }
 }
 
 /**

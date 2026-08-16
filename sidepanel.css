@@ -53,7 +53,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   flex-direction: column;
   gap: 0.4rem;
 }
-.direction.off { opacity: 0.55; }
+/* Everything below the heading, and not the heading itself: dimming the whole
+   box dimmed the switch that turns it back on, which reads as "this is not
+   available" rather than "this is off". The switch is always live. */
+.direction.off > :not(.heading) { opacity: 0.55; }
 
 .row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 .row.heading { font-weight: 400; }
