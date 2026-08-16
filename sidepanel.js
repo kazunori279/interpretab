@@ -39,7 +39,34 @@ async function init() {
   render();
   const state = await send({ type: "getState" });
   running = !!state?.running;
+  restore(state);
   render();
+}
+
+/**
+ * Redraw what arrived while this panel did not exist.
+ *
+ * Opening the panel is no longer a once-per-session event: it belongs to the
+ * tab it was opened on, so every switch to another tab destroys this document
+ * and every switch back builds a fresh one. The two things that were otherwise
+ * only ever broadcast come back with the running state — the transcript from
+ * the offscreen document, the subtitle warning from session storage — and the
+ * lines still being streamed into are adopted as open, so the next increment of
+ * a half-finished sentence extends it instead of printing it again underneath.
+ */
+function restore(state) {
+  for (const line of state?.lines || []) {
+    const node = appendLine(line);
+    if (line.open) openLines.set(`${line.direction}:${line.side}`, node);
+  }
+  el("transcript").scrollTop = el("transcript").scrollHeight;
+  // One string, `${status}: ${detail}`, the shape the service worker
+  // deduplicates on.
+  const stored = state?.captionStatus;
+  if (!stored) return;
+  const at = stored.indexOf(": ");
+  if (at < 0) onCaptionStatus({ status: stored, detail: "" });
+  else onCaptionStatus({ status: stored.slice(0, at), detail: stored.slice(at + 2) });
 }
 
 /** The lists are bundled, so the dropdowns fill before the first paint. */
@@ -419,19 +446,27 @@ function onTranscript({ direction, side, text, finished }) {
   const key = `${direction}:${side}`;
   let line = openLines.get(key);
   if (!line) {
-    line = document.createElement("div");
-    line.className = `line ${side}`;
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = side === "input" ? `heard (${direction})` : `translation (${direction})`;
-    line.appendChild(tag);
-    line.appendChild(document.createElement("span"));
-    el("transcript").appendChild(line);
+    line = appendLine({ direction, side, text });
     openLines.set(key, line);
   }
   line.lastChild.textContent = text;
   if (finished) openLines.delete(key);
   el("transcript").scrollTop = el("transcript").scrollHeight;
+}
+
+/** One bubble, appended. Shared by the live feed and by `restore`. */
+function appendLine({ direction, side, text }) {
+  const line = document.createElement("div");
+  line.className = `line ${side}`;
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = side === "input" ? `heard (${direction})` : `translation (${direction})`;
+  line.appendChild(tag);
+  const body = document.createElement("span");
+  body.textContent = text;
+  line.appendChild(body);
+  el("transcript").appendChild(line);
+  return line;
 }
 
 function showError(message) {

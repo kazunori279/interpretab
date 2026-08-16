@@ -58,6 +58,11 @@ const VOICE_RELEASE_SEC = 0.4;
 // on offer, so it is the one used. Same 2s as `app/static/js/app.js`.
 const SIMUL_IDLE_MS = 2000;
 
+// How many transcript lines are kept for a side panel that is not currently
+// open. Enough to scroll back through a meeting, short enough that an hour of
+// continuous subtitling cannot grow this document without bound.
+const HISTORY_LIMIT = 200;
+
 const state = {
   settings: null,
   // Held only for the life of a run, and only so a reconnect can reopen the
@@ -94,6 +99,10 @@ const state = {
   // interval watching for it never having done so — see `watchMicSilence`.
   micHeardAt: 0,
   micSilenceTimer: null,
+  // The transcript, kept here because this is the only context that outlives
+  // both the side panel and the service worker — see `noteLine`.
+  lines: [],
+  openLines: new Map(),
   active: false,
 };
 
@@ -118,7 +127,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     } catch (err) {
       fail(err);
     }
-  } else return false;
+  } else if (msg.type === "history") done({ lines: history() });
+  else return false;
   return true;
 });
 
@@ -599,6 +609,7 @@ function resume(ctx) {
  * speech over a video is a separate decision from subtitling the video.
  */
 function post(payload) {
+  noteLine(payload);
   chrome.runtime.sendMessage({ target: "ui", ...payload }).catch(() => {});
   const perDirection =
     (payload.type === "transcript" && payload.side === "output") ||
@@ -609,6 +620,52 @@ function post(payload) {
   if (perDirection || payload.type === "state") {
     chrome.runtime.sendMessage({ target: "sw", type: "caption", payload }).catch(() => {});
   }
+}
+
+/**
+ * Keep a copy of the transcript, for a side panel that is not there to hear it.
+ *
+ * The panel is scoped to one tab, so its document is torn down every time the
+ * user looks at another one and the lines that arrive meanwhile have nobody to
+ * arrive at. This mirrors what the panel would have drawn — the same open-line
+ * bookkeeping, keyed by direction and side, so a streamed increment extends a
+ * line instead of appending a new one — and hands the result over on `history`
+ * when a panel comes back.
+ *
+ * Only the current run: this document is created at Start and closed at Stop,
+ * which is exactly the span the transcript belongs to.
+ */
+function noteLine(payload) {
+  if (payload.type === "turnComplete") {
+    for (const key of [...state.openLines.keys()]) {
+      if (key.startsWith(payload.direction)) state.openLines.delete(key);
+    }
+    return;
+  }
+  if (payload.type !== "transcript") return;
+  const { direction, side, text, finished } = payload;
+  const key = `${direction}:${side}`;
+  let line = state.openLines.get(key);
+  if (!line) {
+    line = { direction, side, text };
+    state.lines.push(line);
+    if (state.lines.length > HISTORY_LIMIT) state.lines.shift();
+    state.openLines.set(key, line);
+  }
+  line.text = text;
+  if (finished) state.openLines.delete(key);
+}
+
+/**
+ * The transcript so far, with the lines still being streamed into marked.
+ *
+ * A panel that redraws an unfinished line has to know it is unfinished:
+ * otherwise the next increment of it — the same sentence, one word longer —
+ * arrives as a line of its own and the text is on screen twice.
+ */
+function history() {
+  const open = new Set(state.openLines.values());
+  return state.lines.map((line) => ({ ...line, open: open.has(line) }));
 }
 
 function captionsOn(direction) {

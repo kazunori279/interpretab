@@ -15,6 +15,24 @@ import { loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 
 const OFFSCREEN_URL = "offscreen.html";
+const PANEL_URL = "sidepanel.html";
+
+/**
+ * The panel belongs to the tab it was opened on, not to the window.
+ *
+ * Chrome's default is the other one: a side panel with a `default_path` is
+ * offered on every tab and, once opened, stays open across tab switches — so
+ * the controls for a translation of *this* tab follow the user onto their mail
+ * and their calendar. Disabling the global default and enabling the panel per
+ * tab in the click handler below turns it into what it is: a thing attached to
+ * a page. The toolbar icon still summons it anywhere, which is what keeps Stop
+ * reachable from a tab that was never translating.
+ *
+ * Run at module scope, so it is re-applied on every wake of this worker rather
+ * than trusted to survive in whatever Chrome persists. It is idempotent, and a
+ * per-tab enable set by an earlier click wins over it.
+ */
+chrome.sidePanel.setOptions({ enabled: false }).catch(() => {});
 
 // The action click is what grants `activeTab` on the current tab, and
 // `tabCapture` is gated on exactly that grant. Opening the side panel has to
@@ -22,6 +40,10 @@ const OFFSCREEN_URL = "offscreen.html";
 // gesture and a message from the panel is not one.
 chrome.action.onClicked.addListener(async (tab) => {
   try {
+    // Enabled first: with the global default off, this tab has no panel to open
+    // until it is given one. Awaited inside the gesture — `setOptions` is fast
+    // and `open` still counts as user-initiated after it.
+    await chrome.sidePanel.setOptions({ tabId: tab.id, path: PANEL_URL, enabled: true });
     await chrome.sidePanel.open({ tabId: tab.id });
   } catch (err) {
     console.warn("Could not open the side panel:", err);
@@ -98,12 +120,27 @@ async function handle(msg, sender) {
   }
 }
 
+/**
+ * Everything the side panel cannot remember for itself.
+ *
+ * Now that the panel is scoped to one tab, its document is destroyed on every
+ * tab switch and rebuilt on the way back — several times in a session that used
+ * to build it once. So the transcript and the subtitle note cannot only be
+ * broadcast, they have to be fetchable: the transcript from the offscreen
+ * document, which lives for the whole run, and the note from session storage,
+ * where it is already kept for deduplication.
+ */
 async function getState() {
-  const { running = false, capturedTabId = null } = await chrome.storage.session.get([
-    "running",
-    "capturedTabId",
-  ]);
-  return { running, capturedTabId };
+  const {
+    running = false,
+    capturedTabId = null,
+    captionStatus = null,
+  } = await chrome.storage.session.get(["running", "capturedTabId", "captionStatus"]);
+  let lines = [];
+  if (running && (await hasOffscreen())) {
+    lines = (await toOffscreen({ type: "history" }).catch(() => null))?.lines || [];
+  }
+  return { running, capturedTabId, captionStatus, lines };
 }
 
 async function targetTab() {

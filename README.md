@@ -53,6 +53,12 @@ Not on the Chrome Web Store yet; load it unpacked.
    it.
 5. Pick your languages in the side panel and click **Start**.
 
+The panel belongs to the tab you opened it on. Switch to another tab and it is not there —
+Interpretab is translating *that* page, and its controls have no business following you onto
+your mail. Switch back and it returns with its transcript. Clicking the toolbar icon on any
+other tab brings the panel there too, so **Stop** is always one click away, and it hands the
+subtitles to that tab while it is at it.
+
 Chrome 116 or newer.
 
 ### About the key
@@ -216,7 +222,8 @@ service-worker.js     switchboard only. Action click → tabCapture.getMediaStre
                       create the offscreen document, open the side panel, inject
                       the caption script. Holds no audio and no socket.
 offscreen.js          the engine. Owns every MediaStream, AudioContext and WebSocket.
-sidepanel.js          controls and the transcript. Closing it does not stop capture.
+sidepanel.js          controls and the transcript. Scoped to one tab; closing it,
+                      or leaving that tab, does not stop capture.
 content/captions.js   subtitles in a closed shadow root, injected on demand.
 options.js            API key, voice, subtitle size, audio devices, glossary CSV.
 lib/live-session.js   one WebSocket to the Live API: framing in, framing out.
@@ -230,6 +237,15 @@ side panel dies when it is closed — neither can hold a live capture. An offscr
 created with `USER_MEDIA` + `AUDIO_PLAYBACK` has a lifetime independent of both, so putting the
 engine there removes the need for any keepalive hack. The service worker keeps what little state
 it has in `chrome.storage.session`, never in a module variable.
+
+**Why the offscreen document keeps the transcript.** Scoping the panel to a tab —
+`sidePanel.setOptions({enabled: false})` globally, enabled per tab in the action click — means
+its document is destroyed and rebuilt every time the user looks at something else, several times
+in a session that used to build it once. Anything only ever *broadcast* is therefore lost, so the
+transcript is also held by the offscreen document, the one context that lives for the whole run,
+capped at the last 200 lines and handed over on a `history` message when a panel comes back. The
+lines still being streamed into are marked as open in that reply, or the next increment of a
+half-finished sentence would print it a second time underneath the first.
 
 **An offscreen document gets `chrome.runtime` and nothing else.** It looks like an extension page
 and it is not one: every other namespace is `undefined` there, `chrome.storage` included. That is

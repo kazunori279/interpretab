@@ -159,6 +159,20 @@ test("every element the panel and the options page reach for exists", () => {
   assert.deepEqual(missing, []);
 });
 
+test("the side panel is scoped to a tab, and to the path the manifest names", () => {
+  // Two halves of one behaviour, and either alone is broken: without the global
+  // `enabled: false` the panel follows the user onto every other tab, and
+  // without the per-tab enable the toolbar icon opens nothing at all. The path
+  // is passed again there because a per-tab `setOptions` replaces the whole
+  // option set — a copy of `default_path`, and a blank panel when it drifts.
+  const code = fs.readFileSync(path.join(ROOT, "service-worker.js"), "utf8");
+  assert.match(code, /sidePanel\.setOptions\(\{\s*enabled:\s*false\s*\}\)/);
+  const perTab = code.match(/sidePanel\.setOptions\(\{\s*tabId[^}]*path:\s*(\w+)/);
+  assert.ok(perTab, "no per-tab setOptions with a path");
+  const url = code.match(new RegExp(`${perTab[1]}\\s*=\\s*"([^"]+)"`));
+  assert.equal(url?.[1], manifest.side_panel.default_path);
+});
+
 test("the offscreen document reaches for no extension API but chrome.runtime", () => {
   // An offscreen document is granted the messaging API and nothing else. Every
   // other namespace is `undefined` there, so `chrome.storage.onChanged` is not
