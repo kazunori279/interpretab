@@ -113,6 +113,19 @@ seconds of nothing above the noise floor now puts the device actually being capt
 by name, and points at that setting. A device named there and then unplugged falls back to the
 default and says so, rather than resurrecting the silence the setting exists to end.
 
+**Two mute buttons** sit beside Start. The microphone one drops its frames before they are sent,
+so what is said while it is on is not heard, not translated, and not charged for. The sound one
+drops the translated voice before it is played — including what the player had already buffered,
+which is usually seconds ahead of what you are hearing, so it stops mid-sentence rather than
+after it. Both apply to a running session without reopening it: a mute that reconnected would
+let through the sentence it was pressed for. Neither touches the transcript — with the sound off
+the translation still arrives in the panel and in the subtitles.
+
+The sound button is about what *you* hear, so it leaves a microphone direction that Audio output
+has routed to a device of its own alone: that voice is going to whatever is listening to the
+device, and silencing it is the microphone button's job. When there is nothing on the speakers
+to silence, the button is greyed and says why.
+
 ## Glossary
 
 Product names, people's names, and jargon are what a general model gets wrong, and getting them

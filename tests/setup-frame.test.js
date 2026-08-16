@@ -20,6 +20,7 @@ import {
   buildSetup,
   endpointUrl,
   isSimul,
+  LIVE_KEYS,
   parseDuration,
   usesDuplexGate,
   arrayToBase64,
@@ -198,4 +199,16 @@ test("arrayToBase64 round-trips a PCM buffer", () => {
   // reinterpreting the bytes as Int16.
   const bytes = Uint8Array.from(Buffer.from(encoded, "base64"));
   assert.deepEqual(new Int16Array(bytes.buffer), pcm);
+});
+
+test("every live-patchable key is a setting that exists", () => {
+  // A typo here is silent in both directions: the panel writes a key nothing
+  // reads, and `applyLive` copies it onto a settings object nothing consults.
+  for (const key of LIVE_KEYS) {
+    assert.ok(key in DEFAULTS, `${key} is patched live but is not a setting`);
+  }
+  // And none of them may be in the setup frame, or patching would leave the
+  // session running with the old value while the panel showed the new one.
+  const frame = JSON.stringify(buildSetup("mic", { ...DEFAULTS, ...SETTINGS }, []));
+  for (const key of LIVE_KEYS) assert.ok(!frame.includes(key), `${key} is in the setup frame`);
 });

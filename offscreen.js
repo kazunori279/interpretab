@@ -33,7 +33,13 @@
  * resample it down and audibly dull anything musical.
  */
 
-import { buildSetup, isSimul, usesDuplexGate, UPLINK_RATE } from "./lib/live-session.js";
+import {
+  buildSetup,
+  isSimul,
+  LIVE_KEYS,
+  usesDuplexGate,
+  UPLINK_RATE,
+} from "./lib/live-session.js";
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
 
@@ -136,10 +142,31 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
  */
 function applyLive(patch = {}) {
   if (!state.settings) return;
-  for (const key of ["duckLevel", "tabCaptions", "micCaptions"]) {
+  for (const key of LIVE_KEYS) {
     if (key in patch) state.settings[key] = patch[key];
   }
   if ("duckLevel" in patch) applyDuck(state.ducked, true);
+  if (patch.soundMuted) dropQueuedVoice();
+}
+
+/**
+ * Throw away the translated audio already queued, not only the audio still to
+ * come.
+ *
+ * The model returns a sentence far faster than it takes to say it, so at any
+ * moment the player holds seconds of speech nobody has heard yet. Muting the
+ * incoming frames alone would leave all of it to play out, and the button would
+ * look broken for as long as the sentence lasted. Clearing the play-out deadline
+ * with it lets the duck release on the next tick instead of holding the tab
+ * audio down for a translation that is no longer coming.
+ */
+function dropQueuedVoice() {
+  for (const name of ["tab", "mic"]) {
+    const dir = state[name];
+    if (!dir?.audible) continue;
+    dir.player.port.postMessage({ command: "endOfAudio" });
+    state.playoutEndsAt[name] = 0;
+  }
 }
 
 async function start({ apiKey, streamId, settings, glossary }) {
@@ -217,6 +244,14 @@ function watchMicSilence(stream) {
   state.micHeardAt = performance.now();
   clearInterval(state.micSilenceTimer);
   state.micSilenceTimer = setInterval(() => {
+    // A muted microphone is silent on purpose, and being told that the device
+    // might be the wrong one is no help while the user is the one holding it
+    // shut. The clock is pushed forward rather than paused, so the count starts
+    // again from the unmute.
+    if (state.settings?.micMuted) {
+      state.micHeardAt = performance.now();
+      return;
+    }
     if (performance.now() - state.micHeardAt < MIC_SILENCE_MS) return;
     clearInterval(state.micSilenceTimer);
     state.micSilenceTimer = null;
@@ -353,11 +388,16 @@ function startPassthrough(stream) {
 function openDirection(name, stream, glossary, simul, outputCtx) {
   const player = makePlayer(outputCtx);
   const acc = { input: "", output: "", simul, idle: null };
+  // Whether this direction's voice comes out of the user's own speakers. It
+  // does unless `micOutput` gave the microphone a context of its own, in which
+  // case its translation is going to whatever is listening to that device — and
+  // the Sound button, which is about what the user hears, leaves it alone.
+  const audible = outputCtx === state.ctxDown;
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
     onStatus: (status, detail) => post({ type: "status", direction: name, status, detail }),
-    onEvent: (ev) => onEvent(name, ev, player, acc),
+    onEvent: (ev) => onEvent(name, ev, player, acc, audible),
   });
   session.start();
   // Conversation mode's microphone only — see `usesDuplexGate`. Two directions
@@ -376,9 +416,14 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
     // continuously, so reading it here would close the microphone for the whole
     // session.
     if (gated && speaking("mic")) return;
+    // Muted at the last possible moment, and by dropping frames rather than by
+    // closing anything: the session stays open, so unmuting is the next frame
+    // rather than a reconnect — and nothing said while it is on is sent, which
+    // means nothing said while it is on is transcribed, spoken or charged for.
+    if (name === "mic" && state.settings?.micMuted) return;
     session.send(pcm);
   });
-  return { session, player, node, acc };
+  return { session, player, node, acc, audible };
 }
 
 /**
@@ -390,8 +435,12 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
  * page captions both receive whole sentences and neither has to keep its own
  * copy of the state.
  */
-function onEvent(direction, ev, player, acc) {
+function onEvent(direction, ev, player, acc, audible) {
   if (ev.type === "audio") {
+    // Only the audio is dropped. The transcript of the same sentence goes on
+    // arriving, so the sound can be switched off and the translation still read
+    // — in the panel and, if they are on, in the subtitles on the page.
+    if (audible && state.settings?.soundMuted) return;
     player.port.postMessage(ev.buffer);
     noteVoiceAudio(direction, ev.buffer.byteLength);
     return;
