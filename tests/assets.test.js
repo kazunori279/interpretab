@@ -247,11 +247,14 @@ test("the package script ships the extension and nothing else", () => {
   assert.ok(zipped.has("PRIVACY.md"));
 
   // The developer README is 24 KB — a quarter of the package — and it is the one
-  // file no user or reviewer opens. The rest is repository furniture.
-  for (const excluded of ["README.md", "package.json", ".gitignore"]) {
+  // file no user or reviewer opens. index.md is the GitHub Pages front page, which
+  // is the same thing for a different audience: it links to images under store/,
+  // which the ZIP does not carry. The rest is repository furniture.
+  for (const excluded of ["README.md", "index.md", "package.json", ".gitignore"]) {
     assert.ok(!zipped.has(excluded), `${excluded} does not belong in the ZIP`);
   }
-  for (const dir of ["tests", "store", ".git", "node_modules"]) {
+  // ja/ is the translated Pages front page, and the same reasoning applies.
+  for (const dir of ["ja", "tests", "store", ".git", "node_modules"]) {
     const leaked = [...zipped].filter((file) => file.startsWith(`${dir}/`));
     assert.deepEqual(leaked, [], `${dir}/ leaked into the ZIP`);
   }
