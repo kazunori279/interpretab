@@ -129,10 +129,17 @@ Avoid: a key that is real (use `AIza…` placeholder text), any identifiable mee
 and any copyrighted video frame that is recognisable enough to be a problem. A conference talk on a
 public channel or a Creative Commons clip is the safe choice.
 
-Shot so far: `screenshot-3-glossary.png`, `screenshot-4-panel.png`, `screenshot-5-api-key.png`.
-1 and 2 need a live session on a playing video, so they are shot off the screen rather than out of
-the browser — the side panel and the tab strip are browser UI, and nothing inside the page can
-photograph them.
+The five, in order: `screenshot-1-subtitles.png`, `screenshot-2-microphone.png`,
+`screenshot-3-glossary.png`, `screenshot-4-panel.png`, `screenshot-5-api-key.png`. Two more that
+did not make the cut are kept as `spare-*.png`: the same tab-audio frame translated into Brazilian
+Portuguese, and the options page with the panel beside it.
+
+1 and 2 are off-screen captures of a live session — the side panel is browser UI, and nothing
+inside a page can photograph it. A browser window is wider than 1.6:1, so they are scaled to the
+full 1280 and the strips above and below are filled by stretching the capture's own edge rows,
+which reads as more window rather than as a border. 2 ended up being the microphone direction
+alone rather than both directions at once: the panel's `HEARD (MIC)` / `TRANSLATION (MIC)` pair
+tells the two-way story more legibly than two subtitle lines stacked on one page.
 
 The three that are pure extension UI were taken by loading the page into a 1280×800 iframe on an
 extension page and setting `zoom` on it: the window is whatever size it is, and a screenshot of it
