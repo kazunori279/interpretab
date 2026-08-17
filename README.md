@@ -45,7 +45,9 @@ mapped, and a language only one of them has falls back to the top of the list.
 
 ## Install
 
-Not on the Chrome Web Store yet; load it unpacked.
+Submitted to the Chrome Web Store and
+[waiting for review](https://chromewebstore.google.com/detail/johnocemcoemdhiogfgmphjmlghgdnbm);
+until it is through, load it unpacked.
 
 1. Clone this repo.
 2. Open `chrome://extensions`, turn on **Developer mode** (top right), click **Load unpacked**
@@ -83,7 +85,8 @@ it](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) 
 API — which is what the Cloud console now calls `generativelanguage.googleapis.com`, and the
 only place the restriction can be set: AI Studio's key page offers nothing but rename and
 delete. Two directions at once means two concurrent Live sessions and roughly
-double the cost; the side panel says so when both are on.
+double the cost — and rather than only warning about that, the side panel counts what the run has
+actually spent as it runs. See [What a run costs](#what-a-run-costs).
 
 ## What you hear
 
@@ -220,7 +223,8 @@ them completely.
   gate and the instruction's echo guard, and still wants distance between the microphone and the
   speakers.
 - **Only Two-way conversation mode takes a glossary**, for the reason above.
-- **Two directions means two concurrent Live sessions**, so roughly double the API cost.
+- **Two directions means two concurrent Live sessions**, so roughly double the API cost. The side
+  panel prices the run as it goes; see [What a run costs](#what-a-run-costs).
 - **Quality depends on the language pair, not just the model.** An hour of tab audio scored 64%
   translating Japanese into English and 92% going the other way. See [Soak
   results](#soak-results--1-hour-tab-audio-ja--en).
@@ -476,6 +480,54 @@ untested part is whether reconnecting with one actually restores the conversatio
 worthwhile v1.1. It would not remove `session-loop.js`, which also has to cover the case where
 the socket dies without warning.
 
+### What a run costs
+
+The extension spends the user's own money and, until v1.0, told them so only in the abstract: a
+static line saying two directions cost roughly double. The Live API attaches `usageMetadata` to
+its server messages — token counts, broken down by modality — and every one of them was being
+dropped on the floor. `lib/usage.js` reads them instead, and the side panel replaces that warning
+with a meter — a dial and one figure: *~$0.31 of Gemini usage this run — an estimate, not your
+actual bill.*
+
+- **The tally lives above the session.** It sits on each direction's accumulator in
+  `offscreen.js`, so the half-dozen session swaps in an hour do not reset it, and it survives a
+  tab switch — the side panel is destroyed and rebuilt on every one of those, so it asks for the
+  figure in `getState` as well as receiving it broadcast. Posts are coalesced to one a second;
+  the frames arrive far faster than anyone reads them.
+- **`SessionLoop` forwards a usage frame without treating it as speech.** Every other event
+  updates `_lastRelayAt`, which is how a drain decides the dying session has fallen silent. A
+  tally is bookkeeping, not an answer, so letting it count would hold a cutover open to its
+  deadline and shorten the preroll owed to the replacement.
+- **Both directions are priced separately, then added**, because they can be two different models
+  at two different rates.
+- **Rates are per million tokens, in one table, with the date they were read.** Live Translate
+  publishes audio prices only and bills everything at them; Flash Live prices text separately and
+  much lower. Tokens the modality breakdown does not account for are priced as audio, which is
+  the more expensive guess — a cost estimate that errs should err upwards.
+- **Frames are summed, and that is the assumption to check.** `promptTokenCount` documents the
+  tokens of *the* request, and the SDKs that surface it in a live session accumulate across
+  events rather than reading the last one. If the server instead re-reports retained context each
+  turn, the input side drifts high. Output — five to six times the price on both models — is
+  unambiguous either way. `tests/live-smoke.mjs` prints both readings of a real run and says
+  which shape the per-frame totals had, so one soak settles it.
+
+**One number, against a dial.** The first version of this line also printed the token count and,
+when both directions were running, what each of them had spent — three figures and a breakdown, in
+a 12px grey line, while a translation was playing. All of it went. The tokens are the thing
+measured rather than the thing wanted, and the per-direction split was standing in for the
+doubling warning that the run total already makes visible by being twice as large. What is left is
+a gauge glyph, which says "meter" before the sentence is read, and one figure with a tilde on it.
+
+**The disclaimer is in the sentence, not only in the tooltip.** A figure in dollars reads as a bill
+unless it says otherwise, and nobody hovers over a line of text to find out that it is not one. So
+the sentence carries *an estimate, not your actual bill* — in `sidepanel.html` with the other
+static notes, since only the figure is written from script — and the tooltip has the arithmetic:
+Gemini reports the tokens, the prices are a hardcoded table that goes stale silently, and
+**Interpretab cannot see which usage tier the key is on**, so it prices everything at the paid
+rates even though a free-tier key is charged nothing at all. If the wording of the sentence
+changes, `README.md`, `index.md` and `ja/index.md` all quote it, and `tests/assets.test.js` fails
+until they agree.
+
 ## Development
 
 ```bash
@@ -719,24 +771,28 @@ entitled to. `tests/assets.test.js` works the list out from the script's own `-x
 asserts both halves of it, so a new top-level file is either deliberately in the ZIP or
 deliberately out of it.
 
-## Before the store submission
+## The store submission
 
-What is left between here and a listing is tracked in
-[issues](https://github.com/kazunori279/interpretab/issues) rather than here, so that its state
-is visible without reading a README diff. In the order it blocks:
+Submitted on 17 August 2026 and waiting for review, with auto-publish on approval left on.
+Everything that blocked it is closed:
+[the five screenshots](https://github.com/kazunori279/interpretab/issues/1),
+[the manual checklist in Chrome](https://github.com/kazunori279/interpretab/issues/2),
+[the hour-long tab soak](https://github.com/kazunori279/interpretab/issues/3) — the third of the
+three hours above, next to [Simultaneous](#soak-results--1-hour-microphone-simultaneous-en--ja)
+and [the conversation model](#soak-results--1-hour-microphone-the-conversation-model-en--ja) —
+and [registration and submission](https://github.com/kazunori279/interpretab/issues/5).
 
-1. [Five screenshots, 1280×800](https://github.com/kazunori279/interpretab/issues/1) — the only
-   hard blocker. `store/listing.md` says what each of the five should show and why the order
-   matters.
-2. [The manual checklist in Chrome](https://github.com/kazunori279/interpretab/issues/2) —
-   nothing automated covers any of it, and each item on it is a plausible way to fail a review.
-3. [An hour-long soak in the tab direction](https://github.com/kazunori279/interpretab/issues/3),
-   the last of the three. Both microphone hours are above:
-   [Simultaneous](#soak-results--1-hour-microphone-simultaneous-en--ja), which is what ships, and
-   [the conversation model](#soak-results--1-hour-microphone-the-conversation-model-en--ja).
-4. [Registration and submission](https://github.com/kazunori279/interpretab/issues/5) — the $5
-   developer registration and the dashboard both need the author's Google account, and
-   `store/justifications.md` holds the answers the dashboard asks for.
+`store/listing.md` and `store/justifications.md` hold the copy that was pasted into the dashboard
+and the answers to its permission questions. They are the source for the *next* version rather
+than a record of the last one, so the two can drift: the API-key advice in `listing.md` has been
+corrected here and not on the dashboard, which is the sort of thing that only goes in with an
+update.
+
+Left for the day it goes live: the "waiting for review" wording on `index.md` and `ja/index.md`;
+the dashboard's homepage URL, which still points at this repo rather than at
+[the user guide](https://kazunori279.github.io/interpretab/)
+([#11](https://github.com/kazunori279/interpretab/issues/11)); and the detailed description,
+which needs that API-key correction.
 
 Beyond the listing, [#9](https://github.com/kazunori279/interpretab/issues/9) is the interesting
 one: getting the microphone's translated voice into a call without asking the user to install a
