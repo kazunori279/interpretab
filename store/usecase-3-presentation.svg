@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"
+     fill="none" stroke="#3F51B5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+     role="img" aria-hidden="true">
+  <!-- Microphone, one: a presentation screen with a microphone above a subtitle
+       bar — your own voice, translated, on the screen the room is already
+       looking at. -->
+  <rect x="5" y="7" width="54" height="38" rx="4" />
+  <path d="M32 45v7" />
+  <path d="M22 52h20" />
+  <rect x="28.5" y="12" width="7" height="12" rx="3.5" />
+  <path d="M25.5 21.5a6.5 6.5 0 0 0 13 0" />
+  <path d="M32 28v3" />
+  <path d="M16 38h32" />
+</svg>

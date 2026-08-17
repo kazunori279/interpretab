@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"
+     fill="none" stroke="#3F51B5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+     role="img" aria-hidden="true">
+  <!-- Tab audio, one: a browser window playing something, subtitled. The bar
+       under the play triangle is the subtitle line, which is what tells this
+       apart from a plain "video" glyph. -->
+  <rect x="6" y="12" width="52" height="40" rx="4" />
+  <path d="M6 22h52" />
+  <circle cx="12" cy="17" r="1.6" fill="#3F51B5" stroke="none" />
+  <circle cx="17" cy="17" r="1.6" fill="#3F51B5" stroke="none" />
+  <circle cx="22" cy="17" r="1.6" fill="#3F51B5" stroke="none" />
+  <path d="M28 28.5l10 5.5-10 5.5z" />
+  <path d="M20 46h24" />
+</svg>

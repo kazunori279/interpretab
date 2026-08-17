@@ -1,30 +1,83 @@
 ---
 title: Interpretab
-description: Hear any tab in your language, spoken and subtitled in real time. Your own Gemini API key — no server in between.
+description: A Chrome extension that translates what your browser plays, and what you say, into 70+ languages in real time — spoken out loud and subtitled on the page.
 ---
 
 **English** · [日本語](ja/)
 
-# Interpretab
+<h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
+  <img src="icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <span>Interpretab</span>
+</h1>
 
-**Hear any tab in your language — spoken out loud and subtitled on the page, as it happens.**
-And the other way too: your microphone, into theirs.
+**A Chrome extension that translates what your browser plays, and what you say, into 70+
+languages in real time — spoken out loud and subtitled on the page.**
 
-A video, a webinar, a conference stream, the remote side of a call. Interpretab interprets what
-your browser is playing, plays the translation over it, and subtitles it across the bottom of the
-page at the same time.
+## What you can use it for
 
-[![Interpretab interpreting a talk, with subtitles on the page and the transcript in the side panel](store/screenshot-1-subtitles.png)](store/screenshot-1-subtitles.png)
+<div style="margin:1rem 0 1.5rem">
+  <p style="margin:0 0 .6rem"><b>Translating browser audio</b></p>
+  <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
+    <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
+      <img src="store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <span>Watch a video, a live stream or a podcast playing in your browser in the language
+      you prefer.</span>
+    </div>
+    <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
+      <img src="store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <span>Follow an online meeting with everything the other side says translated into your
+      language.</span>
+    </div>
+  </div>
+  <p style="margin:0 0 .6rem"><b>Translating microphone audio</b></p>
+  <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
+    <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
+      <img src="store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <span>Give a presentation or a live stream with your own voice subtitled on screen in
+      another language.</span>
+    </div>
+    <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
+      <img src="store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <span>Meet in a room, or talk with friends, with everyone interpreted into the language
+      you pick.</span>
+    </div>
+  </div>
+</div>
+
+[![Interpretab translating a Japanese talk into English: English subtitles on the video and the transcript in the side panel](store/hero-tab-ja-en.png)](store/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Watch it run (2:45)</a></p>
 
+## How Interpretab works, and privacy
+
+Interpretab translates through Google's
+[Gemini Live API](https://ai.google.dev/gemini-api/docs/live). Your audio, your subtitles and your
+key travel encrypted between your browser and Google, and reach nowhere else. There is no
+analytics or data-collection server either. Note that, being a Gemini Live API model, it can
+translate inaccurately, and it can produce speech that is not a translation at all.
+
+- [Privacy policy](PRIVACY.html)
+
+## Free to try, about $2 an hour to keep running
+
+Interpretab is an open-source tool. The Gemini Live API behind the translation is what costs
+money, and its free tier is enough to try it — after that, **the Gemini Live API usage is billed to
+your own Google account**.
+
+Here are the Gemini Live API rates
+[Google publishes](https://ai.google.dev/gemini-api/docs/pricing) as of August 2026:
+
+| What is running | Audio in | Audio out | **Per hour** |
+|---|---|---|---|
+| Tab audio, or the microphone in Simultaneous mode | $0.0053/min | $0.0315/min | **≈ $2.20** |
+| The microphone in Two-way conversation mode | $0.005/min | $0.018/min | **≈ $1.40** |
+
+Those are hours of *continuous* audio, so less talking costs less. Turning tab audio and the
+microphone on together runs two sessions, so the price is the sum of the two rows.
+
 ## Install
 
-Interpretab has been submitted to the Chrome Web Store and is **waiting for review**. Once it is
-through, it will live at
-[chromewebstore.google.com/detail/johnocemcoemdhiogfgmphjmlghgdnbm](https://chromewebstore.google.com/detail/johnocemcoemdhiogfgmphjmlghgdnbm).
-
-Until then, load it yourself — it is the same code:
+Interpretab installs like this:
 
 1. Download or clone [the repository](https://github.com/kazunori279/interpretab).
 2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, pick that
@@ -33,82 +86,77 @@ Until then, load it yourself — it is the same code:
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and paste it into the
    extension's **Options** page.
 4. Open the page you want translated and **click the Interpretab toolbar icon on that tab**. That
-   click is how you give permission to listen to the tab — skip it and Start comes back with an
-   error.
+   click is how you give permission to listen to the tab — skip it and you get an error.
 5. Pick your language in the side panel and press **Start**.
 
 Chrome 116 or newer. Closing the side panel does not stop the translation — the **Stop** button is
 always one click on the toolbar icon away, from any tab.
 
-## About the key, and what it costs
+## Choosing what to translate
 
-Interpretab has **no server**. It connects from your browser straight to Google's
-[Gemini Live API](https://ai.google.dev/gemini-api/docs/live) with a key you supply (a Gemini API
-key). Nothing goes anywhere except between your browser and Google.
+Interpretab has two directions, tab audio and microphone. Either on its own, or both at once.
 
-**Usage is billed to your own Google account**, at Google's rates. Both models Interpretab uses
-have a free tier, which is enough to try it properly. The key is kept safely on your own device.
+[![The Interpretab side panel: two direction cards, language pickers, the original-volume slider, Start](store/screenshot-4-panel.png)](store/screenshot-4-panel.png)
 
-### Roughly what it costs
+**Tab audio** translates whatever the current tab is playing into the language you pick, from a
+choice of 78.
 
-The Live API bills audio by the minute, in and out. At the paid rates
-[Google publishes](https://ai.google.dev/gemini-api/docs/pricing) as of August 2026:
+**Microphone** translates what your computer's microphone hears. It has two modes:
 
-| What is running | Audio in | Audio out | **Per hour** |
-|---|---|---|---|
-| Tab audio, or the microphone in Simultaneous mode | $0.0053/min | $0.0315/min | **≈ $2.20** |
-| The microphone in Two-way conversation mode | $0.005/min | $0.018/min | **≈ $1.40** |
-
-Turning tab audio and the microphone on together bills them as two separate sessions, so the price
-is the sum of the two rows. Two-way conversation has "two-way" in its name but runs as a single
-session, so it is not affected.
-
-Those are hours of *continuous* audio, which is the pessimistic reading: almost all of the money is
-on the output side, and the output side only runs while somebody is speaking. A recorded talk is
-close to continuous. A meeting where you are mostly listening is not.
-
-## Choosing a mode
-
-Interpretab has two modes, tab audio and microphone. Either on its own, or both at once.
-
-[![The Interpretab side panel: two mode cards, language pickers, the original-volume slider, Start](store/screenshot-4-panel.png)](store/screenshot-4-panel.png)
-
-**Tab audio** interprets whatever the current tab is playing. You pick the target language and
-nothing else — the source is detected as it goes, because a tab plays whoever it plays and a video
-that cuts to a second speaker should not need you to change a setting. 78 languages to choose from.
-
-**Microphone** interprets you, and it has two modes:
-
-- **Simultaneous** interprets you into one language and does not wait for you to finish a sentence
-  — that is what makes it simultaneous. Source detected, 78 targets. Wear headphones: it will
-  answer over you.
-- **Two-way conversation** is for one microphone shared by two people. Name both languages, put the
-  laptop on the desk between you, and it routes each utterance to the other side — set English and
-  Japanese, and it hears English, it says Japanese; it hears Japanese, it says English. No button
-  to press, no switching sides. 97 languages, 30 voices, and it is the only mode a
+- **Simultaneous** translates speech into one language without waiting for the speaker to finish a
+  sentence.
+- **Two-way conversation** is for two people talking in two languages. Name both languages, put the
+  laptop on the desk between you, and it waits for each speaker to finish and routes them to the
+  other language — set English and Japanese, and it hears English, it says Japanese; it hears
+  Japanese, it says English. No switching. 97 languages, and it is the only mode a
   [glossary](#glossary) reaches.
 
-## Subtitles
+Turning tab audio and the microphone on together bills them as two separate sessions, so the cost
+is the sum of the two.
+
+### Subtitles and the spoken translation
 
 Subtitles appear bottom-centre of the page, three lines at a time, and they follow the video into
-fullscreen. When both modes are on, the microphone's line is marked with a blue edge. **Options →
-Subtitle size** sets how tall they are, 16–64 px, live while you watch.
+fullscreen. When both tab audio and the microphone are on, the microphone's line is marked with a
+blue edge. **Options → Subtitle size** sets how tall they are, 16–64 px, live while you watch.
 
-The tab's own audio does not disappear behind the translation — it **keeps playing underneath, at a
-lower volume**. It drops to 15% (a slider) while the translated voice is speaking and comes
-straight back when it stops. Speech-activated rather than constant, so a film's music and effects
-are still there to hear.
+The translated voice comes out of your computer's audio output, and a mute button silences it at
+any time. With tab audio, the tab's own sound **keeps playing underneath at a lower volume** while
+the translation speaks, so a film's music and effects are still there to hear.
 
-Next to Start are two mute buttons, one for the microphone and one for the translated voice.
-Neither of them affects the subtitles.
+**Options → Audio input/output** picks which device the microphone is heard on, and which one the
+translation is spoken out of.
 
-The translation model can also misfire, and subtitles can come out with the wrong content, or in the
+### Using it in online meetings
+
+**Hearing the other side is what this tool does out of the box.** Open the meeting in a tab, turn
+tab audio on, pick your language and press Start. What they say arrives in your language, spoken
+and subtitled.
+
+For them to hear your voice translated, they need Interpretab installed in their browser too. And
+because this is a Chrome extension, it only works with the browser versions of these services —
+desktop apps and native clients are out of reach.
+
+### The models behind the translation, and its quality
+
+Tab audio and the microphone's Simultaneous mode run on the Gemini Live API's
+[Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview)
+model. The microphone's Two-way conversation mode runs on the
+[Gemini Live model](https://aistudio.google.com/docs/live-api), which cannot translate
+simultaneously — it waits for the speaker to finish — but translates better than Live Translate
+does, and is the only one that takes the glossary below.
+
+Either way, the model can misfire, and subtitles can come out with the wrong content, or in the
 wrong language.
 
-## Glossary
+### Glossary
 
 Product names, people's names and jargon are what a general model most often gets wrong, in both
-pronunciation and spelling. **Options → Glossary** takes a CSV like this:
+pronunciation and spelling. The **microphone's Two-way conversation mode** takes a glossary to cut
+those mistakes down; no other mode does. The model can still misfire here, and a registered
+pronunciation or spelling may not come through.
+
+**Options → Glossary** takes a CSV like this:
 
 ```
 source,pronunciation,transcript
@@ -116,45 +164,78 @@ Kubernetes,クバネティス,Kubernetes
 Cloud Run,クラウドラン,Cloud Run
 ```
 
-The second column is the *pronunciation* the model is told to use; the third is what you want the
-**subtitles to show**.
+The first column is the term to match, the second is the *pronunciation* the model is told to use,
+and the third is what you want the **subtitles to show**.
 
 [![The Options page with a glossary table filled in](store/screenshot-3-glossary.png)](store/screenshot-3-glossary.png)
 
-The glossary works in the **microphone's Two-way conversation mode only**. The model can also
-misfire here, and a registered pronunciation or spelling may not come through.
+### Things to know
 
-## Using it in Meet, Zoom and Teams
+- **Use earphones or headphones for the microphone's Simultaneous mode.** That mode speaks over
+  you, so the microphone picks its own translated voice back up — an echo loop — and translation
+  quality drops badly.
+- **If you want external speakers with the microphone, use a microphone with a mute button.**
+  Speakers feed the translated voice back into the microphone — an echo loop — and the translation
+  stops working properly. Unmute only while you are speaking.
+- **Tab audio and the microphone at the same time means two sessions**, and a cost that goes up to
+  match.
+- **Interpretab runs on one tab at a time.** Pressing Start on another tab stops the translation
+  that was already running.
+- **Chrome does not let extensions draw on its own pages or on PDFs**, so subtitles cannot appear
+  there. The spoken translation and the side-panel transcript still work.
 
-**Hearing the other side is what this tool does out of the box.** Open the meeting in a tab, turn
-tab audio on, pick your language and press Start. Everything they say arrives in your language,
-spoken and subtitled.
+## More about using the Gemini Live API
 
-For them to hear your voice translated, they need Interpretab installed in their browser too. And
-because this is a Chrome extension, it only works with the browser versions of these services —
-desktop apps and native clients are out of reach.
+The side panel keeps a meter of what the run has spent so far — *~$0.31 of Gemini usage this run —
+an estimate, not your actual bill.* — and starts again at zero each time you press Start. **Your
+Google account is the only place your actual bill exists.**
 
-## Things to know
+### Choosing between the free tier and a paid one
 
-- **Use earphones or headphones with microphone mode.** On speakers, the microphone picks its own
-  translated voice back up — an echo loop — and translation quality drops badly. If you have to use
-  speakers, use a microphone with a mute button and open it only while you are speaking.
-- **Tab audio and the microphone at the same time means two billed sessions.** Two-way conversation
-  is a single session, so it is not affected.
-- **Chrome does not let extensions draw on its own pages, the Web Store, or PDFs**, so subtitles will
-  not appear there. The audio and the side-panel transcript still work.
+What a Gemini API key costs, how hard it is rate-limited, and what Google does with what you send
+through it all depend on the project's **usage tier**. Tiers rise automatically with what you have
+paid. The qualifications
+[Google publishes](https://ai.google.dev/gemini-api/docs/rate-limits) are:
 
-## When it gets things wrong
+| Tier | How you qualify | Cost and limits | What Google does with your data | Where it fits Interpretab |
+|---|---|---|---|---|
+| **Free** | No billing account needed | Free of charge, but long or heavy use runs into the rate limits and errors out | **Used to improve Google's products, and subject to human review** | Trying it out |
+| **Tier 1** | Link an active billing account | Pay as you go, up to $10 per 10 minutes and $250 a month | Not used to improve products; logged briefly for abuse detection only | **Where to be if you use it regularly.** Enough for almost any use |
 
-This tool uses an AI model developed by Google. It can translate inaccurately, and it can produce
-speech that is not a translation at all.
+Start on the free tier, and link a billing account to reach Tier 1 once you keep using it. On
+Tier 1 nothing you send is used to improve Google's products, and the ceilings are roomy for a tool
+like this one: about 25 Interpretab sessions running at the same time, and around 110 hours a
+month.
 
-## Privacy
+The free tier's limits are not published — you
+[view them in AI Studio](https://aistudio.google.com/apikey) — and a tool that holds a connection
+open for an hour at a time reaches them easily, at which point it simply fails to connect.
 
-Your audio, your subtitles and your key go from your browser to Google's Gemini API and reach
-nowhere else. Nothing is sent to any analytics or data-collection server.
+### Sharing one Gemini API key between machines and people
 
-Full text: [Privacy policy](PRIVACY.html).
+Interpretab keeps the key on the machine, in `chrome.storage.local`. Chrome's profile sync does not
+carry it, so using Interpretab on several computers means pasting the key into each of them.
+**Using one key on your own several machines is fine.**
+
+**Handing the key to someone else is not**, under Google's
+[API Terms of Service](https://developers.google.com/terms).
+
+### Things to know about your Gemini API key
+
+- **Rate limits are per project, not per key.**
+  [Google's documentation](https://ai.google.dev/gemini-api/docs/rate-limits) says so in as many
+  words. Tier 1's $10 per 10 minutes is about 25 Interpretab sessions at once, and anything past
+  that errors out.
+- **A key is a password.** If it gets out,
+  [Google's guidance](https://ai.google.dev/gemini-api/docs/api-key) applies: "others can consume
+  your project's quota, incur unexpected billing charges, and access private resources." When you
+  part with a machine, or think a key may have leaked, delete the old key in
+  [AI Studio](https://aistudio.google.com/apikey) and make a new one.
+- **For a team, one key per person.** Give each member their own project under the same Google
+  Cloud billing account and the payment stays in one place while the keys and the rate limits do
+  not.
+- **For users in the EEA, Switzerland or the UK**, the
+  [Gemini API Additional Terms](https://ai.google.dev/gemini-api/terms) require a paid tier.
 
 ## Open source
 
