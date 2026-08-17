@@ -1,5 +1,9 @@
 # Interpretab
 
+User guide: **[English](https://kazunori279.github.io/interpretab/)** ·
+**[日本語](https://kazunori279.github.io/interpretab/ja/)** — what it does, what it costs, and how
+to turn it on. What follows is the engineering side of the same thing.
+
 A Chrome extension that interprets **whatever a tab is playing** — a video, a webinar, the
 remote side of a Meet call — into your language, spoken out loud and subtitled on the page. It
 also works the other way: your microphone, into theirs.
