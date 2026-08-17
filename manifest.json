@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Interpretab",
   "version": "1.0.0",
-  "description": "Real-time interpretation of tab audio and your microphone, with subtitles. Your own Gemini API key, no server in between.",
+  "description": "Hear any tab in your language, spoken and subtitled in real time. Your own Gemini API key — no server in between.",
   "minimum_chrome_version": "116",
   "permissions": [
     "tabCapture",

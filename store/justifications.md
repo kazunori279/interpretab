@@ -98,6 +98,21 @@ carries audio and JSON, never code.
 
 ---
 
+## Test instructions
+
+Its own page in the dashboard, under Access. Not required, but an extension that does nothing
+until a key is pasted in looks broken to a reviewer who does not know that, and "core
+functionality could not be tested" is a rejection. 500 characters, so it is terse. No credential
+is handed over: the reviewer makes their own free key, which is exactly what a user does.
+
+```
+No account or login. A free Gemini API key is needed: create one at https://aistudio.google.com/apikey, open Options and paste it into the API key field.
+
+Then open a page playing speech (any YouTube conference talk), click the Interpretab toolbar icon ON THAT TAB — that click grants access to it — pick a target language in the side panel and press Start. The translation is spoken and subtitled on the page. For the second direction, turn on Microphone in the same panel.
+```
+
+---
+
 ## Before pressing Submit
 
 - [ ] `npm test` passes.

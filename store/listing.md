@@ -18,6 +18,10 @@ Hear any tab in your language, spoken and subtitled in real time. Your own Gemin
 
 *(113 characters.)*
 
+Not a field you type into: the dashboard shows it as **パッケージの概要** and takes it from
+`manifest.json`'s `description`, so the two have to be kept identical. Changing it means
+re-packaging and re-uploading the ZIP.
+
 ## Category
 
 Productivity → Workflow & Planning. (Secondary consideration: Accessibility. Productivity is the
@@ -152,7 +156,9 @@ does not fire. `tests/assets.test.js` checks the dimensions of everything in her
 Required for any chance at featuring. No screenshot content — it renders too small. `promo-440x280.png`
 is the icon plus the name and "Live speech translation, spoken and subtitled.", and comes out of
 `store/icon-source.html` along with the four extension icons, so the wording is one edit away if
-"Hear any tab in your language" turns out to sell it better.
+"Hear any tab in your language" turns out to sell it better. It is stored without an alpha
+channel: the upload form asks for 24-bit PNG, and the canvas export was RGBA over an opaque
+background, which is the same picture with a channel nobody needs.
 
 ---
 

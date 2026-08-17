@@ -705,7 +705,7 @@ There is no build. The extension directory is what ships.
 npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
-Verified 2026-08-16: 30 files, 143 KB unpacked and 68 KB zipped, `manifest.json` at the root,
+Verified 2026-08-17: 26 files, 184 KB unpacked and 79 KB zipped, `manifest.json` at the root,
 nothing from `.git`, `tests/`, `store/` or `package.json`. This file is excluded too — 37 KB of
 developer documentation that no user or reviewer opens, and it was a quarter of the package.
 `LICENSE` and `PRIVACY.md` do ship: two files, a few KB, and both are documents a user is
