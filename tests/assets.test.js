@@ -284,4 +284,72 @@ test("the store artwork is the size the store demands", () => {
     assert.deepEqual(pngSize(path.join(dir, shot)), [1280, 800], `${shot} is the wrong size`);
   }
   assert.deepEqual(pngSize(path.join(dir, "promo-440x280.png")), [440, 280]);
+  // The guide pages' lead image is a frame lifted out of the promo video rather
+  // than one of the five, and is deliberately outside the `screenshot-` set so
+  // it cannot be miscounted into an upload. Same size, so it can be promoted
+  // into that set by renaming and nothing else.
+  assert.deepEqual(pngSize(path.join(dir, "hero-tab-ja-en.png")), [1280, 800]);
+});
+
+test("the cost figure disclaims itself where the user can actually see it", () => {
+  // A dollar figure printed next to "on your key" reads as a bill. It is not
+  // one: the tokens are the server's count but the prices are a hardcoded table
+  // that goes stale silently, and a free-tier key is charged nothing at all.
+  // The disclaimer therefore has to be in the string itself — a tooltip is not
+  // where a number disclaims itself, because nobody hovers. Both guide pages
+  // quote that string, so they are checked with it rather than left to drift.
+  const DISCLAIMER = "an estimate, not your actual bill.";
+  // The sentence is static, so it lives in the markup with the other notes; only
+  // the figure is written from script. Whitespace is normalised because the
+  // markup hard-wraps it.
+  const markup = fs
+    .readFileSync(path.join(ROOT, "sidepanel.html"), "utf8")
+    .replace(/\s+/g, " ");
+  const note = markup.slice(markup.indexOf('id="usageNote"'), markup.indexOf("</p>", markup.indexOf('id="usageNote"')));
+  assert.ok(
+    note.includes(DISCLAIMER),
+    "the visible usage note must carry the disclaimer, not only note.title"
+  );
+  for (const page of ["index.md", path.join("ja", "index.md")]) {
+    // Hard-wrapped prose, so the quote can carry a newline where the panel has
+    // a space.
+    const text = fs.readFileSync(path.join(ROOT, page), "utf8").replace(/\s+/g, " ");
+    assert.ok(text.includes(DISCLAIMER), `${page} quotes an out-of-date usage note`);
+  }
+});
+
+test("a class that sets display does not un-hide an element the panel hides", () => {
+  // `[hidden]` is a UA rule, and any class rule that sets `display` outranks it.
+  // The failure is silent and looks like a bug in the JavaScript: the element
+  // shows itself, empty, from the moment the panel opens — which is exactly what
+  // the usage meter did the day it was given `display: flex`. So every class
+  // worn by an element that starts hidden has to take the attribute back.
+  const html = fs.readFileSync(path.join(ROOT, "sidepanel.html"), "utf8");
+  const css = fs.readFileSync(path.join(ROOT, "sidepanel.css"), "utf8");
+
+  const hiddenClasses = new Set();
+  for (const [tag] of html.matchAll(/<[a-z]+\b[^>]*\bhidden\b[^>]*>/g)) {
+    const classes = /class="([^"]*)"/.exec(tag);
+    for (const name of classes?.[1].split(/\s+/) ?? []) if (name) hiddenClasses.add(name);
+  }
+  assert.ok(hiddenClasses.size > 0, "no hidden elements found — has the markup moved?");
+
+  const rules = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)].map(([, selector, body]) => ({
+    selector: selector.trim(),
+    body,
+  }));
+  for (const { selector, body } of rules) {
+    const display = /display:\s*([a-z-]+)/.exec(body);
+    if (!display || display[1] === "none" || selector.includes("[hidden]")) continue;
+    for (const name of hiddenClasses) {
+      if (!new RegExp(`\\.${name}\\b`).test(selector)) continue;
+      const undone = rules.some(
+        (rule) =>
+          rule.selector.includes("[hidden]") &&
+          new RegExp(`\\.${name}\\b`).test(rule.selector) &&
+          /display:\s*none/.test(rule.body)
+      );
+      assert.ok(undone, `\`${selector}\` gives .${name} a display but never [hidden] one back`);
+    }
+  }
 });

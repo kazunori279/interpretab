@@ -10,6 +10,7 @@
 
 import { LIVE_KEYS } from "./lib/live-session.js";
 import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import { formatCost } from "./lib/usage.js";
 import {
   agentLanguageCode,
   LANGUAGES,
@@ -26,6 +27,11 @@ const el = (id) => document.getElementById(id);
 
 let settings = { ...DEFAULTS };
 let running = false;
+// The last token tally the offscreen document sent, per direction and in total,
+// or null before the first one. Kept so a redraw for any other reason does not
+// wipe it, and so `render` knows the live figure has taken over from the static
+// cost warning.
+let usage = null;
 // The bubble currently being appended to, per direction and side, so streamed
 // increments extend a line instead of starting a new one.
 const openLines = new Map();
@@ -60,6 +66,10 @@ function restore(state) {
     if (line.open) openLines.set(`${line.direction}:${line.side}`, node);
   }
   el("transcript").scrollTop = el("transcript").scrollHeight;
+  if (state?.usage) {
+    usage = state.usage;
+    renderUsage();
+  }
   // One string, `${status}: ${detail}`, the shape the service worker
   // deduplicates on.
   const stored = state?.captionStatus;
@@ -261,7 +271,9 @@ function render() {
 
   renderDirection("tabEnabled", settings.tabEnabled);
   renderDirection("micEnabled", settings.micEnabled);
-  el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled);
+  // The warning is an estimate of a doubling; once the tally is running it says
+  // the same thing in dollars, and both at once is one sentence too many.
+  el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled) || !!usage;
 
   const hasKey = !!(settings.apiKey || "").trim();
   el("keyNote").hidden = hasKey;
@@ -289,6 +301,47 @@ function render() {
   el("toggle").classList.toggle("running", running);
   el("toggle").disabled = (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", "Idle");
+}
+
+/**
+ * What this run has spent: one number, against a dial.
+ *
+ * Money is what the user is being asked about — the key is theirs and the bill
+ * is theirs — so money is the whole of it. The token count and the
+ * per-direction split were both here and are both gone: the tokens are the
+ * thing measured rather than the thing wanted, and the split answered "which
+ * direction costs more" in a line that has to be read at a glance while a
+ * translation is running. The run total already carries the warning the split
+ * was standing in for, because two sessions make it visibly twice as big.
+ *
+ * The figure is prefixed with a tilde and the sentence after it says "an
+ * estimate, not your actual bill", in the markup rather than in the title
+ * attribute. The tally is the server's own count, but the prices behind it are
+ * a hardcoded table in `lib/usage.js` that goes stale silently, and Interpretab
+ * cannot see which usage tier the key is on — a free-tier key is charged
+ * nothing at all. A figure in dollars reads as a bill unless it says otherwise,
+ * and a tooltip is not where a number disclaims itself: nobody hovers. What is
+ * left for the tooltip is the arithmetic, for whoever wants it.
+ */
+function renderUsage() {
+  const note = el("usageNote");
+  if (!usage?.total) {
+    note.hidden = true;
+    return;
+  }
+  const cost = formatCost(usage.total.cost);
+  // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
+  el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
+  note.title =
+    "How this is worked out: Gemini reports the tokens each turn used, and " +
+    "those are multiplied by Google's published rates for the model, read " +
+    "from the pricing page in August 2026 rather than from your account. " +
+    "Interpretab cannot see which usage tier your key is on — on the free " +
+    "tier you are charged nothing at all — and rates change. Your Google " +
+    "account is the only place your real bill exists.";
+  note.hidden = false;
+  // The live figure covers what the static warning was there to say.
+  el("costNote").hidden = true;
 }
 
 /**
@@ -346,6 +399,10 @@ async function onToggle() {
       el("captionNote").hidden = true;
       el("outputNote").hidden = true;
       el("micNote").hidden = true;
+      // Cleared on the way in, not on the way out: what the last run cost is
+      // worth reading after Stop, and this run has not spent anything yet.
+      usage = null;
+      renderUsage();
       openLines.clear();
       await send({ type: "start" }, true);
       running = true;
@@ -391,6 +448,9 @@ chrome.runtime.onMessage.addListener((msg) => {
     for (const key of [...openLines.keys()]) {
       if (key.startsWith(msg.direction)) openLines.delete(key);
     }
+  } else if (msg.type === "usage") {
+    usage = msg.usage;
+    renderUsage();
   } else if (msg.type === "captions") {
     onCaptionStatus(msg);
   } else if (msg.type === "output") {

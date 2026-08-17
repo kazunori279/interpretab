@@ -32,11 +32,17 @@
  * past the ~10 minute expiry, which is the only way to see a real `goAway`;
  * `--raw` prints every frame the server sends, minus the audio payloads that
  * would drown the log.
+ *
+ * Every run also reports the token tally the side panel is built on, both
+ * summed and read as a running total. Which of the two is right is not
+ * something the documentation says and not something a fake socket can show, so
+ * a single real run here is what settles it.
  */
 
-import { buildSetup, isSimul } from "../lib/live-session.js";
+import { buildSetup, isSimul, modelFor } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
 import { DEFAULTS } from "../lib/settings.js";
+import { addUsage, costOf, emptyUsage, formatCost, formatTokens } from "../lib/usage.js";
 import {
   argOf,
   hasFlag,
@@ -85,6 +91,19 @@ let lastAudioAt = 0;
 let maxAudioGapMs = 0;
 let measuringGaps = false;
 
+/**
+ * The token tally, and the one thing about it the documentation does not
+ * settle: whether a `usageMetadata` frame is what that turn cost or what the
+ * session has cost so far. The side panel sums them, which is right for the
+ * first reading and roughly doubles-and-doubles-again for the second, so both
+ * readings are printed here — summed, and the largest single frame — along with
+ * the shape that tells them apart. Per-frame totals that only ever climb are
+ * cumulative; totals that rise and fall with the length of each turn are not.
+ * A drop right after a cutover is not evidence either way: the replacement
+ * session starts its own count.
+ */
+const usage = { summed: emptyUsage(), totals: [], climbing: true };
+
 // A rendering no model would produce on its own, so the transcript says plainly
 // whether the glossary reached the session or was quietly ignored.
 const GLOSSARY = [{ source: "リアルタイム翻訳", target: "Interpretab live relay" }];
@@ -131,6 +150,13 @@ const loop = new SessionLoop({
       lastAudioAt = now;
       return;
     }
+    if (ev.type === "usage") {
+      const frame = Number(ev.usage.totalTokenCount) || 0;
+      if (frame < (usage.totals.at(-1) ?? 0)) usage.climbing = false;
+      usage.totals.push(frame);
+      addUsage(usage.summed, ev.usage);
+      return; // `--raw` already prints the frame itself
+    }
     if (ev.type === "input") inputText += ev.text;
     if (ev.type === "output") outputText += ev.text;
     if (ev.type === "turnComplete") turns += 1;
@@ -173,6 +199,38 @@ console.log("turns   :", turns);
 console.log("sessions:", `${counts.opened} opened, ${counts.ready} ready, ${counts.failed} failed`);
 console.log("goAways :", counts.goAways, `| server closes: ${counts.closed}`);
 console.log("max gap :", `${(maxAudioGapMs / 1000).toFixed(1)}s between output audio frames`);
+
+const model = modelFor(direction, settings);
+if (!usage.totals.length) {
+  console.log("usage   : the server reported none — the side panel will show nothing");
+} else {
+  const largest = Math.max(...usage.totals);
+  console.log(
+    "usage   :",
+    `${usage.totals.length} frames, summed ${formatTokens(usage.summed.total)} tokens ` +
+      `≈ ${formatCost(costOf(usage.summed, model))} on ${model}`
+  );
+  console.log(
+    "  read as a running total instead:",
+    `${formatTokens(largest)} tokens (largest frame; last was ${formatTokens(usage.totals.at(-1))})`
+  );
+  console.log(
+    "  per-frame totals",
+    usage.climbing
+      ? "never fell — cumulative, unless every turn happened to be longer than the last"
+      : "rose and fell — per-turn, which is what the side panel assumes"
+  );
+  console.log(
+    "  in :",
+    `audio ${formatTokens(usage.summed.input.audio)}, text ${formatTokens(usage.summed.input.text)},` +
+      ` other ${formatTokens(usage.summed.input.other)}`
+  );
+  console.log(
+    "  out:",
+    `audio ${formatTokens(usage.summed.output.audio)}, text ${formatTokens(usage.summed.output.text)},` +
+      ` other ${formatTokens(usage.summed.output.other)}`
+  );
+}
 
 loop.close();
 await sleep(100); // let the sockets go before the process does

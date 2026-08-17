@@ -159,10 +159,15 @@ async function getState() {
     captionStatus = null,
   } = await chrome.storage.session.get(["running", "capturedTabId", "captionStatus"]);
   let lines = [];
+  let usage = null;
   if (running && (await hasOffscreen())) {
-    lines = (await toOffscreen({ type: "history" }).catch(() => null))?.lines || [];
+    const reply = await toOffscreen({ type: "history" }).catch(() => null);
+    lines = reply?.lines || [];
+    // The token tally is broadcast as it changes, so a panel rebuilt between
+    // two of those broadcasts would otherwise show nothing until the next one.
+    usage = reply?.usage || null;
   }
-  return { running, capturedTabId, captionStatus, lines };
+  return { running, capturedTabId, captionStatus, lines, usage };
 }
 
 async function targetTab() {

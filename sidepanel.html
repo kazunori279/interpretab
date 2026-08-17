@@ -121,6 +121,27 @@
       double.
     </p>
 
+    <!-- What the run has spent so far, once the server has said. It takes the
+         place of the static warning above: a live figure covers what that
+         sentence was there to warn about, and says it in money.
+
+         One number and a dial. The dial says "meter" before the sentence is
+         read, and the sentence is the only part that has to be read: the
+         per-direction split and the token count were both answers to questions
+         nobody was asking of a line this size. The disclaimer is here in the
+         markup rather than in the title attribute, because a figure in dollars
+         reads as a bill unless it says otherwise and nobody hovers. -->
+    <p class="note usage" id="usageNote" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3.5 18a9 9 0 1 1 17 0" />
+        <path d="M12 18l4.7-5.2" />
+      </svg>
+      <span
+        ><b id="usageAmount"></b> of Gemini usage this run — an estimate, not
+        your actual bill.</span
+      >
+    </p>
+
     <p class="note warn" id="captionNote" hidden></p>
 
     <p class="note warn" id="outputNote" hidden></p>

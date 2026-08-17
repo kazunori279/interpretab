@@ -70,6 +70,26 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
    transcript is still here — so it is not given the red banner. */
 .note.warn { color: #b06000; }
 
+/* The cost figure is a meter reading, so it is drawn as one. The dial is what
+   the eye lands on, the amount is the only part in the panel's own ink, and the
+   sentence after it stays the grey of every other note. */
+.note.usage { display: flex; align-items: flex-start; gap: 0.4rem; }
+/* `display` from a class beats the `display: none` the browser gives [hidden],
+   so a flex note has to say this or it shows itself with no figure in it. */
+.note.usage[hidden] { display: none; }
+.note.usage svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 0.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.note.usage b { color: #202124; }
+
 select.lang, select.mode, input[type="range"] {
   font: inherit;
   background: var(--input-bg);

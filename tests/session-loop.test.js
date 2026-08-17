@@ -169,6 +169,36 @@ test("a drain that falls silent replays only the unanswered audio", async () => 
   h.loop.close();
 });
 
+test("a usage report passes through without counting as the session still talking", async () => {
+  // The tally arrives on its own frames as well as on spoken ones. Treating it
+  // as a relay would keep a dying session's drain open to its deadline and cut
+  // the preroll owed to the replacement down to the audio since the last
+  // bookkeeping message.
+  const h = harness();
+  h.loop.start();
+  await settle();
+
+  h.loop.send(frame(1));
+  h.sessions[0].onEvent({ type: "goAway", timeLeft: 30000 });
+  await settle();
+
+  h.advance(100);
+  h.loop.send(frame(2));
+  h.advance(GOAWAY_IDLE_GRACE_MS - 100);
+  h.sessions[0].onEvent({ type: "usage", usage: { totalTokenCount: 200 } });
+  h.loop._checkDrain();
+  await settle();
+
+  assert.equal(h.sessions[0].closed, true, "the silence clock kept running");
+  assert.equal(h.sessions[1].bytes, 8, "and both unanswered frames were still owed");
+  assert.deepEqual(
+    h.events.filter((e) => e.type === "usage"),
+    [{ type: "usage", usage: { totalTokenCount: 200 } }],
+    "forwarded once, to whoever is counting",
+  );
+  h.loop.close();
+});
+
 test("the goAway deadline forces the swap even while the session is talking", async () => {
   const h = harness();
   h.loop.start();

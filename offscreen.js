@@ -37,11 +37,13 @@ import {
   buildSetup,
   isSimul,
   LIVE_KEYS,
+  modelFor,
   usesDuplexGate,
   UPLINK_RATE,
 } from "./lib/live-session.js";
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
+import { addUsage, costOf, emptyUsage, mergeUsage } from "./lib/usage.js";
 
 const DOWNLINK_RATE = 24000; // what Gemini returns
 
@@ -62,6 +64,12 @@ const SIMUL_IDLE_MS = 2000;
 // open. Enough to scroll back through a meeting, short enough that an hour of
 // continuous subtitling cannot grow this document without bound.
 const HISTORY_LIMIT = 200;
+
+// How often the running token tally is pushed to the panel. Usage frames can
+// arrive with every turn, and a figure that moves faster than it can be read is
+// a distraction rather than information — a second is slow enough to read and
+// fast enough to answer "is this counting?".
+const USAGE_POST_MS = 1000;
 
 const state = {
   settings: null,
@@ -104,6 +112,9 @@ const state = {
   // both the side panel and the service worker — see `noteLine`.
   lines: [],
   openLines: new Map(),
+  // The trailing-edge timer behind USAGE_POST_MS. The tallies themselves live
+  // on each direction's accumulator, which is where the events arrive.
+  usageTimer: null,
   active: false,
 };
 
@@ -128,7 +139,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     } catch (err) {
       fail(err);
     }
-  } else if (msg.type === "history") done({ lines: history() });
+  } else if (msg.type === "history") done({ lines: history(), usage: usageSnapshot() });
   else return false;
   return true;
 });
@@ -410,7 +421,19 @@ function startPassthrough(stream) {
 /** Wire one capture stream to its own Live session, and the replies to a speaker. */
 function openDirection(name, stream, glossary, simul, outputCtx) {
   const player = makePlayer(outputCtx);
-  const acc = { input: "", output: "", simul, idle: null };
+  // `usage` and `model` ride along with the transcript accumulator because the
+  // events they are fed by arrive through the same handler. The tally has to
+  // live out here rather than in the session: `SessionLoop` retires a session
+  // roughly every ten minutes, and a counter inside one would restart from zero
+  // with each of them.
+  const acc = {
+    input: "",
+    output: "",
+    simul,
+    idle: null,
+    usage: emptyUsage(),
+    model: modelFor(name, state.settings),
+  };
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
@@ -473,6 +496,11 @@ function onEvent(direction, ev, player, acc) {
     endTurn(direction, acc);
     return;
   }
+  if (ev.type === "usage") {
+    addUsage(acc.usage, ev.usage);
+    scheduleUsagePost();
+    return;
+  }
   acc[ev.type] = ev.finished ? ev.text : acc[ev.type] + ev.text;
   const text = applyDisplayMap(acc[ev.type], state.displayMap);
   if (ev.finished) acc[ev.type] = "";
@@ -496,6 +524,48 @@ function endTurn(direction, acc) {
   acc.input = "";
   acc.output = "";
   post({ type: "turnComplete", direction });
+}
+
+/**
+ * What the run has cost so far, per direction and in total.
+ *
+ * Priced here rather than in the panel because the rate depends on the model,
+ * and the model is a consequence of the mode the direction was started in — the
+ * panel would have to reconstruct that, and would get it wrong for a session
+ * still running under settings the user has since changed.
+ *
+ * A direction that has reported nothing is left out rather than shown as zero.
+ * Whether the simultaneous-translation model reports usage at all is the
+ * server's business, and "0 tokens" next to a session that is plainly working
+ * reads as a broken counter rather than as a quiet one.
+ */
+function usageSnapshot() {
+  const snapshot = { tab: null, mic: null, total: null };
+  const combined = emptyUsage();
+  let cost = 0;
+  for (const name of ["tab", "mic"]) {
+    const acc = state[name]?.acc;
+    if (!acc?.usage.frames) continue;
+    snapshot[name] = { tokens: acc.usage.total, cost: costOf(acc.usage, acc.model) };
+    mergeUsage(combined, acc.usage);
+    // Summed per direction rather than priced from the combined tally: with the
+    // microphone in conversation mode the two directions are two models on two
+    // rate cards, and one total priced as either would be wrong.
+    cost += snapshot[name].cost;
+  }
+  if (!combined.frames) return null;
+  snapshot.total = { tokens: combined.total, cost };
+  return snapshot;
+}
+
+/** Trailing edge only: the first tally lands a second in, and none is skipped. */
+function scheduleUsagePost() {
+  if (state.usageTimer) return;
+  state.usageTimer = setTimeout(() => {
+    state.usageTimer = null;
+    const usage = usageSnapshot();
+    if (usage) post({ type: "usage", usage });
+  }, USAGE_POST_MS);
 }
 
 /** 16 kHz uplink: mono-downmixed PCM16, the format the Live API takes. */
@@ -568,6 +638,11 @@ function applyDuck(shouldDuck, force = false) {
 async function stop() {
   clearInterval(state.duckTimer);
   state.duckTimer = null;
+  // The tallies go with the directions below, and the panel keeps the last
+  // figure it was sent: what a run cost is worth reading after it has ended,
+  // and it is cleared by the next Start rather than by this Stop.
+  clearTimeout(state.usageTimer);
+  state.usageTimer = null;
   stopMicSilenceWatch();
   for (const dir of [state.tab, state.mic]) {
     if (!dir) continue;

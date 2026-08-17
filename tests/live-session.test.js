@@ -146,6 +146,28 @@ test("server frames unwrap from serverContent", async () => {
   assert.deepEqual(h.events[3], { type: "turnComplete" });
 });
 
+test("usageMetadata reports alongside the frame it arrives with", async () => {
+  // It is a sibling of `serverContent`, not part of it, and the message that
+  // carries it usually carries a transcript too — so reporting the tally must
+  // not consume the frame.
+  const h = session();
+  const opening = h.live.open();
+  h.ws().accept();
+  h.ws().deliver({ setupComplete: {} });
+  await opening;
+
+  await h.ws().deliver({
+    usageMetadata: { promptTokenCount: 120, responseTokenCount: 80, totalTokenCount: 200 },
+    serverContent: { outputTranscription: { text: "hello", finished: true } },
+  });
+
+  assert.deepEqual(h.events[0], {
+    type: "usage",
+    usage: { promptTokenCount: 120, responseTokenCount: 80, totalTokenCount: 200 },
+  });
+  assert.deepEqual(h.events[1], { type: "output", text: "hello", finished: true });
+});
+
 test("an interrupted turn closes the caption the same way a finished one does", async () => {
   const h = session();
   const opening = h.live.open();
