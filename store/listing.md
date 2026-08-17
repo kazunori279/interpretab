@@ -160,6 +160,26 @@ is the icon plus the name and "Live speech translation, spoken and subtitled.", 
 channel: the upload form asks for 24-bit PNG, and the canvas export was RGBA over an opaque
 background, which is the same picture with a channel nobody needs.
 
+## Promotional video
+
+The dashboard's 全言語向けプロモーション動画 field, one YouTube URL, optional:
+
+```
+https://www.youtube.com/watch?v=jiY8WJgeKCA
+```
+
+2:45, **unlisted** — a link the store can embed, but not something that shows up on the channel.
+It is a screen recording of a real session rather than a montage: tab audio being interpreted with
+subtitles on the page, then the microphone direction, then the glossary and the options page. Cut
+from six clips shot in one sitting, concatenated and re-encoded CFR 30 (the concat demuxer's
+`-c copy` path produced non-monotonic DTS at the splices), then levelled — the recorded voice sat
+about 20 dB under the translated one, which `dynaudnorm` plus an RMS-detected `agate` and a
+two-pass `loudnorm` to -16 LUFS fixed. Re-cut from the untouched concatenation each time rather
+than from the previous render, so the edits never stack encoder generations.
+
+Nothing in frame is a real API key: the options page shows the field masked throughout, and the
+AI Studio sequence stops at the "Create a new key" dialog.
+
 ---
 
 ## Positioning note (not for submission)
