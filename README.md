@@ -75,8 +75,10 @@ is never logged, never synced, and there is no server of ours for it to reach.
 
 Usage is billed to whichever Google Cloud project the key belongs to, so treat it like a
 password and [restrict
-it](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) to the
-Generative Language API. Two directions at once means two concurrent Live sessions and roughly
+it](https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions) to the Gemini
+API — which is what the Cloud console now calls `generativelanguage.googleapis.com`, and the
+only place the restriction can be set: AI Studio's key page offers nothing but rename and
+delete. Two directions at once means two concurrent Live sessions and roughly
 double the cost; the side panel says so when both are on.
 
 ## What you hear

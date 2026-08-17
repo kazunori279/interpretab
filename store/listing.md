@@ -96,7 +96,7 @@ Honest limits, up front:
 
 ▍ COST
 
-Interpretab is free and open source. Gemini API usage is billed to your own Google account, at Google's rates; the free tier is enough to try it properly. Restricting your key to the Generative Language API is recommended.
+Interpretab is free and open source. Gemini API usage is billed to your own Google account, at Google's rates; the free tier is enough to try it properly. Treat the key like a password: don't share it, and if it ever gets out, delete it at aistudio.google.com/apikey and paste a new one into Options.
 
 ▍ OPEN SOURCE
 
