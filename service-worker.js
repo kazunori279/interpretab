@@ -163,7 +163,7 @@ async function getState() {
   if (running && (await hasOffscreen())) {
     const reply = await toOffscreen({ type: "history" }).catch(() => null);
     lines = reply?.lines || [];
-    // The token tally is broadcast as it changes, so a panel rebuilt between
+    // The usage tally is broadcast as it changes, so a panel rebuilt between
     // two of those broadcasts would otherwise show nothing until the next one.
     usage = reply?.usage || null;
   }

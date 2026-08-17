@@ -43,7 +43,7 @@ import {
 } from "./lib/live-session.js";
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
-import { addUsage, costOf, emptyUsage, mergeUsage } from "./lib/usage.js";
+import { costOf, emptyUsage, mergeUsage, noteAudioIn, noteAudioOut } from "./lib/usage.js";
 
 const DOWNLINK_RATE = 24000; // what Gemini returns
 
@@ -463,6 +463,12 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
     // means nothing said while it is on is transcribed, spoken or charged for.
     if (name === "mic" && state.settings?.micMuted) return;
     session.send(pcm);
+    // After the gate and the mute, so a dropped frame is not charged for: this
+    // counts what went on the wire and nothing else, which is what the Live API
+    // prices. Posting from a path that runs every 32 ms is free — the schedule
+    // coalesces to one post a second and returns on a single comparison.
+    noteAudioIn(acc.usage, pcm.byteLength / 2 / UPLINK_RATE);
+    scheduleUsagePost();
   });
   return { session, player, node, acc };
 }
@@ -478,6 +484,11 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
  */
 function onEvent(direction, ev, player, acc) {
   if (ev.type === "audio") {
+    // Counted before the mute below, and before anything else can drop it: the
+    // server sent this audio and is charging for it whether or not it reaches a
+    // speaker. Muting silences the translation, not the bill.
+    noteAudioOut(acc.usage, ev.buffer.byteLength / 2 / DOWNLINK_RATE);
+    scheduleUsagePost();
     // Only the audio is dropped. The transcript of the same sentence goes on
     // arriving, so the sound can be switched off and the translation still read
     // — in the panel and, if they are on, in the subtitles on the page.
@@ -496,11 +507,12 @@ function onEvent(direction, ev, player, acc) {
     endTurn(direction, acc);
     return;
   }
-  if (ev.type === "usage") {
-    addUsage(acc.usage, ev.usage);
-    scheduleUsagePost();
-    return;
-  }
+  // What the server says it used. Swallowed rather than read: the price comes
+  // from the audio clock instead, for the reasons in `lib/usage.js`, and
+  // `tests/live-smoke.mjs` is where these frames still get looked at. It has to
+  // be caught here all the same, or it falls through to the transcript
+  // accumulator below as if it were text.
+  if (ev.type === "usage") return;
   acc[ev.type] = ev.finished ? ev.text : acc[ev.type] + ev.text;
   const text = applyDisplayMap(acc[ev.type], state.displayMap);
   if (ev.finished) acc[ev.type] = "";
@@ -534,10 +546,8 @@ function endTurn(direction, acc) {
  * panel would have to reconstruct that, and would get it wrong for a session
  * still running under settings the user has since changed.
  *
- * A direction that has reported nothing is left out rather than shown as zero.
- * Whether the simultaneous-translation model reports usage at all is the
- * server's business, and "0 tokens" next to a session that is plainly working
- * reads as a broken counter rather than as a quiet one.
+ * A direction that has moved no audio yet is left out rather than shown as
+ * zero: a session still opening is quiet, not free.
  */
 function usageSnapshot() {
   const snapshot = { tab: null, mic: null, total: null };
@@ -545,16 +555,18 @@ function usageSnapshot() {
   let cost = 0;
   for (const name of ["tab", "mic"]) {
     const acc = state[name]?.acc;
-    if (!acc?.usage.frames) continue;
-    snapshot[name] = { tokens: acc.usage.total, cost: costOf(acc.usage, acc.model) };
+    if (!acc?.usage.inSeconds && !acc?.usage.outSeconds) continue;
+    snapshot[name] = { cost: costOf(acc.usage, acc.model) };
     mergeUsage(combined, acc.usage);
     // Summed per direction rather than priced from the combined tally: with the
     // microphone in conversation mode the two directions are two models on two
     // rate cards, and one total priced as either would be wrong.
     cost += snapshot[name].cost;
   }
-  if (!combined.frames) return null;
-  snapshot.total = { tokens: combined.total, cost };
+  if (!combined.inSeconds && !combined.outSeconds) return null;
+  // The two times go with the figure: the tooltip shows what it was worked out
+  // from, which is the part a wrong meter would have made obvious.
+  snapshot.total = { cost, inSeconds: combined.inSeconds, outSeconds: combined.outSeconds };
   return snapshot;
 }
 

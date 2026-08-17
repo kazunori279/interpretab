@@ -10,7 +10,7 @@
 
 import { LIVE_KEYS } from "./lib/live-session.js";
 import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
-import { formatCost } from "./lib/usage.js";
+import { formatCost, formatDuration } from "./lib/usage.js";
 import {
   agentLanguageCode,
   LANGUAGES,
@@ -316,12 +316,13 @@ function render() {
  *
  * The figure is prefixed with a tilde and the sentence after it says "an
  * estimate, not your actual bill", in the markup rather than in the title
- * attribute. The tally is the server's own count, but the prices behind it are
- * a hardcoded table in `lib/usage.js` that goes stale silently, and Interpretab
- * cannot see which usage tier the key is on — a free-tier key is charged
- * nothing at all. A figure in dollars reads as a bill unless it says otherwise,
- * and a tooltip is not where a number disclaims itself: nobody hovers. What is
- * left for the tooltip is the arithmetic, for whoever wants it.
+ * attribute. The prices behind it are a hardcoded table in `lib/usage.js` that
+ * goes stale silently, and Interpretab cannot see which usage tier the key is
+ * on — a free-tier key is charged nothing at all. A figure in dollars reads as
+ * a bill unless it says otherwise, and a tooltip is not where a number
+ * disclaims itself: nobody hovers. What is left for the tooltip is the
+ * arithmetic, including the two audio times it is derived from — the thing that
+ * would have made #16 legible from the panel instead of from a stopwatch.
  */
 function renderUsage() {
   const note = el("usageNote");
@@ -332,13 +333,15 @@ function renderUsage() {
   const cost = formatCost(usage.total.cost);
   // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
   el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
+  const { inSeconds = 0, outSeconds = 0 } = usage.total;
   note.title =
-    "How this is worked out: Gemini reports the tokens each turn used, and " +
-    "those are multiplied by Google's published rates for the model, read " +
-    "from the pricing page in August 2026 rather than from your account. " +
-    "Interpretab cannot see which usage tier your key is on — on the free " +
-    "tier you are charged nothing at all — and rates change. Your Google " +
-    "account is the only place your real bill exists.";
+    `This run has sent ${formatDuration(inSeconds)} of audio and been sent ` +
+    `${formatDuration(outSeconds)} back. The Live API charges both at 25 ` +
+    "tokens a second, and those are priced at Google's published rates for " +
+    "the model, read from the pricing page in August 2026 rather than from " +
+    "your account. Interpretab cannot see which usage tier your key is on — " +
+    "on the free tier you are charged nothing at all — and rates change. " +
+    "Your Google account is the only place your real bill exists.";
   note.hidden = false;
   // The live figure covers what the static warning was there to say.
   el("costNote").hidden = true;

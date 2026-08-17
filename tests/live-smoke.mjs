@@ -42,7 +42,7 @@
 import { buildSetup, isSimul, modelFor } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
 import { DEFAULTS } from "../lib/settings.js";
-import { addUsage, costOf, emptyUsage, formatCost, formatTokens } from "../lib/usage.js";
+import { AUDIO_TOKENS_PER_SECOND, costOf, formatCost, formatDuration } from "../lib/usage.js";
 import {
   argOf,
   hasFlag,
@@ -94,15 +94,16 @@ let measuringGaps = false;
 /**
  * The token tally, and the one thing about it the documentation does not
  * settle: whether a `usageMetadata` frame is what that turn cost or what the
- * session has cost so far. The side panel sums them, which is right for the
- * first reading and roughly doubles-and-doubles-again for the second, so both
- * readings are printed here — summed, and the largest single frame — along with
- * the shape that tells them apart. Per-frame totals that only ever climb are
- * cumulative; totals that rise and fall with the length of each turn are not.
- * A drop right after a cutover is not evidence either way: the replacement
+ * session has cost so far. The side panel used to sum them and ran three to
+ * five times high (#16), so it now prices the audio clock instead and this is
+ * the only place the frames are still read. Every reading is printed — summed,
+ * the largest single frame, and what the audio actually moved — along with the
+ * shape that tells the first two apart. Per-frame totals that only ever climb
+ * are cumulative; totals that rise and fall with the length of each turn are
+ * not. A drop right after a cutover is not evidence either way: the replacement
  * session starts its own count.
  */
-const usage = { summed: emptyUsage(), totals: [], climbing: true };
+const usage = { totals: [], climbing: true };
 
 // A rendering no model would produce on its own, so the transcript says plainly
 // whether the glossary reached the session or was quietly ignored.
@@ -154,7 +155,6 @@ const loop = new SessionLoop({
       const frame = Number(ev.usage.totalTokenCount) || 0;
       if (frame < (usage.totals.at(-1) ?? 0)) usage.climbing = false;
       usage.totals.push(frame);
-      addUsage(usage.summed, ev.usage);
       return; // `--raw` already prints the frame itself
     }
     if (ev.type === "input") inputText += ev.text;
@@ -201,34 +201,29 @@ console.log("goAways :", counts.goAways, `| server closes: ${counts.closed}`);
 console.log("max gap :", `${(maxAudioGapMs / 1000).toFixed(1)}s between output audio frames`);
 
 const model = modelFor(direction, settings);
+// What the side panel shows: the audio this run put on the wire and got back,
+// at the 25 tokens a second the Live API bills it at.
+const clock = { inSeconds: speechSec * passes + 15, outSeconds: audioBytes / 2 / 24000 };
+console.log(
+  "usage   :",
+  `${formatDuration(clock.inSeconds)} in, ${formatDuration(clock.outSeconds)} out` +
+    ` ≈ ${formatCost(costOf(clock, model))} on ${model} — what the side panel shows`
+);
 if (!usage.totals.length) {
-  console.log("usage   : the server reported none — the side panel will show nothing");
+  console.log("  the server reported no usageMetadata at all");
 } else {
-  const largest = Math.max(...usage.totals);
+  const summed = usage.totals.reduce((a, b) => a + b, 0);
+  const clockTokens = Math.round((clock.inSeconds + clock.outSeconds) * AUDIO_TOKENS_PER_SECOND);
   console.log(
-    "usage   :",
-    `${usage.totals.length} frames, summed ${formatTokens(usage.summed.total)} tokens ` +
-      `≈ ${formatCost(costOf(usage.summed, model))} on ${model}`
-  );
-  console.log(
-    "  read as a running total instead:",
-    `${formatTokens(largest)} tokens (largest frame; last was ${formatTokens(usage.totals.at(-1))})`
+    "  server:",
+    `${usage.totals.length} frames — summed ${summed}, largest ${Math.max(...usage.totals)},` +
+      ` last ${usage.totals.at(-1)}; the audio clock says ${clockTokens}`
   );
   console.log(
     "  per-frame totals",
     usage.climbing
       ? "never fell — cumulative, unless every turn happened to be longer than the last"
-      : "rose and fell — per-turn, which is what the side panel assumes"
-  );
-  console.log(
-    "  in :",
-    `audio ${formatTokens(usage.summed.input.audio)}, text ${formatTokens(usage.summed.input.text)},` +
-      ` other ${formatTokens(usage.summed.input.other)}`
-  );
-  console.log(
-    "  out:",
-    `audio ${formatTokens(usage.summed.output.audio)}, text ${formatTokens(usage.summed.output.text)},` +
-      ` other ${formatTokens(usage.summed.output.other)}`
+      : "rose and fell — per-turn"
   );
 }
 

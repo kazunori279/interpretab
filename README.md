@@ -483,33 +483,53 @@ the socket dies without warning.
 ### What a run costs
 
 The extension spends the user's own money and, until v1.0, told them so only in the abstract: a
-static line saying two directions cost roughly double. The Live API attaches `usageMetadata` to
-its server messages — token counts, broken down by modality — and every one of them was being
-dropped on the floor. `lib/usage.js` reads them instead, and the side panel replaces that warning
-with a meter — a dial and one figure: *~$0.31 of Gemini usage this run — an estimate, not your
-actual bill.*
+static line saying two directions cost roughly double. The side panel replaces that warning with a
+meter — a dial and one figure: *~$0.31 of Gemini usage this run — an estimate, not your actual
+bill.*
 
+**The figure is the audio clock, not the server's token count**, and getting there took a wrong
+turn worth writing down. The Live API attaches `usageMetadata` to its server messages and the
+extension was dropping every one of them, so the first version read them instead and summed them
+— the documented reading, and the one every SDK that surfaces `usageMetadata` in a live session
+takes. In use the meter climbed a cent every few seconds in Simultaneous mode, three to five times
+what Google's own per-minute prices allow ([#16](https://github.com/kazunori279/interpretab/issues/16)).
+Something about the frames is not what that reading assumes — either turn-cumulative counts ride
+on every chunk of a turn, or each turn re-reports the context it retained — and nothing in a frame
+says which, so any rule for folding them together is a guess about somebody else's money.
+
+There is nothing to guess at. Google states the basis in as many words — *billing is based on
+total input and output audio token consumption, calculated at a rate of 25 tokens per second of
+audio* — and this extension owns both ends of that audio. `lib/usage.js` counts the seconds
+instead:
+
+- **Uplink is counted after the duplex gate and the mute**, at the one line that hands PCM to
+  `SessionLoop`, so a frame that was dropped is a frame not charged for. Downlink is counted
+  *before* the sound mute, because the server sent that audio and is charging for it whether or
+  not it reaches a speaker.
 - **The tally lives above the session.** It sits on each direction's accumulator in
   `offscreen.js`, so the half-dozen session swaps in an hour do not reset it, and it survives a
   tab switch — the side panel is destroyed and rebuilt on every one of those, so it asks for the
   figure in `getState` as well as receiving it broadcast. Posts are coalesced to one a second;
-  the frames arrive far faster than anyone reads them.
+  the uplink path alone runs every 32 ms.
 - **`SessionLoop` forwards a usage frame without treating it as speech.** Every other event
   updates `_lastRelayAt`, which is how a drain decides the dying session has fallen silent. A
   tally is bookkeeping, not an answer, so letting it count would hold a cutover open to its
   deadline and shorten the preroll owed to the replacement.
 - **Both directions are priced separately, then added**, because they can be two different models
   at two different rates.
-- **Rates are per million tokens, in one table, with the date they were read.** Live Translate
-  publishes audio prices only and bills everything at them; Flash Live prices text separately and
-  much lower. Tokens the modality breakdown does not account for are priced as audio, which is
-  the more expensive guess — a cost estimate that errs should err upwards.
-- **Frames are summed, and that is the assumption to check.** `promptTokenCount` documents the
-  tokens of *the* request, and the SDKs that surface it in a live session accumulate across
-  events rather than reading the last one. If the server instead re-reports retained context each
-  turn, the input side drifts high. Output — five to six times the price on both models — is
-  unambiguous either way. `tests/live-smoke.mjs` prints both readings of a real run and says
-  which shape the per-frame totals had, so one soak settles it.
+- **Rates are per million tokens, in one table, with the date they were read.** Only the audio
+  rates are used now: Live Translate publishes nothing else, and leaving out Flash Live's cheaper
+  text understates a conversation-mode run by a few percent — the direction to be wrong in is not
+  the one that invents a charge.
+- **`usageMetadata` is swallowed, not read.** It still arrives and `SessionLoop` still forwards
+  it, because `tests/live-smoke.mjs` is where those frames still get looked at — it prints the
+  summed, largest and last frame next to the audio clock, which is what #16 needs to be *closed*
+  rather than merely worked around. Nothing carries them into the panel: a number nobody can see
+  is not worth threading through three layers.
+
+The unit test that would have caught this in the first place is now in `tests/usage.test.js`: a
+cent takes sixteen seconds of continuous audio in both directions, and the arithmetic is asserted
+against the per-minute column of the same pricing page the per-token column came from.
 
 **One number, against a dial.** The first version of this line also printed the token count and,
 when both directions were running, what each of them had spent — three figures and a breakdown, in
@@ -517,14 +537,20 @@ a 12px grey line, while a translation was playing. All of it went. The tokens ar
 measured rather than the thing wanted, and the per-direction split was standing in for the
 doubling warning that the run total already makes visible by being twice as large. What is left is
 a gauge glyph, which says "meter" before the sentence is read, and one figure with a tilde on it.
+Removing the breakdown did cost something, though: it was also the only thing that would have made
+a meter running at five times the rate legible from the panel. The two audio times are back in the
+tooltip for that reason.
 
 **The disclaimer is in the sentence, not only in the tooltip.** A figure in dollars reads as a bill
 unless it says otherwise, and nobody hovers over a line of text to find out that it is not one. So
 the sentence carries *an estimate, not your actual bill* — in `sidepanel.html` with the other
 static notes, since only the figure is written from script — and the tooltip has the arithmetic:
-Gemini reports the tokens, the prices are a hardcoded table that goes stale silently, and
-**Interpretab cannot see which usage tier the key is on**, so it prices everything at the paid
-rates even though a free-tier key is charged nothing at all. If the wording of the sentence
+how much audio went each way, that the Live API charges both at 25 tokens a second, that the
+prices are a hardcoded table that goes stale silently, and that **Interpretab cannot see which
+usage tier the key is on**, so it prices everything at the paid rates even though a free-tier key
+is charged nothing at all. That last one is its own problem — a price is not a useful thing to
+show someone who is not being charged
+([#17](https://github.com/kazunori279/interpretab/issues/17)). If the wording of the sentence
 changes, `README.md`, `index.md` and `ja/index.md` all quote it, and `tests/assets.test.js` fails
 until they agree.
 
