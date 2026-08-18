@@ -295,23 +295,27 @@ test("a sentence delivered all at once is queued whole, not folded over itself",
   assert.equal(+(scheduled.at(-1).at + 0.1 - scheduled[0].at).toFixed(6), 4);
 });
 
-test("how far ahead of the clock the queue has run is said out loud", () => {
+test("how long a frame waits before it is heard is said out loud, as a range", () => {
   // The first real call was four seconds mouth to far-ear, two of them added
   // after the local player. This is the only part of that stretch that cannot
-  // be read from outside the page, and whether it sits at the lead or climbs is
-  // the difference between "Meet is slow" and "we are holding the audio".
+  // be read from outside the page — and the first version of this instrument
+  // reported one number, which could not be read either, because a sentence
+  // that takes four seconds to say and a queue four seconds behind produce the
+  // same 4.2. The two ends of the range are what tell them apart.
   const win = fakeWindow();
   load(win);
   for (let i = 0; i < 40; i++) win.fromBridge({ type: "voice", pcm: frame(2400) });
   const leads = win.calls.posted.filter((m) => m.state === "lead").map((m) => m.detail);
   // Four seconds of speech handed over at once, against a clock that has not
-  // moved: the queue really is four seconds ahead, and the report says so
-  // rather than reporting the 0.12 it started at.
-  assert.deepEqual(leads, ["2.02", "4.02"]);
+  // moved. The high end climbs to the whole of it, because the last frame
+  // really does wait that long — but the low end of the first window is the
+  // 0.12 the run started from, which is the queue saying it was empty when the
+  // sentence began.
+  assert.deepEqual(leads, ["0.12..2.12", "2.12..4.12"]);
 
-  // And a run arriving at the rate it will be spoken does not drift: the lead
-  // is the 120 ms the first frame left, plus the frame just queued behind it,
-  // and it is the same at the end of the run as at the start.
+  // A run arriving at the rate it will be spoken does not drift: every frame
+  // waits the 120 ms the first one left, and the high end is that plus the
+  // frame just queued behind it. Same at the end of the run as at the start.
   const steady = fakeWindow();
   load(steady);
   for (let i = 0; i < 40; i++) {
@@ -319,7 +323,30 @@ test("how far ahead of the clock the queue has run is said out loud", () => {
     steady.clock.now += 0.1;
   }
   const same = steady.calls.posted.filter((m) => m.state === "lead").map((m) => m.detail);
-  assert.deepEqual(same, ["0.22", "0.22"]);
+  assert.deepEqual(same, ["0.12..0.22", "0.12..0.22"]);
+
+  // And the thing the range exists to catch: sentences with gaps between them,
+  // which is what a call sounds like. Each one starts from a drained queue, so
+  // 0.12 comes back at the start of each — however high the inside of a
+  // sentence went. It is 0.12 *failing* to come back that means the delay is
+  // ours.
+  const gaps = fakeWindow();
+  load(gaps);
+  for (let sentence = 0; sentence < 3; sentence++) {
+    for (let i = 0; i < 25; i++) gaps.fromBridge({ type: "voice", pcm: frame(2400) });
+    // The two and a half seconds of speech play out, and half a second of
+    // silence follows.
+    gaps.clock.now += 3;
+  }
+  const perSentence = gaps.calls.posted.filter((m) => m.state === "lead").map((m) => m.detail);
+  // One report each, and the low end of every one of them is the lead: three
+  // sentences in and the queue is still starting each from empty. The high ends
+  // are not asserted — which frame of a run trips the two-second window is a
+  // rounding away either side, and it is not what the low end is for.
+  assert.deepEqual(
+    perSentence.map((d) => d.split("..")[0]),
+    ["0.12", "0.12", "0.12"],
+  );
 });
 
 test("the shim only listens to its own half of the relay", () => {

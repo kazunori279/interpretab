@@ -341,10 +341,19 @@ What that first call answered, and what it did not:
   paragraph above this one predicted: half the delay is added *after* the audio has been
   translated and played on this machine. Two seconds is not what three contexts and a base64
   round trip cost. It is spent either in this file — the queue running ahead of the clock, which
-  `LEAD_S` permits on purpose — or somewhere in Meet. The shim now reports its lead every two
-  seconds of scheduled audio (`console.info` from the service worker, `state: "lead"`), which
-  separates the two: 0.22 means the audio is leaving here on time and the delay is Meet's; a
-  number that climbs over a call means the queue is the delay.
+  `LEAD_S` permits on purpose — or somewhere in Meet. The shim reports its lead every two seconds
+  of scheduled audio (`console.info` from the service worker, `state: "lead"`) to separate the
+  two.
+
+  It reports a **range**, `0.12..2.12`, and the first version of it did not, which cost a
+  measurement. One number here cannot be read: a frame scheduled four seconds ahead of the clock
+  is either a queue four seconds behind or a sentence that takes four seconds to say, and the
+  reading of "4.2, all of them" from the second call was the second thing while looking exactly
+  like the first. The low end is the shortest wait any frame in the window had, taken before its
+  own duration is counted, and a run of speech that starts from a drained queue starts at
+  `LEAD_S`. So read the stream of reports rather than one of them: `0.12..` coming back at the
+  start of each sentence means the audio is leaving here on time and the delay is Meet's, however
+  high the inside of a sentence climbs. `0.12` never reappearing is the queue being the delay.
 
   Read that number before reaching for `chrome://webrtc-internals`. The obvious hypothesis about
   Meet's half — that its jitter buffer inflates because a synthetic track arrives in bursts —
@@ -356,8 +365,8 @@ What that first call answered, and what it did not:
   `jitterBufferDelay / jitterBufferEmittedCount` on the far end's inbound audio track.
 - **A second of it was Studio Sound**, and turning that off is the whole fix for that second.
   Which settles part of the question above: at least half of the two seconds was Meet's, not the
-  queue's. Three seconds is still too many, and where the last one lives — the queue, or the
-  jitter buffer that has to make sense of a track arriving in bursts — is still open.
+  queue's. Three seconds is still too many, and where the last one lives — the queue, or Meet's
+  jitter buffer — is still open, pending a reading of the range described above.
 - **Meet did not take the microphone back.** Not once, across the call. The silent failure that
   would have sunk this did not happen, which is a weaker statement than "cannot happen" and worth
   re-checking on a reconnection and a network drop.

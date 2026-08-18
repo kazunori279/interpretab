@@ -108,22 +108,30 @@ function installMicShim(win) {
   let playhead = 0;
   const sinks = new Set();
 
-  // How far ahead of the clock the queue has run, reported every this many
-  // seconds of scheduled audio.
+  // How long a frame waits before it is heard, reported as a range every this
+  // many seconds of scheduled audio.
   //
-  // The first real call came in at four seconds mouth to far-ear with two of
-  // them added somewhere after the local player, and this is the only part of
-  // that stretch nobody can see from outside: Meet's own path can be read off
-  // `chrome://webrtc-internals` at the far end, and everything before this file
-  // is timestamped in the panel. If the number below sits at 0.12 the audio is
-  // leaving here on time and the two seconds are Meet's; if it climbs, the
-  // queue is the delay, and it climbing is a thing this file allows on purpose
-  // — see the comment on `LEAD_S`, and note that the assumption there is that
-  // translated speech takes as long to say as the speech it came from. A target
-  // language that is wordier than the source would break it slowly, over a
-  // call, which is exactly the shape of a delay nobody notices starting.
+  // A range, and not the single number the first version of this reported,
+  // because one number here cannot be read. Take a four-second sentence
+  // delivered as a burst: the last frame of it is scheduled four seconds ahead
+  // of the clock, and that is not four seconds of latency, it is a sentence
+  // that takes four seconds to say. The measured "lead 4.2" that prompted this
+  // was exactly that, and it looks identical to a queue that has fallen four
+  // seconds behind.
+  //
+  // What tells them apart is the *low* end: the shortest wait any one frame in
+  // the window had, taken before its own duration is counted. A run of speech
+  // that starts from a drained queue starts at `LEAD_S`, so on a healthy call
+  // `0.12..` keeps coming back — once per sentence, whatever the high end has
+  // climbed to inside it. Read the stream of reports, not one of them: it is
+  // `0.12` never reappearing that means the playhead stopped resetting, the
+  // queue never drained, and the delay is ours. That is the failure `LEAD_S`
+  // allows on purpose — the comment there assumes translated speech takes as
+  // long to say as the speech it came from, and a target language wordier than
+  // the source would break it slowly, over a call.
   const REPORT_EVERY_S = 2;
   let reportedAt = 0;
+  let minLead = Infinity;
 
   function context() {
     if (ctx) return ctx;
@@ -175,12 +183,26 @@ function installMicShim(win) {
     // the relay stalled — and anything scheduled in the past is played at once,
     // on top of whatever else was. Start a fresh run instead.
     const floor = c.currentTime + LEAD_S;
-    if (playhead < floor) playhead = floor;
+    if (playhead < floor) {
+      playhead = floor;
+      // A new run of speech starts a new reporting window, so that the first
+      // report of a sentence covers the start of that sentence and not the
+      // silence in front of it. Without this the windows drift out of step with
+      // the audio by however long the gaps were, and no two reports of the same
+      // call are measuring comparable stretches.
+      reportedAt = playhead;
+    }
+    // Before the frame's own duration is added: this is how long *this* frame
+    // waits, which is the latency, rather than how much audio is stacked up
+    // behind it.
+    const lead = playhead - c.currentTime;
+    if (lead < minLead) minLead = lead;
     source.start(playhead);
     playhead += buffer.duration;
     if (playhead - reportedAt >= REPORT_EVERY_S) {
       reportedAt = playhead;
-      report("lead", (playhead - c.currentTime).toFixed(2));
+      report("lead", `${minLead.toFixed(2)}..${(playhead - c.currentTime).toFixed(2)}`);
+      minLead = Infinity;
     }
   }
 
@@ -298,6 +320,7 @@ function installMicShim(win) {
     // between a call that hears nothing and a call that drops the participant.
     playhead = 0;
     reportedAt = 0;
+    minLead = Infinity;
     if (win[MARK] === handle) delete win[MARK];
     // The device is gone; say so, so the picker stops offering it.
     media.dispatchEvent?.(new win.Event("devicechange"));
