@@ -123,7 +123,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 async function handle(msg, sender) {
   switch (msg.type) {
     case "start":
-      return start();
+      // The panel names its own tab rather than letting this worker guess.
+      // `invokedTabId` is the last tab the icon was clicked on, which is not
+      // the same thing: switching between two tabs that both have a panel
+      // rebuilds the panel without a click, and Start would then capture the
+      // other one.
+      return start(msg.tabId ?? null);
     case "stop":
       return stop();
     case "getState":
@@ -165,11 +170,15 @@ async function getState() {
     capturedTabId = null,
     captionStatus = null,
     lastError = null,
+    runTabId = null,
+    runTabTitle = "",
   } = await chrome.storage.session.get([
     "running",
     "capturedTabId",
     "captionStatus",
     "lastError",
+    "runTabId",
+    "runTabTitle",
   ]);
   let lines = [];
   let usage = null;
@@ -180,17 +189,36 @@ async function getState() {
     // two of those broadcasts would otherwise show nothing until the next one.
     usage = reply?.usage || null;
   }
-  return { running, capturedTabId, captionStatus, lastError, lines, usage };
+  return {
+    running,
+    capturedTabId,
+    captionStatus,
+    lastError,
+    // Which tab the run belongs to, so a panel can tell whether it is looking
+    // at its own run or at somebody else's — see `render` in the panel.
+    runTabId,
+    runTabTitle,
+    lines,
+    usage,
+  };
 }
 
-async function targetTab() {
+/**
+ * The tab a run is about to be attached to.
+ *
+ * The panel's own tab first, because that is the tab the user is looking at
+ * while pressing Start. `invokedTabId` behind it for the callers that have no
+ * panel to ask, and the active tab behind that — which will simply fail the
+ * activeTab check with a clear message if it was never clicked.
+ */
+async function targetTab(preferredId = null) {
   const { invokedTabId } = await chrome.storage.session.get("invokedTabId");
-  if (invokedTabId != null) {
+  for (const id of [preferredId, invokedTabId]) {
+    if (id == null) continue;
     try {
-      return await chrome.tabs.get(invokedTabId);
+      return await chrome.tabs.get(id);
     } catch {
-      // The tab closed since the icon was clicked; fall through to the active
-      // one, which will simply fail the activeTab check with a clear message.
+      // Closed since; try the next one.
     }
   }
   const [active] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -198,7 +226,34 @@ async function targetTab() {
   return active;
 }
 
-async function start() {
+/**
+ * There is one engine, so there is one run, and it belongs to one tab.
+ *
+ * Starting from a second tab used to take the run over in silence: the
+ * offscreen document stops and restarts itself, and the first tab was left with
+ * subtitles that had stopped arriving, a mark in its title that meant nothing,
+ * and a panel still saying Connected. Refusing is the honest version of the
+ * same limit — and the panel on a tab that does not own the run offers Stop
+ * rather than Start, so reaching this is a race rather than the ordinary way in.
+ */
+async function refuseSecondRun(panelTabId) {
+  const { running, runTabId, runTabTitle } = await chrome.storage.session.get([
+    "running",
+    "runTabId",
+    "runTabTitle",
+  ]);
+  // Starting again on the run's own tab is a restart, which is how every
+  // setting that needs a reconnect is applied.
+  if (!running || (runTabId != null && runTabId === panelTabId)) return;
+  const where = runTabTitle ? `on “${runTabTitle}”` : "on another tab";
+  throw new Error(
+    `Interpretab is already running ${where}, and it runs on one tab at a time. ` +
+      `Press Stop first — the Stop button works from any tab.`
+  );
+}
+
+async function start(panelTabId = null) {
+  await refuseSecondRun(panelTabId);
   const settings = await loadSettings();
   if (!settings.tabEnabled && !settings.micEnabled) {
     throw new Error("Enable at least one direction first.");
@@ -207,10 +262,15 @@ async function start() {
   // message rather than a tab-capture prompt followed by silence.
   const apiKey = requireApiKey(settings);
 
+  // The tab the run belongs to. The captured one where there is one; otherwise
+  // the tab whose panel pressed Start, which for a microphone-only run is where
+  // the subtitles and the title mark go — the same tab, and the same `activeTab`
+  // grant is what allows any of it.
+  let tab = null;
   let streamId = null;
   let tabId = null;
   if (settings.tabEnabled) {
-    const tab = await targetTab();
+    tab = await targetTab(panelTabId);
     tabId = tab.id;
     try {
       streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
@@ -222,6 +282,8 @@ async function start() {
           `then press Start again. (${err.message})`
       );
     }
+  } else {
+    tab = await targetTab(panelTabId).catch(() => null);
   }
 
   const glossary = await ensureGlossary();
@@ -239,28 +301,49 @@ async function start() {
   // captionStatus is cleared so this run re-announces it rather than being
   // deduplicated against whatever the last one ended on, and lastError because
   // it belongs to the run that ended, not to this one.
+  //
+  // The title is taken here and not read back later: `activeTab` is what makes
+  // it readable at all, and that grant lapses the moment the tab navigates —
+  // which is exactly when a panel on some other tab most wants to name the tab
+  // it should look at. A title from the start of the run beats none.
   await chrome.storage.session.set({
     running: true,
     capturedTabId: tabId,
+    runTabId: tab?.id ?? null,
+    runTabTitle: tab?.title || "",
     captionStatus: null,
     lastError: null,
   });
+  announceRun(tab?.id ?? null, tab?.title || "");
   await markTab(settings);
   await ensureCaptionTab(settings);
   return { capturedTabId: tabId };
 }
 
 /**
+ * Tell every open panel whose run this is.
+ *
+ * The running flag itself is broadcast by the offscreen document, which has no
+ * tab and so cannot say. Without this, a panel on another tab would hear that a
+ * run had started and have no way to tell it was not its own — and would offer
+ * that tab's controls, wired to global settings, over somebody else's
+ * translation.
+ */
+function announceRun(runTabId, runTabTitle) {
+  chrome.runtime.sendMessage({ target: "ui", type: "run", runTabId, runTabTitle }).catch(() => {});
+}
+
+/**
  * Say in the tab strip which tab this run belongs to.
  *
- * The captured tab if there is one; otherwise the tab the icon was clicked on,
- * which for a microphone-only run is where the side panel lives — the same tab
- * and the same reasoning as the subtitles, and the same `activeTab` grant is
- * what allows either.
+ * `runTabId` and not a tab worked out again here: the mark, the subtitles and
+ * the panel's idea of whose run this is all have to name the same tab, and
+ * three separate derivations of "the captured one, or else the clicked one"
+ * were three chances to name three different tabs.
  */
 async function markTab(settings) {
-  const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
-  const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
+  const { runTabId } = await chrome.storage.session.get("runTabId");
+  const tabId = runTabId ?? null;
   if (tabId == null) return;
   const prefix =
     (settings.tabEnabled ? TAB_MARKS.tab : "") + (settings.micEnabled ? TAB_MARKS.mic : "") + " ";
@@ -312,15 +395,16 @@ function wantsCaptions(settings) {
  *
  * The captured tab is the obvious target, but the microphone direction can run
  * on its own, with nothing captured. Its subtitles still have to land
- * somewhere, and the tab the toolbar icon was clicked on is both the sensible
- * choice and the only one `activeTab` lets us inject into.
+ * somewhere, and the tab that started the run is both the sensible choice and
+ * the only one `activeTab` lets us inject into — which is what `runTabId`
+ * already holds, for the mark and for the panel as well.
  */
 async function ensureCaptionTab(settings) {
   if (!wantsCaptions(settings)) return reportCaptions("off");
   const existing = (await chrome.storage.session.get("captionTabId")).captionTabId;
   if (existing != null) return;
-  const { capturedTabId } = await chrome.storage.session.get("capturedTabId");
-  const tabId = capturedTabId ?? (await targetTab().catch(() => null))?.id ?? null;
+  const { runTabId } = await chrome.storage.session.get("runTabId");
+  const tabId = runTabId ?? null;
   if (tabId == null) {
     return reportCaptions("unavailable", "Open a website and click the toolbar icon there.");
   }
@@ -396,12 +480,15 @@ async function stop() {
   await chrome.storage.session.set({
     running: false,
     capturedTabId: null,
+    runTabId: null,
+    runTabTitle: "",
     captionTabId: null,
     captionRetryAt: 0,
     captionStatus: null,
     markedTabId: null,
     tabMarkPrefix: null,
   });
+  announceRun(null, "");
   return {};
 }
 
@@ -526,12 +613,23 @@ async function reinjectDue() {
 // A captured tab that goes away takes its stream with it, and the offscreen
 // document would sit there holding a dead MediaStream.
 chrome.tabs.onRemoved.addListener(async (tabId) => {
-  const { capturedTabId, captionTabId } = await chrome.storage.session.get([
+  const { capturedTabId, captionTabId, runTabId } = await chrome.storage.session.get([
     "capturedTabId",
     "captionTabId",
+    "runTabId",
   ]);
   // A microphone-only run outlives the page it was subtitling; forget the
   // overlay and keep going.
   if (tabId === captionTabId) await chrome.storage.session.set({ captionTabId: null });
-  if (tabId === capturedTabId) await stop();
+  if (tabId === capturedTabId) {
+    await stop();
+    return;
+  }
+  // The run outlives its tab, but its claim on that tab does not: leave it
+  // owned by nobody rather than by a tab id Chrome will hand to some future
+  // page. Every panel then shows it as running elsewhere, which is true, and
+  // Stop from any of them ends it.
+  if (tabId === runTabId) {
+    await chrome.storage.session.set({ runTabId: null, runTabTitle: "" });
+  }
 });

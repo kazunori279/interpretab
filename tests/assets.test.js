@@ -221,6 +221,85 @@ test("the microphone warning is taken back down by the first sound", () => {
   assert.match(panel, /el\("micNote"\)\.hidden = !msg\.detail/);
 });
 
+/** One source file, as text. Every invariant below is a regex over one. */
+const read = (name) => fs.readFileSync(path.join(ROOT, name), "utf8");
+
+/** A named top-level function's body, up to the `}` in the first column. */
+function body(code, name) {
+  const found = code.match(new RegExp(`(?:async )?function ${name}\\([\\s\\S]*?\\n\\}`));
+  assert.ok(found, `${name} is gone`);
+  return found[0];
+}
+
+test("one engine means one run, and a second tab is refused rather than served", () => {
+  // Start on a second tab used to stop and restart the offscreen document
+  // without telling anybody: the first tab was left with a mark in its title, a
+  // subtitle overlay nothing was being sent to, and a panel still lit green.
+  // Refusing is the honest version of the same one-engine limit, and it has to
+  // come before anything is captured — a tab-capture prompt for a run that is
+  // about to be refused is worse than the refusal.
+  const sw = read("service-worker.js");
+  assert.match(
+    body(sw, "start"),
+    /^async function start\(panelTabId[^)]*\) \{\s*\n\s*await refuseSecondRun\(panelTabId\);/
+  );
+
+  const refuse = body(sw, "refuseSecondRun");
+  assert.match(refuse, /throw new Error/, "a second run has to be refused, not adopted");
+  // Except on the run's own tab, where Start is the restart every setting that
+  // needs a reconnect is applied with.
+  assert.match(refuse, /runTabId === panelTabId/);
+
+  // And the owner is written down where the mark, the subtitles and the panel
+  // all read it from, then cleared with the run.
+  assert.match(body(sw, "start"), /runTabId: tab\?\.id \?\? null/);
+  assert.match(body(sw, "stop"), /runTabId: null/);
+});
+
+test("a panel that does not own the run may stop it and nothing else", () => {
+  const panel = read("sidepanel.js");
+  const html = read("sidepanel.html");
+
+  assert.match(panel, /const elsewhere = running && runTabId !== myTabId;/);
+  assert.match(panel, /for \(const id of RUN_CONTROLS\) el\(id\)\.disabled = elsewhere;/);
+  // Stop is the one exemption: reaching it from a tab that was never
+  // translating is what the toolbar icon is for.
+  assert.match(panel, /el\("toggle"\)\.disabled = elsewhere\s*\n?\s*\?\s*false/);
+
+  // Every control in the markup has to be in that list. The settings behind
+  // them are global, so one that is left out is a checkbox that silently
+  // reconfigures and reconnects a run on a page the user is not looking at —
+  // and it would look like it had done nothing at all.
+  const list = panel.match(/const RUN_CONTROLS = \[([\s\S]*?)\];/);
+  assert.ok(list, "RUN_CONTROLS is gone");
+  const listed = new Set([...list[1].matchAll(/"([\w-]+)"/g)].map((m) => m[1]));
+  const controls = [...html.matchAll(/<(?:input|select)[^>]*\bid="([\w-]+)"/g)].map((m) => m[1]);
+  assert.ok(controls.length > 5, "the markup scan found suspiciously few controls");
+  assert.deepEqual(
+    controls.filter((id) => !listed.has(id)),
+    []
+  );
+});
+
+test("the run belongs to the tab whose panel started it, not the last one clicked", () => {
+  // `invokedTabId` is the last tab the toolbar icon was clicked on, and two tabs
+  // that both have a panel are switched between without any click at all — so
+  // Start on one of them would capture the other. The panel names its own tab.
+  const panel = read("sidepanel.js");
+  const starts = [...panel.matchAll(/send\(\{ type: "start"[^}]*\}/g)].map((m) => m[0]);
+  assert.equal(starts.length, 2, "Start and the settings restart, and nothing else");
+  for (const call of starts) assert.match(call, /tabId: myTabId/);
+
+  // And the mark and the subtitles follow that one recorded tab rather than
+  // each working out "the captured one, or else the clicked one" again — three
+  // derivations were three chances to name three different tabs.
+  const sw = read("service-worker.js");
+  for (const fn of ["markTab", "ensureCaptionTab"]) {
+    assert.match(body(sw, fn), /runTabId/);
+    assert.doesNotMatch(body(sw, fn), /targetTab|invokedTabId/);
+  }
+});
+
 test("the cost meter's clock is stamped where the run is", () => {
   // Not in the panel: it can be closed and reopened in the middle of a run, and
   // a timer that started with it would report the run as having begun when the

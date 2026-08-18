@@ -25,6 +25,27 @@ const SIMUL = { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES };
 
 const el = (id) => document.getElementById(id);
 
+/**
+ * Everything that would edit a run, for the panels that are not the run's.
+ *
+ * There is one engine and one run, and the settings behind these controls are
+ * global — so a checkbox pressed on a tab that is not the running one would
+ * silently reconfigure and reconnect a translation the user is not looking at.
+ * The Stop button is deliberately not in this list: stopping from any tab is
+ * what the toolbar icon is for.
+ */
+const RUN_CONTROLS = [
+  "tabEnabled",
+  "tabCaptions",
+  "tabTarget",
+  "duckLevel",
+  "micEnabled",
+  "micCaptions",
+  "micMode",
+  "micSource",
+  "micTarget",
+];
+
 let settings = { ...DEFAULTS };
 let running = false;
 // The last token tally the offscreen document sent, per direction and in total,
@@ -35,11 +56,27 @@ let usage = null;
 // The bubble currently being appended to, per direction and side, so streamed
 // increments extend a line instead of starting a new one.
 const openLines = new Map();
+/**
+ * The tab this panel belongs to, and the tab the current run belongs to.
+ *
+ * They are usually the same one and the panel is then an ordinary control
+ * panel. When they differ, this panel is a bystander: the run is somebody
+ * else's page, and all it may do is show it and stop it.
+ *
+ * Asked for once, on the way in. The panel is scoped to its tab — Chrome
+ * destroys this document when the user switches away and builds a fresh one on
+ * the way back — so the active tab at init is always this panel's own, and a
+ * tab id does not change under a navigation.
+ */
+let myTabId = null;
+let runTabId = null;
+let runTabTitle = "";
 
 init();
 
 async function init() {
   settings = await loadSettings();
+  myTabId = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id ?? null;
   await populateLanguages();
   bind();
   render();
@@ -61,6 +98,8 @@ async function init() {
  * a half-finished sentence extends it instead of printing it again underneath.
  */
 function restore(state) {
+  runTabId = state?.runTabId ?? null;
+  runTabTitle = state?.runTabTitle || "";
   // Why the last run ended by itself, for a panel that was not there to be told
   // — it is kept in session storage until the next Start for exactly this.
   if (state?.lastError) showError(state.lastError);
@@ -281,6 +320,21 @@ function render() {
   const hasKey = !!(settings.apiKey || "").trim();
   el("keyNote").hidden = hasKey;
 
+  // One engine, one run, one tab. This panel is on a different tab from the
+  // run when the user has switched away and clicked the icon somewhere else —
+  // or when the run's tab has since been closed, which leaves it owned by
+  // nobody and every panel a bystander. Either way the controls here are wired
+  // to global settings and would reach into that run, so they come off; the
+  // note says where it is, and Stop stays.
+  const elsewhere = running && runTabId !== myTabId;
+  el("elsewhereNote").textContent = runTabTitle
+    ? `Interpretab is running on “${runTabTitle}”, and it runs on one tab at a time. ` +
+      `Its controls are on that tab — Stop works from here.`
+    : `Interpretab is running on another tab, and it runs on one tab at a time. ` +
+      `Its controls are on that tab — Stop works from here.`;
+  el("elsewhereNote").hidden = !elsewhere;
+  for (const id of RUN_CONTROLS) el(id).disabled = elsewhere;
+
   // Nothing to mute when the direction behind the button is switched off. The
   // sound button stops every translated voice there is, wherever it is being
   // played, so the only state that leaves it with nothing to do is both
@@ -288,21 +342,25 @@ function render() {
   renderMute(
     "micMute",
     settings.micMuted,
-    settings.micEnabled,
+    settings.micEnabled && !elsewhere,
     "the microphone",
-    "The microphone direction is off."
+    elsewhere ? "The run is on another tab." : "The microphone direction is off."
   );
   renderMute(
     "soundMute",
     settings.soundMuted,
-    settings.tabEnabled || settings.micEnabled,
+    (settings.tabEnabled || settings.micEnabled) && !elsewhere,
     "the translated voice",
-    "Neither direction is on."
+    elsewhere ? "The run is on another tab." : "Neither direction is on."
   );
 
   el("toggle").textContent = running ? "Stop" : "Start";
   el("toggle").classList.toggle("running", running);
-  el("toggle").disabled = (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
+  // Stop is the exception to the paragraph above: it is the whole reason the
+  // icon opens this panel on a tab that was never translating.
+  el("toggle").disabled = elsewhere
+    ? false
+    : (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", "Idle");
 }
 
@@ -404,6 +462,8 @@ async function onToggle() {
     if (running) {
       await send({ type: "stop" }, true);
       running = false;
+      runTabId = null;
+      runTabTitle = "";
     } else {
       // Cleared before the run, not after it. `start()` reports the subtitle
       // status from inside itself — a page that refuses injection is known
@@ -421,12 +481,23 @@ async function onToggle() {
       usage = null;
       renderUsage();
       openLines.clear();
-      await send({ type: "start" }, true);
+      // Claimed before the run exists, not after it: the offscreen document
+      // broadcasts `state` from inside Start, well before the service worker
+      // has written down whose run it is, and a panel that had not claimed it
+      // by then would draw its own run as a stranger's for as long as that took.
+      runTabId = myTabId;
+      // This panel's own tab, named rather than left to be guessed: the service
+      // worker's other candidate is the last tab the icon was clicked on, which
+      // is a different tab as soon as the user has switched between two that
+      // both have a panel.
+      await send({ type: "start", tabId: myTabId }, true);
       running = true;
     }
   } catch (err) {
     showError(err.message);
     running = false;
+    runTabId = null;
+    runTabTitle = "";
   }
   render();
   el("toggle").disabled = false;
@@ -434,7 +505,10 @@ async function onToggle() {
 
 async function restart() {
   await send({ type: "stop" }, true).catch(() => {});
-  await send({ type: "start" }, true);
+  // The run comes back on this tab, which is the tab it was on: only the
+  // owner's panel has controls to change, so only the owner gets here.
+  await send({ type: "start", tabId: myTabId }, true);
+  runTabId = myTabId;
 }
 
 async function send(message, throwOnError = false) {
@@ -456,6 +530,15 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg?.target !== "ui") return;
   if (msg.type === "state") {
     running = msg.running;
+    render();
+  } else if (msg.type === "run") {
+    // Whose run this is. It arrives separately from `state`, which the
+    // offscreen document broadcasts and which cannot name a tab because that
+    // document has none. Until this lands, a panel that did not press Start
+    // itself has a run and no owner, which is drawn as somebody else's — the
+    // safe way round.
+    runTabId = msg.runTabId;
+    runTabTitle = msg.runTabTitle || "";
     render();
   } else if (msg.type === "status") {
     onStatus(msg);

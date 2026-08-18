@@ -179,8 +179,8 @@ and the third is what you want the **subtitles to show**.
   stops working properly. Unmute only while you are speaking.
 - **Tab audio and the microphone at the same time means two sessions**, and a cost that goes up to
   match.
-- **Interpretab runs on one tab at a time.** Pressing Start on another tab stops the translation
-  that was already running.
+- **Interpretab runs on one tab at a time.** While it is running, the side panel on any other tab
+  names the tab it is running on and offers only **Stop**. Stop it there and Start comes back.
 - **Chrome does not let extensions draw on its own pages or on PDFs**, so subtitles cannot appear
   there. The spoken translation and the side-panel transcript still work.
 

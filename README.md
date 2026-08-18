@@ -65,6 +65,16 @@ your mail. Switch back and it returns with its transcript. Clicking the toolbar 
 other tab brings the panel there too, so **Stop** is always one click away, and it hands the
 subtitles to that tab while it is at it.
 
+There is one engine, so there is one run, and it belongs to one tab. Pressing Start on a second
+tab used to take the engine over in silence: the first tab kept its 💬, its subtitles and its
+Connected light while nothing arrived at any of them. Now the run records the tab it belongs to,
+and a panel on any other tab says which tab that is, offers **Stop**, and turns its own controls
+off — one settings object serves every panel, so a checkbox pressed on a bystander tab would
+reconfigure and reconnect a translation on a page the user is not looking at. Start from there is
+refused in the same words. If the run's tab is closed while a microphone-only run carries on, the
+run outlives it with no owner at all, and every panel then treats it as somebody else's: visible,
+and stoppable, and nothing more.
+
 While a run is going, that tab says so in the tab strip: **💬** in front of its title for the tab
 audio being interpreted, **🔴** for the microphone being recorded, both when both are on. The
 title is the only part of a tab an extension can write — the strip is browser UI — and it is put
@@ -236,6 +246,9 @@ them completely.
 - Chrome refuses script injection on its own pages, the Web Store, and PDFs, so subtitles do not
   appear there — starting from a new tab is the everyday way to meet this. Capture and the
   side-panel transcript still work, and the panel says to open an ordinary page and start again.
+- **One run at a time, on one tab.** There is one offscreen document and it holds the whole
+  engine. Start on a second tab is refused rather than served, and the panel there is a
+  bystander's: what is running, where, and Stop.
 - **A session cutover is short, not lossless.** See [Session expiry](#session-expiry).
 
 ## How it works
@@ -664,6 +677,23 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
+
+**Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
+the invariants in the source — Start refuses before it captures, every control in the markup is
+in the panel's disabled list, the mark and the subtitles read the one recorded tab — but the
+behaviour itself needs two tabs and a person. Six checks, a couple of minutes:
+
+1. Click the icon on tab A, Start. Switch to tab B, click the icon there. The panel says
+   *Interpretab is running on “A”*, its checkboxes and dropdowns are dead, and **Stop** is live.
+2. Press Start on B anyway — you cannot, the button says Stop. Press Stop instead: A's 💬 goes,
+   A's subtitles go, and B can now Start.
+3. With a run on A, switch A → B → A. A's panel comes back with its controls, its transcript and
+   its meter — not as a bystander.
+4. With a run on A, change a language on A. It reconnects onto A, not onto whichever tab the
+   icon was clicked on last.
+5. Microphone only, started from A: A carries 🔴, and closing A leaves the run going with every
+   panel a bystander — *running on another tab*, Stop live.
+6. Tab audio on A: closing A stops the run.
 
 ### Soak results — 1 hour, microphone, the conversation model, en → ja
 
