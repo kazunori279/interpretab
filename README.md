@@ -332,16 +332,26 @@ Worth knowing while the flag has no UI: `micToCall` is read once, at `start()`, 
 keeps the settings it was handed, and not in the service worker, where `ensureCallTab()` is only
 called from `start()`. Set it, then Start.
 
-What still needs a real call:
+What that first call answered, and what it did not:
 
-- What the relay costs end to end. Three contexts and a base64 round trip, on top of the Live
-  API's own latency — 120 ms is the budget, not a measurement.
-- Whether Meet re-acquires the real microphone by itself at any point, which would be the silent
-  failure that matters: the call sounds fine to everyone except the person nobody can understand.
-- What the mix should be. 0.15 borrows a number from the ducking and assumes the same judgement
-  applies to a room full of people rather than to one listener.
-- Whether echo cancellation copes. It covers the microphone against the speakers and never sees
-  the synthetic track, so the honest expectation is that it does not.
+- **Latency: over five seconds**, mouth to far-ear. That is the number that decides whether this
+  is usable, and it is much too large for a conversation — it is a briefing tool at five seconds,
+  not a dialogue. What it is *not* is evidence against the relay: three contexts and a base64
+  round trip do not cost seconds, and the same delay should be sitting in front of the local
+  player. The next measurement is the one that splits it — time the local translated voice
+  against the far end's. If they land together the whole five seconds is the Live API deciding a
+  phrase has finished and saying it, and nothing in this file can shorten it.
+- **Meet did not take the microphone back.** Not once, across the call. The silent failure that
+  would have sunk this did not happen, which is a weaker statement than "cannot happen" and worth
+  re-checking on a reconnection and a network drop.
+- **The own voice sits well under the translation** at 0.15, which is what the number asks for.
+  Whether that is the right balance is a judgement nobody has made yet with a room listening.
+- **Echo cancellation: unmeasured, and the call gave no way to measure it.** The speakers were
+  muted, so there was nothing for the microphone to hear itself through. It becomes a real
+  question the moment someone runs this unmuted on speakers, which the mute fix above makes an
+  unusual thing to do.
+- **Studio Sound was on throughout** and did not obstruct anything. Meet's noise processing is
+  happy to carry a synthetic voice.
 
 The prototype's only instrumentation is `console.info` from the service worker, which is the
 correct amount for something with no UI and this many open questions.
