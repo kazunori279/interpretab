@@ -1,7 +1,8 @@
-# GitHub Pages settings. They apply to the user guide — `index.md` and its nine
-# translations — and to nothing else: the extension is not built by Jekyll, and
-# the files it is made of are only in this repository's Pages site because Jekyll
-# copies whatever it does not recognise.
+# GitHub Pages settings. Pages builds from this directory, so the site is the
+# user guide — `index.md` and its nine translations — `PRIVACY.md`, and the
+# images in `assets/`. Nothing above here is published, which is the whole of
+# why those images are in `assets/` and not in the `store/` and `icons/`
+# directories the pages used to point at.
 #
 # Until this file existed, Pages ran with its own defaults, which meant the theme
 # below applied anyway. It is named here so that `_layouts/default.html` is

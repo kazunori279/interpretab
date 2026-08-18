@@ -5,7 +5,7 @@ description: إضافة Chrome تترجم ما يشغّله متصفحك، وم�
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -17,28 +17,28 @@ description: إضافة Chrome تترجم ما يشغّله متصفحك، وم�
   <p style="margin:0 0 .6rem"><b>ترجمة صوت المتصفح</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>مشاهدة فيديو أو بث مباشر أو بودكاست يعمل في متصفحك، باللغة التي تفضّلها.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>متابعة اجتماع عبر الإنترنت وكل ما يقوله الطرف الآخر مترجَمًا إلى لغتك.</span>
     </div>
   </div>
   <p style="margin:0 0 .6rem"><b>ترجمة صوت الميكروفون</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>تقديم عرض أو بث مباشر مع ظهور صوتك أنت كترجمة نصية على الشاشة بلغة أخرى.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>الاجتماع في غرفة، أو الحديث مع الأصدقاء، مع ترجمة الجميع فوريًا إلى اللغة التي تختارها.</span>
     </div>
   </div>
 </div>
 
-[![‏Interpretab يترجم محاضرة يابانية إلى الإنجليزية: ترجمة نصية إنجليزية على الفيديو والنص المكتوب في اللوحة الجانبية](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![‏Interpretab يترجم محاضرة يابانية إلى الإنجليزية: ترجمة نصية إنجليزية على الفيديو والنص المكتوب في اللوحة الجانبية](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ شاهده وهو يعمل (2:45)</a></p>
 
@@ -83,7 +83,7 @@ description: إضافة Chrome تترجم ما يشغّله متصفحك، وم�
 
 في Interpretab اتجاهان: صوت علامة التبويب والميكروفون. أيٌّ منهما وحده، أو كلاهما معًا.
 
-[![اللوحة الجانبية في Interpretab: بطاقتا الاتجاهين، ومحدِّدات اللغة، ومؤشر مستوى الصوت الأصلي، وزر Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![اللوحة الجانبية في Interpretab: بطاقتا الاتجاهين، ومحدِّدات اللغة، ومؤشر مستوى الصوت الأصلي، وزر Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **صوت علامة التبويب** يترجم ما تشغّله العلامة الحالية إلى اللغة التي تختارها، من بين 78 لغة.
 
@@ -144,7 +144,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 العمود الأول هو المصطلح المطلوب التعرّف عليه، والثاني هو *النطق* الذي يُطلب من النموذج استخدامه، والثالث هو ما تريد أن **تعرضه الترجمة النصية**.
 
-[![صفحة الخيارات وفيها جدول قائمة مصطلحات ممتلئ](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![صفحة الخيارات وفيها جدول قائمة مصطلحات ممتلئ](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### أمور تستحق المعرفة
 

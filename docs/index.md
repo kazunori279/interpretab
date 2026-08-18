@@ -5,7 +5,7 @@ description: A Chrome extension that translates what your browser plays, and wha
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -18,12 +18,12 @@ languages in real time — spoken out loud and subtitled on the page.**
   <p style="margin:0 0 .6rem"><b>Translating browser audio</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
-      <img src="store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>Watch a video, a live stream or a podcast playing in your browser in the language
       you prefer.</span>
     </div>
     <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
-      <img src="store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>Follow an online meeting with everything the other side says translated into your
       language.</span>
     </div>
@@ -31,19 +31,19 @@ languages in real time — spoken out loud and subtitled on the page.**
   <p style="margin:0 0 .6rem"><b>Translating microphone audio</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
-      <img src="store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>Give a presentation or a live stream with your own voice subtitled on screen in
       another language.</span>
     </div>
     <div style="flex:1 1 17rem;display:flex;gap:.9rem;align-items:center">
-      <img src="store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>Meet in a room, or talk with friends, with everyone interpreted into the language
       you pick.</span>
     </div>
   </div>
 </div>
 
-[![Interpretab translating a Japanese talk into English: English subtitles on the video and the transcript in the side panel](store/hero-tab-ja-en.png)](store/hero-tab-ja-en.png)
+[![Interpretab translating a Japanese talk into English: English subtitles on the video and the transcript in the side panel](assets/hero-tab-ja-en.png)](assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Watch it run (2:45)</a></p>
 
@@ -99,7 +99,7 @@ page.
 
 Interpretab has two directions, tab audio and microphone. Either on its own, or both at once.
 
-[![The Interpretab side panel: two direction cards, language pickers, the original-volume slider, Start](store/screenshot-4-panel.png)](store/screenshot-4-panel.png)
+[![The Interpretab side panel: two direction cards, language pickers, the original-volume slider, Start](assets/screenshot-4-panel.png)](assets/screenshot-4-panel.png)
 
 **Tab audio** translates whatever the current tab is playing into the language you pick, from a
 choice of 78.
@@ -190,7 +190,7 @@ Cloud Run,クラウドラン,Cloud Run
 The first column is the term to match, the second is the *pronunciation* the model is told to use,
 and the third is what you want the **subtitles to show**.
 
-[![The Options page with a glossary table filled in](store/screenshot-3-glossary.png)](store/screenshot-3-glossary.png)
+[![The Options page with a glossary table filled in](assets/screenshot-3-glossary.png)](assets/screenshot-3-glossary.png)
 
 ### Things to know
 

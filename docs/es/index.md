@@ -5,7 +5,7 @@ description: Una extensión de Chrome que traduce lo que reproduce tu navegador,
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -18,12 +18,12 @@ idiomas en tiempo real — hablado en voz alta y subtitulado en la página.**
   <p style="margin:0 0 .6rem"><b>Traducir el audio del navegador</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>Ver un vídeo, una retransmisión en directo o un pódcast que suena en tu navegador en el
       idioma que prefieras.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>Seguir una reunión en línea con todo lo que dice la otra parte traducido a tu
       idioma.</span>
     </div>
@@ -31,19 +31,19 @@ idiomas en tiempo real — hablado en voz alta y subtitulado en la página.**
   <p style="margin:0 0 .6rem"><b>Traducir el audio del micrófono</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>Dar una presentación o una retransmisión con tu propia voz subtitulada en pantalla en
       otro idioma.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>Reunirte en una sala, o charlar con amigos, con todo el mundo interpretado al idioma
       que elijas.</span>
     </div>
   </div>
 </div>
 
-[![Interpretab traduciendo una charla en japonés al inglés: subtítulos en inglés sobre el vídeo y la transcripción en el panel lateral](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab traduciendo una charla en japonés al inglés: subtítulos en inglés sobre el vídeo y la transcripción en el panel lateral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Verlo funcionar (2:45)</a></p>
 
@@ -101,7 +101,7 @@ La interfaz de Interpretab sigue el idioma de tu navegador, en los diez idiomas 
 Interpretab tiene dos direcciones, el audio de la pestaña y el micrófono. Cualquiera por su cuenta,
 o las dos a la vez.
 
-[![El panel lateral de Interpretab: dos tarjetas de dirección, selectores de idioma, el control de volumen original y Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![El panel lateral de Interpretab: dos tarjetas de dirección, selectores de idioma, el control de volumen original y Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **Audio de la pestaña** traduce lo que esté reproduciendo la pestaña actual al idioma que elijas,
 entre 78.
@@ -196,7 +196,7 @@ Cloud Run,クラウドラン,Cloud Run
 La primera columna es el término que hay que reconocer, la segunda es la *pronunciación* que se le
 indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos**.
 
-[![La página de Opciones con una tabla de glosario rellena](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![La página de Opciones con una tabla de glosario rellena](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### Cosas que conviene saber
 

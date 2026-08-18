@@ -5,7 +5,7 @@ description: 一款 Chrome 扩展，把浏览器正在播放的声音和你说�
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -17,28 +17,28 @@ description: 一款 Chrome 扩展，把浏览器正在播放的声音和你说�
   <p style="margin:0 0 .6rem"><b>翻译浏览器音频</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>用你习惯的语言观看浏览器里播放的视频、直播或播客。</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>参加线上会议，把对方说的每一句都翻译成你的语言。</span>
     </div>
   </div>
   <p style="margin:0 0 .6rem"><b>翻译麦克风音频</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>做演讲或直播时，把自己的声音以另一种语言显示为屏幕字幕。</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>在会议室开会或和朋友聊天时，把每个人的话都口译成你选定的语言。</span>
     </div>
   </div>
 </div>
 
-[![Interpretab 正把一场日语演讲译成英语：视频上是英文字幕，侧边栏是文字记录](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab 正把一场日语演讲译成英语：视频上是英文字幕，侧边栏是文字记录](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ 观看实际运行（2:45）</a></p>
 
@@ -81,7 +81,7 @@ Interpretab 的界面跟随浏览器的语言，共支持本页列出的十种�
 
 Interpretab 有两个方向：标签页音频和麦克风。可以只用其一，也可以两个同时用。
 
-[![Interpretab 侧边栏：两张方向卡片、语言选择器、原声音量滑块、Start 按钮](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Interpretab 侧边栏：两张方向卡片、语言选择器、原声音量滑块、Start 按钮](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **标签页音频**把当前标签页正在播放的内容翻译成你选定的语言，共 78 种可选。
 
@@ -142,7 +142,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 第一列是要匹配的词，第二列是告诉模型采用的*读音*，第三列是你希望**字幕上显示**的写法。
 
-[![填好术语表的选项页面](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![填好术语表的选项页面](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### 需要注意的事
 

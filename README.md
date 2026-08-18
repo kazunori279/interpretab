@@ -934,9 +934,22 @@ root, which cost nothing until someone tried to reload the unpacked extension: *
 every top-level name beginning with `_`** — `_locales` and `_metadata` are the two exceptions —
 and refuses to load an extension from a directory containing one, with `Could not load manifest.`
 `_config.yml`, `_data`, `_includes` and `_layouts` are all names Jekyll insists on, so the two
-cannot share a root. Nothing published moved: with the source at `/docs`, `docs/ja/index.md` is
-still `/interpretab/ja/`. What did move is the exclude list in `npm run package`, which was eleven
-globs for the same reason and is now one.
+cannot share a root. With the source at `/docs`, `docs/ja/index.md` is still `/interpretab/ja/`,
+so no published *page* moved. What did move is the exclude list in `npm run package`, which was
+eleven globs for the same reason and is now one.
+
+What also moved, and was missed for four days, is every image on those pages. The guide was
+written when Pages built from the repository root, where `store/hero-tab-ja-en.png` and
+`icons/icon-128.png` were paths that resolved; the move was a pure rename of ten markdown files
+and left all eight images in all ten languages pointing outside the published directory, and
+therefore at a 404. Jekyll cannot reach above its source and GitHub Pages will not follow a
+symlink out of it, so the fix is that the site owns its images: `docs/assets/`, which is what the
+pages now reference. Five of them live only there. The other three do not belong to the site — the
+icon is the extension's and two of the screenshots are store uploads the guide reuses — so those
+are copies, and `tests/assets.test.js` asserts they are byte-identical to their originals, on the
+same reasoning as `PRIVACY.md` below. The test beside it walks every `<img>` and every markdown
+image on all ten pages and resolves it, because a broken path repeated in ten translations is not
+a thing anyone finds by looking.
 
 `PRIVACY.md` is the one file in both places, and the duplication is deliberate. The store
 listing's privacy policy URL is `https://kazunori279.github.io/interpretab/PRIVACY.html`, which

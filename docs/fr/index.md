@@ -5,7 +5,7 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -18,12 +18,12 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
   <p style="margin:0 0 .6rem"><b>Traduire l'audio du navigateur</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>Regarder une vidéo, un direct ou un podcast qui joue dans votre navigateur dans la
       langue de votre choix.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>Suivre une réunion en ligne avec tout ce que dit l'autre partie traduit dans votre
       langue.</span>
     </div>
@@ -31,19 +31,19 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
   <p style="margin:0 0 .6rem"><b>Traduire l'audio du microphone</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>Faire une présentation ou un direct avec votre propre voix sous-titrée à l'écran dans
       une autre langue.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>Se réunir dans une salle, ou discuter entre amis, chacun interprété dans la langue que
       vous choisissez.</span>
     </div>
   </div>
 </div>
 
-[![Interpretab traduisant une conférence en japonais vers l'anglais : sous-titres anglais sur la vidéo et la transcription dans le panneau latéral](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab traduisant une conférence en japonais vers l'anglais : sous-titres anglais sur la vidéo et la transcription dans le panneau latéral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Le voir tourner (2:45)</a></p>
 
@@ -101,7 +101,7 @@ L'interface d'Interpretab suit la langue de votre navigateur, dans les dix langu
 Interpretab a deux directions, l'audio de l'onglet et le microphone. L'une ou l'autre, ou les deux à
 la fois.
 
-[![Le panneau latéral d'Interpretab : deux cartes de direction, les sélecteurs de langue, le curseur du volume d'origine, Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Le panneau latéral d'Interpretab : deux cartes de direction, les sélecteurs de langue, le curseur du volume d'origine, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **L'audio de l'onglet** traduit ce que joue l'onglet courant dans la langue que vous choisissez,
 parmi 78.
@@ -199,7 +199,7 @@ Cloud Run,クラウドラン,Cloud Run
 La première colonne est le terme à reconnaître, la deuxième est la *prononciation* indiquée au
 modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-titres**.
 
-[![La page Options avec un tableau de glossaire rempli](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![La page Options avec un tableau de glossaire rempli](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### Bon à savoir
 

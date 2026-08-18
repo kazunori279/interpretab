@@ -5,7 +5,7 @@ description: ブラウザが再生している音声や、あなたが話した�
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -17,28 +17,28 @@ description: ブラウザが再生している音声や、あなたが話した�
   <p style="margin:0 0 .6rem"><b>ブラウザの音声の翻訳</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>ブラウザで再生している動画や配信、ポッドキャスト等を、好きな言語で視聴したい</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>オンラインミーティングで聞こえてくる音声を、好きな言語に翻訳したい</span>
     </div>
   </div>
   <p style="margin:0 0 .6rem"><b>マイクの音声の翻訳</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>プレゼンテーションやオンライン配信で、自分の声を好きな言語に翻訳して投影画面に字幕表示したい</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>会議室でのミーティングや友達とのおしゃべりで、みんなの声を好きな言語に翻訳したい</span>
     </div>
   </div>
 </div>
 
-[![日本語の動画を英語に翻訳している Interpretab の動作画面。動画上に英語の字幕、サイドパネルに文字起こし](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![日本語の動画を英語に翻訳している Interpretab の動作画面。動画上に英語の字幕、サイドパネルに文字起こし](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ 動作の様子 (2:45)</a></p>
 
@@ -83,7 +83,7 @@ Interpretab の画面表示はブラウザの言語に追従します。対応�
 
 Interpretab では、タブ音声翻訳とマイク音声翻訳の 2 つの翻訳機能をサポートしています。片方だけでも両方同時でも動きます。
 
-[![Interpretab のサイドパネル。2 つの方向カード、言語セレクタ、元音声の音量、Start ボタン](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Interpretab のサイドパネル。2 つの方向カード、言語セレクタ、元音声の音量、Start ボタン](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **タブ音声翻訳**は、現在のタブが再生している音声を指定した言語（78 言語から選択）に翻訳します。
 
@@ -142,7 +142,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 1 列目は対象の文字列、2 列目はモデルに**読み**を伝える内容、3 列目は**字幕に表記**したい内容です。
 
-[![用語集の表が入力されたオプションページ](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![用語集の表が入力されたオプションページ](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### 翻訳機能の注意点
 

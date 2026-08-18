@@ -5,7 +5,7 @@ description: एक Chrome एक्सटेंशन जो आपके ब�
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -17,28 +17,28 @@ description: एक Chrome एक्सटेंशन जो आपके ब�
   <p style="margin:0 0 .6rem"><b>ब्राउज़र की आवाज़ का अनुवाद</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>ब्राउज़र में चल रहे वीडियो, लाइव स्ट्रीम या पॉडकास्ट को अपनी पसंद की भाषा में देखना-सुनना।</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>ऑनलाइन मीटिंग में सामने वाले की हर बात अपनी भाषा में सुनकर बातचीत के साथ चलना।</span>
     </div>
   </div>
   <p style="margin:0 0 .6rem"><b>माइक्रोफ़ोन की आवाज़ का अनुवाद</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>प्रेज़ेंटेशन या लाइव स्ट्रीम में अपनी ही आवाज़ को दूसरी भाषा के सबटाइटल के रूप में स्क्रीन पर दिखाना।</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>कमरे में हो रही मीटिंग या दोस्तों की बातचीत में हर किसी की बात अपनी चुनी हुई भाषा में सुनना।</span>
     </div>
   </div>
 </div>
 
-[![Interpretab एक जापानी टॉक का अंग्रेज़ी में अनुवाद करते हुए: वीडियो पर अंग्रेज़ी सबटाइटल और साइड पैनल में ट्रांसक्रिप्ट](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab एक जापानी टॉक का अंग्रेज़ी में अनुवाद करते हुए: वीडियो पर अंग्रेज़ी सबटाइटल और साइड पैनल में ट्रांसक्रिप्ट](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ चलते हुए देखें (2:45)</a></p>
 
@@ -82,7 +82,7 @@ Interpretab का इंटरफ़ेस आपके ब्राउज़�
 
 Interpretab में दो दिशाएँ हैं, टैब ऑडियो और माइक्रोफ़ोन। कोई एक अकेले, या दोनों एक साथ।
 
-[![Interpretab का साइड पैनल: दो दिशा कार्ड, भाषा चुनने के मेन्यू, मूल आवाज़ का वॉल्यूम स्लाइडर, Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Interpretab का साइड पैनल: दो दिशा कार्ड, भाषा चुनने के मेन्यू, मूल आवाज़ का वॉल्यूम स्लाइडर, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **टैब ऑडियो** मौजूदा टैब में जो कुछ चल रहा है उसे आपकी चुनी हुई भाषा में अनुवाद करता है — 78 भाषाओं में से चुनिए।
 
@@ -144,7 +144,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 पहला कॉलम पहचाने जाने वाला शब्द है, दूसरा वह *उच्चारण* है जो मॉडल को बताया जाता है, और तीसरा वह है जो आप **सबटाइटल में दिखाना** चाहते हैं।
 
-[![भरी हुई शब्दावली तालिका के साथ विकल्प पेज](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![भरी हुई शब्दावली तालिका के साथ विकल्प पेज](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### जानने लायक बातें
 

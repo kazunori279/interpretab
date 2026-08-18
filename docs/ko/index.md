@@ -5,7 +5,7 @@ description: 브라우저가 재생하는 소리와 당신이 하는 말을 70�
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -17,28 +17,28 @@ description: 브라우저가 재생하는 소리와 당신이 하는 말을 70�
   <p style="margin:0 0 .6rem"><b>브라우저 오디오 번역</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>브라우저에서 재생 중인 영상, 라이브 스트림, 팟캐스트를 원하는 언어로 보고 듣기.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>상대방이 하는 말을 전부 내 언어로 번역해 온라인 회의를 따라가기.</span>
     </div>
   </div>
   <p style="margin:0 0 .6rem"><b>마이크 오디오 번역</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>발표나 라이브 방송에서 내 목소리를 다른 언어 자막으로 화면에 띄우기.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>회의실에서 모이거나 친구와 이야기할 때, 모두의 말을 원하는 언어로 통역하기.</span>
     </div>
   </div>
 </div>
 
-[![일본어 강연을 영어로 번역 중인 Interpretab: 영상 위에 영어 자막, 사이드 패널에 전사 내용](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![일본어 강연을 영어로 번역 중인 Interpretab: 영상 위에 영어 자막, 사이드 패널에 전사 내용](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ 동작 영상 보기 (2:45)</a></p>
 
@@ -82,7 +82,7 @@ Interpretab의 인터페이스는 브라우저 언어를 따라가며, 이 페�
 
 Interpretab에는 탭 오디오와 마이크라는 두 방향이 있습니다. 하나만 써도 되고 둘 다 동시에 써도 됩니다.
 
-[![Interpretab 사이드 패널: 두 개의 방향 카드, 언어 선택기, 원음 볼륨 슬라이더, Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Interpretab 사이드 패널: 두 개의 방향 카드, 언어 선택기, 원음 볼륨 슬라이더, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **탭 오디오**는 현재 탭이 재생 중인 소리를 78개 언어 중 고른 언어로 번역합니다.
 
@@ -143,7 +143,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 첫 번째 열은 인식할 대상 문자열, 두 번째 열은 모델에 알려 줄 *발음*, 세 번째 열은 **자막에 표시**하고 싶은 표기입니다.
 
-[![용어집 표가 채워진 옵션 페이지](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![용어집 표가 채워진 옵션 페이지](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### 알아 둘 점
 

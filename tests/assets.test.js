@@ -511,10 +511,60 @@ test("the store artwork is the size the store demands", () => {
   }
   assert.deepEqual(pngSize(path.join(dir, "promo-440x280.png")), [440, 280]);
   // The guide pages' lead image is a frame lifted out of the promo video rather
-  // than one of the five, and is deliberately outside the `screenshot-` set so
-  // it cannot be miscounted into an upload. Same size, so it can be promoted
-  // into that set by renaming and nothing else.
-  assert.deepEqual(pngSize(path.join(dir, "hero-tab-ja-en.png")), [1280, 800]);
+  // than one of the five, so it lives with the site and not here. Checked to the
+  // same size all the same: it can be promoted into the upload set by moving it
+  // back and renaming, and nothing else.
+  assert.deepEqual(pngSize(path.join(SITE, "assets", "hero-tab-ja-en.png")), [1280, 800]);
+});
+
+test("every image the guide pages ask for is somewhere Pages will serve it", () => {
+  // Pages builds from `docs/`, and nothing above it is published. The guide was
+  // written when it built from the repository root, so `store/…` and `icons/…`
+  // resolved; the move to `docs/` was a pure rename and left every one of the
+  // eight images in all ten languages pointing at a 404, which is what shipped.
+  // A path is not a thing to check by eye across ten translations.
+  const pages = ["index.md", ...fs.readdirSync(SITE).filter((f) => f.length === 2).map((l) => `${l}/index.md`)];
+  let checked = 0;
+  for (const page of pages) {
+    const text = fs.readFileSync(path.join(SITE, page), "utf8");
+    const refs = [
+      ...[...text.matchAll(/<img[^>]+src="([^"]+)"/g)].map(([, src]) => src),
+      ...[...text.matchAll(/\]\(([^)]+\.(?:png|svg|jpg|gif))\)/g)].map(([, src]) => src),
+    ];
+    assert.ok(refs.length > 0, `${page} references no images at all`);
+    for (const ref of refs) {
+      if (/^https?:/.test(ref)) continue;
+      const resolved = path.resolve(path.dirname(path.join(SITE, page)), ref);
+      assert.ok(
+        resolved.startsWith(SITE + path.sep),
+        `${page} points at ${ref}, which is above the published directory`
+      );
+      assert.ok(fs.existsSync(resolved), `${page} points at ${ref}, which does not exist`);
+      checked++;
+    }
+  }
+  // Ten pages that all lost their images together is the failure this exists
+  // for, and a regex that quietly matched nothing would have passed it.
+  assert.ok(checked >= 80, `only ${checked} image references found across ten pages`);
+});
+
+test("the images the site shares with the extension and the store are the same images", () => {
+  // Jekyll cannot reach outside its source directory and GitHub Pages refuses to
+  // follow symlinks, so the site keeps its own copy of the three images it does
+  // not own: the icon belongs to the extension, and two of the screenshots are
+  // store uploads that the guide happens to reuse. Copies drift, and a guide
+  // showing last month's panel is the kind of wrong nobody reports.
+  const shared = [
+    ["icons/icon-128.png", "assets/icon-128.png"],
+    ["store/screenshot-3-glossary.png", "assets/screenshot-3-glossary.png"],
+    ["store/screenshot-4-panel.png", "assets/screenshot-4-panel.png"],
+  ];
+  for (const [original, copy] of shared) {
+    assert.ok(
+      fs.readFileSync(path.join(ROOT, original)).equals(fs.readFileSync(path.join(SITE, copy))),
+      `docs/${copy} has drifted from ${original} — copy it across`
+    );
+  }
 });
 
 test("the cost figure disclaims itself where the user can actually see it", () => {

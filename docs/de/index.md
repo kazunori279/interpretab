@@ -5,7 +5,7 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -18,12 +18,12 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
   <p style="margin:0 0 .6rem"><b>Browser-Audio übersetzen</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>Ein Video, einen Livestream oder einen Podcast, der im Browser läuft, in Ihrer
       Wunschsprache verfolgen.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>Einem Online-Meeting folgen, mit allem, was die Gegenseite sagt, in Ihre Sprache
       übersetzt.</span>
     </div>
@@ -31,19 +31,19 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
   <p style="margin:0 0 .6rem"><b>Mikrofon-Audio übersetzen</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>Einen Vortrag oder Livestream halten, mit der eigenen Stimme in einer anderen Sprache
       auf dem Bildschirm untertitelt.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>Sich in einem Raum treffen oder mit Freunden reden, wobei alle in die von Ihnen
       gewählte Sprache gedolmetscht werden.</span>
     </div>
   </div>
 </div>
 
-[![Interpretab übersetzt einen japanischen Vortrag ins Englische: englische Untertitel auf dem Video und das Transkript im Seitenbereich](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab übersetzt einen japanischen Vortrag ins Englische: englische Untertitel auf dem Video und das Transkript im Seitenbereich](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ In Aktion ansehen (2:45)</a></p>
 
@@ -99,7 +99,7 @@ Die Oberfläche von Interpretab folgt der Sprache Ihres Browsers, in den zehn Sp
 
 Interpretab hat zwei Richtungen, Tab-Audio und Mikrofon. Jede für sich oder beide gleichzeitig.
 
-[![Der Seitenbereich von Interpretab: zwei Richtungskarten, Sprachauswahl, der Regler für die Originallautstärke, Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![Der Seitenbereich von Interpretab: zwei Richtungskarten, Sprachauswahl, der Regler für die Originallautstärke, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **Tab-Audio** übersetzt alles, was der aktuelle Tab abspielt, in die Sprache Ihrer Wahl, aus 78
 Möglichkeiten.
@@ -196,7 +196,7 @@ Cloud Run,クラウドラン,Cloud Run
 Die erste Spalte ist der zu erkennende Begriff, die zweite die *Aussprache*, die dem Modell
 vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
 
-[![Die Optionsseite mit einer ausgefüllten Glossartabelle](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![Die Optionsseite mit einer ausgefüllten Glossartabelle](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### Wissenswertes
 

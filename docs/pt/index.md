@@ -5,7 +5,7 @@ description: Uma extensão do Chrome que traduz o que o seu navegador está repr
 ---
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
-  <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
+  <img src="../assets/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
   <span>Interpretab</span>
 </h1>
 
@@ -18,12 +18,12 @@ mais de 70 idiomas em tempo real — falado em voz alta e legendado na página.*
   <p style="margin:0 0 .6rem"><b>Traduzir o áudio do navegador</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem;margin:0 0 1.25rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-1-video.svg" alt="" width="52" height="52" style="flex:none">
       <span>Assistir a um vídeo, uma transmissão ao vivo ou um podcast tocando no navegador no
       idioma que você preferir.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-2-meeting.svg" alt="" width="52" height="52" style="flex:none">
       <span>Acompanhar uma reunião online com tudo o que o outro lado diz traduzido para o seu
       idioma.</span>
     </div>
@@ -31,19 +31,19 @@ mais de 70 idiomas em tempo real — falado em voz alta e legendado na página.*
   <p style="margin:0 0 .6rem"><b>Traduzir o áudio do microfone</b></p>
   <div style="display:flex;flex-wrap:wrap;gap:1rem 1.5rem">
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-3-presentation.svg" alt="" width="52" height="52" style="flex:none">
       <span>Fazer uma apresentação ou uma transmissão com a sua própria voz legendada na tela em
       outro idioma.</span>
     </div>
     <div style="flex:1 1 19rem;display:flex;gap:.9rem;align-items:center">
-      <img src="../store/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
+      <img src="../assets/usecase-4-room.svg" alt="" width="52" height="52" style="flex:none">
       <span>Reunir-se em uma sala, ou conversar com amigos, com todo mundo interpretado para o
       idioma que você escolher.</span>
     </div>
   </div>
 </div>
 
-[![Interpretab traduzindo uma palestra em japonês para o inglês: legendas em inglês no vídeo e a transcrição no painel lateral](../store/hero-tab-ja-en.png)](../store/hero-tab-ja-en.png)
+[![Interpretab traduzindo uma palestra em japonês para o inglês: legendas em inglês no vídeo e a transcrição no painel lateral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
 <p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Veja funcionando (2:45)</a></p>
 
@@ -101,7 +101,7 @@ A interface do Interpretab acompanha o idioma do seu navegador, nos dez idiomas 
 O Interpretab tem duas direções, áudio da aba e microfone. Cada uma sozinha, ou as duas ao mesmo
 tempo.
 
-[![O painel lateral do Interpretab: dois cartões de direção, seletores de idioma, o controle do volume original, Start](../store/screenshot-4-panel.png)](../store/screenshot-4-panel.png)
+[![O painel lateral do Interpretab: dois cartões de direção, seletores de idioma, o controle do volume original, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **Áudio da aba** traduz o que a aba atual estiver reproduzindo para o idioma que você escolher,
 entre 78.
@@ -194,7 +194,7 @@ Cloud Run,クラウドラン,Cloud Run
 A primeira coluna é o termo a reconhecer, a segunda é a *pronúncia* que se manda o modelo usar, e a
 terceira é o que você quer que as **legendas mostrem**.
 
-[![A página de Opções com uma tabela de glossário preenchida](../store/screenshot-3-glossary.png)](../store/screenshot-3-glossary.png)
+[![A página de Opções com uma tabela de glossário preenchida](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
 ### O que é bom saber
 
