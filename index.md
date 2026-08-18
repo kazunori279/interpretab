@@ -216,17 +216,6 @@ like this one: about 25 Interpretab sessions running at the same time, and aroun
 month. Google documents [how to set the billing
 up](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-The free tier's limits are not published — you
-[view them in AI Studio](https://aistudio.google.com/apikey) — and a tool that holds a connection
-open for an hour at a time reaches them easily, at which point it simply fails to connect.
-
-**A run that will not connect is more often quota than a wrong key.** A browser is never told why
-a connection was refused, so Interpretab cannot tell the two apart and names both. If the key
-worked earlier the same day, quota is the likely one: check the limits in
-[AI Studio](https://aistudio.google.com/apikey), wait for them to reset, or link a billing account
-to move up a tier. Interpretab stops retrying after about twenty seconds and puts the reason in
-the side panel, rather than knocking on a limited endpoint until you press Stop.
-
 ### Sharing one Gemini API key between machines and people
 
 Interpretab keeps the key on the machine, in `chrome.storage.local`. Chrome's profile sync does not
@@ -252,6 +241,10 @@ carry it, so using Interpretab on several computers means pasting the key into e
   not.
 - **For users in the EEA, Switzerland or the UK**, the
   [Gemini API Additional Terms](https://ai.google.dev/gemini-api/terms) require a paid tier.
+- **If it will not connect to the Gemini Live API**, either the key is wrong or the quota has run
+  out — Interpretab cannot tell the two apart. Check the limits in
+  [AI Studio](https://aistudio.google.com/apikey) and wait for them to reset, or set up billing and
+  move to Tier 1.
 
 ## Open source
 
