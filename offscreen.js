@@ -122,6 +122,9 @@ const state = {
   // the panel: the panel can be closed and reopened mid-run, and a timer that
   // restarted with it would say the run began when the user last looked at it.
   startedAt: 0,
+  // Set once a session loop has given up and the run is being taken down, so
+  // the other direction failing behind it stays quiet — see `failRun`.
+  failed: false,
   active: false,
 };
 
@@ -207,6 +210,7 @@ async function start({ apiKey, streamId, settings, glossary }) {
   // microphone permission goes, and the clock beside the cost has to cover the
   // whole run, including the part the user spent waiting for it.
   state.startedAt = performance.now();
+  state.failed = false;
 
   // Half a run is worse than none. The microphone is the half that fails —
   // a refused permission is the common one — and it fails *after* the tab
@@ -468,7 +472,14 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
-    onStatus: (status, detail) => post({ type: "status", direction: name, status, detail }),
+    onStatus: (status, detail) => {
+      post({ type: "status", direction: name, status, detail });
+      // The loop has stopped trying and will not restart itself. Both
+      // directions hold the same key, so whatever rejected this one is about to
+      // reject the other; and `start` already refuses to leave half a run
+      // going, with no button on screen that admits it.
+      if (status === "failed") failRun(detail);
+    },
     onEvent: (ev) => onEvent(name, ev, player, acc),
   });
   session.start();
@@ -558,6 +569,26 @@ function onEvent(direction, ev, player, acc) {
     text: ev.type === "input" ? cleanCJKSpaces(text) : text,
     finished: ev.finished,
   });
+}
+
+/**
+ * End the run because a session loop gave up (#13).
+ *
+ * The stop is asked for rather than done here. The service worker owns the run
+ * — it holds the `running` flag a reopened panel reads, the caption overlay,
+ * the tab marker and this document's own lifetime — so a document that quietly
+ * shut its own sessions down would leave every one of those saying the run is
+ * still going. What is done here is the message: it goes out first, and
+ * directly, because the stop that follows closes this document.
+ *
+ * Once per run. The second direction is about to fail for the same reason and
+ * would otherwise say so over the top of the first.
+ */
+function failRun(detail) {
+  if (!state.active || state.failed) return;
+  state.failed = true;
+  post({ type: "error", detail });
+  chrome.runtime.sendMessage({ target: "sw", type: "failed", detail }).catch(() => {});
 }
 
 /** Close the open sentence: drop the accumulator and let both surfaces know. */

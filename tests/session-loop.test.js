@@ -14,6 +14,8 @@ import {
   GOAWAY_DEADLINE_MARGIN_MS,
   GOAWAY_IDLE_GRACE_MS,
   RETRY_BACKOFF_INIT_MS,
+  RETRY_HEALTHY_MS,
+  RETRY_MAX_ATTEMPTS,
   SessionLoop,
 } from "../lib/session-loop.js";
 
@@ -62,16 +64,19 @@ function harness() {
   FakeSession.failNext = 0;
   let clock = 1000;
   const events = [];
+  const statuses = [];
   const loop = new SessionLoop({
     apiKey: "k",
     setup: { setup: {} },
     SessionClass: FakeSession,
     now: () => clock,
     onEvent: (ev) => events.push(ev),
+    onStatus: (status, detail) => statuses.push({ status, detail }),
   });
   return {
     loop,
     events,
+    statuses,
     sessions: FakeSession.opened,
     advance: (ms) => {
       clock += ms;
@@ -282,6 +287,77 @@ test("the backoff doubles per failure and resets once a session is adopted", asy
 
   await h.loop._connect(); // succeeds
   assert.equal(h.loop._backoff, RETRY_BACKOFF_INIT_MS);
+  h.loop.close();
+});
+
+test("a rejection that is never going to clear is given up on (#13)", async () => {
+  // The backoff tops out at four seconds and used to run for ever, so a key out
+  // of free-tier quota — which does not come back until midnight Pacific — had
+  // the extension knocking on a rate-limited endpoint until the user noticed.
+  const h = harness();
+  FakeSession.failNext = 100;
+  h.loop.start();
+  await settle();
+  for (let i = 1; i < RETRY_MAX_ATTEMPTS; i++) await h.loop._connect();
+
+  assert.equal(h.sessions.length, RETRY_MAX_ATTEMPTS, "one attempt per failure, and no more");
+  const last = h.statuses.at(-1);
+  assert.equal(last.status, "failed");
+  assert.match(last.detail, /Google AI Studio/, "the message says where quota is checked");
+  assert.equal(h.loop._retryTimer, null, "nothing is left scheduled");
+  assert.ok(h.loop._closed);
+
+  // And it stays given up rather than being restarted by a stray callback.
+  await h.loop._connect();
+  assert.equal(h.sessions.length, RETRY_MAX_ATTEMPTS);
+});
+
+test("a session that relays anything clears the failures behind it", async () => {
+  const h = harness();
+  FakeSession.failNext = 3;
+  h.loop.start();
+  await settle();
+  await h.loop._connect();
+  await h.loop._connect();
+  assert.equal(h.loop._attempts, 3);
+
+  await h.loop._connect(); // this one connects
+  assert.equal(h.loop._attempts, 3, "connecting on its own proves nothing");
+  h.sessions.at(-1).onEvent({ type: "output", text: "hi" });
+  assert.equal(h.loop._attempts, 0, "an answer does");
+  h.loop.close();
+});
+
+test("connecting and dropping straight back is not a fresh start", async () => {
+  // Why adoption does not clear the tally: a key can be rejected *after* the
+  // handshake, and a loop that took `open()` as evidence would cycle for ever
+  // with a clean counter at every turn.
+  const h = harness();
+  h.loop.start();
+  await settle();
+  for (let i = 1; i < RETRY_MAX_ATTEMPTS; i++) {
+    h.sessions.at(-1).onEvent({ type: "closed" });
+    await h.loop._connect();
+  }
+  h.sessions.at(-1).onEvent({ type: "closed" });
+
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.ok(h.loop._closed);
+});
+
+test("a session that stayed up for a minute clears the tally on its way out", async () => {
+  // Otherwise an hour on bad Wi-Fi accumulates ten unrelated drops during
+  // silences and gives up on the eleventh, which is not what the count means.
+  const h = harness();
+  h.loop.start();
+  await settle();
+  h.loop._attempts = RETRY_MAX_ATTEMPTS - 1;
+
+  h.advance(RETRY_HEALTHY_MS);
+  h.sessions[0].onEvent({ type: "closed" });
+
+  assert.equal(h.loop._attempts, 1, "the minute cleared it, and this drop is the first");
+  assert.notEqual(h.statuses.at(-1).status, "failed");
   h.loop.close();
 });
 

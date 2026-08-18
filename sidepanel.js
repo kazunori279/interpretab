@@ -61,6 +61,9 @@ async function init() {
  * a half-finished sentence extends it instead of printing it again underneath.
  */
 function restore(state) {
+  // Why the last run ended by itself, for a panel that was not there to be told
+  // — it is kept in session storage until the next Start for exactly this.
+  if (state?.lastError) showError(state.lastError);
   for (const line of state?.lines || []) {
     const node = appendLine(line);
     if (line.open) openLines.set(`${line.direction}:${line.side}`, node);
@@ -473,6 +476,12 @@ chrome.runtime.onMessage.addListener((msg) => {
     // transcript keeps filling, and the only symptom is at the far end of a call.
     el("outputNote").textContent = msg.detail;
     el("outputNote").hidden = false;
+  } else if (msg.type === "error") {
+    // A run ending on its own, which until now it never did: a session loop
+    // that has given up takes the whole run down with it, and the banner is
+    // where the reason and what to do about it go. The Idle state arrives
+    // separately, as the `state` message behind the stop this triggered.
+    showError(msg.detail);
   } else if (msg.type === "micNote") {
     // The opposite case, and the one that reads as a broken extension: the
     // microphone is open and connected and carrying nothing, so the panel is
@@ -513,6 +522,9 @@ function onStatus({ status, detail }) {
   else if (status === "connecting") setStatus("connecting", "Connecting…");
   else if (status === "error") setStatus("disconnected", detail || "Error");
   else if (status === "disconnected") setStatus("disconnected", "Reconnecting…");
+  // The detail of a `failed` is a paragraph and goes to the banner, not into
+  // the one line of the header. This says only that the retrying has stopped.
+  else if (status === "failed") setStatus("disconnected", "Stopped");
 }
 
 function setStatus(cls, text) {

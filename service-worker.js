@@ -132,6 +132,13 @@ async function handle(msg, sender) {
       // Relayed from the offscreen document, which has no tab of its own.
       await sendToCaptions(msg.payload);
       return {};
+    case "failed":
+      // A session loop gave up (#13). The offscreen document has already told
+      // the panel why; kept here as well because the panel it told may have
+      // been on another tab and destroyed, and a run that ends by itself with
+      // no reason on screen is the failure this was raised about.
+      await chrome.storage.session.set({ lastError: msg.detail || "" });
+      return stop();
     case "live":
       // Relayed to the offscreen document, which cannot read storage for
       // itself — see `applyLive` there.
@@ -157,7 +164,13 @@ async function getState() {
     running = false,
     capturedTabId = null,
     captionStatus = null,
-  } = await chrome.storage.session.get(["running", "capturedTabId", "captionStatus"]);
+    lastError = null,
+  } = await chrome.storage.session.get([
+    "running",
+    "capturedTabId",
+    "captionStatus",
+    "lastError",
+  ]);
   let lines = [];
   let usage = null;
   if (running && (await hasOffscreen())) {
@@ -167,7 +180,7 @@ async function getState() {
     // two of those broadcasts would otherwise show nothing until the next one.
     usage = reply?.usage || null;
   }
-  return { running, capturedTabId, captionStatus, lines, usage };
+  return { running, capturedTabId, captionStatus, lastError, lines, usage };
 }
 
 async function targetTab() {
@@ -224,8 +237,14 @@ async function start() {
   if (!started.ok) throw new Error(started.error);
 
   // captionStatus is cleared so this run re-announces it rather than being
-  // deduplicated against whatever the last one ended on.
-  await chrome.storage.session.set({ running: true, capturedTabId: tabId, captionStatus: null });
+  // deduplicated against whatever the last one ended on, and lastError because
+  // it belongs to the run that ended, not to this one.
+  await chrome.storage.session.set({
+    running: true,
+    capturedTabId: tabId,
+    captionStatus: null,
+    lastError: null,
+  });
   await markTab(settings);
   await ensureCaptionTab(settings);
   return { capturedTabId: tabId };

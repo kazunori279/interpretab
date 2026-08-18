@@ -460,7 +460,33 @@ so `lib/session-loop.js` does this instead:
 4. **Close the abandoned caption.** A turn that was cut off will never report itself complete, so
    the loop emits a synthetic `turnComplete` to the UI.
 
-Connect failures back off from 200 ms to 4 s rather than spinning.
+Connect failures back off from 200 ms to 4 s rather than spinning — and, after ten in a row, stop.
+
+**Retrying for ever is a bug when the answer is not going to change**
+([#13](https://github.com/kazunori279/interpretab/issues/13)). The backoff was written for a flaky
+socket, which it fits; a key that has run out of free-tier quota is the case it does not. That
+quota comes back at midnight Pacific, so the extension used to knock on a rate-limited endpoint
+every four seconds, for hours, showing the same sentence, until the user noticed and pressed Stop.
+Ten attempts is about twenty-two seconds on that curve.
+
+What clears the tally is a session doing something — any relayed event, or simply one that stayed
+up for a minute. Deliberately **not** a successful `open()`: a rejection can arrive after the
+handshake, and a loop that took connecting as proof of life would cycle for ever with a clean
+counter at every turn. The minute is there so that an hour on bad Wi-Fi, which can drop ten times
+during silences, is not mistaken for a rejection.
+
+Giving up is a state the UI had no way of reaching before, because until now nothing ever stopped
+on its own: the loop reports `failed`, `offscreen.js` asks the service worker to take the whole run
+down — it owns the `running` flag, the caption overlay and the offscreen document's lifetime, so a
+document that shut its own sessions down would leave all three claiming a run that no longer exists
+— and the reason goes to the side panel's banner and to session storage, so a panel that was on
+another tab when it happened still finds out why the run ended.
+
+**The reason itself is two guesses, and says so.** A browser is not handed the HTTP status of a
+failed WebSocket upgrade, by design; a 429 `RESOURCE_EXHAUSTED` and a rejected key both arrive as a
+bare 1006 with an empty reason. `closeReason()` used to name the key alone, which sent a user whose
+quota had run out to check the one thing that was fine. It now names both, and the give-up message
+adds where each is checked: the Options page for the key, AI Studio for the quota.
 
 **Measured against the real server**, twelve minutes of continuous tab audio through
 `tests/live-smoke.mjs`: the warning arrived at 9 min 00 s carrying `"50s"`, the replacement was
