@@ -253,9 +253,11 @@ chrome.storage.local.set({ micToCall: true })
 ```
 
 Then start a run with **Microphone** on, from a `https://meet.google.com/` tab, and pick
-**Interpretab (translated)** in Meet's microphone list. Nothing to install, and your own voice is
-mixed in underneath at `micToCallOwnVoice` (0.15, the same level the passthrough ducks to) so the
-room hears you as well as the interpreter.
+**Interpretab (translated)** in Meet's microphone list. **Turn Studio Sound off** while you are
+in there: it is a second of latency on a path that has too much of it already, and what it
+removes is background noise from a microphone this device is not. Nothing to install, and your
+own voice is mixed in underneath at `micToCallOwnVoice` (0.15, the same level the passthrough
+ducks to) so the room hears you as well as the interpreter.
 
 Three files, and each does the half the other cannot. `content/mic-shim.js` goes into the page's
 world with `world: "MAIN"` — a content script's `navigator.mediaDevices` is a *different object*
@@ -346,8 +348,11 @@ What that first call answered, and what it did not:
   0.22 means the audio is leaving here on time and the two seconds are Meet's; a number that
   climbs over a call means the queue is the delay. Meet's own half can be read off
   `chrome://webrtc-internals` at the far end — `jitterBufferDelay / jitterBufferEmittedCount` on
-  the inbound audio track — and Studio Sound, which was on for this measurement, is the obvious
-  thing to turn off first.
+  the inbound audio track.
+- **A second of it was Studio Sound**, and turning that off is the whole fix for that second.
+  Which settles part of the question above: at least half of the two seconds was Meet's, not the
+  queue's. Three seconds is still too many, and where the last one lives — the queue, or the
+  jitter buffer that has to make sense of a track arriving in bursts — is still open.
 - **Meet did not take the microphone back.** Not once, across the call. The silent failure that
   would have sunk this did not happen, which is a weaker statement than "cannot happen" and worth
   re-checking on a reconnection and a network drop.
@@ -357,9 +362,10 @@ What that first call answered, and what it did not:
   muted, so there was nothing for the microphone to hear itself through. It becomes a real
   question the moment someone runs this unmuted on speakers, which the mute fix above makes an
   unusual thing to do.
-- **Studio Sound was on throughout** and did not obstruct anything. Meet's noise processing is
-  happy to carry a synthetic voice — though it is a neural denoiser sitting in the path, so it
-  is also a candidate for the two seconds above and has not been ruled out.
+- **Studio Sound carries a synthetic voice happily, and charges a second for it.** It never
+  obstructed anything — Meet's noise processing has no objection to speech that came out of an
+  `AudioContext` — but it is a neural denoiser in the path, and the path cannot afford one. The
+  setup instructions above now say to switch it off.
 
 The prototype's only instrumentation is `console.info` from the service worker, which is the
 correct amount for something with no UI and this many open questions.
