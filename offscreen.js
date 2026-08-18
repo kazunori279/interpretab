@@ -539,6 +539,7 @@ function onEvent(direction, ev, player, acc) {
     if (state.settings?.soundMuted) return;
     player.port.postMessage(ev.buffer);
     noteVoiceAudio(direction, ev.buffer.byteLength);
+    if (direction === "mic") sendToCall(ev.buffer);
     return;
   }
   if (ev.type === "turnComplete") {
@@ -776,6 +777,37 @@ function resume(ctx) {
  * direction, because both directions share one page and subtitling your own
  * speech over a video is a separate decision from subtitling the video.
  */
+/**
+ * The microphone's translated voice, on its way to a meeting's microphone (#9).
+ *
+ * The same frames that go to the player, sent again to the shim in the page.
+ * They cannot go there directly: an offscreen document has no `chrome.tabs`, so
+ * the service worker addresses the tab and this only hands it the bytes.
+ *
+ * Base64 because extension messages are JSON, and an `ArrayBuffer` serialises
+ * to `{}` — silently, which is the kind of bug that takes an afternoon. The
+ * third of a byte that costs puts the relay at about 64 kB/s while someone is
+ * speaking, and at nothing at all while they are not.
+ *
+ * Below the sound mute by construction — it is called from the branch that mute
+ * returns out of — for the reason given there: mute silences the translation
+ * wherever it is going, and a call is somewhere it is going.
+ */
+function sendToCall(buffer) {
+  if (!state.settings?.micToCall) return;
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  // In chunks: `String.fromCharCode` takes its bytes as arguments, and a frame
+  // long enough to overflow the argument list is a stack overflow rather than a
+  // slow path.
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  }
+  chrome.runtime
+    .sendMessage({ target: "sw", type: "voice", pcm: btoa(binary) })
+    .catch(() => {});
+}
+
 function post(payload) {
   noteLine(payload);
   chrome.runtime.sendMessage({ target: "ui", ...payload }).catch(() => {});

@@ -139,6 +139,15 @@ async function handle(msg, sender) {
       // Relayed from the offscreen document, which has no tab of its own.
       await sendToCaptions(msg.payload);
       return {};
+    case "voice":
+      // Same relay, for the translated microphone (#9).
+      await sendToCall(msg.pcm);
+      return {};
+    case "micShim":
+      // The prototype's only instrumentation. See `content/mic-bridge.js` for
+      // why a report that nothing acts on is still worth carrying.
+      console.info("Translated microphone:", msg.state, msg.detail || "");
+      return {};
     case "failed":
       // A session loop gave up (#13). The offscreen document has already told
       // the panel why; kept here as well because the panel it told may have
@@ -333,6 +342,7 @@ async function start(panelTabId = null) {
   announceRun(tab?.id ?? null, tab?.title || "");
   await markTab(settings);
   await ensureCaptionTab(settings);
+  await ensureCallTab(settings);
   return { capturedTabId: tabId };
 }
 
@@ -487,6 +497,15 @@ async function stop() {
     await chrome.offscreen.closeDocument();
   }
   await sendToCaptions({ type: "teardown" }).catch(() => {});
+  // The shim lives in the page's world and nothing there reloads it, so a run
+  // that ends without saying so leaves Meet holding a microphone that will
+  // never carry another word — and Meet has no way to tell that from silence.
+  const { callTabId } = await chrome.storage.session.get("callTabId");
+  if (callTabId != null) {
+    await chrome.tabs
+      .sendMessage(callTabId, { target: "micBridge", type: "teardown" })
+      .catch(() => {});
+  }
   const { markedTabId } = await chrome.storage.session.get("markedTabId");
   if (markedTabId != null) {
     await chrome.tabs
@@ -501,6 +520,7 @@ async function stop() {
     captionTabId: null,
     captionRetryAt: 0,
     captionStatus: null,
+    callTabId: null,
     markedTabId: null,
     tabMarkPrefix: null,
   });
@@ -618,6 +638,83 @@ async function sendToCaptions(payload) {
   }
 }
 
+/** Where the translated microphone is allowed to exist at all. */
+const CALL_ORIGIN = "https://meet.google.com/";
+
+/**
+ * Offer the page a microphone carrying the translation (#9, prototype).
+ *
+ * Three gates, and all three are the point of the prototype rather than
+ * caution for its own sake. The flag, because this is unmeasured and there is
+ * no UI for it yet. The microphone direction, because the tab direction's
+ * translation is the one you are listening to and putting it into a call would
+ * play the room its own voice. And Meet, because "how much of the plumbing does
+ * it tolerate" is a question about one application's device picker, and the
+ * answer will not generalise to Zoom or Teams without being asked again.
+ *
+ * No host permission for any of it: the shim goes in under `activeTab`, the
+ * same grant that puts the subtitles on a page, which is why the run tab is the
+ * only tab this can ever reach. That grant is also what makes `chrome.tabs.get`
+ * return a URL here — without it there would be nothing to match against.
+ */
+async function ensureCallTab(settings) {
+  if (!settings.micToCall || !settings.micEnabled) return;
+  const { runTabId } = await chrome.storage.session.get("runTabId");
+  if (runTabId == null) return;
+  let url = "";
+  try {
+    url = (await chrome.tabs.get(runTabId)).url || "";
+  } catch {
+    // No `activeTab` grant on this tab, so no URL and no injection either.
+    return;
+  }
+  if (!url.startsWith(CALL_ORIGIN)) return;
+  try {
+    // The page's world, where its own `navigator.mediaDevices` lives, and then
+    // the isolated one, which is the only half that can still hear from here.
+    // In that order: the bridge's first act is to forward whatever the shim
+    // says, and the shim reports as soon as it is installed.
+    await chrome.scripting.executeScript({
+      target: { tabId: runTabId },
+      files: ["content/mic-shim.js"],
+      world: "MAIN",
+    });
+    await chrome.scripting.executeScript({
+      target: { tabId: runTabId },
+      files: ["content/mic-bridge.js"],
+    });
+    await chrome.storage.session.set({ callTabId: runTabId });
+    await chrome.tabs.sendMessage(runTabId, {
+      target: "micBridge",
+      type: "config",
+      ownVoice: settings.micToCallOwnVoice,
+    });
+  } catch (err) {
+    // Nowhere for this to go on screen yet, which is the honest state of a
+    // prototype with no UI. The console is the instrument.
+    console.warn("Translated microphone unavailable on this page:", err.message);
+  }
+}
+
+/**
+ * A frame of translated speech, handed to the shim in the call.
+ *
+ * Unlike `sendToCaptions` this never re-injects. A page that has gone away has
+ * taken Meet's own state with it, and putting a fresh shim into whatever
+ * replaced it would advertise a device to a page that has not been in a call
+ * since. The tab is forgotten instead, and the next run offers it again.
+ */
+async function sendToCall(pcm) {
+  const { callTabId } = await chrome.storage.session.get("callTabId");
+  if (callTabId == null) return;
+  try {
+    await chrome.tabs.sendMessage(callTabId, { target: "micBridge", type: "voice", pcm });
+  } catch {
+    await chrome.storage.session.set({ callTabId: null });
+    console.warn("Translated microphone: the call tab is no longer listening");
+  }
+}
+
 async function reinjectDue() {
   const { captionRetryAt = 0 } = await chrome.storage.session.get("captionRetryAt");
   const now = Date.now();
@@ -641,10 +738,12 @@ async function reinjectDue() {
  * nothing else.
  */
 chrome.tabs.onRemoved.addListener(async (tabId) => {
-  const { captionTabId, runTabId } = await chrome.storage.session.get([
+  const { captionTabId, callTabId, runTabId } = await chrome.storage.session.get([
     "captionTabId",
+    "callTabId",
     "runTabId",
   ]);
   if (tabId === captionTabId) await chrome.storage.session.set({ captionTabId: null });
+  if (tabId === callTabId) await chrome.storage.session.set({ callTabId: null });
   if (tabId === runTabId) await stop();
 });
