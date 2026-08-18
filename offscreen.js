@@ -527,19 +527,28 @@ function onEvent(direction, ev, player, acc) {
     // speaker. Muting silences the translation, not the bill.
     noteAudioOut(acc.usage, ev.buffer.byteLength / 2 / DOWNLINK_RATE);
     scheduleUsagePost();
+    // The call first, because the call is not a speaker (#9).
+    //
+    // `soundMuted` below means "not out of this machine", and on a call that is
+    // the setting you want on: the alternative is the interpreter coming out of
+    // the room's speakers, into the microphone, and back through the
+    // translation. Someone who mutes for that reason has said nothing about
+    // what the other end should hear, and taking the relay off after the gate
+    // made the two inseparable — which is how this shipped, and why the first
+    // real two-party call was silent at the far end while the panel showed the
+    // translation arriving. `micMuted` is the switch that means "the call hears
+    // nothing", and it stops the audio going up rather than coming down.
+    if (direction === "mic") sendToCall(ev.buffer);
     // Only the audio is dropped. The transcript of the same sentence goes on
     // arriving, so the sound can be switched off and the translation still read
     // — in the panel and, if they are on, in the subtitles on the page.
     //
-    // Every direction, including a microphone playing into the device named by
-    // `micOutput`: one button that silences the translation wherever it is
-    // going beats one that silences some of it. Which does mean that a call
-    // listening to that device hears nothing while it is on — the same as the
-    // microphone button, and the same as any other mute.
+    // Both directions, including a microphone playing into the device named by
+    // `micOutput`: that device is a speaker like any other, and a virtual cable
+    // pointed at a call is still this machine putting sound somewhere.
     if (state.settings?.soundMuted) return;
     player.port.postMessage(ev.buffer);
     noteVoiceAudio(direction, ev.buffer.byteLength);
-    if (direction === "mic") sendToCall(ev.buffer);
     return;
   }
   if (ev.type === "turnComplete") {
@@ -789,9 +798,10 @@ function resume(ctx) {
  * third of a byte that costs puts the relay at about 64 kB/s while someone is
  * speaking, and at nothing at all while they are not.
  *
- * Below the sound mute by construction — it is called from the branch that mute
- * returns out of — for the reason given there: mute silences the translation
- * wherever it is going, and a call is somewhere it is going.
+ * Above the sound mute, and below `micMuted`, for the reasons at the call site:
+ * muting the speakers is the normal state of a call and must not mute the call,
+ * while muting the microphone means the other end hears nothing and already
+ * stops the audio being sent up.
  */
 function sendToCall(buffer) {
   if (!state.settings?.micToCall) return;

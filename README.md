@@ -309,6 +309,23 @@ had already been built. The mismatched `label` and `getSettings().deviceId` do n
 either: switching away to a real microphone and back leaves the menu showing our entry ticked,
 which means Meet trusts the id it asked for rather than the one the track reports.
 
+**And then the far end heard nothing.** Two people on a call, the panel filling with
+`TRANSLATION (MIC)`, Meet holding the synthetic track, and not one frame of audio reaching the
+page. The relay was fine; the tap was in the wrong place. `sendToCall` used to be called *after*
+the `soundMuted` gate in `onEvent`, deliberately, on the reasoning that mute should silence the
+translation wherever it is going. That reasoning was written for the virtual cable, where a
+muted machine really does mean a silent call. It is exactly wrong here: **on a call, muting the
+speakers is the setting you want on** — otherwise the interpreter comes out of the room's
+speakers, into the microphone, and back through the translation — and someone who mutes for that
+reason has said nothing about what the other end should hear. The tap is above the gate now.
+`micMuted` remains the switch that means the call hears nothing, and it stops the audio going up
+rather than coming down.
+
+Worth knowing while the flag has no UI: `micToCall` is read once, at `start()`, and it is not in
+`LIVE_KEYS`. Setting it during a run does nothing at all — not in the offscreen document, which
+keeps the settings it was handed, and not in the service worker, where `ensureCallTab()` is only
+called from `start()`. Set it, then Start.
+
 What still needs a real call:
 
 - What the relay costs end to end. Three contexts and a base64 round trip, on top of the Live
