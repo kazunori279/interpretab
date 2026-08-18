@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <title>Interpretab — Options</title>
+    <title data-i18n="optTitle">Interpretab — Options</title>
     <link rel="stylesheet" href="sidepanel.css" />
     <style>
       body { max-width: 44rem; margin: 0 auto; height: auto; padding: 1.5rem; font-size: 14px; }
       h2 { font-size: 1rem; font-weight: 500; margin: 1.2rem 0 0.2rem; }
       input[type="text"], input[type="password"] { font: inherit; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 0.3rem; width: 100%; }
       table { border-collapse: collapse; width: 100%; font-size: 12px; }
-      th, td { text-align: left; border-bottom: 1px solid var(--border); padding: 0.25rem 0.4rem; }
+      th, td { text-align: start; border-bottom: 1px solid var(--border); padding: 0.25rem 0.4rem; }
       th { color: var(--muted); font-weight: 500; }
       #glossaryList { max-height: 16rem; overflow-y: auto; border: 1px solid var(--border); border-radius: 0.3rem; }
       /* Device labels are sentences — "MacBook Pro Speakers (Built-in)" — and the
@@ -26,29 +26,22 @@
         display: inline-block; color: #fff; line-height: 1.4;
         background: rgba(0, 0, 0, 0.72); padding: 0.16em 0.5em;
         border-radius: 0.25em; text-align: center;
-        font-family: "Google Sans", "Noto Sans", "Noto Sans JP", sans-serif;
+        font-family: "Google Sans", "Noto Sans", "Noto Sans JP", "Noto Sans SC",
+          "Noto Sans KR", "Noto Sans Devanagari", "Noto Sans Arabic", sans-serif;
       }
     </style>
   </head>
+  <!-- `lang` is set by `localize()` rather than declared: see sidepanel.html. -->
   <body>
-    <h1 style="font-size: 1.15rem; font-weight: 500; margin: 0">Interpretab options</h1>
+    <h1 style="font-size: 1.15rem; font-weight: 500; margin: 0" data-i18n="optHeading"></h1>
 
-    <h2>Gemini API key</h2>
-    <p class="note">
-      Interpretab has no server. Your audio goes straight from this browser to
-      the Gemini Live API, authenticated with your own key — get a free one at
-      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-        >aistudio.google.com/apikey</a
-      >. The key is stored in this browser's extension storage and is sent
-      nowhere except <code>generativelanguage.googleapis.com</code>. Usage is
-      billed to the Google account the key belongs to, so treat it like a
-      password: don't share it, and don't paste it anywhere else. If it ever
-      gets out, delete it on the
-      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-        >same page you made it on</a
-      >
-      and paste a new one in here.
-    </p>
+    <h2 data-i18n="optKeyHeading"></h2>
+    <p
+      class="note"
+      data-i18n="optKeyNote"
+      data-link1="https://aistudio.google.com/apikey"
+      data-link2="https://aistudio.google.com/apikey"
+    ></p>
     <div class="row">
       <!-- No format in the placeholder. It said "AIza…" while Google was
            issuing keys that started that way, and then Google started issuing
@@ -59,99 +52,60 @@
         id="apiKey"
         spellcheck="false"
         autocomplete="off"
-        placeholder="Paste your key here"
+        data-i18n-placeholder="optKeyPlaceholder"
       />
-      <button id="toggleKey" class="ghost">Show</button>
+      <button id="toggleKey" class="ghost" data-i18n="optShow"></button>
     </div>
     <p class="note" id="apiKeyStatus"></p>
 
-    <h2>Gemini API plan</h2>
-    <p class="note">
-      Which plan the key's project is on. Interpretab has no way to tell — no
-      Gemini API response says — and it has to know, because the side panel's
-      meter would otherwise show a price to people Google charges nothing. On
-      <b>Free</b> the meter counts time and audio; on <b>Paid</b> it also
-      estimates what the run has cost. Pick the one your key is on: it is the
-      project you made it in at
-      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-        >aistudio.google.com/apikey</a
-      >, and a project is on the paid tier once it has a billing account linked.
-    </p>
+    <h2 data-i18n="optPlanHeading"></h2>
+    <p class="note" data-i18n="optPlanNote" data-link1="https://aistudio.google.com/apikey"></p>
     <div class="row">
       <select id="apiTier" class="mode">
-        <option value="free">Free — Google charges nothing for this key</option>
-        <option value="paid">Paid — pay as you go, billed to your account</option>
+        <option value="free" data-i18n="optPlanFree"></option>
+        <option value="paid" data-i18n="optPlanPaid"></option>
       </select>
     </div>
 
-    <h2>Voice</h2>
-    <p class="note">
-      The prebuilt voice the translation is spoken in. Fixed for the life of a
-      session, so a change applies the next time you press Start.
-    </p>
+    <h2 data-i18n="optVoiceHeading"></h2>
+    <p class="note" data-i18n="optVoiceNote"></p>
     <div class="row"><select id="voice" class="lang"></select></div>
 
-    <h2>Subtitle size</h2>
-    <p class="note">
-      How tall the on-page subtitles are, in pixels. Applies immediately, even
-      to a translation already running — drag it while watching the video and
-      stop where it reads well.
-    </p>
+    <h2 data-i18n="optSizeHeading"></h2>
+    <p class="note" data-i18n="optSizeNote"></p>
     <div class="row">
       <input type="range" id="captionSize" min="16" max="64" step="2" />
       <output id="captionSizeOut"></output>
     </div>
-    <div id="captionPreview"><span>The quick brown fox — 素早い茶色の狐</span></div>
+    <div id="captionPreview"><span data-i18n="optSizePreview"></span></div>
 
-    <h2>Microphone</h2>
-    <p class="note">
-      Chrome grants the microphone to the extension as a whole. The engine runs
-      in a background document that cannot show a permission prompt, so if the
-      microphone direction fails, grant it once from here.
-    </p>
+    <h2 data-i18n="optMicHeading"></h2>
+    <p class="note" data-i18n="optMicNote"></p>
     <div class="row">
-      <button id="grantMic" class="ghost">Grant microphone</button>
+      <button id="grantMic" class="ghost" data-i18n="optMicGrant"></button>
       <span class="note" id="micStatus"></span>
     </div>
 
-    <h2>Audio input</h2>
-    <p class="note">
-      Which microphone the <b>microphone</b> direction listens to. Left on the
-      system default, Chrome picks whatever your computer currently calls the
-      input — which may be a headset you have unplugged, a monitor, or some
-      other device you never speak into. That failure is silent: the
-      session connects, the panel goes green, and nothing is ever transcribed.
-      Name the device here if that happens. Applies the next time you press Start.
-    </p>
+    <h2 data-i18n="optInputHeading"></h2>
+    <p class="note" data-i18n="optInputNote"></p>
     <div class="row">
       <select id="micInput" class="lang"></select>
       <span class="note" id="micInputStatus"></span>
     </div>
 
-    <h2>Audio output</h2>
-    <p class="note">
-      Where the <b>microphone</b> direction's translated voice is played. The tab
-      direction's translation always stays on the system output — that is the one
-      you are listening to. Applies the next time you press Start.
-    </p>
+    <h2 data-i18n="optOutputHeading"></h2>
+    <p class="note" data-i18n="optOutputNote"></p>
     <div class="row">
       <select id="micOutput" class="lang"></select>
       <span class="note" id="micOutputStatus"></span>
     </div>
 
-    <h2>Glossary</h2>
-    <p class="note">
-      <code>source,pronunciation,transcript</code> per line. The second column is
-      what the model is told to say; the optional third is what the captions
-      show instead. Applies to the microphone in <b>Two-way conversation</b> mode
-      only: everything else — tab audio, and the microphone's Simultaneous mode —
-      runs the simultaneous-translation model, which takes no system instruction
-      and so has nowhere to put a glossary.
-    </p>
+    <h2 data-i18n="optGlossaryHeading"></h2>
+    <p class="note" data-i18n="optGlossaryNote"></p>
     <div class="row">
       <input type="file" id="glossaryFile" accept=".csv" />
-      <button id="uploadGlossary" class="ghost">Replace</button>
-      <button id="resetGlossary" class="ghost">Reset to defaults</button>
+      <button id="uploadGlossary" class="ghost" data-i18n="optGlossaryReplace"></button>
+      <button id="resetGlossary" class="ghost" data-i18n="optGlossaryReset"></button>
       <span id="glossaryStatus" class="note"></span>
     </div>
     <div id="glossaryList"></div>

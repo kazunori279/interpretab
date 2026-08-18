@@ -1,0 +1,269 @@
+{
+  "extName": { "message": "Interpretab" },
+  "extDescription": {
+    "message": "어떤 탭이든 내 언어로 듣습니다. 실시간 음성과 자막으로. 내 Gemini API 키로 동작하며, 중간에 서버는 없습니다."
+  },
+
+  "panelTitle": { "message": "Interpretab" },
+  "statusIdle": { "message": "대기 중" },
+  "statusConnecting": { "message": "연결 중…" },
+  "statusConnected": { "message": "연결됨" },
+  "statusReconnecting": { "message": "다시 연결 중…" },
+  "statusStopped": { "message": "중지됨" },
+  "statusError": { "message": "오류" },
+
+  "panelKeyNote": {
+    "message": "Interpretab은 <b>내 API 키</b>로 Gemini와 통신합니다. <a1>aistudio.google.com/apikey</a1>에서 무료로 발급받아 <a2>옵션</a2>에 붙여 넣으세요."
+  },
+  "panelRunningOn": {
+    "message": "Interpretab이 “{1}”에서 실행 중입니다. 한 번에 한 탭에서만 동작하며, 조작은 그 탭에서 합니다 — Stop은 여기서도 됩니다."
+  },
+  "panelRunningElsewhere": {
+    "message": "Interpretab이 다른 탭에서 실행 중입니다. 한 번에 한 탭에서만 동작하며, 조작은 그 탭에서 합니다 — Stop은 여기서도 됩니다."
+  },
+
+  "panelTabDirection": { "message": "<b>탭 오디오</b> — 이 탭을 내 언어로" },
+  "panelInto": { "message": "번역할 언어" },
+  "panelTabTargetTitle": { "message": "듣고 싶은 언어" },
+  "panelSourceDetected": { "message": "— 원어는 자동 인식" },
+  "panelDuckLevel": { "message": "말하는 동안 원본 음량" },
+  "panelPageSubtitles": { "message": "페이지에 자막 표시" },
+
+  "panelMicDirection": { "message": "<b>마이크</b> — 현장의 말을 소리 내어 통역" },
+  "panelMicModeTitle": { "message": "마이크를 통역하는 방식" },
+  "panelMicModeSimul": { "message": "Simultaneous — 말하는 동안 바로" },
+  "panelMicModeConversation": { "message": "Two-way conversation — 두 언어의 대화" },
+  "panelMicSourceTitle": { "message": "내가 말하는 언어" },
+  "panelMicNoteMuted": {
+    "message": "통역 음성이 <b>음소거</b> 상태입니다. 스피커로 들으려면 음소거 해제 버튼을 누르세요."
+  },
+  "panelMicNoteSimul": {
+    "message": "참고: 재생할 때는 헤드폰을 쓰세요. 이 모드는 말하는 도중에 응답하기 때문에 자기가 말하는 동안 마이크를 음소거할 수 없고, 스피커를 쓰면 번역이 그대로 입력으로 되돌아가 번역 자체가 나빠집니다."
+  },
+  "panelMicNoteConversation": {
+    "message": "마이크 하나를 두 사람이 함께 쓰는 모드입니다. 두 언어 중 들린 쪽의 반대 언어로 말해 줍니다. <b>스피커</b>로 소리 내어 읽어 주는 것이 이 모드의 목적이지만, 그만큼 통역이 자기 목소리를 듣게 되므로 마이크는 스피커에서 떨어뜨려 두세요. 한 사람이 말을 마칠 때까지 기다렸다가 번역하므로 Simultaneous보다 조금 느리며, <b>용어집</b>이 적용되는 것은 이 모드뿐입니다."
+  },
+
+  "panelStart": { "message": "Start" },
+  "panelStop": { "message": "Stop" },
+  "panelOptions": { "message": "옵션" },
+
+  "panelCostNote": {
+    "message": "양방향을 함께 켜면 Live 세션이 두 개 동시에 열리므로 API 사용량은 대략 두 배가 됩니다."
+  },
+  "panelUsagePaid": {
+    "message": "지금까지 <b>{1}</b>, 이번 실행의 Gemini 사용량 <b>{2}</b> — 추정치이며 실제 청구액이 아닙니다."
+  },
+  "panelUsageFree": {
+    "message": "지금까지 <b>{1}</b>, Gemini 오디오 <b>{2}</b>. 무료 등급에서는 이에 대해 요금이 부과되지 않습니다."
+  },
+  "panelUsageTip": {
+    "message": "{1} 전에 시작했습니다. 그동안 오디오 {2}를 보내고 {3}를 받았으며, 양쪽 모두 초당 25 토큰으로 계산됩니다."
+  },
+  "panelUsageTipPaid": {
+    "message": "이 토큰은 Google이 해당 모델에 대해 공개한 요율로 계산한 값으로, 계정이 아니라 2026년 8월 시점의 가격 페이지에서 읽어 온 것이며 요율은 바뀝니다. 실제 청구액이 존재하는 곳은 내 Google 계정뿐입니다."
+  },
+  "panelUsageTipFree": {
+    "message": "옵션 페이지에서 이 키가 무료 등급으로 설정되어 있고, Google은 이에 대해 아무것도 청구하지 않으므로 표시할 비용이 없습니다. 프로젝트에 결제 계정이 연결되어 있다면 옵션에서 요금제를 Paid로 바꾸세요. 그러면 이 줄이 이번 실행의 비용을 추정해 줍니다."
+  },
+  "durationSeconds": { "message": "{1}초" },
+  "durationMinutes": { "message": "{1}분" },
+
+  "panelMuteMic": { "message": "마이크 음소거" },
+  "panelUnmuteMic": { "message": "마이크 음소거 해제" },
+  "panelMuteSound": { "message": "통역 음성 음소거" },
+  "panelUnmuteSound": { "message": "통역 음성 음소거 해제" },
+  "panelMuteOffElsewhere": { "message": "다른 탭에서 실행 중입니다." },
+  "panelMuteOffMic": { "message": "마이크 방향이 꺼져 있습니다." },
+  "panelMuteOffSound": { "message": "켜져 있는 방향이 없습니다." },
+
+  "panelLangPopular": { "message": "자주 쓰는 언어" },
+  "panelLangAll": { "message": "모든 언어" },
+  "panelDirTab": { "message": "탭" },
+  "panelDirMic": { "message": "마이크" },
+  "panelHeard": { "message": "들은 말 ({1})" },
+  "panelTranslated": { "message": "번역 ({1})" },
+  "panelCaptionsUnavailable": { "message": "이 페이지에는 자막을 표시할 수 없습니다." },
+  "panelCaptionsStopped": { "message": "자막이 이 페이지에 더 이상 도달하지 않습니다." },
+
+  "optTitle": { "message": "Interpretab — 옵션" },
+  "optHeading": { "message": "Interpretab 옵션" },
+
+  "optKeyHeading": { "message": "Gemini API 키" },
+  "optKeyNote": {
+    "message": "Interpretab에는 서버가 없습니다. 오디오는 이 브라우저에서 Gemini Live API로 바로 가며, 내 키로 인증합니다 — <a1>aistudio.google.com/apikey</a1>에서 무료로 발급받을 수 있습니다. 키는 이 브라우저의 확장 프로그램 저장소에 보관되고 <code>generativelanguage.googleapis.com</code> 외에는 어디로도 전송되지 않습니다. 사용량은 그 키가 속한 Google 계정에 청구되므로 비밀번호처럼 다루세요. 공유하지 말고 다른 곳에 붙여 넣지 마세요. 혹시 유출되면 <a2>키를 만들었던 바로 그 페이지</a2>에서 삭제하고 새 키를 여기에 붙여 넣으세요."
+  },
+  "optKeyPlaceholder": { "message": "여기에 키를 붙여 넣으세요" },
+  "optShow": { "message": "표시" },
+  "optHide": { "message": "숨기기" },
+  "optKeyNone": { "message": "아직 키가 없습니다. 키 없이는 Interpretab을 시작할 수 없습니다." },
+  "optKeyStray": { "message": "저장했지만, 키라기보다는 잘못 붙여 넣은 내용으로 보입니다." },
+  "optKeyShort": { "message": "저장했지만 너무 짧아 보입니다 — 키의 일부가 빠지지 않았나요?" },
+  "optKeySaved": { "message": "키를 이 브라우저에 저장했습니다." },
+
+  "optPlanHeading": { "message": "Gemini API 요금제" },
+  "optPlanNote": {
+    "message": "키가 속한 프로젝트의 요금제입니다. Interpretab은 이를 알 방법이 없고 — Gemini API의 어떤 응답도 알려 주지 않습니다 — 그래도 알아야 합니다. 모르면 사이드 패널의 사용량 표시가 Google이 아무것도 청구하지 않는 사람에게 금액을 보여 주기 때문입니다. <b>Free</b>에서는 시간과 오디오만 세고, <b>Paid</b>에서는 이번 실행의 비용까지 추정합니다. 내 키에 맞는 쪽을 고르세요. <a1>aistudio.google.com/apikey</a1>에서 키를 만든 그 프로젝트가 기준이며, 결제 계정이 연결된 프로젝트는 유료 등급입니다."
+  },
+  "optPlanFree": { "message": "Free — 이 키에는 Google이 요금을 청구하지 않습니다" },
+  "optPlanPaid": { "message": "Paid — 종량제, 내 계정에 청구됩니다" },
+
+  "optVoiceHeading": { "message": "음성" },
+  "optVoiceNote": {
+    "message": "번역을 읽어 주는 기본 제공 음성입니다. 세션 중에는 바뀌지 않으므로 변경은 다음 Start부터 적용됩니다."
+  },
+  "optVoiceOption": { "message": "{1} — {2}" },
+  "voiceBright": { "message": "밝음" },
+  "voiceUpbeat": { "message": "경쾌함" },
+  "voiceInformative": { "message": "차분한 설명조" },
+  "voiceFirm": { "message": "단단함" },
+  "voiceExcitable": { "message": "들뜸" },
+  "voiceYouthful": { "message": "앳됨" },
+  "voiceBreezy": { "message": "산뜻함" },
+  "voiceEasygoing": { "message": "느긋함" },
+  "voiceBreathy": { "message": "숨결 섞인" },
+  "voiceClear": { "message": "또렷함" },
+  "voiceSmooth": { "message": "매끄러움" },
+  "voiceGravelly": { "message": "거칠함" },
+  "voiceSoft": { "message": "부드러움" },
+  "voiceEven": { "message": "고른" },
+  "voiceMature": { "message": "중후함" },
+  "voiceForward": { "message": "적극적" },
+  "voiceFriendly": { "message": "친근함" },
+  "voiceCasual": { "message": "편안함" },
+  "voiceGentle": { "message": "온화함" },
+  "voiceLively": { "message": "활기참" },
+  "voiceKnowledgeable": { "message": "박식함" },
+  "voiceWarm": { "message": "따뜻함" },
+
+  "optSizeHeading": { "message": "자막 크기" },
+  "optSizeNote": {
+    "message": "페이지에 표시되는 자막의 높이(픽셀)입니다. 실행 중인 번역에도 즉시 적용되므로, 영상을 보면서 슬라이더를 끌다가 읽기 좋은 지점에서 멈추면 됩니다."
+  },
+  "optSizePx": { "message": "{1} px" },
+  "optSizePreview": { "message": "다람쥐 헌 쳇바퀴에 타고파 — The quick brown fox" },
+
+  "optMicHeading": { "message": "마이크" },
+  "optMicNote": {
+    "message": "Chrome은 마이크 권한을 확장 프로그램 전체에 부여합니다. 엔진은 권한 요청 창을 띄울 수 없는 백그라운드 문서에서 돌아가므로, 마이크 방향이 실패하면 여기서 한 번 권한을 주세요."
+  },
+  "optMicGrant": { "message": "마이크 권한 부여" },
+  "optMicGranted": { "message": "허용됨." },
+  "optMicNotGranted": { "message": "허용되지 않음 ({1})." },
+  "optMicDenied": { "message": "거부됨: {1}" },
+
+  "optInputHeading": { "message": "오디오 입력" },
+  "optInputNote": {
+    "message": "<b>마이크</b> 방향이 어떤 마이크를 들을지 정합니다. 시스템 기본값으로 두면 Chrome은 컴퓨터가 그때그때 입력이라고 부르는 장치를 씁니다 — 뽑아 둔 헤드셋일 수도, 모니터일 수도, 한 번도 대고 말한 적 없는 다른 장치일 수도 있습니다. 이런 실패는 소리 없이 일어납니다. 세션은 연결되고 패널은 초록색이 되는데 아무것도 전사되지 않습니다. 그럴 때는 여기서 장치를 지정하세요. 다음 Start부터 적용됩니다."
+  },
+  "optInputSystem": { "message": "시스템 기본값 — 컴퓨터가 지금 쓰고 있는 마이크" },
+  "optInputAnonymous": { "message": "마이크 {1}…" },
+  "optInputNone": { "message": "보이는 마이크가 없습니다." },
+  "optInputMissing": { "message": "그 마이크가 연결되어 있지 않아 시스템 기본값을 사용합니다." },
+  "optInputSaved": { "message": "저장했습니다. 다음 Start부터 적용됩니다." },
+  "optInputCleared": { "message": "저장했습니다. 시스템 기본 마이크를 사용합니다." },
+
+  "optOutputHeading": { "message": "오디오 출력" },
+  "optOutputNote": {
+    "message": "<b>마이크</b> 방향의 통역 음성을 어디로 재생할지 정합니다. 탭 방향의 번역은 언제나 시스템 출력에 남습니다 — 그쪽이 지금 듣고 있는 소리입니다. 다음 Start부터 적용됩니다."
+  },
+  "optOutputSystem": { "message": "시스템 기본값 — 지금 쓰고 있는 스피커" },
+  "optOutputAnonymous": { "message": "출력 {1}…" },
+  "optOutputNone": { "message": "보이는 출력 장치가 없습니다." },
+  "optOutputMissing": { "message": "그 장치가 연결되어 있지 않아 스피커를 대신 사용합니다." },
+  "optOutputSaved": {
+    "message": "저장했습니다. 다음 Start부터 적용됩니다 — 그 장치를 듣고 있는 쪽에도 따로 알려 주어야 합니다."
+  },
+  "optOutputCleared": { "message": "저장했습니다. 통역 음성은 스피커로 나옵니다." },
+
+  "optDeviceListFailed": { "message": "오디오 장치 목록을 가져오지 못했습니다: {1}." },
+  "optDeviceNamesHidden": { "message": "장치 이름을 보려면 위에서 마이크 권한을 주세요." },
+  "optDeviceSavedMissing": { "message": "저장된 장치 — 지금은 연결되어 있지 않음" },
+
+  "optGlossaryHeading": { "message": "용어집" },
+  "optGlossaryNote": {
+    "message": "한 줄에 <code>source,pronunciation,transcript</code> 형식입니다. 두 번째 열은 모델이 읽도록 지시할 발음이고, 선택 사항인 세 번째 열은 자막에 대신 표시할 표기입니다. 마이크의 <b>Two-way conversation</b> 모드에서만 적용됩니다. 나머지 — 탭 오디오와 마이크의 Simultaneous 모드 — 는 동시 번역 모델로 동작하는데, 이 모델은 시스템 지시를 받지 않아 용어집을 넣을 자리가 없습니다."
+  },
+  "optGlossaryReplace": { "message": "교체" },
+  "optGlossaryReset": { "message": "기본값으로 되돌리기" },
+  "optGlossaryPickFile": { "message": "먼저 .csv 파일을 선택하세요." },
+  "optGlossaryNotCsv": { "message": "파일 확장자는 .csv여야 합니다." },
+  "optGlossaryTooBig": { "message": "파일이 {1}바이트를 초과합니다." },
+  "optGlossaryReplaced": { "message": "{1}개 항목으로 교체했습니다. 다음 Start부터 적용됩니다." },
+  "optGlossaryWasReset": { "message": "기본 항목 {1}개로 되돌렸습니다." },
+  "optGlossaryLoadFailed": { "message": "불러오기 실패: {1}" },
+  "optGlossaryEmpty": { "message": "용어집 항목이 없습니다." },
+  "optGlossaryColSource": { "message": "원어" },
+  "optGlossaryColPronunciation": { "message": "발음" },
+  "optGlossaryColTranscript": { "message": "자막 표기" },
+
+  "errNoKey": {
+    "message": "아직 Gemini API 키가 없습니다. 옵션을 열고 aistudio.google.com/apikey에서 받은 키를 붙여 넣으세요."
+  },
+  "errPreflightNoKey": { "message": "Gemini API 키가 없습니다. 옵션에서 추가하세요." },
+  "errKeyRejected": {
+    "message": "Gemini가 그 API 키를 거부했습니다. 옵션 페이지에서 확인하거나 aistudio.google.com/apikey에서 새로 만드세요."
+  },
+  "errQuota": {
+    "message": "그 API 키의 할당량이 소진되었습니다. 한도가 초기화될 때까지 기다리거나, 결제를 설정해 Tier 1으로 올리세요 — 가장 먼저 한도에 걸리는 쪽이 무료 등급입니다."
+  },
+  "errKeyForbidden": {
+    "message": "그 API 키에는 Gemini API를 호출할 권한이 없습니다. 키의 사용 제한과, 해당 프로젝트에서 Generative Language API가 사용 설정되어 있는지 확인하세요."
+  },
+  "errAlreadyRunningOn": {
+    "message": "Interpretab이 이미 “{1}”에서 실행 중이고, 한 번에 한 탭에서만 동작합니다. 먼저 Stop을 누르세요 — Stop 버튼은 어느 탭에서나 동작합니다."
+  },
+  "errAlreadyRunningElsewhere": {
+    "message": "Interpretab이 이미 다른 탭에서 실행 중이고, 한 번에 한 탭에서만 동작합니다. 먼저 Stop을 누르세요 — Stop 버튼은 어느 탭에서나 동작합니다."
+  },
+  "errNoDirection": { "message": "먼저 방향을 하나 이상 켜세요." },
+  "errNoTab": { "message": "캡처할 탭이 없습니다." },
+  "errClickIcon": {
+    "message": "번역하려는 탭에서 툴바의 Interpretab 아이콘을 클릭한 다음 Start를 다시 누르세요. ({1})"
+  },
+  "errNoStreamId": { "message": "탭 스트림 id가 없습니다." },
+  "errUnknownMessage": { "message": "알 수 없는 메시지 유형: {1}" },
+  "errMicRefused": {
+    "message": "마이크 접근이 거부되었습니다. 확장 프로그램의 옵션 페이지를 열어 마이크 권한을 한 번 준 뒤 다시 시도하세요."
+  },
+
+  "captionsChromePage": {
+    "message": "Chrome 자체 페이지에는 자막을 넣을 수 없습니다. 웹사이트를 열고 그 페이지에서 툴바 아이콘을 클릭하세요."
+  },
+  "captionsClickIcon": { "message": "그 페이지에서 툴바 아이콘을 클릭하세요." },
+  "captionsOpenSite": { "message": "웹사이트를 열고 그 페이지에서 툴바 아이콘을 클릭하세요." },
+
+  "micNoSoundNamed": {
+    "message": "Start 이후로 마이크에 아무 소리도 들어오지 않았습니다. “{1}”에서 녹음하고 있는데, 대고 말하는 장치가 그것이 아니라면 옵션의 오디오 입력에서 올바른 장치를 지정하고 Start를 다시 누르세요."
+  },
+  "micNoSoundDefault": {
+    "message": "Start 이후로 마이크에 아무 소리도 들어오지 않았습니다. 시스템 기본 입력에서 녹음하고 있는데, 대고 말하는 장치가 그것이 아니라면 옵션의 오디오 입력에서 올바른 장치를 지정하고 Start를 다시 누르세요."
+  },
+  "micDeviceMissing": {
+    "message": "옵션에서 선택한 마이크를 사용할 수 없어 ({1}) 시스템 기본 입력을 대신 사용합니다."
+  },
+  "outputDeviceMissing": {
+    "message": "옵션에서 선택한 오디오 출력을 사용할 수 없어 ({1}) 통역 음성이 스피커로 나오고 있습니다. 옵션에서 다른 장치를 고르세요."
+  },
+
+  "closeReasonGiven": { "message": "Gemini가 연결을 끊었습니다: {1}" },
+  "closeReasonOpaqueHint": {
+    "message": "Gemini Live API에 연결하지 못했습니다 — 브라우저에는 이유가 전달되지 않습니다. {1}"
+  },
+  "closeReasonOpaque": {
+    "message": "Gemini Live API에 연결하지 못했습니다 — 브라우저에는 이유가 전달되지 않습니다. 대개는 API 키 문제입니다. 없거나, 거부되었거나, 할당량이 소진된 경우이며 무료 등급이 가장 먼저 걸립니다."
+  },
+  "closeReasonCode": { "message": "Gemini가 연결을 끊었습니다 (코드 {1})." },
+  "closeBeforeReady": { "message": "세션이 준비되기 전에 닫혔습니다." },
+  "hintKeyAccepted": {
+    "message": "키 자체는 조금 전 API가 받아들였으므로, 키가 아니라 Live API나 네트워크 쪽 문제입니다."
+  },
+  "loopGaveUp": {
+    "message": "{1} {2}번 연속 실패한 뒤 Interpretab이 재시도를 그만두었습니다. 옵션 페이지에서 API 키를, Google AI Studio에서 할당량을 확인하세요 — Live 모델에 대한 무료 등급 한도는 낮습니다. 다시 시도하려면 Start를 누르세요."
+  },
+  "loopDropping": { "message": "Gemini와의 연결이 계속 끊깁니다." },
+
+  "glossaryBadLine": { "message": "{1}번째 줄은 'source,target' 형식이어야 합니다 (3번째 열은 선택)." },
+  "glossaryMissingField": { "message": "{1}번째 줄에 source 또는 target이 없습니다." },
+  "glossaryTooMany": { "message": "항목이 너무 많습니다 (최대 {1}개)." }
+}

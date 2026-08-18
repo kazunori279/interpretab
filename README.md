@@ -660,8 +660,9 @@ the same once-a-second post.
 
 **The disclaimer is in the sentence, not only in the tooltip.** A figure in dollars reads as a bill
 unless it says otherwise, and nobody hovers over a line of text to find out that it is not one. So
-the sentence carries *an estimate, not your actual bill* — in `sidepanel.html` with the other
-static notes, since only the figure is written from script — and the tooltip has the arithmetic:
+the sentence carries *an estimate, not your actual bill* — as part of the same catalogue message
+as the figure, so no code path can print the one without the other — and the tooltip has the
+arithmetic:
 how much audio went each way, and that the Live API charges both at 25 tokens a second against a
 hardcoded price table that goes stale silently.
 
@@ -679,12 +680,88 @@ The free tail counts the audio instead — *12 min so far, 18 min of Gemini audi
 charged nothing for it.* — and that is not a consolation figure. The free tier is limited by rate
 rather than by money, so seconds of audio are what its limits are actually spent on, and the
 number that predicts a run failing to reconnect
-([#13](https://github.com/kazunori279/interpretab/issues/13)). Both sentences are static in
-`sidepanel.html` and only the figures are written from script, so no code path can drop the
-disclaimer off the paid one. The clock is shared: it is the question either tier is asking.
+([#13](https://github.com/kazunori279/interpretab/issues/13)). Both tails are whole messages —
+`panelUsagePaid` and `panelUsageFree` — rather than markup assembled around a number, so which of
+the two to use is the only choice `renderUsage` makes and the disclaimer cannot fall off the paid
+one. The clock is shared: it is the question either tier is asking.
 
 If the wording of either sentence changes, `README.md`, `index.md` and `ja/index.md` all quote
 them, and `tests/assets.test.js` fails until they agree.
+
+### Ten languages, one catalogue
+
+Every string the user reads comes from `_locales/<lang>/messages.json` through `lib/i18n.js`
+([#10](https://github.com/kazunori279/interpretab/issues/10)). English is `default_locale`, so a
+key a locale has not translated falls back to it rather than disappearing. The other nine are the
+ones the language picker calls popular, which is the set most likely to be someone's *browser*
+language too: `ja`, `zh_CN`, `es`, `fr`, `de`, `pt_BR`, `ko`, `hi`, `ar`. Two of those names are
+Chrome's rather than the picker's — a directory called `zh` or `pt` is not a locale Chrome will
+match, so the catalogues sit under the region-qualified names. `chrome.i18n.getUILanguage()`
+decides which is used, and there is deliberately no picker — the browser already knows, and a
+second place to set the language is a second place for it to be wrong.
+
+**Chrome expands `__MSG_name__` in the manifest and in CSS and nowhere else.** Not in HTML, which
+is where most of the text is. So both pages ship with their labels empty and carry a `data-i18n`
+attribute naming the key, and `localize()` fills them — first thing in `init()`, before the first
+`await`, because a page that painted English and corrected itself afterwards would flash.
+`data-i18n-title` and `data-i18n-placeholder` do the same for the two attributes that hold text.
+`<html lang>` is set there too rather than declared: neither page knows which locale it will be
+served as, and a hardcoded `lang="en"` has a screen reader read Japanese aloud with English
+pronunciation.
+
+**One of the ten is Arabic**, so `localize()` also sets `<html dir>` from `@@bidi_dir` — Chrome's
+own message, which answers for the locale it actually resolved rather than for the one this code
+guessed. Everything downstream of it is a logical CSS property instead of a physical one: the
+indent under a switch is `padding-inline-start`, a slider's readout is `text-align: end`, the mic
+line's rule is `border-inline-start`. The transcript bubbles need no variant — in a column flex box
+the cross axis is the inline one, so `align-self: flex-start` is already the right edge under
+`dir="rtl"` — but the tag above each one does: `text-transform: uppercase` has nothing to change in
+a script with no case, and letter-spacing on a cursive one just pulls the joins apart.
+
+**Content direction is not interface direction.** A transcript bubble and an on-page subtitle are
+in the languages being translated, which have nothing to do with the language the panel is in:
+Arabic in an English panel, English in an Arabic one, both at once in conversation mode. Those
+carry `dir="auto"` and take their direction from their own first strong character. The subtitle
+`<span>` and the bubble body are `display: block` so that `dir` decides their alignment and not
+just their glyph order. Both font stacks name a Noto face per script — Latin, CJK, Devanagari,
+Arabic — because a stack that finds a Latin face first renders Hindi and Arabic in whatever the
+system substitutes; absent faces cost nothing, the list falls through.
+
+Two things in the catalogue are deliberately not Chrome's own:
+
+**Substitution is `{1}`…`{9}`, not `$1`.** Chrome's placeholders have to be declared per message
+in a `placeholders` block, and `$` is meaningful to `getMessage` whether or not they are. Braces
+mean nothing to it, so the same catalogue behaves identically read through `chrome.i18n` in the
+browser and off disk in Node — which is what `tests/messages.mjs` does, so that an assertion is
+still about the sentence a user reads rather than about a key.
+
+**A message may carry emphasis and links.** Most of the prose here is a paragraph with a `<b>` or
+a link in the middle of it, and where that lands is the translator's decision: splitting the
+sentence around the tag bakes English word order into every other language. So a message may use
+`<b>`, `<code>` and `<a1>`…`<a9>`, and `setMessage` builds those as real elements. It is a closed
+alphabet with no attributes in it — the destination behind `<a1>` is read from `data-link1` on the
+element being filled, so a catalogue cannot introduce a URL, and `tests/i18n.test.js` fails on one
+that tries. Markup is matched *before* the values go in, so a substituted value is never read as
+markup; one of those values is a tab title, which is a remote page's to choose. `t()` is the same
+message with the tags stripped, for a `title`, an `Error`, or anything posted to another document.
+
+What is not translated: the language names in `lib/languages.js`, which are already in their own
+language and should stay that way — a Japanese speaker looking for Japanese wants 日本語, not
+whatever the current UI language calls it — and the 30 voice names, which are the values sent over
+the wire. The tone word beside each voice *is* translated, through a key derived from the English
+adjective (`voiceToneKey`: "Easy-going" → `voiceEasygoing`), so there is no second table to keep in
+step with `VOICES`. The two buttons stay `Start` and `Stop` in all ten, and so do `Free` and `Paid`
+and the two mode names: the buttons because a sentence elsewhere in the panel tells you to press
+one of them by name, the plan words because they are what Google's own console shows next to the
+key, and the mode names because they are followed by a translated gloss anyway.
+
+`_locales/ja` is the author's. The other eight are machine translation that no native speaker has
+read, which is worth knowing before quoting a sentence from one of them back at a user.
+
+`tests/i18n.test.js` holds the rest in place: every locale carries exactly the keys English does,
+a translation keeps the same set of placeholders and the same markup as its English original
+(order is the translator's to change, which is most of the point of numbering them), every key the
+code names exists, and every message in the catalogue is reachable from somewhere.
 
 ## Development
 
@@ -694,8 +771,12 @@ npm test    # node --test, no dependencies and no build step
 
 The suite covers the parts that are painful to test by hand: the exact `setup` wire shape, the
 GoAway cutover against a fake session and a settable clock, socket lifecycle against a stub
-WebSocket, glossary CSV parsing, and a walk over every asset path the manifest and the HTML
-name.
+WebSocket, glossary CSV parsing, the ten message catalogues against each other, and a walk over
+every asset path the manifest and the HTML name.
+
+Anything that asserts about a sentence rather than a key imports `tests/messages.mjs`, which wires
+`lib/i18n.js` to `_locales/en/messages.json` off disk — `chrome.i18n` does not exist in Node, and
+without it every message is its own key.
 
 None of that talks to Google. Two scripts do, and both sit outside `npm test` because they need
 a key and spend quota.

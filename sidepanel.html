@@ -1,27 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <title>Interpretab</title>
+    <title data-i18n="panelTitle">Interpretab</title>
     <link rel="stylesheet" href="sidepanel.css" />
   </head>
+  <!-- No `lang` on <html>: this document is whichever locale Chrome resolved,
+       and a hardcoded one would have a screen reader read Japanese aloud with
+       English pronunciation. `localize()` sets it from the UI language before
+       the first paint, along with every `data-i18n` below. -->
   <body>
     <header>
       <h1>Interpretab</h1>
       <div class="status">
         <span id="statusDot" class="dot disconnected"></span>
-        <span id="statusText">Idle</span>
+        <span id="statusText" data-i18n="statusIdle"></span>
       </div>
     </header>
 
     <div id="error" class="banner error" hidden></div>
 
-    <div id="keyNote" class="banner" hidden>
-      Interpretab talks to Gemini with <b>your own API key</b>. Get a free one at
-      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-        >aistudio.google.com/apikey</a
-      >, then paste it into <a href="#" id="keyNoteOptions">Options</a>.
-    </div>
+    <div
+      id="keyNote"
+      class="banner"
+      hidden
+      data-i18n="panelKeyNote"
+      data-link1="https://aistudio.google.com/apikey"
+      data-link2="options"
+    ></div>
 
     <!-- One engine, one run, one tab — and the toolbar icon opens this panel
          anywhere, so this is the panel a bystander tab gets: what is running,
@@ -31,16 +37,16 @@
     <section class="direction">
       <label class="row heading">
         <input type="checkbox" id="tabEnabled" />
-        <span><b>Tab audio</b> — this tab, into your language</span>
+        <span data-i18n="panelTabDirection"></span>
       </label>
       <div class="row indent">
-        <span class="small">into</span>
-        <select id="tabTarget" class="lang" title="Language you want to hear"></select>
-        <span class="small">— source auto-detected</span>
+        <span class="small" data-i18n="panelInto"></span>
+        <select id="tabTarget" class="lang" data-i18n-title="panelTabTargetTitle"></select>
+        <span class="small" data-i18n="panelSourceDetected"></span>
       </div>
       <div class="row indent">
         <label class="inline grow">
-          Original volume while speaking
+          <span data-i18n="panelDuckLevel"></span>
           <input type="range" id="duckLevel" min="0" max="100" step="5" />
           <output id="duckLevelOut"></output>
         </label>
@@ -48,7 +54,7 @@
       <div class="row indent">
         <label class="inline">
           <input type="checkbox" id="tabCaptions" />
-          Subtitles on the page
+          <span data-i18n="panelPageSubtitles"></span>
         </label>
       </div>
     </section>
@@ -56,48 +62,39 @@
     <section class="direction">
       <label class="row heading">
         <input type="checkbox" id="micEnabled" />
-        <span><b>Microphone</b> — the room, interpreted out loud</span>
+        <span data-i18n="panelMicDirection"></span>
       </label>
       <div class="row indent">
-        <select id="micMode" class="mode" title="How the microphone is interpreted">
-          <option value="simul">Simultaneous — you, as you speak</option>
-          <option value="conversation">Two-way conversation</option>
+        <select id="micMode" class="mode" data-i18n-title="panelMicModeTitle">
+          <option value="simul" data-i18n="panelMicModeSimul"></option>
+          <option value="conversation" data-i18n="panelMicModeConversation"></option>
         </select>
       </div>
       <div class="row indent">
-        <span class="small" id="micInto">into</span>
-        <select id="micSource" class="lang" title="The language you speak"></select>
+        <span class="small" id="micInto" data-i18n="panelInto"></span>
+        <select id="micSource" class="lang" data-i18n-title="panelMicSourceTitle"></select>
         <span class="small" id="micArrow">⇄</span>
         <select id="micTarget" class="lang"></select>
-        <span class="small" id="micDetected">— source auto-detected</span>
+        <span class="small" id="micDetected" data-i18n="panelSourceDetected"></span>
       </div>
       <div class="row indent">
         <label class="inline">
           <input type="checkbox" id="micCaptions" />
-          Subtitles on the page
+          <span data-i18n="panelPageSubtitles"></span>
         </label>
       </div>
+      <!-- Two spans and not one sentence: the first is shown only while the
+           sound button is off, and a message that had to be spliced into
+           another one would decide the word order of both. -->
       <p class="note indent" id="micNoteSimul">
-        <span id="micNoteSimulMuted"
-          >The interpreted voice is <b>muted</b>. Click the unmute button to play it
-          through your speakers. </span
-        >Note: wear headphones when you play it. This mode answers while you are
-        still speaking, so it cannot mute the microphone while it talks, and a
-        speaker feeds the translation straight back in — which degrades the
-        translation itself.
+        <span id="micNoteSimulMuted" data-i18n="panelMicNoteMuted"></span>
+        <span data-i18n="panelMicNoteSimul"></span>
       </p>
-      <p class="note indent" id="micNoteConversation" hidden>
-        For two people sharing this microphone: whichever of the two languages it
-        hears, it speaks the other. Out loud, through <b>your speakers</b>, which is
-        the point — but it means the interpreter can hear itself, so keep the
-        microphone away from them. This mode waits for each turn to finish, so it
-        is a little slower than Simultaneous, and it is the only one the
-        <b>glossary</b> applies to.
-      </p>
+      <p class="note indent" id="micNoteConversation" hidden data-i18n="panelMicNoteConversation"></p>
     </section>
 
     <section class="row buttons">
-      <button id="toggle" class="primary">Start</button>
+      <button id="toggle" class="primary" data-i18n="panelStart"></button>
       <!-- Drawn here rather than loaded, like every other asset in this
            extension: two inline paths cost less than two files, and there is no
            request for anything to block on. The slash is a sibling of the glyph
@@ -118,15 +115,17 @@
           <path class="slash" d="M3 3l18 18" />
         </svg>
       </button>
-      <button id="openOptions" class="ghost" title="Options">Options</button>
+      <button
+        id="openOptions"
+        class="ghost"
+        data-i18n="panelOptions"
+        data-i18n-title="panelOptions"
+      ></button>
     </section>
 
     <!-- "usage" and not "cost": on the free tier there is no cost, and the
          doubling is just as real there — it is twice the quota. -->
-    <p class="note" id="costNote" hidden>
-      Both directions run two concurrent Live sessions, so the API usage is
-      roughly double.
-    </p>
+    <p class="note" id="costNote" hidden data-i18n="panelCostNote"></p>
 
     <!-- What the run has spent so far, once the server has said. It takes the
          place of the static warning above: a live figure covers what that
@@ -138,33 +137,24 @@
          nobody was asking of a line this size. How long the run has been going
          earns its place because the dollars do not always mean anything — on
          the free tier they mean nothing at all, and the time is the only part
-         of this line that is measured rather than estimated. The disclaimer is
-         here in the markup rather than in the title attribute, because a figure
-         in dollars reads as a bill unless it says otherwise and nobody
+         of this line that is measured rather than estimated. The disclaimer
+         rides in the message rather than in the title attribute, because a
+         figure in dollars reads as a bill unless it says otherwise and nobody
          hovers.
 
          Two tails, one clock. The dollars are shown only to a key that is
          actually being charged — Options → Gemini API plan is where that is
          declared, because nothing in an API response says — and the free tail
          counts the audio instead, which is what the free tier's limits are
-         spent on and what predicts the run failing. Both sentences are static
-         and live here rather than being assembled in script, so the disclaimer
-         cannot be dropped by a code path. -->
+         spent on and what predicts the run failing. Which of the two is used is
+         the only choice `renderUsage` makes: both are whole sentences in the
+         catalogue, so no code path can assemble one without its disclaimer. -->
     <p class="note usage" id="usageNote" hidden>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3.5 18a9 9 0 1 1 17 0" />
         <path d="M12 18l4.7-5.2" />
       </svg>
-      <span
-        ><b id="usageTime"></b> so far,
-        <span id="usagePaid"
-          ><b id="usageAmount"></b> of Gemini usage this run — an estimate, not
-          your actual bill.</span
-        ><span id="usageFree"
-          ><b id="usageAudio"></b> of Gemini audio. The free tier is charged
-          nothing for it.</span
-        ></span
-      >
+      <span id="usageText"></span>
     </p>
 
     <p class="note warn" id="captionNote" hidden></p>

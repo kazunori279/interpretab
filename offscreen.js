@@ -44,6 +44,7 @@ import {
 import { SessionLoop } from "./lib/session-loop.js";
 import { applyDisplayMap, buildDisplayMap, cleanCJKSpaces } from "./lib/glossary.js";
 import { costOf, emptyUsage, mergeUsage, noteAudioIn, noteAudioOut } from "./lib/usage.js";
+import { t } from "./lib/i18n.js";
 
 const DOWNLINK_RATE = 24000; // what Gemini returns
 
@@ -242,7 +243,7 @@ async function start({ apiKey, streamId, settings, glossary, closeHint }) {
 /** Whichever of the two directions is switched on, each with its own session. */
 async function openDirections(settings, streamId, glossary) {
   if (settings.tabEnabled) {
-    if (!streamId) throw new Error("No tab stream id.");
+    if (!streamId) throw new Error(t("errNoStreamId"));
     state.tabStream = await navigator.mediaDevices.getUserMedia({
       audio: {
         mandatory: { chromeMediaSource: "tab", chromeMediaSourceId: streamId },
@@ -318,13 +319,11 @@ function watchMicSilence(stream) {
     clearInterval(state.micSilenceTimer);
     state.micSilenceTimer = null;
     state.micNoted = true;
+    // Named device and default device are two whole sentences: the clause the
+    // name sits in is not in the same place in every language.
     post({
       type: "micNote",
-      detail:
-        `No sound has reached the microphone since Start. It is recording from ` +
-        `${label ? `“${label}”` : "your system's default input"} — if that is not ` +
-        `what you are speaking into, name the right one under Audio input in ` +
-        `Options and press Start again.`,
+      detail: label ? t("micNoSoundNamed", [label]) : t("micNoSoundDefault"),
     });
   }, 1000);
 }
@@ -374,21 +373,13 @@ async function getMicStream() {
     return await navigator.mediaDevices.getUserMedia(micConstraints(wanted));
   } catch (err) {
     if (err.name === "NotAllowedError") {
-      throw new Error(
-        "Microphone access was refused. Open the extension's Options page and " +
-          "grant the microphone once, then try again."
-      );
+      throw new Error(t("errMicRefused"));
     }
     // The device named in Options has gone: unplugged, or renamed by an OS
     // update. Falling back to the default keeps the run alive, but silently
     // doing so is how this setting comes to exist in the first place.
     if (!wanted) throw err;
-    post({
-      type: "micNote",
-      detail:
-        `The microphone chosen in Options is not available (${err?.name || err}), ` +
-        `so your system's default input is being used instead.`,
-    });
+    post({ type: "micNote", detail: t("micDeviceMissing", [err?.name || err]) });
     return await navigator.mediaDevices.getUserMedia(micConstraints(""));
   }
 }
@@ -439,13 +430,7 @@ async function micOutputContext() {
     await ctx.audioWorklet.addModule("audio/pcm-player-processor.js");
   } catch (err) {
     await ctx.close().catch(() => {});
-    post({
-      type: "output",
-      detail:
-        `The audio output chosen in Options is not available ` +
-        `(${err?.name || err}), so your translated voice is coming out of the ` +
-        `speakers instead. Pick another one in Options.`,
-    });
+    post({ type: "output", detail: t("outputDeviceMissing", [err?.name || err]) });
     return state.ctxDown;
   }
   resume(ctx);

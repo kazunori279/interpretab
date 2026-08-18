@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+// Real prose behind every message key, so the assertions below can be about it.
+import "./messages.mjs";
+
 import {
   applyDisplayMap,
   buildDisplayMap,

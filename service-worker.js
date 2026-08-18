@@ -14,6 +14,7 @@
 import { loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 import { preflight } from "./lib/preflight.js";
+import { t } from "./lib/i18n.js";
 
 const OFFSCREEN_URL = "offscreen.html";
 const PANEL_URL = "sidepanel.html";
@@ -151,7 +152,7 @@ async function handle(msg, sender) {
       if (await hasOffscreen()) await toOffscreen({ type: "live", patch: msg.patch });
       return {};
     default:
-      throw new Error(`Unknown message type: ${msg.type}`);
+      throw new Error(t("errUnknownMessage", [msg.type]));
   }
 }
 
@@ -223,7 +224,7 @@ async function targetTab(preferredId = null) {
     }
   }
   const [active] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  if (!active) throw new Error("No tab to capture.");
+  if (!active) throw new Error(t("errNoTab"));
   return active;
 }
 
@@ -246,10 +247,13 @@ async function refuseSecondRun(panelTabId) {
   // Starting again on the run's own tab is a restart, which is how every
   // setting that needs a reconnect is applied.
   if (!running || (runTabId != null && runTabId === panelTabId)) return;
-  const where = runTabTitle ? `on “${runTabTitle}”` : "on another tab";
+  // Two whole sentences rather than one with "on another tab" dropped into it:
+  // where the tab name goes is not the same in every language, and in a few it
+  // is not a phrase that can be swapped out for a pronoun at all.
   throw new Error(
-    `Interpretab is already running ${where}, and it runs on one tab at a time. ` +
-      `Press Stop first — the Stop button works from any tab.`
+    runTabTitle
+      ? t("errAlreadyRunningOn", [runTabTitle])
+      : t("errAlreadyRunningElsewhere")
   );
 }
 
@@ -257,7 +261,7 @@ async function start(panelTabId = null) {
   await refuseSecondRun(panelTabId);
   const settings = await loadSettings();
   if (!settings.tabEnabled && !settings.micEnabled) {
-    throw new Error("Enable at least one direction first.");
+    throw new Error(t("errNoDirection"));
   }
   // Checked before anything is captured, so a missing key costs the user a
   // message rather than a tab-capture prompt followed by silence.
@@ -274,10 +278,7 @@ async function start(panelTabId = null) {
   if (checked.fatal) throw new Error(checked.detail);
   // A key that just checked out clean makes the 1006 message's "usually the API
   // key" wrong, and the sessions are where that message is written.
-  const closeHint = checked.ok
-    ? "The key itself was accepted by the API a moment ago, so this is the Live API " +
-      "or the network rather than the key."
-    : "";
+  const closeHint = checked.ok ? t("hintKeyAccepted") : "";
 
   // The tab the run belongs to. The captured one where there is one; otherwise
   // the tab whose panel pressed Start, which for a microphone-only run is where
@@ -294,10 +295,7 @@ async function start(panelTabId = null) {
     } catch (err) {
       // The one failure users actually hit: the extension was never invoked on
       // this tab, or the invocation lapsed when the tab navigated.
-      throw new Error(
-        `Click the Interpretab toolbar icon on the tab you want to translate, ` +
-          `then press Start again. (${err.message})`
-      );
+      throw new Error(t("errClickIcon", [err.message]));
     }
   } else {
     tab = await targetTab(panelTabId).catch(() => null);
@@ -424,7 +422,7 @@ async function ensureCaptionTab(settings) {
   const { runTabId } = await chrome.storage.session.get("runTabId");
   const tabId = runTabId ?? null;
   if (tabId == null) {
-    return reportCaptions("unavailable", "Open a website and click the toolbar icon there.");
+    return reportCaptions("unavailable", t("captionsOpenSite"));
   }
   await chrome.storage.session.set({ captionTabId: tabId });
   await injectCaptions(tabId);
@@ -580,10 +578,10 @@ async function injectCaptions(tabId, reportFailure = true) {
  */
 function explainInjection(message) {
   if (/chrome:\/\/ URL|chrome-untrusted|extensions gallery/i.test(message)) {
-    return "Chrome's own pages can't take them. Open a website and click the toolbar icon there.";
+    return t("captionsChromePage");
   }
   if (!/cannot access|request permission|cannot be scripted/i.test(message)) return message;
-  return "Click the toolbar icon on that page.";
+  return t("captionsClickIcon");
 }
 
 // A page that refuses injection refuses every attempt, and transcripts arrive

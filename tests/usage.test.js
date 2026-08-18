@@ -14,6 +14,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
+// Real prose behind every message key, so the assertions below can be about it.
+import "./messages.mjs";
+
 import { MODEL, SIMUL_MODEL } from "../lib/languages.js";
 import {
   costOf,

@@ -1,0 +1,289 @@
+{
+  "extName": { "message": "Interpretab" },
+  "extDescription": {
+    "message": "استمع إلى أي علامة تبويب بلغتك، منطوقة ومصحوبة بترجمة نصية في الوقت الفعلي. بمفتاح Gemini API الخاص بك، ودون خادم في المنتصف."
+  },
+
+  "panelTitle": { "message": "Interpretab" },
+  "statusIdle": { "message": "في وضع الانتظار" },
+  "statusConnecting": { "message": "جارٍ الاتصال…" },
+  "statusConnected": { "message": "متصل" },
+  "statusReconnecting": { "message": "جارٍ إعادة الاتصال…" },
+  "statusStopped": { "message": "متوقف" },
+  "statusError": { "message": "خطأ" },
+
+  "panelKeyNote": {
+    "message": "يتحدث Interpretab إلى Gemini باستخدام <b>مفتاح API الخاص بك</b>. احصل على مفتاح مجاني من <a1>aistudio.google.com/apikey</a1>، ثم الصقه في <a2>الخيارات</a2>."
+  },
+  "panelRunningOn": {
+    "message": "‏Interpretab يعمل على «{1}»، وهو يعمل على علامة تبويب واحدة في كل مرة. عناصر التحكم موجودة في تلك العلامة — أما Stop فيعمل من هنا."
+  },
+  "panelRunningElsewhere": {
+    "message": "‏Interpretab يعمل على علامة تبويب أخرى، وهو يعمل على علامة تبويب واحدة في كل مرة. عناصر التحكم موجودة في تلك العلامة — أما Stop فيعمل من هنا."
+  },
+
+  "panelTabDirection": { "message": "<b>صوت علامة التبويب</b> — هذه العلامة، إلى لغتك" },
+  "panelInto": { "message": "إلى" },
+  "panelTabTargetTitle": { "message": "اللغة التي تريد سماعها بها" },
+  "panelSourceDetected": { "message": "— يُكتشف مصدر اللغة تلقائيًا" },
+  "panelDuckLevel": { "message": "مستوى الصوت الأصلي أثناء الكلام" },
+  "panelPageSubtitles": { "message": "ترجمة نصية على الصفحة" },
+
+  "panelMicDirection": { "message": "<b>الميكروفون</b> — ما يُقال في الغرفة، مترجَمًا بصوت مسموع" },
+  "panelMicModeTitle": { "message": "كيف تُترجَم فوريًا مدخلات الميكروفون" },
+  "panelMicModeSimul": { "message": "Simultaneous — أنت، أثناء حديثك" },
+  "panelMicModeConversation": { "message": "Two-way conversation — حوار بلغتين" },
+  "panelMicSourceTitle": { "message": "اللغة التي تتحدث بها" },
+  "panelMicNoteMuted": {
+    "message": "الصوت المترجَم <b>مكتوم</b>. اضغط زر إلغاء الكتم لتشغيله عبر مكبرات الصوت."
+  },
+  "panelMicNoteSimul": {
+    "message": "ملاحظة: استخدم سماعات الرأس عند تشغيله. يردّ هذا الوضع وأنت ما زلت تتكلم، فلا يستطيع كتم الميكروفون أثناء كلامه، ومكبر الصوت يعيد الترجمة مباشرةً إلى المدخل — وهو ما يُفسد الترجمة نفسها."
+  },
+  "panelMicNoteConversation": {
+    "message": "لشخصين يتشاركان هذا الميكروفون: أيًّا كانت اللغة التي يسمعها من الاثنتين، فإنه ينطق بالأخرى. بصوت مسموع عبر <b>مكبرات صوتك</b>، وهذا هو المقصود — لكن ذلك يعني أن المترجم يسمع نفسه، فأبعِد الميكروفون عنها. ينتظر هذا الوضع انتهاء كل دور قبل الترجمة، فهو أبطأ قليلًا من Simultaneous، وهو الوضع الوحيد الذي تنطبق عليه <b>قائمة المصطلحات</b>."
+  },
+
+  "panelStart": { "message": "Start" },
+  "panelStop": { "message": "Stop" },
+  "panelOptions": { "message": "الخيارات" },
+
+  "panelCostNote": {
+    "message": "يفتح الاتجاهان معًا جلستَي Live متزامنتين، فيصير استهلاك API نحو الضِّعف."
+  },
+  "panelUsagePaid": {
+    "message": "‏<b>{1}</b> حتى الآن، و<b>{2}</b> من استهلاك Gemini في هذا التشغيل — تقدير، وليس فاتورتك الفعلية."
+  },
+  "panelUsageFree": {
+    "message": "‏<b>{1}</b> حتى الآن، و<b>{2}</b> من صوت Gemini. الفئة المجانية لا يُحتسب عليها شيء مقابل ذلك."
+  },
+  "panelUsageTip": {
+    "message": "بدأ منذ {1}. أرسل خلالها {2} من الصوت واستقبل {3}، ويُحتسب كلاهما بمعدل 25 رمزًا في الثانية."
+  },
+  "panelUsageTipPaid": {
+    "message": "تُسعَّر هذه الرموز بأسعار Google المعلنة لهذا النموذج، مقروءةً من صفحة الأسعار في أغسطس 2026 لا من حسابك، والأسعار تتغير. حسابك في Google هو المكان الوحيد الذي توجد فيه فاتورتك الحقيقية."
+  },
+  "panelUsageTipFree": {
+    "message": "مفتاحك مضبوط على الفئة المجانية في صفحة الخيارات، ولا تتقاضى Google شيئًا مقابل أي من ذلك — فلا تكلفة تُعرَض. غيِّر الخطة هناك إلى Paid إذا كان المشروع مرتبطًا بحساب فوترة، عندها يقدّر هذا السطر تكلفة التشغيل."
+  },
+  "durationSeconds": { "message": "{1} ث" },
+  "durationMinutes": { "message": "{1} د" },
+
+  "panelMuteMic": { "message": "كتم الميكروفون" },
+  "panelUnmuteMic": { "message": "إلغاء كتم الميكروفون" },
+  "panelMuteSound": { "message": "كتم الصوت المترجَم" },
+  "panelUnmuteSound": { "message": "إلغاء كتم الصوت المترجَم" },
+  "panelMuteOffElsewhere": { "message": "التشغيل جارٍ في علامة تبويب أخرى." },
+  "panelMuteOffMic": { "message": "اتجاه الميكروفون مُعطَّل." },
+  "panelMuteOffSound": { "message": "لا يوجد اتجاه مُفعَّل." },
+
+  "panelLangPopular": { "message": "الأكثر شيوعًا" },
+  "panelLangAll": { "message": "كل اللغات" },
+  "panelDirTab": { "message": "علامة التبويب" },
+  "panelDirMic": { "message": "الميكروفون" },
+  "panelHeard": { "message": "المسموع ({1})" },
+  "panelTranslated": { "message": "الترجمة ({1})" },
+  "panelCaptionsUnavailable": {
+    "message": "لا يمكن عرض ترجمة نصية على هذه الصفحة."
+  },
+  "panelCaptionsStopped": { "message": "لم تعد الترجمة النصية تصل إلى هذه الصفحة." },
+
+  "optTitle": { "message": "Interpretab — الخيارات" },
+  "optHeading": { "message": "خيارات Interpretab" },
+
+  "optKeyHeading": { "message": "مفتاح Gemini API" },
+  "optKeyNote": {
+    "message": "‏Interpretab بلا خادم. ينتقل صوتك من هذا المتصفح مباشرةً إلى Gemini Live API، موثَّقًا بمفتاحك أنت — واحصل على مفتاح مجاني من <a1>aistudio.google.com/apikey</a1>. يُحفظ المفتاح في مخزن الإضافات بهذا المتصفح ولا يُرسَل إلى أي جهة سوى <code>generativelanguage.googleapis.com</code>. يُحتسب الاستهلاك على حساب Google الذي يتبعه المفتاح، فتعامل معه كأنه كلمة مرور: لا تشاركه ولا تلصقه في أي مكان آخر. وإذا تسرّب يومًا، فاحذفه من <a2>الصفحة نفسها التي أنشأته فيها</a2> والصق مفتاحًا جديدًا هنا."
+  },
+  "optKeyPlaceholder": { "message": "الصق مفتاحك هنا" },
+  "optShow": { "message": "إظهار" },
+  "optHide": { "message": "إخفاء" },
+  "optKeyNone": { "message": "لا مفتاح بعد. لا يستطيع Interpretab البدء بدونه." },
+  "optKeyStray": { "message": "حُفظ، لكن هذا يبدو لصقًا عابرًا لا مفتاحًا." },
+  "optKeyShort": { "message": "حُفظ، لكنه يبدو قصيرًا أكثر من اللازم — هل نقص جزء من المفتاح؟" },
+  "optKeySaved": { "message": "حُفظ المفتاح في هذا المتصفح." },
+
+  "optPlanHeading": { "message": "خطة Gemini API" },
+  "optPlanNote": {
+    "message": "الخطة التي يعمل عليها مشروع المفتاح. لا سبيل لدى Interpretab لمعرفتها — لا شيء في ردود Gemini API يذكرها — وهو مضطر إلى معرفتها، وإلا لعرض مؤشر اللوحة الجانبية سعرًا على من لا تتقاضى منهم Google شيئًا. في <b>Free</b> يَعُدّ المؤشر الوقت والصوت؛ وفي <b>Paid</b> يقدّر كذلك تكلفة التشغيل. اختر ما ينطبق على مفتاحك: هو المشروع الذي أنشأته فيه على <a1>aistudio.google.com/apikey</a1>، والمشروع يصير على الفئة المدفوعة بمجرد ارتباطه بحساب فوترة."
+  },
+  "optPlanFree": { "message": "Free — لا تتقاضى Google شيئًا مقابل هذا المفتاح" },
+  "optPlanPaid": { "message": "Paid — الدفع حسب الاستخدام، على حسابك" },
+
+  "optVoiceHeading": { "message": "الصوت" },
+  "optVoiceNote": {
+    "message": "الصوت الجاهز الذي تُنطق به الترجمة. يظل ثابتًا طوال الجلسة، فأي تغيير يسري عند ضغط Start في المرة التالية."
+  },
+  "optVoiceOption": { "message": "{1} — {2}" },
+  "voiceBright": { "message": "مشرق" },
+  "voiceUpbeat": { "message": "مرح" },
+  "voiceInformative": { "message": "إخباري" },
+  "voiceFirm": { "message": "حازم" },
+  "voiceExcitable": { "message": "متحمس" },
+  "voiceYouthful": { "message": "شبابي" },
+  "voiceBreezy": { "message": "خفيف" },
+  "voiceEasygoing": { "message": "مسترخٍ" },
+  "voiceBreathy": { "message": "هامس" },
+  "voiceClear": { "message": "واضح" },
+  "voiceSmooth": { "message": "سلس" },
+  "voiceGravelly": { "message": "أجش" },
+  "voiceSoft": { "message": "رقيق" },
+  "voiceEven": { "message": "متزن" },
+  "voiceMature": { "message": "ناضج" },
+  "voiceForward": { "message": "مباشر" },
+  "voiceFriendly": { "message": "ودود" },
+  "voiceCasual": { "message": "عفوي" },
+  "voiceGentle": { "message": "لطيف" },
+  "voiceLively": { "message": "نابض" },
+  "voiceKnowledgeable": { "message": "عليم" },
+  "voiceWarm": { "message": "دافئ" },
+
+  "optSizeHeading": { "message": "حجم الترجمة النصية" },
+  "optSizeNote": {
+    "message": "ارتفاع الترجمة النصية على الصفحة بالبكسل. يسري فورًا، حتى على ترجمة قيد التشغيل — اسحب المؤشر وأنت تشاهد الفيديو وتوقّف حيث تصير القراءة مريحة."
+  },
+  "optSizePx": { "message": "{1} px" },
+  "optSizePreview": { "message": "نص تجريبي للترجمة — The quick brown fox" },
+
+  "optMicHeading": { "message": "الميكروفون" },
+  "optMicNote": {
+    "message": "يمنح Chrome إذن الميكروفون للإضافة ككل. ويعمل المحرك داخل مستند في الخلفية لا يستطيع إظهار طلب الإذن، فإذا أخفق اتجاه الميكروفون فامنح الإذن مرة واحدة من هنا."
+  },
+  "optMicGrant": { "message": "منح إذن الميكروفون" },
+  "optMicGranted": { "message": "مُنح الإذن." },
+  "optMicNotGranted": { "message": "لم يُمنح الإذن ({1})." },
+  "optMicDenied": { "message": "مرفوض: {1}" },
+
+  "optInputHeading": { "message": "مدخل الصوت" },
+  "optInputNote": {
+    "message": "الميكروفون الذي ينصت إليه اتجاه <b>الميكروفون</b>. إن تركته على الإعداد الافتراضي للنظام، اختار Chrome ما يعدّه جهازك مدخلًا في تلك اللحظة — وقد يكون سماعة رأس نزعتها، أو شاشة، أو أي جهاز آخر لا تتحدث إليه أصلًا. وهذا إخفاق صامت: تنجح الجلسة في الاتصال، وتخضرّ اللوحة، ولا يُكتب شيء أبدًا. حدِّد الجهاز هنا إن حدث ذلك. يسري عند ضغط Start في المرة التالية."
+  },
+  "optInputSystem": {
+    "message": "افتراضي النظام — أيًّا كان الميكروفون الذي يستخدمه جهازك"
+  },
+  "optInputAnonymous": { "message": "ميكروفون {1}…" },
+  "optInputNone": { "message": "لا تظهر أي ميكروفونات." },
+  "optInputMissing": {
+    "message": "هذا الميكروفون غير موصول، لذا سيُستخدم افتراضي النظام."
+  },
+  "optInputSaved": { "message": "حُفظ. يسري عند ضغط Start في المرة التالية." },
+  "optInputCleared": { "message": "حُفظ. سيُستخدم ميكروفون النظام الافتراضي." },
+
+  "optOutputHeading": { "message": "مخرج الصوت" },
+  "optOutputNote": {
+    "message": "المكان الذي يُشغَّل فيه الصوت المترجَم لاتجاه <b>الميكروفون</b>. أما ترجمة اتجاه علامة التبويب فتبقى دائمًا على مخرج النظام — وهو ما تستمع إليه. يسري عند ضغط Start في المرة التالية."
+  },
+  "optOutputSystem": { "message": "افتراضي النظام — مكبرات الصوت التي تستخدمها" },
+  "optOutputAnonymous": { "message": "مخرج {1}…" },
+  "optOutputNone": { "message": "لا تظهر أي أجهزة إخراج." },
+  "optOutputMissing": {
+    "message": "هذا الجهاز غير موصول، لذا ستُستخدم مكبرات الصوت بدلًا منه."
+  },
+  "optOutputSaved": {
+    "message": "حُفظ. يسري عند ضغط Start في المرة التالية — ويبقى أن تُخبر ما ينصت إلى ذلك الجهاز بذلك."
+  },
+  "optOutputCleared": {
+    "message": "حُفظ. سيصدر الصوت المترجَم من مكبرات الصوت."
+  },
+
+  "optDeviceListFailed": { "message": "تعذّر سرد أجهزة الصوت: {1}." },
+  "optDeviceNamesHidden": {
+    "message": "امنح إذن الميكروفون بالأعلى لتظهر أسماء الأجهزة."
+  },
+  "optDeviceSavedMissing": { "message": "جهاز محفوظ — غير موصول حاليًا" },
+
+  "optGlossaryHeading": { "message": "قائمة المصطلحات" },
+  "optGlossaryNote": {
+    "message": "‏<code>source,pronunciation,transcript</code> في كل سطر. العمود الثاني هو ما يُطلب من النموذج نطقه؛ والعمود الثالث الاختياري هو ما تعرضه الترجمة النصية بدلًا منه. لا تنطبق على الميكروفون إلا في وضع <b>Two-way conversation</b>: أما ما عداه — صوت علامة التبويب، ووضع Simultaneous في الميكروفون — فيعمل على نموذج الترجمة الفورية، وهو لا يقبل تعليمات نظام ومن ثَم لا مكان فيه لقائمة مصطلحات."
+  },
+  "optGlossaryReplace": { "message": "استبدال" },
+  "optGlossaryReset": { "message": "إعادة الضبط إلى الافتراضي" },
+  "optGlossaryPickFile": { "message": "اختر ملف ‎.csv‎ أولًا." },
+  "optGlossaryNotCsv": { "message": "يجب أن يكون امتداد الملف ‎.csv‎." },
+  "optGlossaryTooBig": { "message": "حجم الملف يتجاوز {1} بايت." },
+  "optGlossaryReplaced": {
+    "message": "استُبدلت بـ {1} مدخلًا. تسري عند ضغط Start في المرة التالية."
+  },
+  "optGlossaryWasReset": { "message": "أُعيد الضبط إلى {1} مدخلًا افتراضيًا." },
+  "optGlossaryLoadFailed": { "message": "أخفق التحميل: {1}" },
+  "optGlossaryEmpty": { "message": "لا توجد مدخلات في قائمة المصطلحات." },
+  "optGlossaryColSource": { "message": "المصدر" },
+  "optGlossaryColPronunciation": { "message": "النطق" },
+  "optGlossaryColTranscript": { "message": "نص الترجمة" },
+
+  "errNoKey": {
+    "message": "لا يوجد مفتاح Gemini API بعد. افتح الخيارات والصق مفتاحًا من aistudio.google.com/apikey."
+  },
+  "errPreflightNoKey": {
+    "message": "لا يوجد مفتاح Gemini API. أضِف واحدًا في الخيارات."
+  },
+  "errKeyRejected": {
+    "message": "رفض Gemini مفتاح API هذا. تحقّق منه في صفحة الخيارات، أو أنشئ مفتاحًا جديدًا على aistudio.google.com/apikey."
+  },
+  "errQuota": {
+    "message": "نفدت حصة مفتاح API هذا. انتظر إعادة ضبط الحدود، أو فعِّل الفوترة للانتقال إلى Tier 1 — فالفئة المجانية هي أول من يصطدم بالحد."
+  },
+  "errKeyForbidden": {
+    "message": "مفتاح API هذا غير مسموح له باستدعاء Gemini API. تحقّق من القيود المفروضة على المفتاح ومن تفعيل Generative Language API في مشروعه."
+  },
+  "errAlreadyRunningOn": {
+    "message": "‏Interpretab يعمل بالفعل على «{1}»، وهو يعمل على علامة تبويب واحدة في كل مرة. اضغط Stop أولًا — زر Stop يعمل من أي علامة تبويب."
+  },
+  "errAlreadyRunningElsewhere": {
+    "message": "‏Interpretab يعمل بالفعل على علامة تبويب أخرى، وهو يعمل على علامة تبويب واحدة في كل مرة. اضغط Stop أولًا — زر Stop يعمل من أي علامة تبويب."
+  },
+  "errNoDirection": { "message": "فعِّل اتجاهًا واحدًا على الأقل أولًا." },
+  "errNoTab": { "message": "لا توجد علامة تبويب لالتقاطها." },
+  "errClickIcon": {
+    "message": "انقر أيقونة Interpretab في شريط الأدوات وأنت على علامة التبويب التي تريد ترجمتها، ثم اضغط Start مرة أخرى. ({1})"
+  },
+  "errNoStreamId": { "message": "لا يوجد معرّف بث لعلامة التبويب." },
+  "errUnknownMessage": { "message": "نوع رسالة غير معروف: {1}" },
+  "errMicRefused": {
+    "message": "رُفض الوصول إلى الميكروفون. افتح صفحة خيارات الإضافة، وامنح إذن الميكروفون مرة واحدة، ثم أعد المحاولة."
+  },
+
+  "captionsChromePage": {
+    "message": "صفحات Chrome نفسها لا تقبلها. افتح موقعًا إلكترونيًا وانقر أيقونة شريط الأدوات هناك."
+  },
+  "captionsClickIcon": { "message": "انقر أيقونة شريط الأدوات على تلك الصفحة." },
+  "captionsOpenSite": {
+    "message": "افتح موقعًا إلكترونيًا وانقر أيقونة شريط الأدوات هناك."
+  },
+
+  "micNoSoundNamed": {
+    "message": "لم يصل أي صوت إلى الميكروفون منذ Start. إنه يسجّل من «{1}» — فإن لم يكن هذا ما تتحدث إليه، فحدِّد الجهاز الصحيح ضمن «مدخل الصوت» في الخيارات واضغط Start مرة أخرى."
+  },
+  "micNoSoundDefault": {
+    "message": "لم يصل أي صوت إلى الميكروفون منذ Start. إنه يسجّل من مدخل نظامك الافتراضي — فإن لم يكن هذا ما تتحدث إليه، فحدِّد الجهاز الصحيح ضمن «مدخل الصوت» في الخيارات واضغط Start مرة أخرى."
+  },
+  "micDeviceMissing": {
+    "message": "الميكروفون المختار في الخيارات غير متاح ({1})، لذا يُستخدم مدخل نظامك الافتراضي بدلًا منه."
+  },
+  "outputDeviceMissing": {
+    "message": "مخرج الصوت المختار في الخيارات غير متاح ({1})، لذا يخرج صوتك المترجَم من مكبرات الصوت. اختر مخرجًا آخر في الخيارات."
+  },
+
+  "closeReasonGiven": { "message": "أغلق Gemini الاتصال: {1}" },
+  "closeReasonOpaqueHint": {
+    "message": "تعذّر الوصول إلى Gemini Live API — ولا يُخبَر المتصفح بالسبب. {1}"
+  },
+  "closeReasonOpaque": {
+    "message": "تعذّر الوصول إلى Gemini Live API — ولا يُخبَر المتصفح بالسبب. عادةً ما يكون السبب مفتاح API: مفقودًا أو مرفوضًا أو نفدت حصته، وهو ما تصطدم به الفئة المجانية أولًا."
+  },
+  "closeReasonCode": { "message": "أغلق Gemini الاتصال (الرمز {1})." },
+  "closeBeforeReady": { "message": "أُغلقت الجلسة قبل أن تصير جاهزة." },
+  "hintKeyAccepted": {
+    "message": "قبِلت واجهة API المفتاح نفسه قبل قليل، فالمشكلة إذًا في Live API أو في الشبكة لا في المفتاح."
+  },
+  "loopGaveUp": {
+    "message": "{1} توقّف Interpretab عن المحاولة بعد {2} محاولات متتالية. تحقّق من مفتاح API في صفحة الخيارات، ومن حصتك في Google AI Studio — فحدود الفئة المجانية على نماذج Live منخفضة. اضغط Start للمحاولة من جديد."
+  },
+  "loopDropping": { "message": "الاتصال بـ Gemini ينقطع مرارًا وتكرارًا." },
+
+  "glossaryBadLine": {
+    "message": "يجب أن يكون السطر {1} على صيغة 'source,target' (العمود الثالث اختياري)."
+  },
+  "glossaryMissingField": { "message": "ينقص السطر {1} حقل source أو target." },
+  "glossaryTooMany": { "message": "عدد المدخلات كبير جدًا (الحد الأقصى {1})." }
+}

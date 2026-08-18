@@ -1,0 +1,297 @@
+{
+  "extName": { "message": "Interpretab" },
+  "extDescription": {
+    "message": "Jeden Tab in Ihrer Sprache hören — gesprochen und untertitelt in Echtzeit. Mit Ihrem eigenen Gemini-API-Schlüssel, ohne Server dazwischen."
+  },
+
+  "panelTitle": { "message": "Interpretab" },
+  "statusIdle": { "message": "Bereit" },
+  "statusConnecting": { "message": "Verbinden…" },
+  "statusConnected": { "message": "Verbunden" },
+  "statusReconnecting": { "message": "Neu verbinden…" },
+  "statusStopped": { "message": "Gestoppt" },
+  "statusError": { "message": "Fehler" },
+
+  "panelKeyNote": {
+    "message": "Interpretab spricht mit Gemini über <b>Ihren eigenen API-Schlüssel</b>. Kostenlos zu bekommen auf <a1>aistudio.google.com/apikey</a1> — danach in den <a2>Optionen</a2> einfügen."
+  },
+  "panelRunningOn": {
+    "message": "Interpretab läuft auf „{1}“, und es läuft immer nur auf einem Tab. Die Bedienelemente sind auf jenem Tab — Stop funktioniert auch von hier."
+  },
+  "panelRunningElsewhere": {
+    "message": "Interpretab läuft auf einem anderen Tab, und es läuft immer nur auf einem Tab. Die Bedienelemente sind auf jenem Tab — Stop funktioniert auch von hier."
+  },
+
+  "panelTabDirection": { "message": "<b>Tab-Audio</b> — dieser Tab, in Ihre Sprache" },
+  "panelInto": { "message": "nach" },
+  "panelTabTargetTitle": { "message": "Sprache, in der Sie es hören wollen" },
+  "panelSourceDetected": { "message": "— Ausgangssprache automatisch erkannt" },
+  "panelDuckLevel": { "message": "Lautstärke des Originaltons während des Sprechens" },
+  "panelPageSubtitles": { "message": "Untertitel auf der Seite" },
+
+  "panelMicDirection": { "message": "<b>Mikrofon</b> — der Raum, laut gedolmetscht" },
+  "panelMicModeTitle": { "message": "Wie das Mikrofon gedolmetscht wird" },
+  "panelMicModeSimul": { "message": "Simultaneous — Sie, während Sie sprechen" },
+  "panelMicModeConversation": { "message": "Two-way conversation — Gespräch in zwei Sprachen" },
+  "panelMicSourceTitle": { "message": "Die Sprache, die Sie sprechen" },
+  "panelMicNoteMuted": {
+    "message": "Die gedolmetschte Stimme ist <b>stummgeschaltet</b>. Heben Sie die Stummschaltung auf, um sie über die Lautsprecher zu hören."
+  },
+  "panelMicNoteSimul": {
+    "message": "Hinweis: Setzen Sie dafür Kopfhörer auf. Dieser Modus antwortet, während Sie noch sprechen, kann das Mikrofon also nicht stummschalten, solange er redet — und ein Lautsprecher führt die Übersetzung direkt wieder zurück, was die Übersetzung selbst verschlechtert."
+  },
+  "panelMicNoteConversation": {
+    "message": "Für zwei Personen an einem Mikrofon: Welche der beiden Sprachen es hört, in der anderen spricht es. Laut, über <b>Ihre Lautsprecher</b>, und genau darum geht es — nur hört der Dolmetscher sich dabei selbst, halten Sie das Mikrofon also von ihnen fern. Dieser Modus wartet jeden Redebeitrag ab und ist damit etwas langsamer als Simultaneous, und er ist der einzige, für den das <b>Glossar</b> gilt."
+  },
+
+  "panelStart": { "message": "Start" },
+  "panelStop": { "message": "Stop" },
+  "panelOptions": { "message": "Optionen" },
+
+  "panelCostNote": {
+    "message": "Beide Richtungen zusammen führen zwei gleichzeitige Live-Sitzungen, die API-Nutzung ist also ungefähr doppelt so hoch."
+  },
+  "panelUsagePaid": {
+    "message": "<b>{1}</b> bisher, <b>{2}</b> Gemini-Nutzung in diesem Lauf — eine Schätzung, nicht Ihre tatsächliche Rechnung."
+  },
+  "panelUsageFree": {
+    "message": "<b>{1}</b> bisher, <b>{2}</b> Gemini-Audio. Im kostenlosen Kontingent wird dafür nichts berechnet."
+  },
+  "panelUsageTip": {
+    "message": "Vor {1} gestartet. In dieser Zeit wurden {2} Audio gesendet und {3} empfangen, beides zu 25 Tokens pro Sekunde berechnet."
+  },
+  "panelUsageTipPaid": {
+    "message": "Diese Tokens sind zu Googles veröffentlichten Preisen für das Modell bewertet, im August 2026 von der Preisseite abgelesen und nicht aus Ihrem Konto — und Preise ändern sich. Ihr Google-Konto ist der einzige Ort, an dem Ihre echte Rechnung existiert."
+  },
+  "panelUsageTipFree": {
+    "message": "Ihr Schlüssel steht auf der Optionen-Seite auf dem kostenlosen Tarif, für den Google nichts davon berechnet — es gibt also keine Kosten anzuzeigen. Stellen Sie den Tarif dort auf Paid, wenn dem Projekt ein Rechnungskonto zugeordnet ist, dann schätzt diese Zeile, was der Lauf gekostet hat."
+  },
+  "durationSeconds": { "message": "{1} s" },
+  "durationMinutes": { "message": "{1} Min." },
+
+  "panelMuteMic": { "message": "Mikrofon stummschalten" },
+  "panelUnmuteMic": { "message": "Stummschaltung des Mikrofons aufheben" },
+  "panelMuteSound": { "message": "Übersetzte Stimme stummschalten" },
+  "panelUnmuteSound": { "message": "Stummschaltung der übersetzten Stimme aufheben" },
+  "panelMuteOffElsewhere": { "message": "Der Lauf ist auf einem anderen Tab." },
+  "panelMuteOffMic": { "message": "Die Mikrofon-Richtung ist aus." },
+  "panelMuteOffSound": { "message": "Keine der beiden Richtungen ist an." },
+
+  "panelLangPopular": { "message": "Häufig" },
+  "panelLangAll": { "message": "Alle Sprachen" },
+  "panelDirTab": { "message": "Tab" },
+  "panelDirMic": { "message": "Mikro" },
+  "panelHeard": { "message": "gehört ({1})" },
+  "panelTranslated": { "message": "Übersetzung ({1})" },
+  "panelCaptionsUnavailable": {
+    "message": "Auf dieser Seite lassen sich keine Untertitel anzeigen."
+  },
+  "panelCaptionsStopped": { "message": "Die Untertitel erreichen diese Seite nicht mehr." },
+
+  "optTitle": { "message": "Interpretab — Optionen" },
+  "optHeading": { "message": "Interpretab-Optionen" },
+
+  "optKeyHeading": { "message": "Gemini-API-Schlüssel" },
+  "optKeyNote": {
+    "message": "Interpretab hat keinen Server. Ihr Audio geht direkt aus diesem Browser an die Gemini Live API, authentifiziert mit Ihrem eigenen Schlüssel — einen kostenlosen gibt es auf <a1>aistudio.google.com/apikey</a1>. Der Schlüssel liegt im Erweiterungsspeicher dieses Browsers und wird nirgendwohin gesendet außer an <code>generativelanguage.googleapis.com</code>. Die Nutzung wird dem Google-Konto berechnet, zu dem der Schlüssel gehört: Behandeln Sie ihn wie ein Passwort, geben Sie ihn nicht weiter und fügen Sie ihn nirgendwo sonst ein. Sollte er je nach außen gelangen, löschen Sie ihn auf <a2>derselben Seite, auf der Sie ihn erstellt haben</a2>, und fügen Sie hier einen neuen ein."
+  },
+  "optKeyPlaceholder": { "message": "Schlüssel hier einfügen" },
+  "optShow": { "message": "Anzeigen" },
+  "optHide": { "message": "Verbergen" },
+  "optKeyNone": { "message": "Noch kein Schlüssel. Ohne einen kann Interpretab nicht starten." },
+  "optKeyStray": {
+    "message": "Gespeichert, aber das sieht eher nach einem versehentlichen Einfügen aus als nach einem Schlüssel."
+  },
+  "optKeyShort": {
+    "message": "Gespeichert, aber das wirkt zu kurz — fehlt ein Teil des Schlüssels?"
+  },
+  "optKeySaved": { "message": "Schlüssel in diesem Browser gespeichert." },
+
+  "optPlanHeading": { "message": "Gemini-API-Tarif" },
+  "optPlanNote": {
+    "message": "Auf welchem Tarif das Projekt des Schlüssels läuft. Interpretab kann das nicht feststellen — keine Antwort der Gemini-API sagt es — und muss es wissen, weil die Anzeige im Seitenpanel sonst Leuten einen Preis zeigt, denen Google nichts berechnet. Bei <b>Free</b> zählt die Anzeige Zeit und Audio; bei <b>Paid</b> schätzt sie zusätzlich, was der Lauf gekostet hat. Wählen Sie den Tarif Ihres Schlüssels: Es ist das Projekt, in dem Sie ihn auf <a1>aistudio.google.com/apikey</a1> erstellt haben, und ein Projekt ist im Bezahltarif, sobald ihm ein Rechnungskonto zugeordnet ist."
+  },
+  "optPlanFree": { "message": "Free — Google berechnet für diesen Schlüssel nichts" },
+  "optPlanPaid": { "message": "Paid — nutzungsabhängig, Ihrem Konto berechnet" },
+
+  "optVoiceHeading": { "message": "Stimme" },
+  "optVoiceNote": {
+    "message": "Die vorgefertigte Stimme, in der die Übersetzung gesprochen wird. Sie steht für die Dauer einer Sitzung fest, eine Änderung gilt also ab dem nächsten Start."
+  },
+  "optVoiceOption": { "message": "{1} — {2}" },
+  "voiceBright": { "message": "Hell" },
+  "voiceUpbeat": { "message": "Beschwingt" },
+  "voiceInformative": { "message": "Sachlich" },
+  "voiceFirm": { "message": "Bestimmt" },
+  "voiceExcitable": { "message": "Aufgeregt" },
+  "voiceYouthful": { "message": "Jugendlich" },
+  "voiceBreezy": { "message": "Locker" },
+  "voiceEasygoing": { "message": "Gelassen" },
+  "voiceBreathy": { "message": "Hauchig" },
+  "voiceClear": { "message": "Klar" },
+  "voiceSmooth": { "message": "Weich" },
+  "voiceGravelly": { "message": "Rau" },
+  "voiceSoft": { "message": "Sanft" },
+  "voiceEven": { "message": "Gleichmäßig" },
+  "voiceMature": { "message": "Reif" },
+  "voiceForward": { "message": "Direkt" },
+  "voiceFriendly": { "message": "Freundlich" },
+  "voiceCasual": { "message": "Salopp" },
+  "voiceGentle": { "message": "Behutsam" },
+  "voiceLively": { "message": "Lebhaft" },
+  "voiceKnowledgeable": { "message": "Kundig" },
+  "voiceWarm": { "message": "Warm" },
+
+  "optSizeHeading": { "message": "Untertitelgröße" },
+  "optSizeNote": {
+    "message": "Wie hoch die Untertitel auf der Seite sind, in Pixeln. Gilt sofort, auch für eine bereits laufende Übersetzung — ziehen Sie den Regler, während Sie das Video ansehen, und halten Sie dort an, wo es sich gut liest."
+  },
+  "optSizePx": { "message": "{1} px" },
+  "optSizePreview": { "message": "Falsches Üben von Xylophonmusik — 素早い茶色の狐" },
+
+  "optMicHeading": { "message": "Mikrofon" },
+  "optMicNote": {
+    "message": "Chrome erteilt die Mikrofonberechtigung der Erweiterung als Ganzes. Die Engine läuft in einem Hintergrunddokument, das keine Berechtigungsabfrage anzeigen kann — wenn die Mikrofon-Richtung also fehlschlägt, erteilen Sie die Berechtigung einmal von hier aus."
+  },
+  "optMicGrant": { "message": "Mikrofon erlauben" },
+  "optMicGranted": { "message": "Erteilt." },
+  "optMicNotGranted": { "message": "Nicht erteilt ({1})." },
+  "optMicDenied": { "message": "Abgelehnt: {1}" },
+
+  "optInputHeading": { "message": "Audioeingang" },
+  "optInputNote": {
+    "message": "Welches Mikrofon die Richtung <b>Mikrofon</b> abhört. Auf der Systemvorgabe belassen nimmt Chrome, was Ihr Rechner gerade als Eingang führt — das kann ein ausgestecktes Headset sein, ein Monitor oder irgendein anderes Gerät, in das Sie nie sprechen. Dieser Fehler ist lautlos: Die Sitzung verbindet sich, das Panel wird grün, und transkribiert wird nie etwas. Nennen Sie in dem Fall hier das Gerät. Gilt ab dem nächsten Start."
+  },
+  "optInputSystem": {
+    "message": "Systemvorgabe — welches Mikrofon Ihr Rechner gerade verwendet"
+  },
+  "optInputAnonymous": { "message": "Mikrofon {1}…" },
+  "optInputNone": { "message": "Keine Mikrofone sichtbar." },
+  "optInputMissing": {
+    "message": "Dieses Mikrofon ist nicht angeschlossen, daher wird die Systemvorgabe verwendet."
+  },
+  "optInputSaved": { "message": "Gespeichert. Gilt ab dem nächsten Start." },
+  "optInputCleared": { "message": "Gespeichert. Es wird das Standardmikrofon des Systems verwendet." },
+
+  "optOutputHeading": { "message": "Audioausgang" },
+  "optOutputNote": {
+    "message": "Wo die übersetzte Stimme der Richtung <b>Mikrofon</b> abgespielt wird. Die Übersetzung der Tab-Richtung bleibt immer auf dem Systemausgang — das ist der, den Sie hören. Gilt ab dem nächsten Start."
+  },
+  "optOutputSystem": { "message": "Systemvorgabe — die Lautsprecher, die Sie verwenden" },
+  "optOutputAnonymous": { "message": "Ausgang {1}…" },
+  "optOutputNone": { "message": "Keine Ausgabegeräte sichtbar." },
+  "optOutputMissing": {
+    "message": "Dieses Gerät ist nicht angeschlossen, daher werden stattdessen die Lautsprecher verwendet."
+  },
+  "optOutputSaved": {
+    "message": "Gespeichert. Gilt ab dem nächsten Start — und wer auch immer dieses Gerät abhört, muss noch darauf hingewiesen werden."
+  },
+  "optOutputCleared": {
+    "message": "Gespeichert. Die übersetzte Stimme kommt aus den Lautsprechern."
+  },
+
+  "optDeviceListFailed": {
+    "message": "Audiogeräte konnten nicht aufgelistet werden: {1}."
+  },
+  "optDeviceNamesHidden": {
+    "message": "Erlauben Sie oben das Mikrofon, um die Gerätenamen zu sehen."
+  },
+  "optDeviceSavedMissing": { "message": "Gespeichertes Gerät — derzeit nicht angeschlossen" },
+
+  "optGlossaryHeading": { "message": "Glossar" },
+  "optGlossaryNote": {
+    "message": "<code>source,pronunciation,transcript</code> pro Zeile. Die zweite Spalte ist das, was das Modell sagen soll; die optionale dritte ist das, was die Untertitel stattdessen anzeigen. Gilt für das Mikrofon nur im Modus <b>Two-way conversation</b>: Alles andere — Tab-Audio und der Simultaneous-Modus des Mikrofons — läuft über das Simultanübersetzungsmodell, das keine System-Anweisung annimmt und deshalb keinen Platz für ein Glossar hat."
+  },
+  "optGlossaryReplace": { "message": "Ersetzen" },
+  "optGlossaryReset": { "message": "Auf Standard zurücksetzen" },
+  "optGlossaryPickFile": { "message": "Wählen Sie zuerst eine .csv-Datei." },
+  "optGlossaryNotCsv": { "message": "Die Datei muss die Endung .csv haben." },
+  "optGlossaryTooBig": { "message": "Die Datei überschreitet {1} Bytes." },
+  "optGlossaryReplaced": {
+    "message": "Durch {1} Einträge ersetzt. Gilt ab dem nächsten Start."
+  },
+  "optGlossaryWasReset": { "message": "Auf {1} Standardeinträge zurückgesetzt." },
+  "optGlossaryLoadFailed": { "message": "Laden fehlgeschlagen: {1}" },
+  "optGlossaryEmpty": { "message": "Keine Glossareinträge." },
+  "optGlossaryColSource": { "message": "Quelle" },
+  "optGlossaryColPronunciation": { "message": "Aussprache" },
+  "optGlossaryColTranscript": { "message": "Transkript" },
+
+  "errNoKey": {
+    "message": "Noch kein Gemini-API-Schlüssel. Öffnen Sie die Optionen und fügen Sie einen von aistudio.google.com/apikey ein."
+  },
+  "errPreflightNoKey": {
+    "message": "Kein Gemini-API-Schlüssel. Fügen Sie in den Optionen einen hinzu."
+  },
+  "errKeyRejected": {
+    "message": "Gemini hat diesen API-Schlüssel abgelehnt. Prüfen Sie ihn auf der Optionen-Seite, oder erstellen Sie einen neuen auf aistudio.google.com/apikey."
+  },
+  "errQuota": {
+    "message": "Das Kontingent dieses API-Schlüssels ist aufgebraucht. Warten Sie auf das Zurücksetzen der Limits, oder richten Sie die Abrechnung ein, um auf Tier 1 zu wechseln — das kostenlose Kontingent stößt zuerst an."
+  },
+  "errKeyForbidden": {
+    "message": "Dieser API-Schlüssel darf die Gemini-API nicht aufrufen. Prüfen Sie die Einschränkungen des Schlüssels und ob die Generative Language API in seinem Projekt aktiviert ist."
+  },
+  "errAlreadyRunningOn": {
+    "message": "Interpretab läuft bereits auf „{1}“, und es läuft immer nur auf einem Tab. Drücken Sie zuerst Stop — der Stop-Knopf funktioniert von jedem Tab aus."
+  },
+  "errAlreadyRunningElsewhere": {
+    "message": "Interpretab läuft bereits auf einem anderen Tab, und es läuft immer nur auf einem Tab. Drücken Sie zuerst Stop — der Stop-Knopf funktioniert von jedem Tab aus."
+  },
+  "errNoDirection": { "message": "Aktivieren Sie zuerst mindestens eine Richtung." },
+  "errNoTab": { "message": "Kein Tab zum Aufnehmen." },
+  "errClickIcon": {
+    "message": "Klicken Sie auf dem Tab, den Sie übersetzen wollen, auf das Interpretab-Symbol in der Symbolleiste und drücken Sie dann erneut Start. ({1})"
+  },
+  "errNoStreamId": { "message": "Keine Tab-Stream-ID." },
+  "errUnknownMessage": { "message": "Unbekannter Nachrichtentyp: {1}" },
+  "errMicRefused": {
+    "message": "Der Mikrofonzugriff wurde verweigert. Öffnen Sie die Optionen-Seite der Erweiterung, erlauben Sie das Mikrofon einmal und versuchen Sie es erneut."
+  },
+
+  "captionsChromePage": {
+    "message": "Chromes eigene Seiten nehmen sie nicht an. Öffnen Sie eine Website und klicken Sie dort auf das Symbol in der Symbolleiste."
+  },
+  "captionsClickIcon": {
+    "message": "Klicken Sie auf jener Seite auf das Symbol in der Symbolleiste."
+  },
+  "captionsOpenSite": {
+    "message": "Öffnen Sie eine Website und klicken Sie dort auf das Symbol in der Symbolleiste."
+  },
+
+  "micNoSoundNamed": {
+    "message": "Seit dem Start ist kein Ton am Mikrofon angekommen. Aufgenommen wird von „{1}“ — wenn Sie nicht da hineinsprechen, nennen Sie das richtige Gerät in den Optionen unter Audioeingang und drücken Sie erneut Start."
+  },
+  "micNoSoundDefault": {
+    "message": "Seit dem Start ist kein Ton am Mikrofon angekommen. Aufgenommen wird vom Standardeingang Ihres Systems — wenn Sie nicht da hineinsprechen, nennen Sie das richtige Gerät in den Optionen unter Audioeingang und drücken Sie erneut Start."
+  },
+  "micDeviceMissing": {
+    "message": "Das in den Optionen gewählte Mikrofon ist nicht verfügbar ({1}), daher wird stattdessen der Standardeingang Ihres Systems verwendet."
+  },
+  "outputDeviceMissing": {
+    "message": "Der in den Optionen gewählte Audioausgang ist nicht verfügbar ({1}), daher kommt Ihre übersetzte Stimme aus den Lautsprechern. Wählen Sie in den Optionen einen anderen."
+  },
+
+  "closeReasonGiven": { "message": "Gemini hat die Verbindung geschlossen: {1}" },
+  "closeReasonOpaqueHint": {
+    "message": "Die Gemini Live API war nicht erreichbar — einem Browser wird nicht gesagt, warum. {1}"
+  },
+  "closeReasonOpaque": {
+    "message": "Die Gemini Live API war nicht erreichbar — einem Browser wird nicht gesagt, warum. Meist liegt es am API-Schlüssel: fehlend, abgelehnt oder ohne Kontingent, woran das kostenlose Kontingent zuerst stößt."
+  },
+  "closeReasonCode": { "message": "Gemini hat die Verbindung geschlossen (Code {1})." },
+  "closeBeforeReady": { "message": "Die Sitzung wurde geschlossen, bevor sie bereit war." },
+  "hintKeyAccepted": {
+    "message": "Der Schlüssel selbst wurde eben noch von der API akzeptiert — es liegt also an der Live API oder am Netzwerk, nicht am Schlüssel."
+  },
+  "loopGaveUp": {
+    "message": "{1} Interpretab hat es nach {2} Versuchen in Folge aufgegeben. Prüfen Sie Ihren API-Schlüssel auf der Optionen-Seite und Ihr Kontingent in Google AI Studio — die Limits des kostenlosen Tarifs für die Live-Modelle sind niedrig. Drücken Sie Start, um es erneut zu versuchen."
+  },
+  "loopDropping": { "message": "Die Verbindung zu Gemini bricht immer wieder ab." },
+
+  "glossaryBadLine": {
+    "message": "Zeile {1} muss 'source,target' sein (3. Spalte optional)."
+  },
+  "glossaryMissingField": { "message": "In Zeile {1} fehlt source oder target." },
+  "glossaryTooMany": { "message": "Zu viele Einträge (max. {1})." }
+}

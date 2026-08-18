@@ -12,7 +12,12 @@
 body {
   margin: 0;
   padding: 0.75rem;
-  font-family: "Google Sans", "Noto Sans", "Noto Sans JP", system-ui, sans-serif;
+  /* The Noto faces are named per script rather than left to one fallback: the
+     ten UI locales cover Latin, CJK, Devanagari and Arabic, and a box that
+     picks a Latin face first renders Hindi and Arabic in whatever the system
+     substitutes. Absent faces cost nothing — the list falls through. */
+  font-family: "Google Sans", "Noto Sans", "Noto Sans JP", "Noto Sans SC",
+    "Noto Sans KR", "Noto Sans Devanagari", "Noto Sans Arabic", system-ui, sans-serif;
   font-size: 13px;
   color: #202124;
   display: flex;
@@ -61,7 +66,9 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 
 .row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 .row.heading { font-weight: 400; }
-.row.indent { padding-left: 1.35rem; }
+/* Logical, not physical: the indent is under the switch that governs the row,
+   and in Arabic the switch is on the right. Same for the `output` below. */
+.row.indent { padding-inline-start: 1.35rem; }
 .row.buttons { gap: 0.5rem; }
 .inline { display: flex; align-items: center; gap: 0.3rem; }
 .grow { flex: 1; }
@@ -106,7 +113,7 @@ select.lang { max-width: 11rem; }
 /* The mode names are sentences rather than words, so this one takes the row. */
 select.mode { flex: 1; min-width: 0; }
 input[type="range"] { flex: 1; min-width: 4rem; }
-output { min-width: 2.4rem; text-align: right; }
+output { min-width: 2.4rem; text-align: end; }
 
 button {
   font: inherit;
@@ -162,8 +169,10 @@ button.icon.off .slash { display: inline; }
   max-width: 95%;
   overflow-wrap: anywhere;
 }
-/* Heard on the left, spoken on the right — the same asymmetry the web app
-   uses to make direction readable at a glance. */
+/* Heard on one side, spoken on the other — the same asymmetry the web app uses
+   to make direction readable at a glance. Which side is which follows the
+   locale: in a column flex box the cross axis is the inline one, so `flex-start`
+   is already the right edge under `dir="rtl"` and neither rule needs a variant. */
 .line.input { background: var(--agent-bubble); color: var(--muted); align-self: flex-start; }
 .line.output { background: var(--primary); color: #fff; align-self: flex-end; }
 .line .tag {
@@ -173,3 +182,10 @@ button.icon.off .slash { display: inline; }
   letter-spacing: 0.04em;
   opacity: 0.7;
 }
+/* Arabic has no case for `uppercase` to change and is cursive, so the tracking
+   that makes a Latin tag read as a label just pulls its letters apart. */
+[dir="rtl"] .line .tag { text-transform: none; letter-spacing: normal; }
+/* Block, so the `dir="auto"` sidepanel.js puts on it also decides which edge a
+   wrapped line is aligned to. On an inline it would order the glyphs correctly
+   and still align the paragraph the interface's way. */
+.line .body { display: block; }

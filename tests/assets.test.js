@@ -15,6 +15,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { readCatalogue } from "./messages.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
 
@@ -64,6 +66,21 @@ test("the manifest is v3 and declares every permission the code uses", () => {
       !manifest.permissions.includes(permission),
       `${permission} is packaged-apps-only and warns on an extension`
     );
+  }
+});
+
+test("the manifest's fallback locale is one that exists", () => {
+  // Without `default_locale` Chrome refuses to load an extension that has a
+  // `_locales` directory at all, and with one that names a missing directory it
+  // refuses just as flatly — both at install time, with the name and the
+  // description showing as `__MSG_extName__` in the store listing if it gets
+  // that far.
+  assert.ok(manifest.default_locale, "an extension with _locales must declare one");
+  assert.ok(fs.existsSync(path.join(ROOT, "_locales", manifest.default_locale, "messages.json")));
+  // And the two fields the store reads have to be the localised ones, because
+  // they are what a user sees before anything is installed.
+  for (const field of [manifest.name, manifest.description, manifest.action?.default_title]) {
+    assert.match(field, /^__MSG_\w+__$/);
   }
 });
 
@@ -316,7 +333,7 @@ test("the cost meter's clock is stamped where the run is", () => {
   const panel = fs.readFileSync(path.join(ROOT, "sidepanel.js"), "utf8");
 
   assert.match(offscreen, /elapsedSeconds:\s*\(performance\.now\(\) - state\.startedAt\)/);
-  assert.match(panel, /el\("usageTime"\)\.textContent = formatDuration\(elapsedSeconds\)/);
+  assert.match(body(panel, "renderUsage"), /formatDuration\(elapsedSeconds\)/);
   assert.doesNotMatch(panel, /setInterval/, "the panel counts nothing of its own");
 });
 
@@ -362,6 +379,12 @@ test("the package script ships the extension and nothing else", () => {
     ...(manifest.web_accessible_resources || []).flatMap((entry) => entry.resources || []),
   ].filter(Boolean)) {
     assert.ok(zipped.has(reference), `the ZIP is missing ${reference}`);
+  }
+  // Every locale, not just the default one: `npm run package` builds from an
+  // exclude list, so a new `_locales` directory is carried automatically and
+  // this is what notices if that ever stops being true.
+  for (const locale of fs.readdirSync(path.join(ROOT, "_locales"))) {
+    assert.ok(zipped.has(`_locales/${locale}/messages.json`), `the ZIP is missing ${locale}`);
   }
   // The licence and the privacy policy are documents users are entitled to, and
   // they are two files and a few KB.
@@ -421,23 +444,25 @@ test("the cost figure disclaims itself where the user can actually see it", () =
   // where a number disclaims itself, because nobody hovers. Both guide pages
   // quote that string, so they are checked with it rather than left to drift.
   const DISCLAIMER = "an estimate, not your actual bill.";
-  // The sentence is static, so it lives in the markup with the other notes; only
-  // the figure is written from script. Whitespace is normalised because the
-  // markup hard-wraps it.
-  const markup = fs
-    .readFileSync(path.join(ROOT, "sidepanel.html"), "utf8")
-    .replace(/\s+/g, " ");
-  const note = markup.slice(markup.indexOf('id="usageNote"'), markup.indexOf("</p>", markup.indexOf('id="usageNote"')));
+  // The sentence and the figure are one message in the catalogue rather than
+  // markup a `renderUsage` branch fills in, so there is no code path that can
+  // print the number without it. Which is also why this reads the catalogue and
+  // not the markup: since #10 the panel ships empty and is filled from here.
   assert.ok(
-    note.includes(DISCLAIMER),
-    "the visible usage note must carry the disclaimer, not only note.title"
+    readCatalogue("en").panelUsagePaid.message.endsWith(DISCLAIMER),
+    "the paid usage message must carry the disclaimer, not only note.title"
   );
-  for (const page of ["index.md", path.join("ja", "index.md")]) {
-    // Hard-wrapped prose, so the quote can carry a newline where the panel has
-    // a space.
-    const text = fs.readFileSync(path.join(ROOT, page), "utf8").replace(/\s+/g, " ");
-    assert.ok(text.includes(DISCLAIMER), `${page} quotes an out-of-date usage note`);
-  }
+  // Hard-wrapped prose, so the quote can carry a newline where the panel has a
+  // space. The English guide quotes the English panel; the Japanese one quotes
+  // what a Japanese Chrome actually shows, which is a different sentence.
+  const en = fs.readFileSync(path.join(ROOT, "index.md"), "utf8").replace(/\s+/g, " ");
+  assert.ok(en.includes(DISCLAIMER), "index.md quotes an out-of-date usage note");
+
+  const ja = fs.readFileSync(path.join(ROOT, "ja", "index.md"), "utf8").replace(/\s+/g, " ");
+  const jaSentence = readCatalogue("ja").panelUsagePaid.message.replace(/<\/?b>/g, "");
+  // Placeholders aside, so the guide is free to quote it with figures in.
+  const [, jaTail] = jaSentence.split("{2}");
+  assert.ok(ja.includes(jaTail.trim()), "ja/index.md quotes an out-of-date usage note");
 });
 
 test("the free tier is never shown a price", () => {
@@ -456,15 +481,16 @@ test("the free tier is never shown a price", () => {
   // The money is written in one branch of the meter, and that branch is paid.
   const meter = body(read("sidepanel.js"), "renderUsage");
   assert.match(meter, /const paid = settings\.apiTier === "paid";/);
-  const at = meter.indexOf("if (paid)");
-  assert.ok(at > 0, "the meter no longer branches on the tier");
-  assert.doesNotMatch(meter.slice(0, at), /formatCost|usageAmount/);
+  assert.match(meter, /paid \? "panelUsagePaid" : "panelUsageFree"/);
 
-  // And the free sentence in the markup carries no price of its own.
-  const panel = read("sidepanel.html").replace(/\s+/g, " ");
-  const from = panel.indexOf('id="usageFree"');
-  assert.ok(from > 0, "the free tail is gone from the meter");
-  assert.doesNotMatch(panel.slice(from, panel.indexOf("</span", from)), /\$|cost|bill/i);
+  // And the free sentence carries no price of its own, in either language. It
+  // is a whole message rather than a shell the code fills, so this is the only
+  // place a price could get in.
+  for (const locale of ["en", "ja"]) {
+    const free = readCatalogue(locale).panelUsageFree.message;
+    assert.ok(!free.includes("$"), `the ${locale} free-tier message quotes a price`);
+  }
+  assert.doesNotMatch(readCatalogue("en").panelUsageFree.message, /cost|bill/i);
 });
 
 test("the key is asked about before the tab is captured, and the answer is kept", () => {
@@ -502,10 +528,19 @@ test("a key is judged by whether it could be one, not by this year's format", ()
   assert.ok(input, "the key field is gone");
   for (const where of [source, input]) assert.doesNotMatch(where, /AIza/);
 
-  const run = new Function("settings", "el", "setStatus", `${source}; renderKeyStatus();`);
+  // `t` goes in as a parameter for the same reason as `el` and `setStatus`: the
+  // function is lifted out of its module, so everything it closes over has to
+  // be handed to it. What it says is not what is under test here — which of the
+  // four it says is.
+  const run = new Function("settings", "el", "setStatus", "t", `${source}; renderKeyStatus();`);
   const accepted = (apiKey) => {
     let ok = false;
-    run({ apiKey }, () => ({}), (_node, _text, good = false) => (ok = good));
+    run(
+      { apiKey },
+      () => ({}),
+      (_node, _text, good = false) => (ok = good),
+      (key) => key
+    );
     return ok;
   };
 

@@ -1,0 +1,289 @@
+{
+  "extName": { "message": "Interpretab" },
+  "extDescription": {
+    "message": "どのタブの音声も、あなたの言語でリアルタイムに読み上げ・字幕表示。あなた自身の Gemini API キーで動き、あいだにサーバはありません。"
+  },
+
+  "panelTitle": { "message": "Interpretab" },
+  "statusIdle": { "message": "待機中" },
+  "statusConnecting": { "message": "接続中…" },
+  "statusConnected": { "message": "接続済み" },
+  "statusReconnecting": { "message": "再接続中…" },
+  "statusStopped": { "message": "停止しました" },
+  "statusError": { "message": "エラー" },
+
+  "panelKeyNote": {
+    "message": "Interpretab は<b>あなた自身の API キー</b>で Gemini と通信します。<a1>aistudio.google.com/apikey</a1> で無料のキーを取得し、<a2>オプション</a2>に貼り付けてください。"
+  },
+  "panelRunningOn": {
+    "message": "Interpretab は「{1}」で動作中です。同時に動かせるタブは 1 つだけなので、操作はそのタブのパネルから行ってください。Stop はここからでも効きます。"
+  },
+  "panelRunningElsewhere": {
+    "message": "Interpretab は別のタブで動作中です。同時に動かせるタブは 1 つだけなので、操作はそのタブのパネルから行ってください。Stop はここからでも効きます。"
+  },
+
+  "panelTabDirection": { "message": "<b>タブ音声</b> — このタブの音声を、あなたの言語へ" },
+  "panelInto": { "message": "翻訳先" },
+  "panelTabTargetTitle": { "message": "聞きたい言語" },
+  "panelSourceDetected": { "message": "— 翻訳元は自動判定" },
+  "panelDuckLevel": { "message": "読み上げ中の元音声の音量" },
+  "panelPageSubtitles": { "message": "ページに字幕を表示" },
+
+  "panelMicDirection": { "message": "<b>マイク</b> — その場の会話を、声に出して通訳" },
+  "panelMicModeTitle": { "message": "マイク音声の通訳のしかた" },
+  "panelMicModeSimul": { "message": "Simultaneous — 話しながら同時に" },
+  "panelMicModeConversation": { "message": "Two-way conversation — 2 言語間の会話" },
+  "panelMicSourceTitle": { "message": "あなたが話す言語" },
+  "panelMicNoteMuted": {
+    "message": "通訳音声は<b>ミュート</b>されています。スピーカーから流すにはミュート解除ボタンを押してください。"
+  },
+  "panelMicNoteSimul": {
+    "message": "注意: 音声を流すときはヘッドホンを使ってください。このモードは話している最中に応答するため、読み上げ中にマイクを止められません。スピーカーを使うと通訳音声がそのままマイクに戻り、翻訳品質そのものが下がります。"
+  },
+  "panelMicNoteConversation": {
+    "message": "1 本のマイクを 2 人で使うためのモードです。指定した 2 言語のうち聞こえたほうを、もう一方の言語で話します。<b>スピーカー</b>から声に出して読み上げるのがこのモードの目的ですが、その分だけ通訳が自分の声を拾ってしまうので、マイクはスピーカーから離してください。話し終わるのを待ってから訳すため Simultaneous より少し遅く、<b>用語集</b>が効くのはこのモードだけです。"
+  },
+
+  "panelStart": { "message": "Start" },
+  "panelStop": { "message": "Stop" },
+  "panelOptions": { "message": "オプション" },
+
+  "panelCostNote": {
+    "message": "両方の翻訳を使うと Live セッションが 2 本同時に動くため、API の利用量はおよそ 2 倍になります。"
+  },
+  "panelUsagePaid": {
+    "message": "経過 <b>{1}</b>、この実行の Gemini 利用料は <b>{2}</b> — 概算であり、実際の請求額ではありません。"
+  },
+  "panelUsageFree": {
+    "message": "経過 <b>{1}</b>、Gemini の音声 <b>{2}</b>。無料枠ではこの分の料金はかかりません。"
+  },
+  "panelUsageTip": {
+    "message": "開始から {1} 経過。そのあいだに {2} の音声を送信し、{3} の音声を受信しました。どちらも 1 秒あたり 25 トークンで課金されます。"
+  },
+  "panelUsageTipPaid": {
+    "message": "トークンの単価は、2026 年 8 月時点で Google が料金ページに公開しているモデル別の価格です。あなたのアカウントから取得した値ではなく、単価は変わることがあります。実際の請求額は Google アカウントでのみ確認できます。"
+  },
+  "panelUsageTipFree": {
+    "message": "このキーはオプションページで無料枠に設定されています。無料枠では Google から料金は請求されないため、表示する金額もありません。課金アカウントを紐づけたプロジェクトのキーであれば、オプションで Paid に切り替えるとこの行に概算の費用が出ます。"
+  },
+  "durationSeconds": {
+    "message": "{1} 秒",
+    "description": "A duration under a minute. {1} is a whole number of seconds."
+  },
+  "durationMinutes": {
+    "message": "{1} 分",
+    "description": "A duration of a minute or more, rounded. {1} is a whole number of minutes."
+  },
+
+  "panelMuteMic": { "message": "マイクをミュート" },
+  "panelUnmuteMic": { "message": "マイクのミュートを解除" },
+  "panelMuteSound": { "message": "通訳音声をミュート" },
+  "panelUnmuteSound": { "message": "通訳音声のミュートを解除" },
+  "panelMuteOffElsewhere": { "message": "別のタブで動作中です。" },
+  "panelMuteOffMic": { "message": "マイク音声の翻訳がオフになっています。" },
+  "panelMuteOffSound": { "message": "どちらの翻訳もオンになっていません。" },
+
+  "panelLangPopular": { "message": "よく使う言語" },
+  "panelLangAll": { "message": "すべての言語" },
+  "panelDirTab": { "message": "タブ" },
+  "panelDirMic": { "message": "マイク" },
+  "panelHeard": { "message": "聞き取り（{1}）" },
+  "panelTranslated": { "message": "翻訳（{1}）" },
+  "panelCaptionsUnavailable": { "message": "このページには字幕を表示できません。" },
+  "panelCaptionsStopped": { "message": "このページへの字幕の送信が止まりました。" },
+
+  "optTitle": { "message": "Interpretab — オプション" },
+  "optHeading": { "message": "Interpretab のオプション" },
+
+  "optKeyHeading": { "message": "Gemini API キー" },
+  "optKeyNote": {
+    "message": "Interpretab にサーバはありません。音声はこのブラウザから Gemini Live API へ直接送られ、認証にはあなた自身のキーを使います。無料のキーは <a1>aistudio.google.com/apikey</a1> で取得できます。キーはこのブラウザの拡張機能ストレージに保存され、<code>generativelanguage.googleapis.com</code> 以外のどこにも送信されません。利用料はキーの持ち主の Google アカウントに課金されるので、パスワードと同じ扱いにしてください。他人に渡さず、他の場所に貼り付けないこと。もし漏れた場合は<a2>取得したページ</a2>で削除し、新しいキーをここに貼り直してください。"
+  },
+  "optKeyPlaceholder": { "message": "キーをここに貼り付け" },
+  "optShow": { "message": "表示" },
+  "optHide": { "message": "隠す" },
+  "optKeyNone": { "message": "キーが未設定です。キーがないと Interpretab は開始できません。" },
+  "optKeyStray": { "message": "保存しましたが、キーではなく誤った貼り付けのように見えます。" },
+  "optKeyShort": { "message": "保存しましたが、短すぎるようです。キーの一部が欠けていませんか？" },
+  "optKeySaved": { "message": "キーをこのブラウザに保存しました。" },
+
+  "optPlanHeading": { "message": "Gemini API のプラン" },
+  "optPlanNote": {
+    "message": "キーのプロジェクトがどのプランかを指定します。Gemini API のレスポンスにはプランの情報が含まれないため Interpretab 側では判別できませんが、これがわからないとサイドパネルのメーターが、料金のかからない人にまで金額を表示してしまいます。<b>Free</b> では時間と音声量だけを表示し、<b>Paid</b> ではさらに概算の費用も表示します。使っているキーに合わせて選んでください。キーを作った <a1>aistudio.google.com/apikey</a1> のプロジェクトが、課金アカウントを紐づけていれば有料ティアです。"
+  },
+  "optPlanFree": { "message": "Free — このキーには料金がかかりません" },
+  "optPlanPaid": { "message": "Paid — 従量課金。アカウントに請求されます" },
+
+  "optVoiceHeading": { "message": "読み上げ音声" },
+  "optVoiceNote": {
+    "message": "翻訳の読み上げに使う音声です。セッション中は変更できないため、変更は次回 Start を押したときから反映されます。"
+  },
+  "optVoiceOption": { "message": "{1} — {2}" },
+  "voiceBright": { "message": "明るい" },
+  "voiceUpbeat": { "message": "陽気" },
+  "voiceInformative": { "message": "説明的" },
+  "voiceFirm": { "message": "しっかりした" },
+  "voiceExcitable": { "message": "元気" },
+  "voiceYouthful": { "message": "若々しい" },
+  "voiceBreezy": { "message": "軽やか" },
+  "voiceEasygoing": { "message": "おだやか" },
+  "voiceBreathy": { "message": "息づかいのある" },
+  "voiceClear": { "message": "明瞭" },
+  "voiceSmooth": { "message": "なめらか" },
+  "voiceGravelly": { "message": "しゃがれた" },
+  "voiceSoft": { "message": "やわらかい" },
+  "voiceEven": { "message": "淡々とした" },
+  "voiceMature": { "message": "落ち着いた" },
+  "voiceForward": { "message": "前に出る" },
+  "voiceFriendly": { "message": "親しみやすい" },
+  "voiceCasual": { "message": "くだけた" },
+  "voiceGentle": { "message": "やさしい" },
+  "voiceLively": { "message": "生き生きした" },
+  "voiceKnowledgeable": { "message": "知的" },
+  "voiceWarm": { "message": "あたたかい" },
+
+  "optSizeHeading": { "message": "字幕の大きさ" },
+  "optSizeNote": {
+    "message": "ページに表示する字幕の高さをピクセルで指定します。翻訳の実行中でもすぐに反映されるので、動画を見ながらドラッグして読みやすいところで止めてください。"
+  },
+  "optSizePx": { "message": "{1} px" },
+  "optSizePreview": { "message": "素早い茶色の狐 — The quick brown fox" },
+
+  "optMicHeading": { "message": "マイク" },
+  "optMicNote": {
+    "message": "Chrome はマイクの許可を拡張機能全体に対して与えます。実際の処理は許可ダイアログを出せないバックグラウンドのドキュメントで動くため、マイク音声の翻訳が失敗する場合は、ここから一度だけ許可してください。"
+  },
+  "optMicGrant": { "message": "マイクを許可する" },
+  "optMicGranted": { "message": "許可済み。" },
+  "optMicNotGranted": { "message": "未許可（{1}）。" },
+  "optMicDenied": { "message": "拒否されました: {1}" },
+
+  "optInputHeading": { "message": "音声入力" },
+  "optInputNote": {
+    "message": "<b>マイク</b>音声の翻訳がどのマイクを聞くかを指定します。システム既定のままだと、その時点で入力デバイスとして扱われているものを Chrome が選ぶため、抜いたはずのヘッドセットやモニタなど、話しかけていないデバイスが選ばれることがあります。この失敗は表に出ません。セッションは接続され、パネルも緑になり、それでいて何も文字起こしされません。そうなったらここでデバイスを指定してください。次回 Start を押したときから反映されます。"
+  },
+  "optInputSystem": { "message": "システム既定 — その時点で使われているマイク" },
+  "optInputAnonymous": { "message": "マイク {1}…" },
+  "optInputNone": { "message": "マイクが見つかりません。" },
+  "optInputMissing": {
+    "message": "そのマイクは接続されていないため、システム既定のマイクを使います。"
+  },
+  "optInputSaved": { "message": "保存しました。次回 Start を押したときから反映されます。" },
+  "optInputCleared": { "message": "保存しました。システム既定のマイクを使います。" },
+
+  "optOutputHeading": { "message": "音声出力" },
+  "optOutputNote": {
+    "message": "<b>マイク</b>音声の翻訳の読み上げをどこから流すかを指定します。タブ音声の翻訳は常にシステムの出力に固定されます。そちらは自分が聞くための音声だからです。次回 Start を押したときから反映されます。"
+  },
+  "optOutputSystem": { "message": "システム既定 — いま使っているスピーカー" },
+  "optOutputAnonymous": { "message": "出力 {1}…" },
+  "optOutputNone": { "message": "出力デバイスが見つかりません。" },
+  "optOutputMissing": {
+    "message": "そのデバイスは接続されていないため、スピーカーから流します。"
+  },
+  "optOutputSaved": {
+    "message": "保存しました。次回 Start から反映されます。そのデバイスを聞く側にも、そのように設定してもらう必要があります。"
+  },
+  "optOutputCleared": { "message": "保存しました。通訳音声はスピーカーから流します。" },
+
+  "optDeviceListFailed": { "message": "音声デバイスの一覧を取得できませんでした: {1}。" },
+  "optDeviceNamesHidden": {
+    "message": "デバイス名を表示するには、上でマイクを許可してください。"
+  },
+  "optDeviceSavedMissing": { "message": "保存済みのデバイス — いまは接続されていません" },
+
+  "optGlossaryHeading": { "message": "用語集" },
+  "optGlossaryNote": {
+    "message": "1 行につき <code>source,pronunciation,transcript</code> の形式です。2 列目はモデルに読ませたい読み、省略可能な 3 列目は字幕に表示したい表記です。効くのは<b>マイクの Two-way conversation モード</b>だけです。それ以外 — タブ音声と、マイクの Simultaneous モード — は同時翻訳モデルで動いており、システム指示を受け付けないため用語集を渡す場所がありません。"
+  },
+  "optGlossaryReplace": { "message": "置き換える" },
+  "optGlossaryReset": { "message": "初期値に戻す" },
+  "optGlossaryPickFile": { "message": "先に .csv ファイルを選んでください。" },
+  "optGlossaryNotCsv": { "message": "拡張子が .csv のファイルを指定してください。" },
+  "optGlossaryTooBig": { "message": "ファイルが {1} バイトを超えています。" },
+  "optGlossaryReplaced": {
+    "message": "{1} 件で置き換えました。次回 Start から反映されます。"
+  },
+  "optGlossaryWasReset": { "message": "初期値の {1} 件に戻しました。" },
+  "optGlossaryLoadFailed": { "message": "読み込みに失敗しました: {1}" },
+  "optGlossaryEmpty": { "message": "用語集は空です。" },
+  "optGlossaryColSource": { "message": "対象" },
+  "optGlossaryColPronunciation": { "message": "読み" },
+  "optGlossaryColTranscript": { "message": "表記" },
+
+  "errNoKey": {
+    "message": "Gemini API キーがまだありません。オプションを開き、aistudio.google.com/apikey で取得したキーを貼り付けてください。"
+  },
+  "errPreflightNoKey": {
+    "message": "Gemini API キーがありません。オプションで設定してください。"
+  },
+  "errKeyRejected": {
+    "message": "Gemini がこの API キーを受け付けませんでした。オプションページで確認するか、aistudio.google.com/apikey で新しいキーを作ってください。"
+  },
+  "errQuota": {
+    "message": "この API キーは使用量の上限に達しています。制限が解除されるのを待つか、課金設定を行って Tier 1 に上げてください。最初に上限に達するのは無料枠です。"
+  },
+  "errKeyForbidden": {
+    "message": "この API キーには Gemini API を呼び出す権限がありません。キーの制限設定と、プロジェクトで Generative Language API が有効になっているかを確認してください。"
+  },
+  "errAlreadyRunningOn": {
+    "message": "Interpretab はすでに「{1}」で動作中です。同時に動かせるタブは 1 つだけなので、先に Stop を押してください。Stop はどのタブからでも効きます。"
+  },
+  "errAlreadyRunningElsewhere": {
+    "message": "Interpretab はすでに別のタブで動作中です。同時に動かせるタブは 1 つだけなので、先に Stop を押してください。Stop はどのタブからでも効きます。"
+  },
+  "errNoDirection": { "message": "先にどちらかの翻訳をオンにしてください。" },
+  "errNoTab": { "message": "キャプチャするタブがありません。" },
+  "errClickIcon": {
+    "message": "翻訳したいタブで Interpretab のツールバーアイコンをクリックしてから、もう一度 Start を押してください。（{1}）"
+  },
+  "errNoStreamId": { "message": "タブのストリーム ID がありません。" },
+  "errUnknownMessage": { "message": "不明なメッセージ種別です: {1}" },
+  "errMicRefused": {
+    "message": "マイクへのアクセスが拒否されました。この拡張機能のオプションページを開いて一度マイクを許可してから、やり直してください。"
+  },
+
+  "captionsChromePage": {
+    "message": "Chrome 自身のページには字幕を表示できません。通常の Web ページを開き、そこでツールバーアイコンをクリックしてください。"
+  },
+  "captionsClickIcon": { "message": "そのページでツールバーアイコンをクリックしてください。" },
+  "captionsOpenSite": {
+    "message": "通常の Web ページを開き、そこでツールバーアイコンをクリックしてください。"
+  },
+
+  "micNoSoundNamed": {
+    "message": "Start してからマイクに音が届いていません。「{1}」から録音しています。話しかけている先がそれでない場合は、オプションの音声入力で正しいデバイスを指定し、もう一度 Start を押してください。"
+  },
+  "micNoSoundDefault": {
+    "message": "Start してからマイクに音が届いていません。システム既定の入力から録音しています。話しかけている先がそれでない場合は、オプションの音声入力で正しいデバイスを指定し、もう一度 Start を押してください。"
+  },
+  "micDeviceMissing": {
+    "message": "オプションで指定したマイクが使えないため（{1}）、システム既定の入力を使っています。"
+  },
+  "outputDeviceMissing": {
+    "message": "オプションで指定した音声出力が使えないため（{1}）、通訳音声はスピーカーから流れています。オプションで別のデバイスを選んでください。"
+  },
+
+  "closeReasonGiven": { "message": "Gemini が接続を閉じました: {1}" },
+  "closeReasonOpaqueHint": {
+    "message": "Gemini Live API に接続できませんでした。理由はブラウザには通知されません。{1}"
+  },
+  "closeReasonOpaque": {
+    "message": "Gemini Live API に接続できませんでした。理由はブラウザには通知されません。多くは API キーの問題です。未設定・拒否・使用量の上限のいずれかで、最初に上限に達するのは無料枠です。"
+  },
+  "closeReasonCode": { "message": "Gemini が接続を閉じました（コード {1}）。" },
+  "closeBeforeReady": { "message": "セッションは準備が整う前に閉じられました。" },
+  "hintKeyAccepted": {
+    "message": "キー自体は直前に API に受理されているので、キーではなく Live API 側かネットワーク側の問題です。"
+  },
+  "loopGaveUp": {
+    "message": "{1} {2} 回連続で失敗したため、Interpretab は再試行をやめました。オプションページで API キーを、Google AI Studio で使用量の上限を確認してください。Live モデルの無料枠の上限は低めです。もう一度試すには Start を押してください。"
+  },
+  "loopDropping": { "message": "Gemini への接続が切れ続けています。" },
+
+  "glossaryBadLine": {
+    "message": "{1} 行目は 'source,target' の形式である必要があります（3 列目は省略可）。"
+  },
+  "glossaryMissingField": { "message": "{1} 行目に source か target がありません。" },
+  "glossaryTooMany": { "message": "エントリが多すぎます（最大 {1} 件）。" }
+}

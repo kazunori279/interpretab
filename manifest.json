@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Interpretab",
+  "name": "__MSG_extName__",
   "version": "1.0.0",
-  "description": "Hear any tab in your language, spoken and subtitled in real time. Your own Gemini API key — no server in between.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "minimum_chrome_version": "116",
   "permissions": [
     "tabCapture",
@@ -20,7 +21,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "Interpretab",
+    "default_title": "__MSG_extName__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

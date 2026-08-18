@@ -28,6 +28,11 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { LiveSession } from "../lib/live-session.js";
+// The library's messages come from `chrome.i18n`, which Node does not have, so
+// without this every close reason a script prints is a bare key. Imported here
+// rather than in each script: everything that talks to the live API goes
+// through this file.
+import "./messages.mjs";
 
 /** 32 ms of 16 kHz PCM16 — the frame size the extension's recorder sends. */
 export const CHUNK = 1024;

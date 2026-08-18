@@ -77,7 +77,8 @@
       #lines {
         display: flex; flex-direction: column; align-items: center;
         gap: 0.25em; padding: 0 32px 40px; pointer-events: none;
-        font-family: "Google Sans", "Noto Sans", "Noto Sans JP", sans-serif;
+        font-family: "Google Sans", "Noto Sans", "Noto Sans JP", "Noto Sans SC",
+          "Noto Sans KR", "Noto Sans Devanagari", "Noto Sans Arabic", sans-serif;
         /* Set once here so everything below can size itself in em. */
         font-size: var(--caption-size);
       }
@@ -100,12 +101,12 @@
       /* With both directions subtitled, two lines are on screen at once and
          they are not interchangeable: one is the room, one is you. The accent
          says which without spending a line on a label. */
-      .line.mic { border-left: 0.12em solid rgba(138, 180, 248, 0.9); }
+      .line.mic { border-inline-start: 0.12em solid rgba(138, 180, 248, 0.9); }
       .line.fade-out { animation: line-out 0.8s ease-in forwards; }
       .dot {
         display: inline-block; width: 0.3em; height: 0.3em;
         background: rgba(255, 255, 255, 0.7); border-radius: 50%;
-        margin-left: 0.2em; vertical-align: middle;
+        margin-inline-start: 0.2em; vertical-align: middle;
         animation: blink 0.8s infinite;
       }
       @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0.2 } }
@@ -150,6 +151,10 @@
     div.className = `line ${direction}`;
     const span = document.createElement("span");
     span.className = "text";
+    // A subtitle is in the target language, which the page has no say in and
+    // the extension's own locale has nothing to do with — Arabic, Hebrew, Urdu
+    // and Persian are all on the list. Taken from the text rather than declared.
+    span.dir = "auto";
     div.appendChild(span);
     linesEl.appendChild(div);
     openLines.set(direction, div);

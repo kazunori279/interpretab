@@ -19,6 +19,7 @@ import {
   SIMUL_POPULAR_LANGUAGES,
   simulLanguageCode,
 } from "./lib/languages.js";
+import { localize, setMessage, t } from "./lib/i18n.js";
 
 const AGENT_LANGUAGES = { langs: LANGUAGES, popular: POPULAR_LANGUAGES };
 const SIMUL = { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES };
@@ -75,6 +76,9 @@ let runTabTitle = "";
 init();
 
 async function init() {
+  // First, and before the first `await`: every label on this page is an empty
+  // element until this fills it, so anything that paints before it is blank.
+  localize();
   settings = await loadSettings();
   myTabId = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id ?? null;
   await populateLanguages();
@@ -180,8 +184,8 @@ function fill(select, { langs, popular }, selected) {
   const codes = Object.keys(langs).sort((a, b) => langs[a].localeCompare(langs[b]));
   const top = popular.filter((code) => code in langs);
   if (top.length) {
-    select.appendChild(optgroup("Popular", top, langs));
-    select.appendChild(optgroup("All languages", codes, langs));
+    select.appendChild(optgroup(t("panelLangPopular"), top, langs));
+    select.appendChild(optgroup(t("panelLangAll"), codes, langs));
   } else {
     // A flat select reads better than one group holding everything.
     for (const code of codes) select.appendChild(option(code, langs[code]));
@@ -243,12 +247,19 @@ function bind() {
   ]) {
     el(id).addEventListener("click", () => update({ [key]: !settings[key] }));
   }
-  for (const id of ["openOptions", "keyNoteOptions"]) {
-    el(id).addEventListener("click", (event) => {
-      event.preventDefault();
-      chrome.runtime.openOptionsPage();
-    });
-  }
+  el("openOptions").addEventListener("click", openOptions);
+  // The other way to the Options page is a link inside a sentence, and where in
+  // that sentence it falls is the translator's business — so the link has no id
+  // to bind to. `i18n.js` marks it `data-action` instead, and this catches it
+  // wherever the message put it.
+  document.addEventListener("click", (event) => {
+    if (event.target.closest?.('[data-action="options"]')) openOptions(event);
+  });
+}
+
+function openOptions(event) {
+  event.preventDefault();
+  chrome.runtime.openOptionsPage();
 }
 
 /**
@@ -325,11 +336,8 @@ function render() {
   // The controls here are wired to global settings and would reach into that
   // run, so they come off; the note says where it is, and Stop stays.
   const elsewhere = running && runTabId !== myTabId;
-  el("elsewhereNote").textContent = runTabTitle
-    ? `Interpretab is running on “${runTabTitle}”, and it runs on one tab at a time. ` +
-      `Its controls are on that tab — Stop works from here.`
-    : `Interpretab is running on another tab, and it runs on one tab at a time. ` +
-      `Its controls are on that tab — Stop works from here.`;
+  if (runTabTitle) setMessage(el("elsewhereNote"), "panelRunningOn", [runTabTitle]);
+  else setMessage(el("elsewhereNote"), "panelRunningElsewhere");
   el("elsewhereNote").hidden = !elsewhere;
   for (const id of RUN_CONTROLS) el(id).disabled = elsewhere;
 
@@ -341,25 +349,25 @@ function render() {
     "micMute",
     settings.micMuted,
     settings.micEnabled && !elsewhere,
-    "the microphone",
-    elsewhere ? "The run is on another tab." : "The microphone direction is off."
+    ["panelMuteMic", "panelUnmuteMic"],
+    elsewhere ? "panelMuteOffElsewhere" : "panelMuteOffMic"
   );
   renderMute(
     "soundMute",
     settings.soundMuted,
     (settings.tabEnabled || settings.micEnabled) && !elsewhere,
-    "the translated voice",
-    elsewhere ? "The run is on another tab." : "Neither direction is on."
+    ["panelMuteSound", "panelUnmuteSound"],
+    elsewhere ? "panelMuteOffElsewhere" : "panelMuteOffSound"
   );
 
-  el("toggle").textContent = running ? "Stop" : "Start";
+  el("toggle").textContent = t(running ? "panelStop" : "panelStart");
   el("toggle").classList.toggle("running", running);
   // Stop is the exception to the paragraph above: it is the whole reason the
   // icon opens this panel on a tab that was never translating.
   el("toggle").disabled = elsewhere
     ? false
     : (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
-  if (!running) setStatus("disconnected", "Idle");
+  if (!running) setStatus("disconnected", t("statusIdle"));
 }
 
 /**
@@ -404,37 +412,30 @@ function renderUsage() {
     return;
   }
   const { inSeconds = 0, outSeconds = 0, elapsedSeconds = 0 } = usage.total;
-  // Wall clock since Start, and the only figure on this line that is not a
-  // guess about anything. Shown to both tiers, because "how long have I had
-  // this running" is the question either of them is asking.
-  el("usageTime").textContent = formatDuration(elapsedSeconds);
-
   const paid = settings.apiTier === "paid";
-  el("usagePaid").hidden = !paid;
-  el("usageFree").hidden = paid;
-  if (paid) {
-    const cost = formatCost(usage.total.cost);
-    // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
-    el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
-  } else {
-    // Both directions of it. The free tier's limits are spent on audio moved,
-    // not on money, and this is the half of the tooltip that was doing the work.
-    el("usageAudio").textContent = formatDuration(inSeconds + outSeconds);
-  }
+  // The wall clock since Start is the first figure either way — it is the only
+  // one on this line that is not a guess about anything, and "how long have I
+  // had this running" is the question both tiers are asking. What follows it is
+  // the money or the audio, and the two are separate messages end to end so
+  // that no arrangement of this code can print a price without its disclaimer.
+  const cost = formatCost(usage.total.cost);
+  // "<$0.01" is already an approximation and says so; "~<$0.01" is noise. The
+  // free tail counts audio moved in both directions instead — that is what the
+  // free tier's limits are spent on.
+  const second = paid
+    ? cost.startsWith("<")
+      ? cost
+      : `~${cost}`
+    : formatDuration(inSeconds + outSeconds);
+  const message = paid ? "panelUsagePaid" : "panelUsageFree";
+  setMessage(el("usageText"), message, [formatDuration(elapsedSeconds), second]);
 
-  const arithmetic =
-    `Started ${formatDuration(elapsedSeconds)} ago. In that time it has sent ` +
-    `${formatDuration(inSeconds)} of audio and been sent ` +
-    `${formatDuration(outSeconds)} back, both charged at 25 tokens a second.`;
-  note.title = paid
-    ? `${arithmetic} Those tokens are priced at Google's published rates for ` +
-      "the model, read from the pricing page in August 2026 rather than from " +
-      "your account, and rates change. Your Google account is the only place " +
-      "your real bill exists."
-    : `${arithmetic} Your key is set to the free tier on the Options page, ` +
-      "where Google charges nothing for any of it — so there is no cost to " +
-      "show. Set the plan to Paid there if the project has a billing account " +
-      "linked, and this line estimates what the run has cost.";
+  const arithmetic = t("panelUsageTip", [
+    formatDuration(elapsedSeconds),
+    formatDuration(inSeconds),
+    formatDuration(outSeconds),
+  ]);
+  note.title = `${arithmetic} ${t(paid ? "panelUsageTipPaid" : "panelUsageTipFree")}`;
   note.hidden = false;
   // The live figure covers what the static warning was there to say.
   el("costNote").hidden = true;
@@ -467,13 +468,17 @@ function renderDirection(checkboxId, on) {
  * carries the state for anything reading the panel out. A greyed button says why
  * it is greyed instead: both of the reasons are settings on another surface, and
  * a control disabled by something the user cannot see reads as a broken one.
+ *
+ * *labels* is `[mute, unmute]` as two whole messages rather than a verb and a
+ * noun spliced together: "Mute the microphone" is a sentence, and a language
+ * that puts its object first cannot be built out of the English halves.
  */
-function renderMute(id, muted, applies, what, why) {
+function renderMute(id, muted, applies, [mute, unmute], why) {
   const button = el(id);
   button.classList.toggle("off", muted);
   button.setAttribute("aria-pressed", String(muted));
   button.disabled = !applies;
-  button.title = !applies ? why : muted ? `Unmute ${what}` : `Mute ${what}`;
+  button.title = t(!applies ? why : muted ? unmute : mute);
 }
 
 async function onToggle() {
@@ -621,22 +626,19 @@ function onCaptionStatus({ status, detail }) {
     note.hidden = true;
     return;
   }
-  const lead =
-    status === "unavailable"
-      ? "Subtitles can't be shown on this page."
-      : "Subtitles stopped reaching this page.";
+  const lead = t(status === "unavailable" ? "panelCaptionsUnavailable" : "panelCaptionsStopped");
   note.textContent = detail ? `${lead} ${detail}` : lead;
   note.hidden = false;
 }
 
 function onStatus({ status, detail }) {
-  if (status === "connected") setStatus("", "Connected");
-  else if (status === "connecting") setStatus("connecting", "Connecting…");
-  else if (status === "error") setStatus("disconnected", detail || "Error");
-  else if (status === "disconnected") setStatus("disconnected", "Reconnecting…");
+  if (status === "connected") setStatus("", t("statusConnected"));
+  else if (status === "connecting") setStatus("connecting", t("statusConnecting"));
+  else if (status === "error") setStatus("disconnected", detail || t("statusError"));
+  else if (status === "disconnected") setStatus("disconnected", t("statusReconnecting"));
   // The detail of a `failed` is a paragraph and goes to the banner, not into
   // the one line of the header. This says only that the retrying has stopped.
-  else if (status === "failed") setStatus("disconnected", "Stopped");
+  else if (status === "failed") setStatus("disconnected", t("statusStopped"));
 }
 
 function setStatus(cls, text) {
@@ -662,9 +664,17 @@ function appendLine({ direction, side, text }) {
   line.className = `line ${side}`;
   const tag = document.createElement("span");
   tag.className = "tag";
-  tag.textContent = side === "input" ? `heard (${direction})` : `translation (${direction})`;
+  const which = t(direction === "mic" ? "panelDirMic" : "panelDirTab");
+  tag.textContent = t(side === "input" ? "panelHeard" : "panelTranslated", [which]);
   line.appendChild(tag);
   const body = document.createElement("span");
+  body.className = "body";
+  // The transcript is in the languages being translated, which have nothing to
+  // do with the language the panel is in: Arabic in an English panel, English
+  // in an Arabic one, and both at once in conversation mode. `auto` lets each
+  // bubble take its direction from its own first strong character, while the
+  // tag above it stays in the interface's.
+  body.dir = "auto";
   body.textContent = text;
   line.appendChild(body);
   el("transcript").appendChild(line);

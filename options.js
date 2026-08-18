@@ -13,7 +13,7 @@ import {
   loadSettings,
   saveSettings,
 } from "./lib/settings.js";
-import { DEFAULT_VOICE, VOICES } from "./lib/languages.js";
+import { DEFAULT_VOICE, VOICES, voiceToneKey } from "./lib/languages.js";
 import {
   MAX_GLOSSARY_BYTES,
   ensureGlossary,
@@ -21,6 +21,7 @@ import {
   normalizeEntry,
   parseGlossaryCsv,
 } from "./lib/glossary.js";
+import { localize, t } from "./lib/i18n.js";
 
 const el = (id) => document.getElementById(id);
 let settings = { ...DEFAULTS };
@@ -28,6 +29,9 @@ let settings = { ...DEFAULTS };
 init();
 
 async function init() {
+  // First, and before the first `await`: the page ships with empty elements, so
+  // until this runs there is nothing on it to read.
+  localize();
   settings = await loadSettings();
   el("apiKey").value = settings.apiKey;
   el("apiTier").value = settings.apiTier;
@@ -101,13 +105,13 @@ function renderKeyStatus() {
   const node = el("apiKeyStatus");
   const key = settings.apiKey;
   if (!key) {
-    setStatus(node, "No key yet. Interpretab cannot start without one.");
+    setStatus(node, t("optKeyNone"));
   } else if (/\s/.test(key) || key.includes("://") || key.includes("@")) {
-    setStatus(node, "Saved, but that looks like a stray paste rather than a key.");
+    setStatus(node, t("optKeyStray"));
   } else if (key.length < 20) {
-    setStatus(node, "Saved, but that looks too short — is some of the key missing?");
+    setStatus(node, t("optKeyShort"));
   } else {
-    setStatus(node, "Key saved in this browser.", true);
+    setStatus(node, t("optKeySaved"), true);
   }
 }
 
@@ -115,7 +119,7 @@ function toggleKey() {
   const field = el("apiKey");
   const hidden = field.type === "password";
   field.type = hidden ? "text" : "password";
-  el("toggleKey").textContent = hidden ? "Hide" : "Show";
+  el("toggleKey").textContent = t(hidden ? "optHide" : "optShow");
 }
 
 /**
@@ -131,7 +135,7 @@ async function grantMic() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getTracks().forEach((t) => t.stop());
   } catch (err) {
-    el("micStatus").textContent = `Denied: ${err.name}`;
+    el("micStatus").textContent = t("optMicDenied", [err.name]);
     el("micStatus").className = "note";
     return;
   }
@@ -145,7 +149,9 @@ async function refreshMicStatus() {
   try {
     const status = await navigator.permissions.query({ name: "microphone" });
     const granted = status.state === "granted";
-    el("micStatus").textContent = granted ? "Granted." : `Not granted (${status.state}).`;
+    el("micStatus").textContent = granted
+      ? t("optMicGranted")
+      : t("optMicNotGranted", [status.state]);
     el("micStatus").className = granted ? "note ok" : "note";
     el("grantMic").hidden = granted;
   } catch {
@@ -162,18 +168,21 @@ async function refreshMicStatus() {
  * resolves "the default device" on its own and tells nobody which one it chose,
  * and being wrong about either is silent — a microphone that carries nothing, or
  * a translated voice a meeting cannot hear.
+ *
+ * The six differing sentences are message keys rather than text, so the pair
+ * stays a table of what is different between the two lists.
  */
 const INPUT = {
   kind: "audioinput",
   select: "micInput",
   status: "micInputStatus",
   key: "micInput",
-  systemLabel: "System default — whichever microphone your computer is using",
-  anonymous: "Microphone",
-  none: "No microphones visible.",
-  missing: "That microphone is not connected, so the system default will be used.",
-  saved: "Saved. Applies the next time you press Start.",
-  cleared: "Saved. The system default microphone will be used.",
+  systemLabel: "optInputSystem",
+  anonymous: "optInputAnonymous",
+  none: "optInputNone",
+  missing: "optInputMissing",
+  saved: "optInputSaved",
+  cleared: "optInputCleared",
 };
 
 const OUTPUT = {
@@ -181,12 +190,12 @@ const OUTPUT = {
   select: "micOutput",
   status: "micOutputStatus",
   key: "micOutput",
-  systemLabel: "System default — the speakers you are using",
-  anonymous: "Output",
-  none: "No output devices visible.",
-  missing: "That device is not connected, so the speakers will be used instead.",
-  saved: "Saved. Applies on next Start — and whatever listens to that device has to be told to.",
-  cleared: "Saved. The translated voice will play on the speakers.",
+  systemLabel: "optOutputSystem",
+  anonymous: "optOutputAnonymous",
+  none: "optOutputNone",
+  missing: "optOutputMissing",
+  saved: "optOutputSaved",
+  cleared: "optOutputCleared",
 };
 
 async function loadDevices() {
@@ -195,7 +204,7 @@ async function loadDevices() {
   try {
     devices = await navigator.mediaDevices.enumerateDevices();
   } catch (err) {
-    failure = `Could not list audio devices: ${err.name}.`;
+    failure = t("optDeviceListFailed", [err.name]);
   }
   for (const spec of [INPUT, OUTPUT]) {
     fillDevices(
@@ -219,29 +228,29 @@ function fillDevices(spec, devices, failure) {
   const status = el(spec.status);
 
   select.innerHTML = "";
-  select.appendChild(new Option(spec.systemLabel, ""));
+  select.appendChild(new Option(t(spec.systemLabel), ""));
   for (const device of devices) {
     // "default" is the same thing as the empty option above under a name that
     // invites the user to wonder what the difference is, and "communications" is
     // a second alias for it that Windows adds.
     if (!device.deviceId || device.deviceId === "default") continue;
     if (device.deviceId === "communications") continue;
-    const label = device.label || `${spec.anonymous} ${device.deviceId.slice(0, 8)}…`;
+    const label = device.label || t(spec.anonymous, [device.deviceId.slice(0, 8)]);
     select.appendChild(new Option(label, device.deviceId));
   }
   const saved = settings[spec.key] || "";
   const missing = saved && !devices.some((device) => device.deviceId === saved);
-  if (missing) select.appendChild(new Option("Saved device — not connected right now", saved));
+  if (missing) select.appendChild(new Option(t("optDeviceSavedMissing"), saved));
   select.value = saved;
 
   if (failure) {
     setStatus(status, failure);
   } else if (!devices.length) {
-    setStatus(status, spec.none);
+    setStatus(status, t(spec.none));
   } else if (devices.every((device) => !device.label)) {
-    setStatus(status, "Grant the microphone above to see device names.");
+    setStatus(status, t("optDeviceNamesHidden"));
   } else if (missing) {
-    setStatus(status, spec.missing);
+    setStatus(status, t(spec.missing));
   } else {
     setStatus(status, "");
   }
@@ -250,7 +259,7 @@ function fillDevices(spec, devices, failure) {
 async function saveDevice(spec) {
   settings[spec.key] = el(spec.select).value;
   await saveSettings({ [spec.key]: settings[spec.key] });
-  setStatus(el(spec.status), settings[spec.key] ? spec.saved : spec.cleared, true);
+  setStatus(el(spec.status), t(settings[spec.key] ? spec.saved : spec.cleared), true);
 }
 
 /** The voice list is bundled — it is a whitelist the API enforces, not a menu. */
@@ -261,7 +270,7 @@ function loadVoices() {
   for (const [name, tone] of Object.entries(VOICES)) {
     const opt = document.createElement("option");
     opt.value = name;
-    opt.textContent = `${name} — ${tone}`;
+    opt.textContent = t("optVoiceOption", [name, t(voiceToneKey(tone))]);
     if (name === chosen) opt.selected = true;
     select.appendChild(opt);
   }
@@ -285,28 +294,28 @@ function loadCaptionSize() {
  * stylesheet so what is shown is what lands on the page.
  */
 function renderCaptionSize(px) {
-  el("captionSizeOut").textContent = `${px} px`;
+  el("captionSizeOut").textContent = t("optSizePx", [px]);
   el("captionPreview").querySelector("span").style.fontSize = `${px}px`;
 }
 
 async function uploadGlossary() {
   const file = el("glossaryFile").files[0];
   const status = el("glossaryStatus");
-  if (!file) return setStatus(status, "Pick a .csv file first.");
+  if (!file) return setStatus(status, t("optGlossaryPickFile"));
   if (!file.name.toLowerCase().endsWith(".csv")) {
-    return setStatus(status, "File must have a .csv extension.");
+    return setStatus(status, t("optGlossaryNotCsv"));
   }
   if (file.size > MAX_GLOSSARY_BYTES) {
-    return setStatus(status, `File exceeds ${MAX_GLOSSARY_BYTES} bytes.`);
+    return setStatus(status, t("optGlossaryTooBig", [MAX_GLOSSARY_BYTES]));
   }
   try {
     const pairs = parseGlossaryCsv(await file.text()).map(normalizeEntry).filter(Boolean);
     await chrome.storage.local.set({ glossary: pairs });
     renderGlossary(pairs);
-    setStatus(status, `Replaced with ${pairs.length} entries. Applies on next Start.`, true);
+    setStatus(status, t("optGlossaryReplaced", [pairs.length]), true);
     el("glossaryFile").value = "";
   } catch (err) {
-    setStatus(status, "Load failed: " + err.message);
+    setStatus(status, t("optGlossaryLoadFailed", [err.message]));
   }
 }
 
@@ -314,21 +323,26 @@ async function resetGlossary() {
   const pairs = await loadDefaultGlossary();
   await chrome.storage.local.set({ glossary: pairs });
   renderGlossary(pairs);
-  setStatus(el("glossaryStatus"), `Reset to ${pairs.length} default entries.`, true);
+  setStatus(el("glossaryStatus"), t("optGlossaryWasReset", [pairs.length]), true);
 }
 
 function renderGlossary(pairs) {
   const host = el("glossaryList");
   host.innerHTML = "";
   if (!pairs.length) {
-    host.innerHTML = '<p class="note" style="padding:0.5rem">No glossary entries.</p>';
+    const empty = document.createElement("p");
+    empty.className = "note";
+    empty.style.padding = "0.5rem";
+    empty.textContent = t("optGlossaryEmpty");
+    host.appendChild(empty);
     return;
   }
   const table = document.createElement("table");
   const head = document.createElement("tr");
-  for (const label of ["Source", "Pronunciation", "Transcript"]) {
+  const columns = ["optGlossaryColSource", "optGlossaryColPronunciation", "optGlossaryColTranscript"];
+  for (const key of columns) {
     const th = document.createElement("th");
-    th.textContent = label;
+    th.textContent = t(key);
     head.appendChild(th);
   }
   table.appendChild(head);
