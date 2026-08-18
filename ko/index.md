@@ -1,6 +1,6 @@
 ---
 lang: ko
-title: Interpretab
+title: 사용 안내
 description: 브라우저가 재생하는 소리와 당신이 하는 말을 70개 이상의 언어로 실시간 번역해, 소리로 읽어 주고 페이지에 자막으로 띄우는 Chrome 확장 프로그램입니다.
 ---
 

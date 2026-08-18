@@ -1,6 +1,6 @@
 ---
 lang: de
-title: Interpretab
+title: Anleitung
 description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das, was Sie sagen, in Echtzeit in über 70 Sprachen übersetzt — laut gesprochen und auf der Seite untertitelt.
 ---
 

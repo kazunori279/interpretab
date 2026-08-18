@@ -1,6 +1,6 @@
 ---
 lang: ja
-title: Interpretab
+title: 使い方
 description: ブラウザが再生している音声や、あなたが話した音声を、70 以上の言語にリアルタイムに翻訳、読み上げと字幕表示する Chrome 拡張です。
 ---
 

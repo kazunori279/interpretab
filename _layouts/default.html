@@ -35,7 +35,14 @@
   </head>
   <body>
     <div class="container-lg px-3 my-5 markdown-body">
-      {% if site.title and site.title != page.title %}
+      {%- comment -%}
+        The theme puts the site's name at the top of every page, and asks whether
+        the page is already called that. A guide page is not — its title is "User
+        guide" in its own language, so that a tab and a search result say which of
+        the ten this is — but it opens with the name in a heading of its own, and
+        two of them stacked is one too many.
+      {%- endcomment -%}
+      {% if site.title and page.lang == nil %}
       <h1><a href="{{ "/" | absolute_url }}">{{ site.title }}</a></h1>
       {% endif %}
 

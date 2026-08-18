@@ -1,6 +1,6 @@
 ---
 lang: zh
-title: Interpretab
+title: 使用指南
 description: 一款 Chrome 扩展，把浏览器正在播放的声音和你说出的话实时翻译成 70 多种语言——朗读出来，并在页面上显示字幕。
 ---
 

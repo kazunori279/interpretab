@@ -1,6 +1,6 @@
 ---
 lang: en
-title: Interpretab
+title: User guide
 description: A Chrome extension that translates what your browser plays, and what you say, into 70+ languages in real time — spoken out loud and subtitled on the page.
 ---
 
