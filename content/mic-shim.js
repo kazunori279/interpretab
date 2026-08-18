@@ -32,6 +32,16 @@
  * talk to the extension.
  */
 
+/*
+ * Everything is inside this closure, and it matters more here than it does in a
+ * content script. A file injected into the MAIN world is evaluated in the
+ * page's own global scope, so a top-level `const` joins the page's global
+ * lexical declarations — and the second injection into the same page throws
+ * `Identifier has already been declared` before a line of it runs. Stop, Start
+ * is enough to do it, and the failure looks exactly like a device that never
+ * appeared.
+ */
+(() => {
 /** The synthetic device, as Meet sees it. */
 const INTERPRETAB_DEVICE_ID = "interpretab-translated";
 
@@ -283,3 +293,4 @@ function installMicShim(win) {
 }
 
 if (typeof window !== "undefined") installMicShim(window);
+})();

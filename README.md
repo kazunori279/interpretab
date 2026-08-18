@@ -271,12 +271,12 @@ What the code already decides, and why: a bare `{ audio: true }` — which is wh
 way in — is **not** substituted, so the device has to be chosen in Meet's own picker and there is
 exactly one place to choose; every `getUserMedia` gets its own destination node, because Meet
 re-acquires and stopping one track must not silence the next; frames are scheduled end to end
-120 ms ahead of the clock, with the lead reset on a gap and capped at 600 ms so a fast relay
-cannot accumulate delay; and teardown puts back the very functions the page started with and
+120 ms ahead of the clock, with the lead reset on a gap and no ceiling above it; and teardown
+puts back the very functions the page started with and
 fires `devicechange`, or the picker goes on offering a microphone that will never carry another
 word. `tests/mic-shim.test.js` covers all of that against a fake window.
 
-**Measured so far, in Chrome 151, on a page rather than in a call.** The mechanics hold up:
+**Measured so far, in Chrome 151.** The mechanics hold up:
 `getUserMedia` and `enumerateDevices` live on `MediaDevices.prototype` and are both writable and
 configurable, so assigning to the instance shadows them and the page sees the replacement; a
 `devicechange` we dispatch ourselves is delivered to the page's own listeners; a 24 kHz
@@ -298,10 +298,19 @@ The second is a risk worth knowing before the call: the synthetic track reports
 the id Meet asked for. Anything in Meet that checks that the device it got is the device it chose
 will disagree with itself, and neither field can be forged from here.
 
+**And then, on meet.google.com itself.** Meet lists it. **Settings → 音声 → マイク** shows
+*Interpretab (translated)* alongside the three real inputs, selects it, keeps it selected, and
+asks for it by name: the constraints it passes are
+`{ audio: { deviceId: { exact: "interpretab-translated" }, echoCancellation: true,
+autoGainControl: true, noiseSuppression: true, voiceIsolation: false }, video: false }`, and it
+gets back the synthetic track. So the first two worries above are answered — a `deviceId` that is
+not a 64-hex string is fine, and the `devicechange` we dispatch is enough to rebuild a picker that
+had already been built. The mismatched `label` and `getSettings().deviceId` do not disturb it
+either: switching away to a real microphone and back leaves the menu showing our entry ticked,
+which means Meet trusts the id it asked for rather than the one the track reports.
+
 What still needs a real call:
 
-- Whether Meet's picker accepts a device whose `deviceId` is not the 64-hex string every real one
-  is, and whether it lists it after the `devicechange` that announces it.
 - What the relay costs end to end. Three contexts and a base64 round trip, on top of the Live
   API's own latency — 120 ms is the budget, not a measurement.
 - Whether Meet re-acquires the real microphone by itself at any point, which would be the silent

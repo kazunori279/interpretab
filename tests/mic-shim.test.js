@@ -328,11 +328,19 @@ test("a torn-down shim leaves the page exactly as it found it", async () => {
 });
 
 test("injecting twice replaces the first shim rather than stacking on it", async () => {
-  // Reloading the extension orphans the bridge and re-injects both halves. Two
-  // live shims would mean two entries in the picker and two wrapped
-  // `getUserMedia`s, the outer one calling the inner one forever.
+  // Reloading the extension orphans the bridge and re-injects both halves, and
+  // so does Stop then Start. Two live shims would mean two entries in the
+  // picker and two wrapped `getUserMedia`s, the outer one calling the inner one
+  // forever.
+  //
+  // Both copies are evaluated in one scope, which is the part that matters: the
+  // MAIN world *is* the page's global scope, so a top-level `const` in this
+  // file would make the second injection a redeclaration SyntaxError — thrown
+  // before any of it runs, leaving the first shim in place with a bridge that
+  // has been torn down, and looking from the outside exactly like a device that
+  // never appeared. Two separate `load()` calls would not catch it.
   const win = fakeWindow({ devices: [{ deviceId: "default", kind: "audioinput" }] });
-  load(win);
-  load(win);
+  new Function("window", `${source}\n${source}`)(win);
   assert.equal((await win.navigator.mediaDevices.enumerateDevices()).length, 2);
+  assert.ok(win.__interpretabMicShim, "the second injection left a live shim behind");
 });
