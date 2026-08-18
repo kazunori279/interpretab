@@ -321,6 +321,12 @@ reason has said nothing about what the other end should hear. The tap is above t
 `micMuted` remains the switch that means the call hears nothing, and it stops the audio going up
 rather than coming down.
 
+**With that moved, the other party heard the translation.** Two participants, Meet on both ends,
+the speaker on this end muted, no virtual cable installed anywhere: someone speaks English into
+the microphone and the far end hears it in Japanese. That is the whole of what
+[#9](https://github.com/kazunori279/interpretab/issues/9) asked for, and the questions left below
+are about how well it does it rather than whether it does it.
+
 Worth knowing while the flag has no UI: `micToCall` is read once, at `start()`, and it is not in
 `LIVE_KEYS`. Setting it during a run does nothing at all — not in the offscreen document, which
 keeps the settings it was handed, and not in the service worker, where `ensureCallTab()` is only
