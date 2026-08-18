@@ -84,8 +84,7 @@ Interpretab installs like this:
    folder.
 3. Get a free Gemini API key at
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and paste it into the
-   extension's **Options** page. While you are there, set **Gemini API plan** to match the
-   project the key came from — it decides whether the side panel's meter shows a price.
+   extension's **Options** page.
 4. Open the page you want translated and **click the Interpretab toolbar icon on that tab**. That
    click is how you give permission to listen to the tab — skip it and you get an error.
 5. Pick your language in the side panel and press **Start**.
@@ -188,8 +187,8 @@ and the third is what you want the **subtitles to show**.
 ## More about using the Gemini Live API
 
 The side panel keeps a meter of what the run has used so far, and starts again at zero each time
-you press Start. What it shows depends on **Options → Gemini API plan**, which is the one thing
-Interpretab cannot work out for itself — no Gemini API response says which tier your key is on.
+you press Start. What it shows depends on **Options → Gemini API plan**: pick whether the key you
+are using is on the free tier or on Tier 1.
 
 - **Free** (the default): *12 min so far, 18 min of Gemini audio. The free tier is charged nothing
   for it.* No price, because there is no price. The audio time is the number worth watching: the
@@ -214,7 +213,8 @@ through it all depend on the project's **usage tier**. The qualifications
 Start on the free tier, and link a billing account to reach Tier 1 once you keep using it. On
 Tier 1 nothing you send is used to improve Google's products, and the ceilings are roomy for a tool
 like this one: about 25 Interpretab sessions running at the same time, and around 110 hours a
-month.
+month. Google documents [how to set the billing
+up](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
 The free tier's limits are not published — you
 [view them in AI Studio](https://aistudio.google.com/apikey) — and a tool that holds a connection
