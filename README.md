@@ -588,9 +588,21 @@ extension was dropping every one of them, so the first version read them instead
 — the documented reading, and the one every SDK that surfaces `usageMetadata` in a live session
 takes. In use the meter climbed a cent every few seconds in Simultaneous mode, three to five times
 what Google's own per-minute prices allow ([#16](https://github.com/kazunori279/interpretab/issues/16)).
-Something about the frames is not what that reading assumes — either turn-cumulative counts ride
-on every chunk of a turn, or each turn re-reports the context it retained — and nothing in a frame
-says which, so any rule for folding them together is a guess about somebody else's money.
+
+A real session says what the frames are, and the answer settles the design rather than the bug.
+`tests/live-smoke.mjs` against 18 s of Japanese speech:
+
+| Model | Frames | Summed | Audio clock |
+|---|---|---|---|
+| `gemini-3.5-live-translate-preview` — tab, Simultaneous | 25, rising and falling | 1550 | 1632 |
+| `gemini-3.1-flash-live-preview` — microphone, conversation | **none at all** | — | 1275 |
+
+So the frames really are per-turn increments, and summed they come out five percent *low* rather
+than several times high — one candidate ruled out, not the report explained; a 35-second run
+cannot see a drift that takes an hour to show. The second row is what decides it. The conversation
+model sends no `usageMetadata` whatsoever, so a meter built on the field would print nothing for
+half the runs this extension makes, and a figure that works in one mode and blanks in the other is
+worse than not using the field.
 
 There is nothing to guess at. Google states the basis in as many words — *billing is based on
 total input and output audio token consumption, calculated at a rate of 25 tokens per second of
@@ -617,10 +629,10 @@ instead:
   text understates a conversation-mode run by a few percent — the direction to be wrong in is not
   the one that invents a charge.
 - **`usageMetadata` is swallowed, not read.** It still arrives and `SessionLoop` still forwards
-  it, because `tests/live-smoke.mjs` is where those frames still get looked at — it prints the
-  summed, largest and last frame next to the audio clock, which is what #16 needs to be *closed*
-  rather than merely worked around. Nothing carries them into the panel: a number nobody can see
-  is not worth threading through three layers.
+  it, because `tests/live-smoke.mjs` is where those frames get looked at — it prints the summed,
+  largest and last frame next to the audio clock, which is how the table above was measured.
+  Nothing carries them into the panel: a number nobody can see is not worth threading through
+  three layers.
 
 The unit test that would have caught this in the first place is now in `tests/usage.test.js`: a
 cent takes sixteen seconds of continuous audio in both directions, and the arithmetic is asserted
