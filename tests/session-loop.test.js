@@ -24,10 +24,11 @@ class FakeSession {
   static opened = [];
   static failNext = 0;
 
-  constructor({ setup, onEvent, onStatus }) {
+  constructor({ setup, onEvent, onStatus, closeHint }) {
     this.setup = setup;
     this.onEvent = onEvent;
     this.onStatus = onStatus;
+    this.closeHint = closeHint;
     this.sent = [];
     this.closed = false;
     FakeSession.opened.push(this);
@@ -68,6 +69,7 @@ function harness() {
   const loop = new SessionLoop({
     apiKey: "k",
     setup: { setup: {} },
+    closeHint: "the preflight said so",
     SessionClass: FakeSession,
     now: () => clock,
     onEvent: (ev) => events.push(ev),
@@ -90,6 +92,21 @@ const settle = () => new Promise((r) => setImmediate(r));
 
 /** Frames of PCM, distinguishable by their first byte. */
 const frame = (n) => new Int16Array([n, n]).buffer;
+
+test("every session the loop opens carries the preflight's verdict", async () => {
+  // Including the replacements. A loop that runs for an hour opens six of them,
+  // and the sixth failing is exactly when a user wants to be told that the key
+  // was fine when the run started.
+  const h = harness();
+  h.loop.start();
+  await settle();
+  h.sessions[0].onEvent({ type: "goAway", timeLeft: 30000 });
+  await settle();
+
+  assert.equal(h.sessions.length, 2);
+  for (const s of h.sessions) assert.equal(s.closeHint, "the preflight said so");
+  h.loop.close();
+});
 
 test("audio goes to the session that is current", async () => {
   const h = harness();

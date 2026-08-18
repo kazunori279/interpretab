@@ -13,6 +13,7 @@
 
 import { loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
+import { preflight } from "./lib/preflight.js";
 
 const OFFSCREEN_URL = "offscreen.html";
 const PANEL_URL = "sidepanel.html";
@@ -262,6 +263,22 @@ async function start(panelTabId = null) {
   // message rather than a tab-capture prompt followed by silence.
   const apiKey = requireApiKey(settings);
 
+  // And asked about, for the same reason and one more. This is the only request
+  // in the run that can carry `x-goog-api-client`, because a WebSocket
+  // handshake takes no headers; and it is the only one that gets told *why* a
+  // key does not work, because a refused upgrade closes with a bare 1006. Here
+  // rather than in the offscreen document so it lands ahead of the capture, and
+  // so a stream id is not left going stale across the round trip. A verdict
+  // short of fatal is not a verdict — see `lib/preflight.js`.
+  const checked = await preflight(apiKey, { version: chrome.runtime.getManifest().version });
+  if (checked.fatal) throw new Error(checked.detail);
+  // A key that just checked out clean makes the 1006 message's "usually the API
+  // key" wrong, and the sessions are where that message is written.
+  const closeHint = checked.ok
+    ? "The key itself was accepted by the API a moment ago, so this is the Live API " +
+      "or the network rather than the key."
+    : "";
+
   // The tab the run belongs to. The captured one where there is one; otherwise
   // the tab whose panel pressed Start, which for a microphone-only run is where
   // the subtitles and the title mark go — the same tab, and the same `activeTab`
@@ -295,6 +312,7 @@ async function start(panelTabId = null) {
     streamId,
     settings,
     glossary,
+    closeHint,
   });
   if (!started.ok) throw new Error(started.error);
 

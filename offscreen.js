@@ -125,6 +125,10 @@ const state = {
   // Set once a session loop has given up and the run is being taken down, so
   // the other direction failing behind it stays quiet — see `failRun`.
   failed: false,
+  // What the service worker's preflight learned about the key, phrased for a
+  // socket that then closes on 1006 with no reason of its own. Empty unless the
+  // preflight had an opinion — see `lib/preflight.js`.
+  closeHint: "",
   active: false,
 };
 
@@ -200,7 +204,7 @@ function dropQueuedVoice() {
   }
 }
 
-async function start({ apiKey, streamId, settings, glossary }) {
+async function start({ apiKey, streamId, settings, glossary, closeHint }) {
   await ensureContexts();
   await stop();
   state.settings = settings;
@@ -211,6 +215,12 @@ async function start({ apiKey, streamId, settings, glossary }) {
   // whole run, including the part the user spent waiting for it.
   state.startedAt = performance.now();
   state.failed = false;
+
+  // What the service worker's preflight learned about this key, if anything —
+  // it runs there rather than here because it has to happen before the tab is
+  // captured, and by the time a `start` reaches this document it already has
+  // been. Empty unless the API had an opinion.
+  state.closeHint = closeHint || "";
 
   // Half a run is worse than none. The microphone is the half that fails —
   // a refused permission is the common one — and it fails *after* the tab
@@ -472,6 +482,7 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
+    closeHint: state.closeHint,
     onStatus: (status, detail) => {
       post({ type: "status", direction: name, status, detail });
       // The loop has stopped trying and will not restart itself. Both
@@ -753,6 +764,8 @@ async function stop() {
   state.playoutEndsAt = { tab: 0, mic: 0 };
   state.ducked = false;
   state.apiKey = null;
+  // The verdict was about the key this run held, at the moment it was asked.
+  state.closeHint = "";
   // `start` calls this first to clear any previous run. Announcing a stop that
   // never followed a start would flip the side panel's button to Start for the
   // instant between the two.

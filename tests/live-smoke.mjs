@@ -41,11 +41,13 @@
 
 import { buildSetup, isSimul, modelFor } from "../lib/live-session.js";
 import { SessionLoop } from "../lib/session-loop.js";
+import { preflight } from "../lib/preflight.js";
 import { DEFAULTS } from "../lib/settings.js";
 import { AUDIO_TOKENS_PER_SECOND, costOf, formatCost, formatDuration } from "../lib/usage.js";
 import {
   argOf,
   hasFlag,
+  MANIFEST,
   readKey,
   readWav,
   sleep,
@@ -111,6 +113,18 @@ const GLOSSARY = [{ source: "リアルタイム翻訳", target: "Interpretab liv
 
 const settings = { ...DEFAULTS, micMode, tabTarget: "en", micSource: "ja", micTarget: "en" };
 const useGlossary = !isSimul(direction, settings);
+
+// The same call the extension makes at Start, run here for the same two
+// reasons: it is the only place `x-goog-api-client` can be sent, and it is the
+// only place a bad key gets a sentence instead of a 1006. A run that stops here
+// has not spent anything on a session that was never going to open.
+const checked = await preflight(apiKey, { version: MANIFEST.version });
+log(
+  checked.ok
+    ? `preflight: key accepted, identified as interpretab/${MANIFEST.version}`
+    : `preflight: ${checked.detail || "no verdict — going ahead anyway"}`
+);
+if (checked.fatal) process.exit(1);
 
 const { SessionClass, counts } = trackedSessionClass(log, raw);
 

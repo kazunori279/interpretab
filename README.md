@@ -451,6 +451,52 @@ of those would spend more bytes on the envelope than on the audio, so `live-sess
 coalesces to 32 ms frames. That costs at most 32 ms of latency, far below anything audible next
 to the model's own response time.
 
+### One HTTP request in front of the sockets
+
+`GET /v1beta/models` goes out at Start from the service worker, next to the key check that was
+already there and for the same reason — ahead of the tab capture, so a run that cannot work costs
+a message rather than a capture prompt followed by silence. It is there for two things a WebSocket
+cannot do.
+
+**It identifies the client.** Google's [partner integration
+guide](https://ai.google.dev/gemini-api/docs/partner-integration) asks anything that sits between
+it and an end user to send `x-goog-api-client: company-product/version`, so traffic can be
+segmented and a client producing a distinctive error pattern can be found. `new WebSocket(url)`
+takes a URL and a subprotocol list and nothing else, and `BidiGenerateContentSetup` has no field
+for a client identifier, so the header has nowhere else to go. Without it the only thing reaching
+Google that says "Interpretab" is the `Origin: chrome-extension://<id>` on the handshake — every
+session runs on the user's own key, so none of the usage rolls up to this extension anywhere.
+
+**It gets an answer that means something.** A refused WebSocket upgrade closes with 1006 and no
+reason, deliberately: telling a page why would make it a cross-origin oracle. A rejected key, an
+exhausted quota and a captive portal are indistinguishable at that point, which is why
+`closeReason` had to name all three (#13). The REST call is the same key, the same host and the
+same API over a protocol that answers in status codes. Two shapes, both observed against the live
+API rather than inferred:
+
+| Key | Status | `error.status` | `reason` |
+|---|---|---|---|
+| A bad `AIza…` one | 400 | `INVALID_ARGUMENT` | `API_KEY_INVALID` |
+| A bad `AQ.…` one | 401 | `UNAUTHENTICATED` | `ACCESS_TOKEN_TYPE_UNSUPPORTED` |
+
+The second is Google failing to recognise the newer key format as a key at all and answering as
+though it had been handed an OAuth token. Neither `reason` is worth matching on its own; the gRPC
+status is.
+
+What the preflight deliberately does not do is decide a run on a maybe. A 500, a body that will
+not parse, a timeout, a network that is not there — none of those are about the key, so the run
+goes ahead and tries the socket. The asymmetry is the whole design: refusing a session that would
+have worked is worse than opening one that fails a second later with the message it would have
+shown anyway.
+
+The verdict outlives the call. When the key checks out clean, a `closeHint` rides the `start`
+message into the offscreen document and from there into every `LiveSession` the run opens, so a
+later 1006 stops saying "usually the API key" — because it demonstrably is not. That is the half
+of #13 no amount of rewording the guess could have fixed.
+
+`tests/live-smoke.mjs` runs the same preflight before its session, which is where the two error
+shapes above came from.
+
 ### Session expiry
 
 Live sessions do not last indefinitely. Measured, rather than assumed: a continuous tab

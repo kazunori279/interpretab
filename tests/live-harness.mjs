@@ -35,6 +35,14 @@ export const CHUNK = 1024;
 /** Model behind the sentence generation and the scoring. Not the one under test. */
 export const JUDGE_MODEL = "gemini-2.5-flash-lite";
 
+/**
+ * The extension's own manifest, so a harness reports the version the extension
+ * would have reported rather than a second copy of the string.
+ */
+export const MANIFEST = JSON.parse(
+  fs.readFileSync(path.join(import.meta.dirname, "..", "manifest.json"), "utf8")
+);
+
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** Seconds since *t0*, for log lines that need to be read against each other. */

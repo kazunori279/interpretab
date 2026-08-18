@@ -79,9 +79,10 @@ microphone on together runs two sessions, so the price is the sum of the two row
 
 Interpretab installs like this:
 
-1. Download or clone [the repository](https://github.com/kazunori279/interpretab).
-2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, pick that
-   folder.
+1. On [the Interpretab repository](https://github.com/kazunori279/interpretab), click the `Code`
+   button, choose `Download ZIP`, and unzip it.
+2. In Chrome, open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and
+   pick the unzipped folder.
 3. Get a free Gemini API key at
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and paste it into the
    extension's **Options** page.

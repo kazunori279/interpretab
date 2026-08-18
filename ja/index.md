@@ -66,9 +66,9 @@ Interpretab はオープンソースのツールです。翻訳機能を提供�
 
 Interpretab は以下の手順でインストールできます。
 
-1. [リポジトリ](https://github.com/kazunori279/interpretab)をダウンロード、または clone する。
-2. `chrome://extensions` を開き、**デベロッパーモード**を ON にして、**パッケージ化されていない拡張機能を
-   読み込む**からそのフォルダを選ぶ。
+1. [Interpretab のリポジトリ](https://github.com/kazunori279/interpretab)をから`Code`ボタンをクリック、`Download ZIP`を選択して ZIP　ファイルをダウンロードして展開する。
+2. Chrome ブラウザで`chrome://extensions` を開き、**デベロッパーモード**を ON にして、**パッケージ化されていない拡張機能を
+   読み込む**から展開したフォルダを選ぶ。
 3. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) で無料の Gemini API キーを取得し、
    拡張機能の**オプション**ページに貼り付ける。
 4. 翻訳したいページを開き、**そのタブで Interpretab のツールバーアイコンをクリックする**。この

@@ -88,6 +88,20 @@ test("a close before setupComplete rejects with the key as the likely cause", as
   await assert.rejects(opening, /API key/);
 });
 
+test("what the preflight learned replaces the guess a 1006 would otherwise get", async () => {
+  // The browser will not say why an upgrade was refused, so the default message
+  // has to list every cause. `preflight` asked the REST API about the same key
+  // over a protocol that answers, and if the key came back fine then "usually
+  // the API key" is the one thing this cannot be — which is the half of #13
+  // that no amount of rewording the guess would have fixed.
+  const h = session({ closeHint: "The key itself was accepted a moment ago." });
+  const opening = h.live.open();
+  h.ws().accept();
+  h.ws().drop(1006);
+  await assert.rejects(opening, /accepted a moment ago/);
+  await assert.rejects(opening, (err) => !/API key/.test(err.message));
+});
+
 test("close during the handshake rejects rather than stranding the caller", async () => {
   const h = session();
   const opening = h.live.open();

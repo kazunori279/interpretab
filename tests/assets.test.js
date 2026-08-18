@@ -467,6 +467,27 @@ test("the free tier is never shown a price", () => {
   assert.doesNotMatch(panel.slice(from, panel.indexOf("</span", from)), /\$|cost|bill/i);
 });
 
+test("the key is asked about before the tab is captured, and the answer is kept", () => {
+  // Order is the whole point of running the preflight in the service worker
+  // rather than in the offscreen document. It has to land ahead of
+  // `getMediaStreamId`, so a key the API has already rejected costs a message
+  // instead of a capture prompt, and so a stream id is not left going stale
+  // across an HTTP round trip.
+  const sw = body(read("service-worker.js"), "start");
+  const asked = sw.indexOf("await preflight(");
+  const captured = sw.indexOf("getMediaStreamId");
+  assert.ok(asked > 0, "nothing asks the API about the key");
+  assert.ok(captured > 0, "the tab is no longer captured here");
+  assert.ok(asked < captured, "the tab is captured before the key is checked");
+  assert.match(sw, /if \(checked\.fatal\) throw/);
+
+  // And the clean verdict has to reach the sessions, which is where the 1006
+  // message that it corrects is written. Three hops, none of them optional.
+  assert.match(sw, /closeHint,/, "the verdict never leaves the service worker");
+  assert.match(read("offscreen.js"), /closeHint: state\.closeHint/);
+  assert.match(read("lib/session-loop.js"), /closeHint: this\._closeHint/);
+});
+
 test("a key is judged by whether it could be one, not by this year's format", () => {
   // The Options page used to require `^AIza[\w-]{30,}$`, which held for every
   // key Google issued for years and does not hold for the `AQ.Ab8RN6…` ones it
