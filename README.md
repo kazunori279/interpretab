@@ -237,13 +237,92 @@ capture and no page to inject into, and `getDisplayMedia` captures system audio 
 and ChromeOS. The virtual-device recipe above is the only thing that reaches them, and it reaches
 them completely.
 
+### A microphone the page can pick — prototype, off by default
+
+The sentence above is true of the *system*: no extension can register an audio input, and nothing
+in Manifest V3 is going to change that. It is not quite true of a single web page. A page asks
+`navigator.mediaDevices` what microphones exist and then asks it for one, and both of those are
+functions living in that page's own JavaScript world — so a script injected into that world can
+add a device to the answer and hand back a stream of its own when the page picks it. That is
+[#9](https://github.com/kazunori279/interpretab/issues/9), and this is the plumbing for it, behind
+a flag and with no UI, because the issue asks for a measurement on a real call before anything is
+designed around it. From the extension's own console:
+
+```js
+chrome.storage.local.set({ micToCall: true })
+```
+
+Then start a run with **Microphone** on, from a `https://meet.google.com/` tab, and pick
+**Interpretab (translated)** in Meet's microphone list. Nothing to install, and your own voice is
+mixed in underneath at `micToCallOwnVoice` (0.15, the same level the passthrough ducks to) so the
+room hears you as well as the interpreter.
+
+Three files, and each does the half the other cannot. `content/mic-shim.js` goes into the page's
+world with `world: "MAIN"` — a content script's `navigator.mediaDevices` is a *different object*
+from the page's, so wrapping ours would fool nobody — where it has no `chrome.runtime` and cannot
+hear from the extension. `content/mic-bridge.js` goes into the isolated world, where it can, and
+the two meet on `window.postMessage`. The audio itself is the same Int16 PCM the player gets,
+base64'd in `offscreen.js` because extension messages are JSON and an `ArrayBuffer` serialises to
+`{}` without complaining, relayed by the service worker because an offscreen document has no
+`chrome.tabs`. Both scripts go in under `activeTab`, so this adds no host permission and can only
+ever reach the tab the run was started on.
+
+What the code already decides, and why: a bare `{ audio: true }` — which is what Meet asks on the
+way in — is **not** substituted, so the device has to be chosen in Meet's own picker and there is
+exactly one place to choose; every `getUserMedia` gets its own destination node, because Meet
+re-acquires and stopping one track must not silence the next; frames are scheduled end to end
+120 ms ahead of the clock, with the lead reset on a gap and capped at 600 ms so a fast relay
+cannot accumulate delay; and teardown puts back the very functions the page started with and
+fires `devicechange`, or the picker goes on offering a microphone that will never carry another
+word. `tests/mic-shim.test.js` covers all of that against a fake window.
+
+**Measured so far, in Chrome 151, on a page rather than in a call.** The mechanics hold up:
+`getUserMedia` and `enumerateDevices` live on `MediaDevices.prototype` and are both writable and
+configurable, so assigning to the instance shadows them and the page sees the replacement; a
+`devicechange` we dispatch ourselves is delivered to the page's own listeners; a 24 kHz
+`AudioBuffer` plays correctly on the 44.1 kHz context Chrome gives you; and the resulting
+`MediaStreamTrack` is `live` and unmuted, which is the object Meet would put on the wire.
+
+Two things that measurement changed. The first is a bug this file shipped for about an hour: the
+lead on the playhead used to be capped at 600 ms, on the reasonable-sounding grounds that a
+playhead running ever further ahead of the clock is latency nobody asked for. The Live API does
+not deliver a sentence in real time — it delivers it as fast as the socket allows — so the cap
+fired constantly, and rewinding the playhead does not shed latency, it schedules the rest of the
+sentence on top of the part already queued. Two seconds of test tone came out as 600 ms of
+clipping and then silence, at four times the amplitude it went in at. Without the cap the same
+two seconds come out once, at the level they went in. There is no ceiling now, and the comment in
+`content/mic-shim.js` explains why there must not be one.
+
+The second is a risk worth knowing before the call: the synthetic track reports
+`label: "MediaStreamAudioDestinationNode"` and `getSettings().deviceId: "WebAudio-<uuid>"` — not
+the id Meet asked for. Anything in Meet that checks that the device it got is the device it chose
+will disagree with itself, and neither field can be forged from here.
+
+What still needs a real call:
+
+- Whether Meet's picker accepts a device whose `deviceId` is not the 64-hex string every real one
+  is, and whether it lists it after the `devicechange` that announces it.
+- What the relay costs end to end. Three contexts and a base64 round trip, on top of the Live
+  API's own latency — 120 ms is the budget, not a measurement.
+- Whether Meet re-acquires the real microphone by itself at any point, which would be the silent
+  failure that matters: the call sounds fine to everyone except the person nobody can understand.
+- What the mix should be. 0.15 borrows a number from the ducking and assumes the same judgement
+  applies to a room full of people rather than to one listener.
+- Whether echo cancellation copes. It covers the microphone against the speakers and never sees
+  the synthetic track, so the honest expectation is that it does not.
+
+The prototype's only instrumentation is `console.info` from the service worker, which is the
+correct amount for something with no UI and this many open questions.
+
 ## Limitations
 
 - **The microphone direction's translated speech reaches a call only through a virtual audio
   device.** No extension can register a microphone, so the last hop is the user's: install
   [BlackHole](https://existential.audio/blackhole/) or
   [VB-Cable](https://vb-audio.com/Cable/), point **Options → Audio output** at it, and select it
-  as the microphone in the meeting. See [Meetings](#meetings).
+  as the microphone in the meeting. See [Meetings](#meetings), which also covers the flagged
+  prototype that skips the cable on Meet by offering the page a microphone of our own
+  ([#9](https://github.com/kazunori279/interpretab/issues/9)).
 - **Running the microphone on speakers invites an echo loop.** Echo cancellation is what handles
   it in Simultaneous mode, because the duplex gate deliberately does not run there — nor on the
   tab direction's voice. Headphones are the real answer. Two-way conversation mode is the awkward
@@ -780,7 +859,23 @@ The user guide is the same ten languages, and it is a different problem: not one
 localises itself but ten pages that a reader has to be *routed* to. GitHub Pages serves static
 files and never sees `Accept-Language`, so nothing on the way out can make that decision.
 
-`_data/languages.yml` is the list — code, name, path, and `dir` for the one that needs it. The
+The whole site is under `docs/`, and Pages is set to build from there. It began at the repository
+root, which cost nothing until someone tried to reload the unpacked extension: **Chrome reserves
+every top-level name beginning with `_`** — `_locales` and `_metadata` are the two exceptions —
+and refuses to load an extension from a directory containing one, with `Could not load manifest.`
+`_config.yml`, `_data`, `_includes` and `_layouts` are all names Jekyll insists on, so the two
+cannot share a root. Nothing published moved: with the source at `/docs`, `docs/ja/index.md` is
+still `/interpretab/ja/`. What did move is the exclude list in `npm run package`, which was eleven
+globs for the same reason and is now one.
+
+`PRIVACY.md` is the one file in both places, and the duplication is deliberate. The store
+listing's privacy policy URL is `https://kazunori279.github.io/interpretab/PRIVACY.html`, which
+requires the file inside the Jekyll source; the copy a user can read in the extension they
+installed requires it at the root of the ZIP; and after the above those cannot be the same
+directory. A policy that says two different things depending on where it is read would be worse
+than either, so `tests/assets.test.js` asserts the two copies are byte-identical.
+
+`docs/_data/languages.yml` is the list — code, name, path, and `dir` for the one that needs it. The
 language bar, the `hreflang` alternates and the redirect are all built from it, so an eleventh
 language is an entry there plus a directory with an `index.md` in it. The page directories are
 named for the picker's codes and not Chrome's, which is the same `zh`/`zh_CN` split as above,
@@ -788,16 +883,16 @@ pointing the other way: nobody types `pt_BR` into an address bar. `tests/assets.
 the list, the directories on disk and the front matter that names each page's language are checked
 against each other.
 
-`_layouts/default.html` is jekyll-theme-primer's own layout with two things added, because before
+`docs/_layouts/default.html` is jekyll-theme-primer's own layout with two things added, because before
 this repository had a layout at all that theme was what Pages rendered it with. `<html dir>`, since
 the direction of a document belongs on its root element where the bidi algorithm and every logical
 CSS property can see it — the Arabic page used to set `direction` on `body` from inside its own
 markdown, which worked and was in the wrong place. And the language bar, which was a line of
 markdown repeated ten times with a different entry bold in each.
 
-`_includes/head-custom.html` is the hook the theme leaves in `<head>`, and it holds the
+`docs/_includes/head-custom.html` is the hook the theme leaves in `<head>`, and it holds the
 `hreflang` alternates — which have to be in the head, since the same markup in the body is ignored
-— and the routing script. The script is `_includes/lang-redirect.js`, plain JavaScript with its
+— and the routing script. The script is `docs/_includes/lang-redirect.js`, plain JavaScript with its
 window passed in so that `tests/site.test.js` can hand it a fake one.
 
 What it does is two things. Every page records an explicit choice: the bar tags its links with
@@ -1067,12 +1162,19 @@ npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
 Verified 2026-08-17: 26 files, 184 KB unpacked and 79 KB zipped, `manifest.json` at the root,
-nothing from `.git`, `tests/`, `store/` or `package.json`. This file is excluded too — 37 KB of
-developer documentation that no user or reviewer opens, and it was a quarter of the package.
-`LICENSE` and `PRIVACY.md` do ship: two files, a few KB, and both are documents a user is
+nothing from `.git`, `tests/`, `store/`, `docs/` or `package.json`. This file is excluded too —
+37 KB of developer documentation that no user or reviewer opens, and it was a quarter of the
+package. `LICENSE` and `PRIVACY.md` do ship: two files, a few KB, and both are documents a user is
 entitled to. `tests/assets.test.js` works the list out from the script's own `-x` globs and
 asserts both halves of it, so a new top-level file is either deliberately in the ZIP or
 deliberately out of it.
+
+The sentence above is the invariant, and it is worth stating as one because it was briefly untrue.
+For a day the user guide sat at the repository root, excluded from the ZIP by eleven globs, and
+the packaged extension was correct while the *unpacked* one would not load at all — Chrome
+reserves top-level names beginning with `_`, and Jekyll needs four of them. Nothing in the ZIP
+noticed, and neither did the tests, because everything they check about the package was still
+true. The guide now lives in `docs/`; see [Ten languages, one guide](#ten-languages-one-guide).
 
 ## The store submission
 

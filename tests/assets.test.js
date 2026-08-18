@@ -21,11 +21,23 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
 
 /**
+ * The user guide, which is a Jekyll site and lives apart from the extension.
+ *
+ * Not because the ZIP wanted it — an exclude list handled that — but because
+ * Chrome reserves every top-level name beginning with `_` except `_locales`,
+ * and refuses to load an unpacked extension from a directory containing one.
+ * `_config.yml`, `_data`, `_includes` and `_layouts` are all names Jekyll
+ * insists on, so the two cannot share a root. GitHub Pages is set to build from
+ * `/docs`, which keeps every published URL exactly as it was.
+ */
+const SITE = path.join(ROOT, "docs");
+
+/**
  * The translated guide pages, and the catalogue each one is the guide to.
  *
  * A page is named for the language picker's code, because that is what a reader
  * types; a `_locales` directory is named for what Chrome will match, which is
- * region-qualified for two of them. `index.md` at the root is English and has no
+ * region-qualified for two of them. `docs/index.md` is English and has no
  * directory of its own.
  */
 const GUIDES = {
@@ -40,11 +52,11 @@ const GUIDES = {
   ar: "ar",
 };
 
-/** Directories at the root holding a guide page, whether or not GUIDES knows. */
+/** Directories in the site holding a guide page, whether or not GUIDES knows. */
 function guideDirs() {
   return fs
-    .readdirSync(ROOT, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && fs.existsSync(path.join(ROOT, e.name, "index.md")))
+    .readdirSync(SITE, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && fs.existsSync(path.join(SITE, e.name, "index.md")))
     .map((e) => e.name);
 }
 
@@ -73,15 +85,15 @@ const FORBIDDEN_PERMISSIONS = ["audioCapture", "videoCapture"];
 const PATH_RE = /["'](?!\w+:|\/\/|#)([\w./-]+\.(?:js|css|html|png|csv))["']/g;
 
 /** Directories the extension is not made of. */
-const SKIP = new Set([".git", "node_modules", "tests", "_layouts", "_includes"]);
+const SKIP = new Set([".git", "node_modules", "tests", "docs"]);
 
 /** Source files that can name an asset, walked from the repo root. */
 function sources(dir = ROOT) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    // `_layouts` and `_includes` are HTML by extension and Jekyll templates by
-    // nature: they are the user guide's markup, they never enter the ZIP, and
-    // their paths and script tags are the theme's rather than the extension's.
+    // `docs/` is HTML and JavaScript by extension and a Jekyll site by nature:
+    // it is the user guide's markup, it never enters the ZIP, and its paths and
+    // script tags are the theme's rather than the extension's.
     if (SKIP.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...sources(full));
@@ -101,6 +113,22 @@ test("the manifest is v3 and declares every permission the code uses", () => {
       `${permission} is packaged-apps-only and warns on an extension`
     );
   }
+});
+
+test("nothing at the root is named in a way Chrome refuses to load", () => {
+  // `Cannot load extension with file or directory name _includes. Filenames
+  // starting with "_" are reserved for use by the system. Could not load
+  // manifest.` — which is what Load unpacked says, and the only place it is
+  // ever said. `npm run package` excluded the offending directories, so the
+  // ZIP was correct, every other test passed, and the extension could not be
+  // run from a checkout at all.
+  //
+  // `_locales` and `_metadata` are the two names Chrome exempts; `_metadata` is
+  // the signature directory it writes into a packed extension itself.
+  const reserved = fs
+    .readdirSync(ROOT)
+    .filter((name) => name.startsWith("_") && !["_locales", "_metadata"].includes(name));
+  assert.deepEqual(reserved, [], "Load unpacked will refuse this directory");
 });
 
 test("the manifest's fallback locale is one that exists", () => {
@@ -426,32 +454,36 @@ test("the package script ships the extension and nothing else", () => {
   assert.ok(zipped.has("PRIVACY.md"));
 
   // The developer README is 24 KB — a quarter of the package — and it is the one
-  // file no user or reviewer opens. index.md is the GitHub Pages front page, which
-  // is the same thing for a different audience: it links to images under store/,
-  // which the ZIP does not carry. The rest is repository furniture.
-  for (const excluded of ["README.md", "index.md", "package.json", ".gitignore", "_config.yml"]) {
+  // file no user or reviewer opens. The rest is repository furniture.
+  for (const excluded of ["README.md", "package.json", ".gitignore"]) {
     assert.ok(!zipped.has(excluded), `${excluded} does not belong in the ZIP`);
   }
-  // The translated Pages front pages, and the same reasoning applies. Read off
-  // disk rather than listed, because the cost of a new language is a directory
-  // added to the exclude list in `npm run package` and nothing else notices.
-  //
-  // Jekyll's own directories are the trap next to `_locales`, which is carried on
-  // purpose: they look alike, and one of them is how the site is built and the
-  // other is how the extension is translated.
-  for (const dir of [
-    ...guideDirs(),
-    "_data",
-    "_includes",
-    "_layouts",
-    "tests",
-    "store",
-    ".git",
-    "node_modules",
-  ]) {
+  // Whole subtrees, and `docs/` is the one that used to be eleven separate globs
+  // — the guide's front page, its nine translations, and the three Jekyll
+  // directories that forced it out of the root in the first place.
+  for (const dir of ["docs", "tests", "store", ".git", "node_modules"]) {
     const leaked = [...zipped].filter((file) => file.startsWith(`${dir}/`));
     assert.deepEqual(leaked, [], `${dir}/ leaked into the ZIP`);
   }
+});
+
+test("the privacy policy the extension ships is the one the store links to", () => {
+  // Two copies of one document, which is a thing worth justifying. The store
+  // listing's privacy policy URL is
+  // `https://kazunori279.github.io/interpretab/PRIVACY.html`, which only exists
+  // if the file is inside the Jekyll source; the copy users can read in the
+  // extension they installed only exists if it is at the root of the ZIP; and
+  // the root of the ZIP cannot be inside the Jekyll source, because Chrome will
+  // not load a directory containing `_layouts`.
+  //
+  // A privacy policy that says two different things depending on where it is
+  // read is worse than either of the alternatives, so the drift is what this
+  // guards. Edit either copy and this fails.
+  assert.equal(
+    fs.readFileSync(path.join(ROOT, "PRIVACY.md"), "utf8"),
+    fs.readFileSync(path.join(SITE, "PRIVACY.md"), "utf8"),
+    "PRIVACY.md and docs/PRIVACY.md have drifted apart"
+  );
 });
 
 test("the bundled glossary the options page resets to is parseable", async () => {
@@ -505,8 +537,8 @@ test("the cost figure disclaims itself where the user can actually see it", () =
   // space. The English guide quotes the English panel; each translated one
   // quotes what a Chrome in that language actually shows, which is a different
   // sentence every time.
-  const en = fs.readFileSync(path.join(ROOT, "index.md"), "utf8").replace(/\s+/g, " ");
-  assert.ok(en.includes(DISCLAIMER), "index.md quotes an out-of-date usage note");
+  const en = fs.readFileSync(path.join(SITE, "index.md"), "utf8").replace(/\s+/g, " ");
+  assert.ok(en.includes(DISCLAIMER), "docs/index.md quotes an out-of-date usage note");
 
   assert.deepEqual(
     guideDirs().sort(),
@@ -514,11 +546,11 @@ test("the cost figure disclaims itself where the user can actually see it", () =
     "a guide page exists that no catalogue is checked against"
   );
   for (const [dir, locale] of Object.entries(GUIDES)) {
-    const page = fs.readFileSync(path.join(ROOT, dir, "index.md"), "utf8").replace(/\s+/g, " ");
+    const page = fs.readFileSync(path.join(SITE, dir, "index.md"), "utf8").replace(/\s+/g, " ");
     const sentence = readCatalogue(locale).panelUsagePaid.message.replace(/<\/?b>/g, "");
     // Placeholders aside, so the guide is free to quote it with figures in.
     const [, tail] = sentence.split("{2}");
-    assert.ok(page.includes(tail.trim()), `${dir}/index.md quotes an out-of-date usage note`);
+    assert.ok(page.includes(tail.trim()), `docs/${dir}/index.md quotes an out-of-date usage note`);
   }
 });
 
@@ -527,12 +559,12 @@ test("the site knows about every guide page, and every page declares its languag
   // the redirect on the English page are all built from. A page missing from it
   // is a page nothing links to and no browser is ever sent to — reachable only by
   // typing the URL, which is indistinguishable from not having translated it.
-  const yaml = fs.readFileSync(path.join(ROOT, "_data", "languages.yml"), "utf8");
+  const yaml = fs.readFileSync(path.join(SITE, "_data", "languages.yml"), "utf8");
   const listed = [...yaml.matchAll(/^- code: ([a-z]{2})$/gm)].map(([, code]) => code);
   assert.deepEqual(
     listed.slice().sort(),
     ["en", ...guideDirs()].sort(),
-    "_data/languages.yml and the guide pages on disk disagree"
+    "docs/_data/languages.yml and the guide pages on disk disagree"
   );
 
   // And the front matter, which is where `<html lang>` comes from and how the
@@ -540,7 +572,7 @@ test("the site knows about every guide page, and every page declares its languag
   // English to a screen reader and loses its language bar.
   for (const code of listed) {
     const file = code === "en" ? "index.md" : path.join(code, "index.md");
-    const front = fs.readFileSync(path.join(ROOT, file), "utf8").split("---")[1] || "";
+    const front = fs.readFileSync(path.join(SITE, file), "utf8").split("---")[1] || "";
     assert.match(front, new RegExp(`^lang: ${code}$`, "m"), `${file} does not declare its language`);
   }
 });

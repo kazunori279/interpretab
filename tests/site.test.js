@@ -8,7 +8,7 @@
  * history entry instead of a replacement is a Back button that bounces; a
  * forgotten choice is a reader sent somewhere else on every visit.
  *
- * `_includes/lang-redirect.js` is plain JavaScript with its window passed in for
+ * `docs/_includes/lang-redirect.js` is plain JavaScript with its window passed in for
  * exactly this reason. What Jekyll wraps it in is checked in `assets.test.js`.
  */
 
@@ -19,7 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const source = fs.readFileSync(path.join(ROOT, "_includes", "lang-redirect.js"), "utf8");
+const source = fs.readFileSync(path.join(ROOT, "docs", "_includes", "lang-redirect.js"), "utf8");
 
 /** The include as the browser gets it: a bare function declaration, no exports. */
 const interpretabLanguage = new Function(`${source}\nreturn interpretabLanguage;`)();
