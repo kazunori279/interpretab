@@ -341,14 +341,19 @@ What that first call answered, and what it did not:
   paragraph above this one predicted: half the delay is added *after* the audio has been
   translated and played on this machine. Two seconds is not what three contexts and a base64
   round trip cost. It is spent either in this file — the queue running ahead of the clock, which
-  `LEAD_S` permits on purpose — or in Meet, whose jitter buffer has every reason to distrust a
-  track that arrives from an `AudioContext` in runs with silence between them rather than from a
-  capture device at a steady rate. The shim now reports its lead every two seconds of scheduled
-  audio (`console.info` from the service worker, `state: "lead"`), which separates the two:
-  0.22 means the audio is leaving here on time and the two seconds are Meet's; a number that
-  climbs over a call means the queue is the delay. Meet's own half can be read off
-  `chrome://webrtc-internals` at the far end — `jitterBufferDelay / jitterBufferEmittedCount` on
-  the inbound audio track.
+  `LEAD_S` permits on purpose — or somewhere in Meet. The shim now reports its lead every two
+  seconds of scheduled audio (`console.info` from the service worker, `state: "lead"`), which
+  separates the two: 0.22 means the audio is leaving here on time and the delay is Meet's; a
+  number that climbs over a call means the queue is the delay.
+
+  Read that number before reaching for `chrome://webrtc-internals`. The obvious hypothesis about
+  Meet's half — that its jitter buffer inflates because a synthetic track arrives in bursts —
+  does not survive being written down: a `MediaStreamAudioDestinationNode` renders continuously
+  for as long as its context runs, so the track carries silence between phrases rather than
+  nothing at all, which is what a real microphone carries too. And `chrome://webrtc-internals`
+  itself is not free — it graphs every statistic of every stream as they arrive, and opening it
+  on a live call hung the browser here. If it is needed, the field is
+  `jitterBufferDelay / jitterBufferEmittedCount` on the far end's inbound audio track.
 - **A second of it was Studio Sound**, and turning that off is the whole fix for that second.
   Which settles part of the question above: at least half of the two seconds was Meet's, not the
   queue's. Three seconds is still too many, and where the last one lives — the queue, or the
