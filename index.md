@@ -203,8 +203,7 @@ actual bill exists.**
 ### Choosing between the free tier and a paid one
 
 What a Gemini API key costs, how hard it is rate-limited, and what Google does with what you send
-through it all depend on the project's **usage tier**. Tiers rise automatically with what you have
-paid. The qualifications
+through it all depend on the project's **usage tier**. The qualifications
 [Google publishes](https://ai.google.dev/gemini-api/docs/rate-limits) are:
 
 | Tier | How you qualify | Cost and limits | What Google does with your data | Where it fits Interpretab |

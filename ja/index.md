@@ -153,7 +153,7 @@ Interpretab のサイドパネルには、その回の利用量がメーター�
 
 ### 無料枠と有料枠の選び方
 
-Gemini API のキーは、プロジェクトの**利用ティア**によって料金・利用量上限・データの扱いが変わります。ティアは支払い実績に応じて自動的に上がり、[Google が公開している](https://ai.google.dev/gemini-api/docs/rate-limits)条件は次のとおりです。
+Gemini API のキーは、プロジェクトの**利用ティア**によって料金・利用量上限・データの扱いが変わります。[Google が公開している](https://ai.google.dev/gemini-api/docs/rate-limits)条件は次のとおりです。
 
 | ティア | 条件 | 費用と上限 | 入力したデータ | Interpretab での使いどころ |
 |---|---|---|---|---|
@@ -177,7 +177,7 @@ Interpretab はキーを端末内（`chrome.storage.local`）に保存します�
 - **使用量制限はキー単位ではなくプロジェクト単位です。**[Google のドキュメント](https://ai.google.dev/gemini-api/docs/rate-limits)。Tier 1 の「10 分あたり $10」は Interpretab の同時セッション 25 本程度に相当し、それを超えた分はエラーになります。
 - **キーはパスワードと同じです。** もしキーが外部に漏れた場合、[Google のガイダンス](https://ai.google.dev/gemini-api/docs/api-key)にあるとおり「他人があなたのキーを無断で使用し、想定外の請求が発生する」ことになります。端末を手放すときや、キーが漏れた可能性があるときは、[AI Studio](https://aistudio.google.com/apikey) で古いキーを削除して作り直してください。
 - **チームで使う場合は 1 人 1 キーが基本です。** Google Cloud の同じ請求先アカウントの下にメンバーごとのプロジェクトを作れば、支払いを 1 つにまとめたまま、キーと使用量制限は各自に分けられます。
-- **EEA・スイス・英国のユーザー**に使ってもらう場合は、Gemini API の[追加利用規約](https://ai.google.dev/gemini-api/terms)により有料ティアの利用が必須です。
+- **EEA・スイス・英国のユーザー**が使う場合は、Gemini API の[追加利用規約](https://ai.google.dev/gemini-api/terms)により有料ティアの利用が必須です。
 
 ## オープンソース
 
