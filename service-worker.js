@@ -610,26 +610,25 @@ async function reinjectDue() {
   return true;
 }
 
-// A captured tab that goes away takes its stream with it, and the offscreen
-// document would sit there holding a dead MediaStream.
+/**
+ * The run ends with the tab it belongs to.
+ *
+ * A captured tab that goes away takes its stream with it, and the offscreen
+ * document would sit there holding a dead MediaStream. A microphone-only run
+ * has no stream to lose, and it used to be left running with its owner cleared
+ * — but everything that says it is running went with that tab: the panel, the
+ * mark in the tab strip, the subtitles, and the meter counting the money. A
+ * session nobody can see is still being billed by the second, so it stops.
+ *
+ * The subtitle tab is the exception, because it is not the run's tab: a click
+ * can move the overlay to any page, so losing that page loses the overlay and
+ * nothing else.
+ */
 chrome.tabs.onRemoved.addListener(async (tabId) => {
-  const { capturedTabId, captionTabId, runTabId } = await chrome.storage.session.get([
-    "capturedTabId",
+  const { captionTabId, runTabId } = await chrome.storage.session.get([
     "captionTabId",
     "runTabId",
   ]);
-  // A microphone-only run outlives the page it was subtitling; forget the
-  // overlay and keep going.
   if (tabId === captionTabId) await chrome.storage.session.set({ captionTabId: null });
-  if (tabId === capturedTabId) {
-    await stop();
-    return;
-  }
-  // The run outlives its tab, but its claim on that tab does not: leave it
-  // owned by nobody rather than by a tab id Chrome will hand to some future
-  // page. Every panel then shows it as running elsewhere, which is true, and
-  // Stop from any of them ends it.
-  if (tabId === runTabId) {
-    await chrome.storage.session.set({ runTabId: null, runTabTitle: "" });
-  }
+  if (tabId === runTabId) await stop();
 });

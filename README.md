@@ -71,9 +71,13 @@ Connected light while nothing arrived at any of them. Now the run records the ta
 and a panel on any other tab says which tab that is, offers **Stop**, and turns its own controls
 off — one settings object serves every panel, so a checkbox pressed on a bystander tab would
 reconfigure and reconnect a translation on a page the user is not looking at. Start from there is
-refused in the same words. If the run's tab is closed while a microphone-only run carries on, the
-run outlives it with no owner at all, and every panel then treats it as somebody else's: visible,
-and stoppable, and nothing more.
+refused in the same words.
+
+Closing that tab ends the run, and not only when it was the captured one. A microphone-only run
+has no stream to lose when its page goes, but everything that says it is running went with it —
+the panel, the mark in the tab strip, the subtitles, the meter counting the money — and a session
+nobody can see is still billed by the second. The subtitle overlay is the exception, because a
+click can move it to any page: losing that page loses the overlay and nothing else.
 
 While a run is going, that tab says so in the tab strip: **💬** in front of its title for the tab
 audio being interpreted, **🔴** for the microphone being recorded, both when both are on. The
@@ -691,9 +695,10 @@ behaviour itself needs two tabs and a person. Six checks, a couple of minutes:
    its meter — not as a bystander.
 4. With a run on A, change a language on A. It reconnects onto A, not onto whichever tab the
    icon was clicked on last.
-5. Microphone only, started from A: A carries 🔴, and closing A leaves the run going with every
-   panel a bystander — *running on another tab*, Stop live.
-6. Tab audio on A: closing A stops the run.
+5. Microphone only, started from A: A carries 🔴, and closing A stops the run — the voice stops,
+   and B's panel is back to Start.
+6. Tab audio on A: closing A stops the run. Subtitles handed to C by a click there: closing C
+   loses the overlay and nothing else.
 
 ### Soak results — 1 hour, microphone, the conversation model, en → ja
 

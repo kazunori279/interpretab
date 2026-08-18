@@ -254,6 +254,13 @@ test("one engine means one run, and a second tab is refused rather than served",
   // all read it from, then cleared with the run.
   assert.match(body(sw, "start"), /runTabId: tab\?\.id \?\? null/);
   assert.match(body(sw, "stop"), /runTabId: null/);
+
+  // The run ends with that tab. Everything that shows a run is running lives on
+  // it — the panel, the mark, the subtitles, the meter — so a run that outlived
+  // it would be billed by the second with nothing on screen anywhere to say so.
+  const removed = sw.match(/onRemoved\.addListener\([\s\S]*?\n\}\);/)?.[0];
+  assert.ok(removed, "nothing watches for the tab going away");
+  assert.match(removed, /if \(tabId === runTabId\) await stop\(\);/);
 });
 
 test("a panel that does not own the run may stop it and nothing else", () => {

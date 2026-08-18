@@ -320,12 +320,10 @@ function render() {
   const hasKey = !!(settings.apiKey || "").trim();
   el("keyNote").hidden = hasKey;
 
-  // One engine, one run, one tab. This panel is on a different tab from the
-  // run when the user has switched away and clicked the icon somewhere else —
-  // or when the run's tab has since been closed, which leaves it owned by
-  // nobody and every panel a bystander. Either way the controls here are wired
-  // to global settings and would reach into that run, so they come off; the
-  // note says where it is, and Stop stays.
+  // One engine, one run, one tab. This panel is on a different tab from the run
+  // whenever the user has switched away and clicked the icon somewhere else.
+  // The controls here are wired to global settings and would reach into that
+  // run, so they come off; the note says where it is, and Stop stays.
   const elsewhere = running && runTabId !== myTabId;
   el("elsewhereNote").textContent = runTabTitle
     ? `Interpretab is running on “${runTabTitle}”, and it runs on one tab at a time. ` +
