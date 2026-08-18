@@ -958,6 +958,12 @@ installed requires it at the root of the ZIP; and after the above those cannot b
 directory. A policy that says two different things depending on where it is read would be worse
 than either, so `tests/assets.test.js` asserts the two copies are byte-identical.
 
+`docs/google669da1d9f9338207.html` is Google's site-verification token, one line of text under a
+name Search Console chose. It is here rather than at the repository root for the same reason the
+images are: only what is under `docs/` is served, and Search Console checks the URL it named and
+nothing else. It has no front matter, which is what keeps Jekyll copying it verbatim instead of
+rendering it into the theme and burying the one line the checker reads.
+
 `docs/_data/languages.yml` is the list — code, name, path, and `dir` for the one that needs it. The
 language bar, the `hreflang` alternates and the redirect are all built from it, so an eleventh
 language is an entry there plus a directory with an `index.md` in it. The page directories are
