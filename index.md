@@ -134,9 +134,29 @@ translation is spoken out of.
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
 and subtitled.
 
-For them to hear your voice translated, they need Interpretab installed in their browser too. And
-because this is a Chrome extension, it only works with the browser versions of these services —
-desktop apps and native clients are out of reach.
+Aim the two directions at *different* languages for a call — tab audio at your language,
+microphone at theirs. The defaults point both at the same one, which would send the other side
+their own words paraphrased back. Use the microphone's **Simultaneous** mode here, not Two-way
+conversation: the other side arrives on the tab, already translated by the other direction.
+
+**For them to hear your voice translated**, the simplest answer is that they install Interpretab
+too and translate your voice on their end. If they cannot, the translated voice has to reach the
+meeting as a microphone — and Chrome gives extensions no way to register one, so it has to be
+played somewhere the meeting is already listening:
+
+1. Install a virtual audio device: [BlackHole](https://existential.audio/blackhole/) on macOS,
+   [VB-Cable](https://vb-audio.com/Cable/) on Windows.
+2. **Options → Audio output** → pick it. Only the microphone direction's voice goes there; the tab
+   direction's translation stays on your speakers, because that is the one you are listening to.
+3. In the meeting, choose the same device as your microphone.
+4. Wear headphones. On speakers the microphone hears the call and the call hears the room, and the
+   two directions start interpreting each other.
+
+You will not hear your own translated voice while it is going down the cable. To monitor it, route
+it through a macOS Multi-Output Device or VB-Cable's repeater.
+
+Because this is a Chrome extension, all of this only works with the browser versions of these
+services — desktop apps and native clients are out of reach.
 
 ### The models behind the translation, and its quality
 
@@ -184,6 +204,9 @@ and the third is what you want the **subtitles to show**.
   names the tab it is running on and offers only **Stop**. Stop it there and Start comes back.
 - **Chrome does not let extensions draw on its own pages or on PDFs**, so subtitles cannot appear
   there. The spoken translation and the side-panel transcript still work.
+- **How well it translates depends on the language pair.** English and Japanese are the pair this
+  has been measured on, in hour-long runs; a more distant or less common pair can come out
+  rougher, and there is no way to know in advance except to try it.
 
 ## More about using the Gemini Live API
 
@@ -242,10 +265,12 @@ carry it, so using Interpretab on several computers means pasting the key into e
   not.
 - **For users in the EEA, Switzerland or the UK**, the
   [Gemini API Additional Terms](https://ai.google.dev/gemini-api/terms) require a paid tier.
-- **If it will not connect to the Gemini Live API**, either the key is wrong or the quota has run
-  out — Interpretab cannot tell the two apart. Check the limits in
-  [AI Studio](https://aistudio.google.com/apikey) and wait for them to reset, or set up billing and
-  move to Tier 1.
+- **If a run will not start, the message says which problem it is.** Interpretab asks Google about
+  the key before it opens anything, so a rejected key, an exhausted quota and a key that is not
+  allowed to call the Gemini API are named separately rather than guessed at. Quota is the usual
+  one on the free tier: check the limits in [AI Studio](https://aistudio.google.com/apikey) and
+  wait for them to reset, or set up billing and move to Tier 1. If the message says the key itself
+  was accepted, the problem is the Live API or your network, not the key.
 
 ## Open source
 
