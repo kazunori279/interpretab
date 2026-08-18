@@ -129,7 +129,8 @@ it by, so it must show the differentiator, not the settings.
    legible. The privacy claim is a selling point; make it readable rather than leaving it to the
    description.
 
-Avoid: a key that is real (use `AIza…` placeholder text), any identifiable meeting participant,
+Avoid: a key that is real (type an obvious fake, or leave the field on its placeholder), any
+identifiable meeting participant,
 and any copyrighted video frame that is recognisable enough to be a problem. A conference talk on a
 public channel or a Creative Commons clip is the safe choice.
 

@@ -467,6 +467,35 @@ test("the free tier is never shown a price", () => {
   assert.doesNotMatch(panel.slice(from, panel.indexOf("</span", from)), /\$|cost|bill/i);
 });
 
+test("a key is judged by whether it could be one, not by this year's format", () => {
+  // The Options page used to require `^AIza[\w-]{30,}$`, which held for every
+  // key Google issued for years and does not hold for the `AQ.Ab8RN6…` ones it
+  // issues now. The result was a working key told it did not look like a key,
+  // which is worse than saying nothing: the next thing that goes wrong gets
+  // read as a consequence of the warning. `endpointUrl` has always escaped the
+  // key rather than assume its charset, and this is the same assumption where
+  // the user can see it. So the real function is run here, against both
+  // formats, rather than the pattern being asserted into place.
+  const source = body(read("options.js"), "renderKeyStatus");
+  const input = read("options.html").match(/<input[^>]*id="apiKey"[^>]*>/s)?.[0];
+  assert.ok(input, "the key field is gone");
+  for (const where of [source, input]) assert.doesNotMatch(where, /AIza/);
+
+  const run = new Function("settings", "el", "setStatus", `${source}; renderKeyStatus();`);
+  const accepted = (apiKey) => {
+    let ok = false;
+    run({ apiKey }, () => ({}), (_node, _text, good = false) => (ok = good));
+    return ok;
+  };
+
+  for (const key of [`AIzaSy${"x".repeat(33)}`, `AQ.Ab8RN6J${"x".repeat(60)}`])
+    assert.ok(accepted(key), `a key Google issues was called suspicious: ${key.slice(0, 6)}…`);
+
+  // What is left is the paste that went wrong, under any format Google picks.
+  for (const bad of ["", "AIzaSy xYz", "https://aistudio.google.com/apikey", "me@example.com", "AQ.Ab8"])
+    assert.ok(!accepted(bad), `${bad || "an empty field"} was accepted as a key`);
+});
+
 test("a class that sets display does not un-hide an element the panel hides", () => {
   // `[hidden]` is a UA rule, and any class rule that sets `display` outranks it.
   // The failure is silent and looks like a bug in the JavaScript: the element

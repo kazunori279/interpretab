@@ -79,15 +79,33 @@ async function saveKey() {
 /**
  * There is no way to check a key short of opening a session, and doing that
  * here would bill the user for a connection they did not ask for. So this
- * reports what it can see — a key is present and looks like one — and leaves
- * the real verdict to the first Start, where a rejection is already reported.
+ * reports what it can see — a key is present — and leaves the real verdict to
+ * the first Start, where a rejection is already reported.
+ *
+ * What it does not do is guess at the format. This used to require
+ * `^AIza[\w-]{30,}$`, which was true of every key Google issued for years and
+ * is false of the `AQ.Ab8RN6…` ones it issues now — a different prefix and a
+ * dot, rejected twice over — so it told people holding a working key that it
+ * did not look like one. The shape is Google's to change and it changed;
+ * `endpointUrl` already escapes the key on the assumption that its characters
+ * are not ours to predict, and this is that assumption applied where the user
+ * can see it. A warning that fires on a key that works is worse than no
+ * warning, because the next thing to go wrong gets read as its consequence.
+ *
+ * So the check is narrowed to pastes that cannot be a key under any format:
+ * something with a space in the middle, an address rather than a credential, or
+ * too few characters to be a secret. Those are the actual mistakes — half a
+ * selection, the URL of the page the key is on, the account it belongs to.
  */
 function renderKeyStatus() {
   const node = el("apiKeyStatus");
-  if (!settings.apiKey) {
+  const key = settings.apiKey;
+  if (!key) {
     setStatus(node, "No key yet. Interpretab cannot start without one.");
-  } else if (!/^AIza[\w-]{30,}$/.test(settings.apiKey)) {
-    setStatus(node, "Saved, but this does not look like a Google API key.");
+  } else if (/\s/.test(key) || key.includes("://") || key.includes("@")) {
+    setStatus(node, "Saved, but that looks like a stray paste rather than a key.");
+  } else if (key.length < 20) {
+    setStatus(node, "Saved, but that looks too short — is some of the key missing?");
   } else {
     setStatus(node, "Key saved in this browser.", true);
   }
