@@ -334,13 +334,20 @@ called from `start()`. Set it, then Start.
 
 What that first call answered, and what it did not:
 
-- **Latency: over five seconds**, mouth to far-ear. That is the number that decides whether this
-  is usable, and it is much too large for a conversation — it is a briefing tool at five seconds,
-  not a dialogue. What it is *not* is evidence against the relay: three contexts and a base64
-  round trip do not cost seconds, and the same delay should be sitting in front of the local
-  player. The next measurement is the one that splits it — time the local translated voice
-  against the far end's. If they land together the whole five seconds is the Live API deciding a
-  phrase has finished and saying it, and nothing in this file can shorten it.
+- **Latency: four seconds mouth to far-ear, and two of them are ours.** The split was measured by
+  timing the local translated voice against the far end's, and it did not come out the way the
+  paragraph above this one predicted: half the delay is added *after* the audio has been
+  translated and played on this machine. Two seconds is not what three contexts and a base64
+  round trip cost. It is spent either in this file — the queue running ahead of the clock, which
+  `LEAD_S` permits on purpose — or in Meet, whose jitter buffer has every reason to distrust a
+  track that arrives from an `AudioContext` in runs with silence between them rather than from a
+  capture device at a steady rate. The shim now reports its lead every two seconds of scheduled
+  audio (`console.info` from the service worker, `state: "lead"`), which separates the two:
+  0.22 means the audio is leaving here on time and the two seconds are Meet's; a number that
+  climbs over a call means the queue is the delay. Meet's own half can be read off
+  `chrome://webrtc-internals` at the far end — `jitterBufferDelay / jitterBufferEmittedCount` on
+  the inbound audio track — and Studio Sound, which was on for this measurement, is the obvious
+  thing to turn off first.
 - **Meet did not take the microphone back.** Not once, across the call. The silent failure that
   would have sunk this did not happen, which is a weaker statement than "cannot happen" and worth
   re-checking on a reconnection and a network drop.
@@ -351,7 +358,8 @@ What that first call answered, and what it did not:
   question the moment someone runs this unmuted on speakers, which the mute fix above makes an
   unusual thing to do.
 - **Studio Sound was on throughout** and did not obstruct anything. Meet's noise processing is
-  happy to carry a synthetic voice.
+  happy to carry a synthetic voice — though it is a neural denoiser sitting in the path, so it
+  is also a candidate for the two seconds above and has not been ruled out.
 
 The prototype's only instrumentation is `console.info` from the service worker, which is the
 correct amount for something with no UI and this many open questions.

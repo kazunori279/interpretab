@@ -295,6 +295,33 @@ test("a sentence delivered all at once is queued whole, not folded over itself",
   assert.equal(+(scheduled.at(-1).at + 0.1 - scheduled[0].at).toFixed(6), 4);
 });
 
+test("how far ahead of the clock the queue has run is said out loud", () => {
+  // The first real call was four seconds mouth to far-ear, two of them added
+  // after the local player. This is the only part of that stretch that cannot
+  // be read from outside the page, and whether it sits at the lead or climbs is
+  // the difference between "Meet is slow" and "we are holding the audio".
+  const win = fakeWindow();
+  load(win);
+  for (let i = 0; i < 40; i++) win.fromBridge({ type: "voice", pcm: frame(2400) });
+  const leads = win.calls.posted.filter((m) => m.state === "lead").map((m) => m.detail);
+  // Four seconds of speech handed over at once, against a clock that has not
+  // moved: the queue really is four seconds ahead, and the report says so
+  // rather than reporting the 0.12 it started at.
+  assert.deepEqual(leads, ["2.02", "4.02"]);
+
+  // And a run arriving at the rate it will be spoken does not drift: the lead
+  // is the 120 ms the first frame left, plus the frame just queued behind it,
+  // and it is the same at the end of the run as at the start.
+  const steady = fakeWindow();
+  load(steady);
+  for (let i = 0; i < 40; i++) {
+    steady.fromBridge({ type: "voice", pcm: frame(2400) });
+    steady.clock.now += 0.1;
+  }
+  const same = steady.calls.posted.filter((m) => m.state === "lead").map((m) => m.detail);
+  assert.deepEqual(same, ["0.22", "0.22"]);
+});
+
 test("the shim only listens to its own half of the relay", () => {
   const win = fakeWindow();
   load(win);
