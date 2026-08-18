@@ -1,0 +1,57 @@
+{%- comment -%}
+  A copy of jekyll-theme-primer's own default layout — which is what this site
+  rendered with before the file existed — with two things added.
+
+  The first is `dir`. Nine of the ten guide pages read left to right and one does
+  not, and the direction of a document belongs on its root element, where every
+  logical CSS property and every bidi calculation in the page can see it.
+
+  The second is the language bar. It used to be a line of markdown repeated at the
+  top of ten pages, each with a different entry in bold and every link written out
+  nine times; a language added anywhere meant editing all of them. Here it is one
+  loop over `_data/languages.yml`, and a page opts in by declaring `lang` in its
+  front matter — which `PRIVACY.md` does not, so it does not get a bar it has no
+  translations for.
+{%- endcomment -%}
+{%- comment -%}
+  `page.lang` is the guard on everything below, and `self` is never trusted on its
+  own. Two reasons, both quiet: `where` handed nothing to match on does not answer
+  with nothing, and an `assign` inside an `if` survives into the next page that
+  renders through this layout, because the parsed layout is reused and its
+  variables live on it. So the assignment is unconditional and the test is not.
+{%- endcomment -%}
+{%- assign languages = site.data.languages -%}
+{%- assign self = languages | where: "code", page.lang | first -%}
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en-US" }}"{% if page.lang and self.dir %} dir="{{ self.dir }}"{% endif %}>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% seo %}
+    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    {% include head-custom.html %}
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      {% if site.title and site.title != page.title %}
+      <h1><a href="{{ "/" | absolute_url }}">{{ site.title }}</a></h1>
+      {% endif %}
+
+      {%- if page.lang %}
+      <p>{% for language in languages %}{% unless forloop.first %} · {% endunless %}{% if language.code == page.lang %}<b lang="{{ language.code }}">{{ language.name }}</b>{% else %}<a href="{{ language.path | relative_url }}?lang={{ language.code }}" lang="{{ language.code }}" hreflang="{{ language.code }}">{{ language.name }}</a>{% endif %}{% endfor %}</p>
+      {%- endif %}
+
+      {{ content }}
+
+      {% if site.github.private != true and site.github.license %}
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. {% github_edit_link "Improve this page" %}.
+      </div>
+      {% endif %}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

@@ -1,8 +1,17 @@
 # Interpretab
 
-User guide: **[English](https://kazunori279.github.io/interpretab/)** ·
-**[日本語](https://kazunori279.github.io/interpretab/ja/)** — what it does, what it costs, and how
-to turn it on. What follows is the engineering side of the same thing.
+User guide — what it does, what it costs, and how to turn it on:
+**[English](https://kazunori279.github.io/interpretab/)** ·
+**[日本語](https://kazunori279.github.io/interpretab/ja/)** ·
+**[中文](https://kazunori279.github.io/interpretab/zh/)** ·
+**[Español](https://kazunori279.github.io/interpretab/es/)** ·
+**[Français](https://kazunori279.github.io/interpretab/fr/)** ·
+**[Deutsch](https://kazunori279.github.io/interpretab/de/)** ·
+**[Português](https://kazunori279.github.io/interpretab/pt/)** ·
+**[한국어](https://kazunori279.github.io/interpretab/ko/)** ·
+**[हिन्दी](https://kazunori279.github.io/interpretab/hi/)** ·
+**[العربية](https://kazunori279.github.io/interpretab/ar/)**. What follows is the engineering side
+of the same thing.
 
 A Chrome extension that interprets **whatever a tab is playing** — a video, a webinar, the
 remote side of a Meet call — into your language, spoken out loud and subtitled on the page. It
@@ -685,8 +694,10 @@ number that predicts a run failing to reconnect
 the two to use is the only choice `renderUsage` makes and the disclaimer cannot fall off the paid
 one. The clock is shared: it is the question either tier is asking.
 
-If the wording of either sentence changes, `README.md`, `index.md` and `ja/index.md` all quote
-them, and `tests/assets.test.js` fails until they agree.
+If the wording of either sentence changes, `README.md` and all ten guide pages quote them, and
+`tests/assets.test.js` fails until they agree — each page against the catalogue of the language it
+is written in, since what a reader of that page sees in the panel is that language's sentence and
+not the English one.
 
 ### Ten languages, one catalogue
 
@@ -762,6 +773,41 @@ read, which is worth knowing before quoting a sentence from one of them back at 
 a translation keeps the same set of placeholders and the same markup as its English original
 (order is the translator's to change, which is most of the point of numbering them), every key the
 code names exists, and every message in the catalogue is reachable from somewhere.
+
+### Ten languages, one guide
+
+The user guide is the same ten languages, and it is a different problem: not one page that
+localises itself but ten pages that a reader has to be *routed* to. GitHub Pages serves static
+files and never sees `Accept-Language`, so nothing on the way out can make that decision.
+
+`_data/languages.yml` is the list — code, name, path, and `dir` for the one that needs it. The
+language bar, the `hreflang` alternates and the redirect are all built from it, so an eleventh
+language is an entry there plus a directory with an `index.md` in it. The page directories are
+named for the picker's codes and not Chrome's, which is the same `zh`/`zh_CN` split as above,
+pointing the other way: nobody types `pt_BR` into an address bar. `tests/assets.test.js` is where
+the list, the directories on disk and the front matter that names each page's language are checked
+against each other.
+
+`_layouts/default.html` is jekyll-theme-primer's own layout with two things added, because before
+this repository had a layout at all that theme was what Pages rendered it with. `<html dir>`, since
+the direction of a document belongs on its root element where the bidi algorithm and every logical
+CSS property can see it — the Arabic page used to set `direction` on `body` from inside its own
+markdown, which worked and was in the wrong place. And the language bar, which was a line of
+markdown repeated ten times with a different entry bold in each.
+
+`_includes/head-custom.html` is the hook the theme leaves in `<head>`, and it holds the
+`hreflang` alternates — which have to be in the head, since the same markup in the body is ignored
+— and the routing script. The script is `_includes/lang-redirect.js`, plain JavaScript with its
+window passed in so that `tests/site.test.js` can hand it a fake one.
+
+What it does is two things. Every page records an explicit choice: the bar tags its links with
+`?lang=`, which is stored and then wiped out of the address bar, so no reader copies a link with
+our bookkeeping in it. And the English page — the only one that redirects, which is what keeps
+this loop-free — sends a reader who has expressed no choice to the language `navigator.languages`
+asks for. That is the same setting `chrome.i18n` reads, so the guide and the extension's interface
+agree about a reader without being told to. The trap it is built around is the bar's English link:
+it points at the page that redirects, so without the stored choice a German reader could never
+reach English.
 
 ## Development
 
@@ -1045,11 +1091,13 @@ than a record of the last one, so the two can drift: the API-key advice in `list
 corrected here and not on the dashboard, which is the sort of thing that only goes in with an
 update.
 
-Left for the day it goes live: the "waiting for review" wording on `index.md` and `ja/index.md`;
-the dashboard's homepage URL, which still points at this repo rather than at
+Left for the day it goes live: the install instructions, which tell the reader to download a ZIP
+and load it unpacked, and which are now on ten pages rather than two; the dashboard's homepage
+URL, which still points at this repo rather than at
 [the user guide](https://kazunori279.github.io/interpretab/)
 ([#11](https://github.com/kazunori279/interpretab/issues/11)); and the detailed description,
-which needs that API-key correction.
+which needs that API-key correction. The listing's own text is localised in the dashboard and not
+from `_locales`, so the ten catalogues here buy nothing there.
 
 Beyond the listing, [#9](https://github.com/kazunori279/interpretab/issues/9) is the interesting
 one: getting the microphone's translated voice into a call without asking the user to install a

@@ -1,9 +1,8 @@
 ---
+lang: ja
 title: Interpretab
 description: ブラウザが再生している音声や、あなたが話した音声を、70 以上の言語にリアルタイムに翻訳、読み上げと字幕表示する Chrome 拡張です。
 ---
-
-[English](../) · **日本語**
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
   <img src="../icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
@@ -77,6 +76,8 @@ Interpretab は以下の手順でインストールできます。
 
 Chrome 116 以降が必要です。サイドパネルを閉じても翻訳は止まりません。**Stop** はどのタブからでも
 ツールバーアイコンをクリックすれば届きます。
+
+Interpretab の画面表示はブラウザの言語に追従します。対応しているのはこのページ上部の 10 言語です。
 
 ## 翻訳機能を選ぶ
 

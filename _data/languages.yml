@@ -1,0 +1,44 @@
+# The ten languages the user guide is written in, in the order the language bar
+# shows them, which is the order of `POPULAR_LANGUAGES` in `lib/languages.js`.
+#
+# This is the one list. `_layouts/default.html` builds the language bar from it,
+# `_includes/head-custom.html` builds the `hreflang` alternates from it, and the
+# redirect script matches `navigator.languages` against it. Adding an eleventh
+# language is this file plus a directory with an `index.md` in it.
+#
+# `code` is what a browser reports and what the directory is called, and it is
+# deliberately not the `_locales` directory name: Chrome will not match a
+# directory called `zh` or `pt`, so the catalogues are `zh_CN` and `pt_BR` while
+# the pages a reader types the URL of are `zh/` and `pt/`. `tests/assets.test.js`
+# is where the two naming schemes are tied together.
+- code: en
+  name: English
+  path: /
+- code: ja
+  name: 日本語
+  path: /ja/
+- code: zh
+  name: 中文
+  path: /zh/
+- code: es
+  name: Español
+  path: /es/
+- code: fr
+  name: Français
+  path: /fr/
+- code: de
+  name: Deutsch
+  path: /de/
+- code: pt
+  name: Português
+  path: /pt/
+- code: ko
+  name: 한국어
+  path: /ko/
+- code: hi
+  name: हिन्दी
+  path: /hi/
+- code: ar
+  name: العربية
+  path: /ar/
+  dir: rtl

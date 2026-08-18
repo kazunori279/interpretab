@@ -1,0 +1,35 @@
+{%- comment -%}
+  The hook jekyll-theme-primer leaves in its `<head>` for a site to fill. Only the
+  guide pages use it: `page.lang` is what says a page is one of the ten and has
+  nine translations somewhere else on this site.
+{%- endcomment -%}
+{%- if page.lang %}
+    {%- comment -%}
+      The alternates, which are how a search engine learns that these ten pages are
+      one document and not ten competing ones. They have to be in `<head>`; the
+      same markup in the body is ignored. `x-default` is the English page, which is
+      also the one that redirects, so a reader arriving from a search result in a
+      language we do not have lands where the choice is offered.
+    {%- endcomment -%}
+    {%- for language in site.data.languages %}
+    <link rel="alternate" hreflang="{{ language.code }}" href="{{ language.path | absolute_url }}">
+    {%- endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ "/" | absolute_url }}">
+    <style>
+      /* Code samples read left to right even on the page that does not: their
+         content is ASCII, and the column order of a CSV is not a sentence. */
+      [dir="rtl"] pre,
+      [dir="rtl"] code { direction: ltr; text-align: left; }
+    </style>
+    <script>
+{% include lang-redirect.js %}
+      interpretabLanguage(
+        {
+          home: {{ "/" | relative_url | jsonify }},
+          pages: {{ site.data.languages | map: "code" | jsonify }},
+          redirect: {% if page.url == "/" %}true{% else %}false{% endif %}
+        },
+        window
+      );
+    </script>
+{%- endif %}

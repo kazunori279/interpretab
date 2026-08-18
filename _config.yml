@@ -1,0 +1,17 @@
+# GitHub Pages settings. They apply to the user guide — `index.md` and its nine
+# translations — and to nothing else: the extension is not built by Jekyll, and
+# the files it is made of are only in this repository's Pages site because Jekyll
+# copies whatever it does not recognise.
+#
+# Until this file existed, Pages ran with its own defaults, which meant the theme
+# below applied anyway. It is named here so that `_layouts/default.html` is
+# understood as an override of a known layout rather than the only one.
+title: Interpretab
+description: >-
+  A Chrome extension that translates what your browser plays, and what you say,
+  into 70+ languages in real time — spoken out loud and subtitled on the page.
+theme: jekyll-theme-primer
+
+# The fallback for a page that does not declare one. Every guide page does; this
+# covers `PRIVACY.md`, which is English and has no front matter at all.
+lang: en

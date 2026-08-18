@@ -20,6 +20,34 @@ import { readCatalogue } from "./messages.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
 
+/**
+ * The translated guide pages, and the catalogue each one is the guide to.
+ *
+ * A page is named for the language picker's code, because that is what a reader
+ * types; a `_locales` directory is named for what Chrome will match, which is
+ * region-qualified for two of them. `index.md` at the root is English and has no
+ * directory of its own.
+ */
+const GUIDES = {
+  ja: "ja",
+  zh: "zh_CN",
+  es: "es",
+  fr: "fr",
+  de: "de",
+  pt: "pt_BR",
+  ko: "ko",
+  hi: "hi",
+  ar: "ar",
+};
+
+/** Directories at the root holding a guide page, whether or not GUIDES knows. */
+function guideDirs() {
+  return fs
+    .readdirSync(ROOT, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && fs.existsSync(path.join(ROOT, e.name, "index.md")))
+    .map((e) => e.name);
+}
+
 /** Everything the extension cannot function without, whatever else changes. */
 const REQUIRED_PERMISSIONS = [
   "tabCapture", // the reason this extension exists
@@ -44,11 +72,17 @@ const FORBIDDEN_PERMISSIONS = ["audioCapture", "videoCapture"];
  */
 const PATH_RE = /["'](?!\w+:|\/\/|#)([\w./-]+\.(?:js|css|html|png|csv))["']/g;
 
+/** Directories the extension is not made of. */
+const SKIP = new Set([".git", "node_modules", "tests", "_layouts", "_includes"]);
+
 /** Source files that can name an asset, walked from the repo root. */
 function sources(dir = ROOT) {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === ".git" || entry.name === "node_modules" || entry.name === "tests") continue;
+    // `_layouts` and `_includes` are HTML by extension and Jekyll templates by
+    // nature: they are the user guide's markup, they never enter the ZIP, and
+    // their paths and script tags are the theme's rather than the extension's.
+    if (SKIP.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...sources(full));
     else if (full.endsWith(".js") || full.endsWith(".html")) out.push(full);
@@ -395,11 +429,26 @@ test("the package script ships the extension and nothing else", () => {
   // file no user or reviewer opens. index.md is the GitHub Pages front page, which
   // is the same thing for a different audience: it links to images under store/,
   // which the ZIP does not carry. The rest is repository furniture.
-  for (const excluded of ["README.md", "index.md", "package.json", ".gitignore"]) {
+  for (const excluded of ["README.md", "index.md", "package.json", ".gitignore", "_config.yml"]) {
     assert.ok(!zipped.has(excluded), `${excluded} does not belong in the ZIP`);
   }
-  // ja/ is the translated Pages front page, and the same reasoning applies.
-  for (const dir of ["ja", "tests", "store", ".git", "node_modules"]) {
+  // The translated Pages front pages, and the same reasoning applies. Read off
+  // disk rather than listed, because the cost of a new language is a directory
+  // added to the exclude list in `npm run package` and nothing else notices.
+  //
+  // Jekyll's own directories are the trap next to `_locales`, which is carried on
+  // purpose: they look alike, and one of them is how the site is built and the
+  // other is how the extension is translated.
+  for (const dir of [
+    ...guideDirs(),
+    "_data",
+    "_includes",
+    "_layouts",
+    "tests",
+    "store",
+    ".git",
+    "node_modules",
+  ]) {
     const leaked = [...zipped].filter((file) => file.startsWith(`${dir}/`));
     assert.deepEqual(leaked, [], `${dir}/ leaked into the ZIP`);
   }
@@ -453,16 +502,47 @@ test("the cost figure disclaims itself where the user can actually see it", () =
     "the paid usage message must carry the disclaimer, not only note.title"
   );
   // Hard-wrapped prose, so the quote can carry a newline where the panel has a
-  // space. The English guide quotes the English panel; the Japanese one quotes
-  // what a Japanese Chrome actually shows, which is a different sentence.
+  // space. The English guide quotes the English panel; each translated one
+  // quotes what a Chrome in that language actually shows, which is a different
+  // sentence every time.
   const en = fs.readFileSync(path.join(ROOT, "index.md"), "utf8").replace(/\s+/g, " ");
   assert.ok(en.includes(DISCLAIMER), "index.md quotes an out-of-date usage note");
 
-  const ja = fs.readFileSync(path.join(ROOT, "ja", "index.md"), "utf8").replace(/\s+/g, " ");
-  const jaSentence = readCatalogue("ja").panelUsagePaid.message.replace(/<\/?b>/g, "");
-  // Placeholders aside, so the guide is free to quote it with figures in.
-  const [, jaTail] = jaSentence.split("{2}");
-  assert.ok(ja.includes(jaTail.trim()), "ja/index.md quotes an out-of-date usage note");
+  assert.deepEqual(
+    guideDirs().sort(),
+    Object.keys(GUIDES).sort(),
+    "a guide page exists that no catalogue is checked against"
+  );
+  for (const [dir, locale] of Object.entries(GUIDES)) {
+    const page = fs.readFileSync(path.join(ROOT, dir, "index.md"), "utf8").replace(/\s+/g, " ");
+    const sentence = readCatalogue(locale).panelUsagePaid.message.replace(/<\/?b>/g, "");
+    // Placeholders aside, so the guide is free to quote it with figures in.
+    const [, tail] = sentence.split("{2}");
+    assert.ok(page.includes(tail.trim()), `${dir}/index.md quotes an out-of-date usage note`);
+  }
+});
+
+test("the site knows about every guide page, and every page declares its language", () => {
+  // `_data/languages.yml` is what the language bar, the `hreflang` alternates and
+  // the redirect on the English page are all built from. A page missing from it
+  // is a page nothing links to and no browser is ever sent to — reachable only by
+  // typing the URL, which is indistinguishable from not having translated it.
+  const yaml = fs.readFileSync(path.join(ROOT, "_data", "languages.yml"), "utf8");
+  const listed = [...yaml.matchAll(/^- code: ([a-z]{2})$/gm)].map(([, code]) => code);
+  assert.deepEqual(
+    listed.slice().sort(),
+    ["en", ...guideDirs()].sort(),
+    "_data/languages.yml and the guide pages on disk disagree"
+  );
+
+  // And the front matter, which is where `<html lang>` comes from and how the
+  // layout tells a guide page from `PRIVACY.md`. A page without it renders as
+  // English to a screen reader and loses its language bar.
+  for (const code of listed) {
+    const file = code === "en" ? "index.md" : path.join(code, "index.md");
+    const front = fs.readFileSync(path.join(ROOT, file), "utf8").split("---")[1] || "";
+    assert.match(front, new RegExp(`^lang: ${code}$`, "m"), `${file} does not declare its language`);
+  }
 });
 
 test("the free tier is never shown a price", () => {

@@ -1,9 +1,8 @@
 ---
+lang: en
 title: Interpretab
 description: A Chrome extension that translates what your browser plays, and what you say, into 70+ languages in real time — spoken out loud and subtitled on the page.
 ---
-
-**English** · [日本語](ja/)
 
 <h1 style="display:flex;align-items:center;gap:.7rem;margin:0 0 .4rem">
   <img src="icons/icon-128.png" alt="" width="52" height="52" style="border-radius:11px;flex:none">
@@ -92,6 +91,9 @@ Interpretab installs like this:
 
 Chrome 116 or newer. Closing the side panel does not stop the translation — the **Stop** button is
 always one click on the toolbar icon away, from any tab.
+
+Interpretab's interface follows your browser's language, in the ten languages at the top of this
+page.
 
 ## Choosing what to translate
 
