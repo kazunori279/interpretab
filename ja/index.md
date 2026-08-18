@@ -70,7 +70,8 @@ Interpretab は以下の手順でインストールできます。
 2. `chrome://extensions` を開き、**デベロッパーモード**を ON にして、**パッケージ化されていない拡張機能を
    読み込む**からそのフォルダを選ぶ。
 3. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) で無料の Gemini API キーを取得し、
-   拡張機能の**オプション**ページに貼り付ける。
+   拡張機能の**オプション**ページに貼り付ける。あわせて **Gemini API plan** を、そのキーを作った
+   プロジェクトに合わせて選んでください。サイドパネルのメーターに金額を表示するかどうかがここで決まります。
 4. 翻訳したいページを開き、**そのタブで Interpretab のツールバーアイコンをクリックする**。この
    クリックが「このタブの音声を聞いていいですよ」という許可になります。押さずに始めるとエラーが発生します。
 5. サイドパネルで言語を選び、**Start** を押す。
@@ -143,7 +144,12 @@ Cloud Run,クラウドラン,Cloud Run
 
 ## Gemini Live API の利用について
 
-Interpretab のサイドパネルには、その回の経過時間と利用料金の目安がメーターとして **12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.** のように表示されます。Start のたびにゼロに戻ります。無料枠では課金されないため、金額ではなく経過時間を目安にしてください。**実際の請求額はご自身の Google アカウントでご確認ください。**
+Interpretab のサイドパネルには、その回の利用量がメーターとして表示されます（Start のたびにゼロに戻ります）。表示内容は**オプション → Gemini API plan** の設定で変わります。キーがどのティアかは Gemini API のレスポンスからは分からないため、ここだけは申告してもらう必要があります。
+
+- **Free**（既定）: **12 min so far, 18 min of Gemini audio. The free tier is charged nothing for it.** 金額は出ません。無料枠は金額ではなくレート制限で区切られるので、見るべき数字は音声の時間のほうです。
+- **Paid**: **12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.**
+
+キーを貼り付けるときに合わせて設定してください。キーを作ったプロジェクトに請求先アカウントが紐づいていれば有料ティアです。**実際の請求額はご自身の Google アカウントでご確認ください。**
 
 ### 無料枠と有料枠の選び方
 

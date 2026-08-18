@@ -440,6 +440,33 @@ test("the cost figure disclaims itself where the user can actually see it", () =
   }
 });
 
+test("the free tier is never shown a price", () => {
+  // Google charges a free-tier key nothing, so a dollar figure there is a bill
+  // that does not exist — and the natural reading of one is that a bill is
+  // accruing, which is the anxiety the meter was added to remove. No API
+  // response carries the tier, so it is asked for on the Options page; free is
+  // the default, because showing a price to someone who is not being charged is
+  // the worse of the two mistakes.
+  assert.match(read("lib/settings.js"), /apiTier: "free"/);
+
+  const select = read("options.html").match(/<select id="apiTier"[\s\S]*?<\/select>/)?.[0];
+  assert.ok(select, "no plan selector on the Options page");
+  for (const value of ["free", "paid"]) assert.match(select, new RegExp(`value="${value}"`));
+
+  // The money is written in one branch of the meter, and that branch is paid.
+  const meter = body(read("sidepanel.js"), "renderUsage");
+  assert.match(meter, /const paid = settings\.apiTier === "paid";/);
+  const at = meter.indexOf("if (paid)");
+  assert.ok(at > 0, "the meter no longer branches on the tier");
+  assert.doesNotMatch(meter.slice(0, at), /formatCost|usageAmount/);
+
+  // And the free sentence in the markup carries no price of its own.
+  const panel = read("sidepanel.html").replace(/\s+/g, " ");
+  const from = panel.indexOf('id="usageFree"');
+  assert.ok(from > 0, "the free tail is gone from the meter");
+  assert.doesNotMatch(panel.slice(from, panel.indexOf("</span", from)), /\$|cost|bill/i);
+});
+
 test("a class that sets display does not un-hide an element the panel hides", () => {
   // `[hidden]` is a UA rule, and any class rule that sets `display` outranks it.
   // The failure is silent and looks like a bug in the JavaScript: the element

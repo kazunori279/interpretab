@@ -379,15 +379,23 @@ function render() {
  * left. It is also the only figure here that is measured rather than estimated,
  * and it moves whether or not the rate table is still right.
  *
+ * Which is why the dollars are shown only to a key that is being charged. The
+ * tier cannot be detected — no Gemini API response carries it — so it is asked
+ * for on the Options page, and a free-tier run gets the audio it has moved
+ * instead of a price it will never pay. That is not a consolation figure: the
+ * free tier is limited by rate rather than by money, so the seconds of audio
+ * are what the limits are actually spent on, and the number that predicts the
+ * run failing to reconnect.
+ *
  * The figure is prefixed with a tilde and the sentence after it says "an
  * estimate, not your actual bill", in the markup rather than in the title
  * attribute. The prices behind it are a hardcoded table in `lib/usage.js` that
- * goes stale silently, and Interpretab cannot see which usage tier the key is
- * on — a free-tier key is charged nothing at all. A figure in dollars reads as
- * a bill unless it says otherwise, and a tooltip is not where a number
- * disclaims itself: nobody hovers. What is left for the tooltip is the
- * arithmetic, including the two audio times it is derived from — the thing that
- * would have made #16 legible from the panel instead of from a stopwatch.
+ * goes stale silently, and the tier it is priced at is whatever the Options
+ * page was told, which nothing checks. A figure in dollars reads as a bill
+ * unless it says otherwise, and a tooltip is not where a number disclaims
+ * itself: nobody hovers. What is left for the tooltip is the arithmetic,
+ * including the two audio times it is derived from — the thing that would have
+ * made #16 legible from the panel instead of from a stopwatch.
  */
 function renderUsage() {
   const note = el("usageNote");
@@ -395,23 +403,38 @@ function renderUsage() {
     note.hidden = true;
     return;
   }
-  const cost = formatCost(usage.total.cost);
-  // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
-  el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
   const { inSeconds = 0, outSeconds = 0, elapsedSeconds = 0 } = usage.total;
   // Wall clock since Start, and the only figure on this line that is not a
-  // guess. It is what the sentence is worth reading for on the free tier, where
-  // the dollars are charged to nobody.
+  // guess about anything. Shown to both tiers, because "how long have I had
+  // this running" is the question either of them is asking.
   el("usageTime").textContent = formatDuration(elapsedSeconds);
-  note.title =
+
+  const paid = settings.apiTier === "paid";
+  el("usagePaid").hidden = !paid;
+  el("usageFree").hidden = paid;
+  if (paid) {
+    const cost = formatCost(usage.total.cost);
+    // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
+    el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
+  } else {
+    // Both directions of it. The free tier's limits are spent on audio moved,
+    // not on money, and this is the half of the tooltip that was doing the work.
+    el("usageAudio").textContent = formatDuration(inSeconds + outSeconds);
+  }
+
+  const arithmetic =
     `Started ${formatDuration(elapsedSeconds)} ago. In that time it has sent ` +
     `${formatDuration(inSeconds)} of audio and been sent ` +
-    `${formatDuration(outSeconds)} back. The Live API charges both at 25 ` +
-    "tokens a second, and those are priced at Google's published rates for " +
-    "the model, read from the pricing page in August 2026 rather than from " +
-    "your account. Interpretab cannot see which usage tier your key is on — " +
-    "on the free tier you are charged nothing at all — and rates change. " +
-    "Your Google account is the only place your real bill exists.";
+    `${formatDuration(outSeconds)} back, both charged at 25 tokens a second.`;
+  note.title = paid
+    ? `${arithmetic} Those tokens are priced at Google's published rates for ` +
+      "the model, read from the pricing page in August 2026 rather than from " +
+      "your account, and rates change. Your Google account is the only place " +
+      "your real bill exists."
+    : `${arithmetic} Your key is set to the free tier on the Options page, ` +
+      "where Google charges nothing for any of it — so there is no cost to " +
+      "show. Set the plan to Paid there if the project has a billing account " +
+      "linked, and this line estimates what the run has cost.";
   note.hidden = false;
   // The live figure covers what the static warning was there to say.
   el("costNote").hidden = true;
@@ -515,13 +538,21 @@ async function send(message, throwOnError = false) {
   return reply;
 }
 
-// The key is set on the Options page, which is a different document, so the
-// panel only learns about it through storage — and it gates the Start button.
+// The key and the plan are both set on the Options page, which is a different
+// document, so the panel only learns about them through storage. One gates the
+// Start button; the other decides whether the meter is allowed to print money,
+// and it is applied to a run already going — the answer to "why am I being
+// shown a price" should not be "press Stop first".
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" || !changes.apiKey) return;
-  settings.apiKey = changes.apiKey.newValue;
-  if (settings.apiKey) clearError();
+  if (area !== "local") return;
+  if (!changes.apiKey && !changes.apiTier) return;
+  if (changes.apiKey) {
+    settings.apiKey = changes.apiKey.newValue;
+    if (settings.apiKey) clearError();
+  }
+  if (changes.apiTier) settings.apiTier = changes.apiTier.newValue;
   render();
+  renderUsage();
 });
 
 chrome.runtime.onMessage.addListener((msg) => {

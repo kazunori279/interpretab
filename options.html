@@ -61,6 +61,25 @@
     </div>
     <p class="note" id="apiKeyStatus"></p>
 
+    <h2>Gemini API plan</h2>
+    <p class="note">
+      Which plan the key's project is on. Interpretab has no way to tell — no
+      Gemini API response says — and it has to know, because the side panel's
+      meter would otherwise show a price to people Google charges nothing. On
+      <b>Free</b> the meter counts time and audio; on <b>Paid</b> it also
+      estimates what the run has cost. Pick the one your key is on: it is the
+      project you made it in at
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
+        >aistudio.google.com/apikey</a
+      >, and a project is on the paid tier once it has a billing account linked.
+    </p>
+    <div class="row">
+      <select id="apiTier" class="mode">
+        <option value="free">Free — Google charges nothing for this key</option>
+        <option value="paid">Paid — pay as you go, billed to your account</option>
+      </select>
+    </div>
+
     <h2>Voice</h2>
     <p class="note">
       The prebuilt voice the translation is spoken in. Fixed for the life of a

@@ -30,6 +30,7 @@ init();
 async function init() {
   settings = await loadSettings();
   el("apiKey").value = settings.apiKey;
+  el("apiTier").value = settings.apiTier;
   loadVoices();
   loadCaptionSize();
   bind();
@@ -44,6 +45,10 @@ function bind() {
   // trail of truncated keys through storage on the way to the real one.
   el("apiKey").addEventListener("change", saveKey);
   el("toggleKey").addEventListener("click", toggleKey);
+  // The side panel redraws its meter from a storage change, so this applies to
+  // a run already going — the answer to "why am I being shown a price" should
+  // not be "press Stop first".
+  el("apiTier").addEventListener("change", () => saveSettings({ apiTier: el("apiTier").value }));
   el("grantMic").addEventListener("click", grantMic);
   el("voice").addEventListener("change", () => saveSettings({ voice: el("voice").value }));
   // `input`, not `change`: the overlay follows the store, so writing on every

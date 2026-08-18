@@ -84,7 +84,8 @@ Interpretab installs like this:
    folder.
 3. Get a free Gemini API key at
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and paste it into the
-   extension's **Options** page.
+   extension's **Options** page. While you are there, set **Gemini API plan** to match the
+   project the key came from — it decides whether the side panel's meter shows a price.
 4. Open the page you want translated and **click the Interpretab toolbar icon on that tab**. That
    click is how you give permission to listen to the tab — skip it and you get an error.
 5. Pick your language in the side panel and press **Start**.
@@ -186,10 +187,18 @@ and the third is what you want the **subtitles to show**.
 
 ## More about using the Gemini Live API
 
-The side panel keeps a meter of how long the run has been going and what it has spent so far —
-*12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.* — and starts
-again at zero each time you press Start. On the free tier you are charged nothing, so read the
-time and ignore the dollars. **Your Google account is the only place your actual bill exists.**
+The side panel keeps a meter of what the run has used so far, and starts again at zero each time
+you press Start. What it shows depends on **Options → Gemini API plan**, which is the one thing
+Interpretab cannot work out for itself — no Gemini API response says which tier your key is on.
+
+- **Free** (the default): *12 min so far, 18 min of Gemini audio. The free tier is charged nothing
+  for it.* No price, because there is no price. The audio time is the number worth watching: the
+  free tier is limited by rate rather than by money, so that is what its limits are spent on.
+- **Paid**: *12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.*
+
+Set the plan when you paste the key — it is the project you made the key in, and a project is on
+the paid tier once it has a billing account linked. **Your Google account is the only place your
+actual bill exists.**
 
 ### Choosing between the free tier and a paid one
 

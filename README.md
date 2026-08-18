@@ -533,7 +533,8 @@ the socket dies without warning.
 The extension spends the user's own money and, until v1.0, told them so only in the abstract: a
 static line saying two directions cost roughly double. The side panel replaces that warning with a
 meter — a dial, a clock and a figure: *12 min so far, ~$0.31 of Gemini usage this run — an
-estimate, not your actual bill.*
+estimate, not your actual bill.* The dollars appear only for a key declared paid on the Options
+page; a free-tier key gets its audio time instead, for the reasons at the end of this section.
 
 **The figure is the audio clock, not the server's token count**, and getting there took a wrong
 turn worth writing down. The Live API attaches `usageMetadata` to its server messages and the
@@ -603,14 +604,29 @@ the same once-a-second post.
 unless it says otherwise, and nobody hovers over a line of text to find out that it is not one. So
 the sentence carries *an estimate, not your actual bill* — in `sidepanel.html` with the other
 static notes, since only the figure is written from script — and the tooltip has the arithmetic:
-how much audio went each way, that the Live API charges both at 25 tokens a second, that the
-prices are a hardcoded table that goes stale silently, and that **Interpretab cannot see which
-usage tier the key is on**, so it prices everything at the paid rates even though a free-tier key
-is charged nothing at all. That last one is its own problem — a price is not a useful thing to
-show someone who is not being charged
-([#17](https://github.com/kazunori279/interpretab/issues/17)). If the wording of the sentence
-changes, `README.md`, `index.md` and `ja/index.md` all quote it, and `tests/assets.test.js` fails
-until they agree.
+how much audio went each way, and that the Live API charges both at 25 tokens a second against a
+hardcoded price table that goes stale silently.
+
+**And the dollars are only shown to a key that is being charged.** A free-tier key is charged
+nothing at all, so a price there is a bill that does not exist, and the natural reading of one is
+that a bill is accruing — the exact anxiety the meter was added to remove
+([#17](https://github.com/kazunori279/interpretab/issues/17)). Nothing in a Gemini API response
+says which tier a key is on, and the model list does not either, so the only way to know is to
+ask: **Options → Gemini API plan**, under the key field, because pasting the key is the moment the
+user was last in AI Studio and knows which project they made it in. It defaults to free, since
+that is what the install steps tell people to get and since a price shown to someone who is not
+paying is the worse of the two mistakes.
+
+The free tail counts the audio instead — *12 min so far, 18 min of Gemini audio. The free tier is
+charged nothing for it.* — and that is not a consolation figure. The free tier is limited by rate
+rather than by money, so seconds of audio are what its limits are actually spent on, and the
+number that predicts a run failing to reconnect
+([#13](https://github.com/kazunori279/interpretab/issues/13)). Both sentences are static in
+`sidepanel.html` and only the figures are written from script, so no code path can drop the
+disclaimer off the paid one. The clock is shared: it is the question either tier is asking.
+
+If the wording of either sentence changes, `README.md`, `index.md` and `ja/index.md` all quote
+them, and `tests/assets.test.js` fails until they agree.
 
 ## Development
 
