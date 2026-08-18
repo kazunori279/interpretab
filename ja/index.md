@@ -143,7 +143,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 ## Gemini Live API の利用について
 
-Interpretab のサイドパネルには、その回の利用料金の目安がメーターとして **~$0.31 of Gemini usage this run — an estimate, not your actual bill.** のように表示されます。Start のたびにゼロに戻ります。**実際の請求額はご自身の Google アカウントでご確認ください。**
+Interpretab のサイドパネルには、その回の経過時間と利用料金の目安がメーターとして **12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.** のように表示されます。Start のたびにゼロに戻ります。無料枠では課金されないため、金額ではなく経過時間を目安にしてください。**実際の請求額はご自身の Google アカウントでご確認ください。**
 
 ### 無料枠と有料枠の選び方
 

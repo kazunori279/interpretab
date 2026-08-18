@@ -304,15 +304,21 @@ function render() {
 }
 
 /**
- * What this run has spent: one number, against a dial.
+ * What this run has spent: how long, and how much, against a dial.
  *
  * Money is what the user is being asked about — the key is theirs and the bill
- * is theirs — so money is the whole of it. The token count and the
- * per-direction split were both here and are both gone: the tokens are the
- * thing measured rather than the thing wanted, and the split answered "which
- * direction costs more" in a line that has to be read at a glance while a
- * translation is running. The run total already carries the warning the split
- * was standing in for, because two sessions make it visibly twice as big.
+ * is theirs — so money is most of it. The token count and the per-direction
+ * split were both here and are both gone: the tokens are the thing measured
+ * rather than the thing wanted, and the split answered "which direction costs
+ * more" in a line that has to be read at a glance while a translation is
+ * running. The run total already carries the warning the split was standing in
+ * for, because two sessions make it visibly twice as big.
+ *
+ * What earns the second number is that the first one is not always about
+ * anybody: a free-tier key is charged nothing, so the dollars are a rate card
+ * rather than a bill, and "how long have I had this running" is the question
+ * left. It is also the only figure here that is measured rather than estimated,
+ * and it moves whether or not the rate table is still right.
  *
  * The figure is prefixed with a tilde and the sentence after it says "an
  * estimate, not your actual bill", in the markup rather than in the title
@@ -333,9 +339,14 @@ function renderUsage() {
   const cost = formatCost(usage.total.cost);
   // "<$0.01" is already an approximation and says so; "~<$0.01" is noise.
   el("usageAmount").textContent = cost.startsWith("<") ? cost : `~${cost}`;
-  const { inSeconds = 0, outSeconds = 0 } = usage.total;
+  const { inSeconds = 0, outSeconds = 0, elapsedSeconds = 0 } = usage.total;
+  // Wall clock since Start, and the only figure on this line that is not a
+  // guess. It is what the sentence is worth reading for on the free tier, where
+  // the dollars are charged to nobody.
+  el("usageTime").textContent = formatDuration(elapsedSeconds);
   note.title =
-    `This run has sent ${formatDuration(inSeconds)} of audio and been sent ` +
+    `Started ${formatDuration(elapsedSeconds)} ago. In that time it has sent ` +
+    `${formatDuration(inSeconds)} of audio and been sent ` +
     `${formatDuration(outSeconds)} back. The Live API charges both at 25 ` +
     "tokens a second, and those are priced at Google's published rates for " +
     "the model, read from the pricing page in August 2026 rather than from " +
@@ -466,8 +477,12 @@ chrome.runtime.onMessage.addListener((msg) => {
     // The opposite case, and the one that reads as a broken extension: the
     // microphone is open and connected and carrying nothing, so the panel is
     // green and empty. Everything the user needs to fix it is in the message.
+    //
+    // An empty one takes the last one back down — the microphone has since
+    // carried something, and a stale "no sound has reached the microphone"
+    // sitting above a filling transcript is worse than never having said it.
     el("micNote").textContent = msg.detail;
-    el("micNote").hidden = false;
+    el("micNote").hidden = !msg.detail;
   }
 });
 

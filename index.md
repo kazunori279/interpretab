@@ -186,9 +186,10 @@ and the third is what you want the **subtitles to show**.
 
 ## More about using the Gemini Live API
 
-The side panel keeps a meter of what the run has spent so far — *~$0.31 of Gemini usage this run —
-an estimate, not your actual bill.* — and starts again at zero each time you press Start. **Your
-Google account is the only place your actual bill exists.**
+The side panel keeps a meter of how long the run has been going and what it has spent so far —
+*12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.* — and starts
+again at zero each time you press Start. On the free tier you are charged nothing, so read the
+time and ignore the dollars. **Your Google account is the only place your actual bill exists.**
 
 ### Choosing between the free tier and a paid one
 

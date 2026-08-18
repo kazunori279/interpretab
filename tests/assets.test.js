@@ -198,6 +198,42 @@ test("the offscreen document reaches for no extension API but chrome.runtime", (
   assert.deepEqual([...used].sort(), ["runtime"]);
 });
 
+test("the microphone warning is taken back down by the first sound", () => {
+  // The warning is a guess made eight seconds in, and the sound that disproves
+  // it usually arrives later — from someone who was slow to start talking, or
+  // who did what it said and switched device. Left up, it sits over a filling
+  // transcript calling a working extension broken, which is the thing it was
+  // written to prevent. Two halves hold that together and neither is visible in
+  // the other's file: the sample scan has to outlive the warning it raised, and
+  // an empty note has to mean "clear this" in the panel rather than an empty
+  // warning box.
+  const offscreen = fs.readFileSync(path.join(ROOT, "offscreen.js"), "utf8");
+  const panel = fs.readFileSync(path.join(ROOT, "sidepanel.js"), "utf8");
+
+  const scan = offscreen.match(/function noteMicLevel\([\s\S]*?\n\}/)?.[0];
+  assert.ok(scan, "noteMicLevel is gone — the retraction went with it");
+  assert.doesNotMatch(
+    scan,
+    /micSilenceTimer/,
+    "the scan is gated on the countdown, which the warning itself clears"
+  );
+  assert.match(scan, /post\(\{\s*type:\s*"micNote",\s*detail:\s*""\s*\}\)/);
+  assert.match(panel, /el\("micNote"\)\.hidden = !msg\.detail/);
+});
+
+test("the cost meter's clock is stamped where the run is", () => {
+  // Not in the panel: it can be closed and reopened in the middle of a run, and
+  // a timer that started with it would report the run as having begun when the
+  // user last looked at it. The elapsed time rides in on the same snapshot as
+  // the cost, from the document that has been open the whole time.
+  const offscreen = fs.readFileSync(path.join(ROOT, "offscreen.js"), "utf8");
+  const panel = fs.readFileSync(path.join(ROOT, "sidepanel.js"), "utf8");
+
+  assert.match(offscreen, /elapsedSeconds:\s*\(performance\.now\(\) - state\.startedAt\)/);
+  assert.match(panel, /el\("usageTime"\)\.textContent = formatDuration\(elapsedSeconds\)/);
+  assert.doesNotMatch(panel, /setInterval/, "the panel counts nothing of its own");
+});
+
 /**
  * What `npm run package` would put in the ZIP, worked out from the script's own
  * `-x` list rather than by running `zip`.

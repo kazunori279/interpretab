@@ -133,8 +133,13 @@ green, and transcribes nothing — a failure with no symptom other than the abse
 seconds from Start with nothing above the noise floor now puts the device actually being captured
 on screen, by name, and points at that setting. Only the opening stretch: the first sound of any
 kind ends the watch for the rest of the run, or a pause after a few translated words would be
-reported as the wrong microphone. A device named there and then unplugged falls back to the
-default and says so, rather than resurrecting the silence the setting exists to end.
+reported as the wrong microphone. **And the first sound takes the warning back down**, which is
+the other half of it — eight seconds is a guess, and the sound that disproves it usually arrives
+afterwards, from someone slow to start talking or from someone who did what the warning said and
+switched device. Left up, the guess sits over a filling transcript calling a working extension
+broken. So the sample scan outlives the warning it raised, and an empty `micNote` is what clears
+one in the panel. A device named there and then unplugged falls back to the default and says so,
+rather than resurrecting the silence the setting exists to end.
 
 **Two mute buttons** sit beside Start. The microphone one drops its frames before they are sent,
 so what is said while it is on is not heard, not translated, and not charged for. The sound one
@@ -484,8 +489,8 @@ the socket dies without warning.
 
 The extension spends the user's own money and, until v1.0, told them so only in the abstract: a
 static line saying two directions cost roughly double. The side panel replaces that warning with a
-meter — a dial and one figure: *~$0.31 of Gemini usage this run — an estimate, not your actual
-bill.*
+meter — a dial, a clock and a figure: *12 min so far, ~$0.31 of Gemini usage this run — an
+estimate, not your actual bill.*
 
 **The figure is the audio clock, not the server's token count**, and getting there took a wrong
 turn worth writing down. The Live API attaches `usageMetadata` to its server messages and the
@@ -531,7 +536,7 @@ The unit test that would have caught this in the first place is now in `tests/us
 cent takes sixteen seconds of continuous audio in both directions, and the arithmetic is asserted
 against the per-minute column of the same pricing page the per-token column came from.
 
-**One number, against a dial.** The first version of this line also printed the token count and,
+**Two numbers, against a dial.** The first version of this line also printed the token count and,
 when both directions were running, what each of them had spent — three figures and a breakdown, in
 a 12px grey line, while a translation was playing. All of it went. The tokens are the thing
 measured rather than the thing wanted, and the per-direction split was standing in for the
@@ -540,6 +545,16 @@ a gauge glyph, which says "meter" before the sentence is read, and one figure wi
 Removing the breakdown did cost something, though: it was also the only thing that would have made
 a meter running at five times the rate legible from the panel. The two audio times are back in the
 tooltip for that reason.
+
+What came back into the line itself is **how long the run has been going**, and it earns the space
+the breakdown lost because the money does not always mean anything: on the free tier nobody is
+charged, so the dollars are a rate card rather than a bill, and *how long have I had this running*
+is the question left over. It is also the only figure here that is measured rather than estimated
+— it keeps moving whether or not the price table is still right. The clock is a wall clock stamped
+in `offscreen.js` at Start, not a sum of audio and not a timer in the panel: the panel is destroyed
+and rebuilt on every tab switch, and one counting for itself would report the run as having begun
+when the user last looked at it. It rides in on the same snapshot as the cost, so it advances with
+the same once-a-second post.
 
 **The disclaimer is in the sentence, not only in the tooltip.** A figure in dollars reads as a bill
 unless it says otherwise, and nobody hovers over a line of text to find out that it is not one. So

@@ -103,11 +103,14 @@ const state = {
   playoutEndsAt: { tab: 0, mic: 0 },
   duckTimer: null,
   ducked: false,
-  // Since when the microphone has carried nothing above the noise floor, and
-  // the interval watching for it never having carried anything at all. Both are
-  // dropped for the rest of the run at the first sound — see `watchMicSilence`.
+  // Since when the microphone has carried nothing above the noise floor, the
+  // interval watching for it never having carried anything at all, and whether
+  // that watch has already put a warning on screen. All three are dropped for
+  // the rest of the run at the first sound — see `watchMicSilence`.
   micSilentSince: 0,
   micSilenceTimer: null,
+  micNoted: false,
+  micListening: false,
   // The transcript, kept here because this is the only context that outlives
   // both the side panel and the service worker — see `noteLine`.
   lines: [],
@@ -115,6 +118,10 @@ const state = {
   // The trailing-edge timer behind USAGE_POST_MS. The tallies themselves live
   // on each direction's accumulator, which is where the events arrive.
   usageTimer: null,
+  // When Start was pressed, for the clock beside the cost. Kept here and not in
+  // the panel: the panel can be closed and reopened mid-run, and a timer that
+  // restarted with it would say the run began when the user last looked at it.
+  startedAt: 0,
   active: false,
 };
 
@@ -196,6 +203,10 @@ async function start({ apiKey, streamId, settings, glossary }) {
   state.settings = settings;
   state.apiKey = apiKey;
   state.displayMap = buildDisplayMap(glossary);
+  // Before the sessions open rather than after: opening them is where a slow
+  // microphone permission goes, and the clock beside the cost has to cover the
+  // whole run, including the part the user spent waiting for it.
+  state.startedAt = performance.now();
 
   // Half a run is worse than none. The microphone is the half that fails —
   // a refused permission is the common one — and it fails *after* the tab
@@ -258,10 +269,17 @@ const MIC_SILENCE_MS = 8000;
  *
  * Asked once per run and only about the opening stretch of it: the question is
  * whether this device ever carries anything, so the first sound answers it for
- * good and the watch is dropped. It used to be a rolling eight seconds instead,
- * which said "no sound has reached the microphone since Start" to someone who
- * had been translated a moment earlier and then stopped talking — a warning
- * that the wrong device was selected, raised by the right one being quiet.
+ * good. It used to be a rolling eight seconds instead, which said "no sound has
+ * reached the microphone since Start" to someone who had been translated a
+ * moment earlier and then stopped talking — a warning that the wrong device was
+ * selected, raised by the right one being quiet.
+ *
+ * The samples go on being read after the warning has been raised, though, and
+ * that is the point of `micNoted`: eight seconds of quiet at the start is a
+ * guess, not a verdict, and someone who was slow to speak — or who fixed the
+ * device the warning pointed at — must not be left reading "no sound has
+ * reached the microphone" while their words are being translated underneath it.
+ * The first sound retracts it. Only then does the scan stop.
  *
  * It cannot be an error either way: silence is also what a microphone waiting
  * to be spoken into sounds like.
@@ -269,6 +287,8 @@ const MIC_SILENCE_MS = 8000;
 function watchMicSilence(stream) {
   const label = stream.getAudioTracks()[0]?.label;
   state.micSilentSince = performance.now();
+  state.micListening = true;
+  state.micNoted = false;
   clearInterval(state.micSilenceTimer);
   state.micSilenceTimer = setInterval(() => {
     // A muted microphone is silent on purpose, and being told that the device
@@ -280,7 +300,10 @@ function watchMicSilence(stream) {
       return;
     }
     if (performance.now() - state.micSilentSince < MIC_SILENCE_MS) return;
-    stopMicSilenceWatch();
+    // The clock is done; the scan is not, so only the interval is cleared here.
+    clearInterval(state.micSilenceTimer);
+    state.micSilenceTimer = null;
+    state.micNoted = true;
     post({
       type: "micNote",
       detail:
@@ -296,16 +319,24 @@ function watchMicSilence(stream) {
  * Note that the microphone carried something, for `watchMicSilence`.
  *
  * One sound is the whole answer, so this stops looking at the samples for the
- * rest of the run — which also takes a per-frame loop out of the hot path.
+ * rest of the run — which also takes a per-frame loop out of the hot path. If
+ * the warning had already gone out by then, the same sound takes it back down:
+ * an empty note is what clears one in the side panel.
  */
 function noteMicLevel(samples) {
-  if (!state.micSilenceTimer) return;
+  if (!state.micListening) return;
   for (let i = 0; i < samples.length; i++) {
-    if (Math.abs(samples[i]) >= MIC_SILENCE_FLOOR) return stopMicSilenceWatch();
+    if (Math.abs(samples[i]) < MIC_SILENCE_FLOOR) continue;
+    const noted = state.micNoted;
+    stopMicSilenceWatch();
+    if (noted) post({ type: "micNote", detail: "" });
+    return;
   }
 }
 
 function stopMicSilenceWatch() {
+  state.micListening = false;
+  state.micNoted = false;
   clearInterval(state.micSilenceTimer);
   state.micSilenceTimer = null;
 }
@@ -564,9 +595,17 @@ function usageSnapshot() {
     cost += snapshot[name].cost;
   }
   if (!combined.inSeconds && !combined.outSeconds) return null;
-  // The two times go with the figure: the tooltip shows what it was worked out
-  // from, which is the part a wrong meter would have made obvious.
-  snapshot.total = { cost, inSeconds: combined.inSeconds, outSeconds: combined.outSeconds };
+  // The two audio times go with the figure: the tooltip shows what it was
+  // worked out from, which is the part a wrong meter would have made obvious.
+  // The elapsed time is not part of that arithmetic — it is the panel's
+  // headline for anyone the dollars mean nothing to, which on the free tier is
+  // everyone (#17) — so it is a wall clock and not a sum of audio.
+  snapshot.total = {
+    cost,
+    inSeconds: combined.inSeconds,
+    outSeconds: combined.outSeconds,
+    elapsedSeconds: (performance.now() - state.startedAt) / 1000,
+  };
   return snapshot;
 }
 
