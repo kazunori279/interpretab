@@ -24,12 +24,24 @@ re-packaging and re-uploading the ZIP.
 
 ## Category
 
-Productivity → Workflow & Planning. (Secondary consideration: Accessibility. Productivity is the
-better fit because the two-way direction is a meeting tool, not only an assistive one.)
+Communication. The store defines it as extensions that enable communications, and names "video
+conferencing apps and enhancements" in the list — which is what this is.
+
+This said Workflow & Planning until the categories were read rather than guessed at. That came from
+picking Productivity and following the 2023 split, but what Workflow & Planning inherited is time
+trackers, to-do lists, calendars and document editors; the half of the old Social & Communications
+bucket a meeting tool belongs in is Communication. (Secondary consideration: Accessibility, which
+fits the one-way listening case but not the two-way one.)
 
 ## Language
 
-English.
+English, and English only until an internationalized package is published. The dashboard's 言語
+field is single-select and links to the `chrome.i18n` docs for a reason: per-locale titles,
+summaries, descriptions and screenshots come from the package's `_locales/`, not from anything you
+can type here. The repository ships all ten (`ar de en es fr hi ja ko pt_BR zh_CN`) behind
+`default_locale`, but the uploaded ZIP predates them, so the store has no locale data to offer and
+serves the English text to every visitor. Uploading a package with `_locales/` is what makes the
+locale selector appear at the top of this page.
 
 ---
 
