@@ -65,16 +65,16 @@ Interpretab एक ओपन सोर्स टूल है। पैसा �
 
 Interpretab ऐसे इंस्टॉल होता है:
 
-1. [Interpretab रिपॉज़िटरी](https://github.com/kazunori279/interpretab) पर `Code` बटन दबाएँ,
-   `Download ZIP` चुनें और उसे अनज़िप करें।
-2. Chrome में `chrome://extensions` खोलें, **डेवलपर मोड** चालू करें, **Load unpacked** पर क्लिक करें
-   और अनज़िप किया हुआ फ़ोल्डर चुनें।
-3. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) से मुफ़्त Gemini API कुंजी लें
+1. [Chrome Web Store पर Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   खोलें और **Chrome में जोड़ें** दबाएँ।
+2. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) से मुफ़्त Gemini API कुंजी लें
    और उसे एक्सटेंशन के **विकल्प** पेज में पेस्ट करें।
-4. जिस पेज का अनुवाद चाहिए उसे खोलें और **उसी टैब पर टूलबार में Interpretab का आइकॉन क्लिक करें**। यही क्लिक उस टैब को सुनने की अनुमति है — इसे छोड़ देने पर त्रुटि मिलेगी।
-5. साइड पैनल में अपनी भाषा चुनें और **Start** दबाएँ।
+3. जिस पेज का अनुवाद चाहिए उसे खोलें और **उसी टैब पर टूलबार में Interpretab का आइकॉन क्लिक करें**। यही क्लिक उस टैब को सुनने की अनुमति है — इसे छोड़ देने पर त्रुटि मिलेगी।
+4. साइड पैनल में अपनी भाषा चुनें और **Start** दबाएँ।
 
 Chrome 116 या उससे नया चाहिए। साइड पैनल बंद करने से अनुवाद नहीं रुकता — **Stop** किसी भी टैब से, टूलबार आइकॉन पर एक क्लिक की दूरी पर रहता है।
+
+Interpretab ओपन सोर्स है, इसलिए इसे सोर्स से भी चलाया जा सकता है: [रिपॉज़िटरी](https://github.com/kazunori279/interpretab) से `Code` बटन दबाकर `Download ZIP` से ZIP लें और अनज़िप करें, फिर `chrome://extensions` खोलकर **डेवलपर मोड** चालू करें, **Load unpacked** पर क्लिक करें और वही फ़ोल्डर चुनें।
 
 Interpretab का इंटरफ़ेस आपके ब्राउज़र की भाषा के अनुसार चलता है, इस पेज पर दी गई दस भाषाओं में।
 

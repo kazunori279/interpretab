@@ -54,9 +54,10 @@ mapped, and a language only one of them has falls back to the top of the list.
 
 ## Install
 
-Submitted to the Chrome Web Store and
-[waiting for review](https://chromewebstore.google.com/detail/johnocemcoemdhiogfgmphjmlghgdnbm);
-until it is through, load it unpacked.
+[On the Chrome Web
+Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm) —
+**Add to Chrome**, and the [user guide](https://kazunori279.github.io/interpretab/) takes it from
+there. To work on it, load it unpacked instead.
 
 1. Clone this repo.
 2. Open `chrome://extensions`, turn on **Developer mode** (top right), click **Load unpacked**

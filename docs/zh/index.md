@@ -65,15 +65,16 @@ Interpretab 是一款开源工具。真正产生费用的是背后的 Gemini Liv
 
 Interpretab 这样安装：
 
-1. 在 [Interpretab 仓库](https://github.com/kazunori279/interpretab)点击 `Code` 按钮，选择
-   `Download ZIP`，然后解压。
-2. 在 Chrome 中打开 `chrome://extensions`，打开**开发者模式**，点击**加载已解压的扩展程序**，选择解压出来的文件夹。
-3. 在 [aistudio.google.com/apikey](https://aistudio.google.com/apikey) 获取免费的 Gemini API
+1. 打开 [Chrome 应用商店中的 Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)，
+   点击**添加至 Chrome**。
+2. 在 [aistudio.google.com/apikey](https://aistudio.google.com/apikey) 获取免费的 Gemini API
    密钥，粘贴到扩展的**选项**页面。
-4. 打开要翻译的页面，**在那个标签页上点击工具栏中的 Interpretab 图标**。这次点击就是你授权它收听该标签页的方式——跳过它就会报错。
-5. 在侧边栏选择语言，按 **Start**。
+3. 打开要翻译的页面，**在那个标签页上点击工具栏中的 Interpretab 图标**。这次点击就是你授权它收听该标签页的方式——跳过它就会报错。
+4. 在侧边栏选择语言，按 **Start**。
 
 需要 Chrome 116 或更高版本。关闭侧边栏并不会停止翻译——在任意标签页点一下工具栏图标，**Stop** 始终触手可及。
+
+Interpretab 是开源的，你也可以直接从源码运行：在[仓库](https://github.com/kazunori279/interpretab)点击 `Code` 按钮，选择 `Download ZIP` 并解压，然后打开 `chrome://extensions`，打开**开发者模式**，点击**加载已解压的扩展程序**，选择解压出来的文件夹。
 
 Interpretab 的界面跟随浏览器的语言，共支持本页列出的十种语言。
 

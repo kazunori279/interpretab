@@ -78,19 +78,23 @@ microphone on together is two translations at once, so the price is the sum of t
 
 Interpretab installs like this:
 
-1. On [the Interpretab repository](https://github.com/kazunori279/interpretab), click the `Code`
-   button, choose `Download ZIP`, and unzip it.
-2. In Chrome, open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and
-   pick the unzipped folder.
-3. Get a free Gemini API key at
+1. Open [Interpretab on the Chrome Web
+   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   and press **Add to Chrome**.
+2. Get a free Gemini API key at
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and paste it into the
    extension's **Options** page.
-4. Open the page you want translated and **click the Interpretab toolbar icon on that tab**. That
+3. Open the page you want translated and **click the Interpretab toolbar icon on that tab**. That
    click is how you give permission to listen to the tab — skip it and you get an error.
-5. Pick your language in the side panel and press **Start**.
+4. Pick your language in the side panel and press **Start**.
 
 Chrome 116 or newer. Closing the side panel does not stop the translation — the **Stop** button is
 always one click on the toolbar icon away, from any tab.
+
+Interpretab is open source, so you can also run it from the source instead: download a ZIP from
+[the repository](https://github.com/kazunori279/interpretab), unzip it, then open
+`chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and pick the unzipped
+folder.
 
 Interpretab's interface follows your browser's language, in the ten languages at the top of this
 page.

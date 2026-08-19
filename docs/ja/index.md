@@ -65,17 +65,19 @@ Interpretab はオープンソースのツールです。翻訳機能を提供�
 
 Interpretab は以下の手順でインストールできます。
 
-1. [Interpretab のリポジトリ](https://github.com/kazunori279/interpretab)から`Code`ボタンをクリック、`Download ZIP`を選択して ZIP ファイルをダウンロードして展開する。
-2. Chrome ブラウザで`chrome://extensions` を開き、**デベロッパーモード**を ON にして、**パッケージ化されていない拡張機能を
-   読み込む**から展開したフォルダを選ぶ。
-3. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) で無料の Gemini API キーを取得し、
+1. [Chrome ウェブストアの Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm) を開き、**Chrome に追加**を押す。
+2. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) で無料の Gemini API キーを取得し、
    拡張機能の**オプション**ページに貼り付ける。
-4. 翻訳したいページを開き、**そのタブで Interpretab のツールバーアイコンをクリックする**。この
+3. 翻訳したいページを開き、**そのタブで Interpretab のツールバーアイコンをクリックする**。この
    クリックが「このタブの音声を聞いていいですよ」という許可になります。押さずに始めるとエラーが発生します。
-5. サイドパネルで言語を選び、**Start** を押す。
+4. サイドパネルで言語を選び、**Start** を押す。
 
 Chrome 116 以降が必要です。サイドパネルを閉じても翻訳は止まりません。**Stop** はどのタブからでも
 ツールバーアイコンをクリックすれば届きます。
+
+Interpretab はオープンソースなので、ソースから動かすこともできます。[リポジトリ](https://github.com/kazunori279/interpretab)から`Code`ボタン →
+`Download ZIP`で ZIP ファイルをダウンロードして展開し、`chrome://extensions` を開いて**デベロッパーモード**を ON にして、
+**パッケージ化されていない拡張機能を読み込む**から展開したフォルダを選んでください。
 
 Interpretab の画面表示はブラウザの言語に追従します。対応しているのはこのページ上部の 10 言語です。
 

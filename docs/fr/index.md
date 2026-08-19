@@ -80,20 +80,24 @@ lignes.
 
 Interpretab s'installe ainsi :
 
-1. Sur [le dépôt Interpretab](https://github.com/kazunori279/interpretab), cliquez sur le bouton
-   `Code`, choisissez `Download ZIP`, et décompressez-le.
-2. Dans Chrome, ouvrez `chrome://extensions`, activez le **mode développeur**, cliquez sur
-   **Charger l'extension non empaquetée**, et choisissez le dossier décompressé.
-3. Obtenez une clé d'API Gemini gratuite sur
+1. Ouvrez [Interpretab sur le Chrome Web
+   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   et cliquez sur **Ajouter à Google Chrome**.
+2. Obtenez une clé d'API Gemini gratuite sur
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) et collez-la dans la page
    **Options** de l'extension.
-4. Ouvrez la page à traduire et **cliquez sur l'icône Interpretab de la barre d'outils depuis cet
+3. Ouvrez la page à traduire et **cliquez sur l'icône Interpretab de la barre d'outils depuis cet
    onglet**. Ce clic est la façon dont vous donnez la permission d'écouter l'onglet : sans lui, vous
    obtenez une erreur.
-5. Choisissez votre langue dans le panneau latéral et appuyez sur **Start**.
+4. Choisissez votre langue dans le panneau latéral et appuyez sur **Start**.
 
 Chrome 116 ou plus récent. Fermer le panneau latéral n'arrête pas la traduction : le bouton **Stop**
 est toujours à un clic sur l'icône de la barre d'outils, depuis n'importe quel onglet.
+
+Interpretab est open source, vous pouvez donc aussi le lancer depuis les sources : téléchargez un
+ZIP depuis [le dépôt](https://github.com/kazunori279/interpretab), décompressez-le, puis ouvrez
+`chrome://extensions`, activez le **mode développeur**, cliquez sur **Charger l'extension non
+empaquetée** et choisissez le dossier décompressé.
 
 L'interface d'Interpretab suit la langue de votre navigateur, dans les dix langues de cette page.
 

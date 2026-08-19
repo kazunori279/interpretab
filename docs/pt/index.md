@@ -79,20 +79,24 @@ mesmo tempo são duas traduções ao mesmo tempo, então o preço é a soma das 
 
 O Interpretab se instala assim:
 
-1. No [repositório do Interpretab](https://github.com/kazunori279/interpretab), clique no botão
-   `Code`, escolha `Download ZIP` e descompacte.
-2. No Chrome, abra `chrome://extensions`, ative o **modo do desenvolvedor**, clique em **Carregar
-   sem compactação** e escolha a pasta descompactada.
-3. Pegue uma chave de API do Gemini gratuita em
+1. Abra o [Interpretab na Chrome Web
+   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   e clique em **Usar no Chrome**.
+2. Pegue uma chave de API do Gemini gratuita em
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) e cole na página de **Opções**
    da extensão.
-4. Abra a página que quer traduzir e **clique no ícone do Interpretab na barra de ferramentas
+3. Abra a página que quer traduzir e **clique no ícone do Interpretab na barra de ferramentas
    estando naquela aba**. Esse clique é como você dá permissão para ouvir a aba — sem ele, aparece
    um erro.
-5. Escolha o seu idioma no painel lateral e aperte **Start**.
+4. Escolha o seu idioma no painel lateral e aperte **Start**.
 
 Chrome 116 ou mais novo. Fechar o painel lateral não interrompe a tradução — o botão **Stop** está
 sempre a um clique no ícone da barra de ferramentas, de qualquer aba.
+
+O Interpretab é de código aberto, então você também pode rodá-lo a partir do código: baixe um ZIP
+no [repositório](https://github.com/kazunori279/interpretab), descompacte, abra
+`chrome://extensions`, ative o **modo do desenvolvedor**, clique em **Carregar sem compactação** e
+escolha a pasta descompactada.
 
 A interface do Interpretab acompanha o idioma do seu navegador, nos dez idiomas desta página.
 

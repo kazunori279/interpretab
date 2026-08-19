@@ -65,17 +65,17 @@ description: إضافة Chrome تترجم ما يشغّله متصفحك، وم�
 
 يُثبَّت Interpretab هكذا:
 
-1. في [مستودع Interpretab](https://github.com/kazunori279/interpretab)، اضغط زر `Code`، واختر
-   `Download ZIP`، ثم فُكّ الضغط.
-2. في Chrome، افتح `chrome://extensions`، وفعّل **وضع المطوّر**، واضغط **Load unpacked**، ثم اختر
-   المجلد الذي فككته.
-3. احصل على مفتاح Gemini API مجاني من
+1. افتح [Interpretab في Chrome Web Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   واضغط **الإضافة إلى Chrome**.
+2. احصل على مفتاح Gemini API مجاني من
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) والصقه في صفحة **الخيارات**
    في الإضافة.
-4. افتح الصفحة التي تريد ترجمتها و**اضغط أيقونة Interpretab في شريط الأدوات وأنت على تلك العلامة**. تلك النقرة هي إذنك بالاستماع إلى علامة التبويب — وتجاوُزها يعني رسالة خطأ.
-5. اختر لغتك في اللوحة الجانبية واضغط **Start**.
+3. افتح الصفحة التي تريد ترجمتها و**اضغط أيقونة Interpretab في شريط الأدوات وأنت على تلك العلامة**. تلك النقرة هي إذنك بالاستماع إلى علامة التبويب — وتجاوُزها يعني رسالة خطأ.
+4. اختر لغتك في اللوحة الجانبية واضغط **Start**.
 
 يتطلب Chrome 116 أو أحدث. وإغلاق اللوحة الجانبية لا يوقف الترجمة — فزر **Stop** يبعد دائمًا نقرةً واحدة على أيقونة شريط الأدوات، من أي علامة تبويب.
+
+Interpretab مفتوح المصدر، فيمكنك أيضًا تشغيله من الشيفرة: نزّل ملف ZIP من [المستودع](https://github.com/kazunori279/interpretab) وفُكّ ضغطه، ثم افتح `chrome://extensions`، وفعّل **وضع المطوّر**، واضغط **Load unpacked**، ثم اختر المجلد الذي فككته.
 
 تتبع واجهة Interpretab لغة متصفحك، باللغات العشر المذكورة في أعلى هذه الصفحة.
 

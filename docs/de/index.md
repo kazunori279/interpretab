@@ -79,20 +79,24 @@ Zeilen.
 
 Interpretab installieren Sie so:
 
-1. Im [Interpretab-Repository](https://github.com/kazunori279/interpretab) auf `Code` klicken,
-   `Download ZIP` wählen und entpacken.
-2. In Chrome `chrome://extensions` öffnen, den **Entwicklermodus** einschalten, auf **Entpackte
-   Erweiterung laden** klicken und den entpackten Ordner auswählen.
-3. Einen kostenlosen Gemini-API-Schlüssel unter
+1. [Interpretab im Chrome Web
+   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
+   öffnen und auf **Hinzufügen** klicken.
+2. Einen kostenlosen Gemini-API-Schlüssel unter
    [aistudio.google.com/apikey](https://aistudio.google.com/apikey) holen und auf der Seite
    **Optionen** der Erweiterung einfügen.
-4. Die zu übersetzende Seite öffnen und **auf diesem Tab das Interpretab-Symbol in der
+3. Die zu übersetzende Seite öffnen und **auf diesem Tab das Interpretab-Symbol in der
    Symbolleiste anklicken**. Mit diesem Klick geben Sie die Erlaubnis, den Tab mitzuhören — ohne ihn
    bekommen Sie eine Fehlermeldung.
-5. Im Seitenbereich Ihre Sprache wählen und **Start** drücken.
+4. Im Seitenbereich Ihre Sprache wählen und **Start** drücken.
 
 Chrome 116 oder neuer. Das Schließen des Seitenbereichs beendet die Übersetzung nicht — die
 Schaltfläche **Stop** ist von jedem Tab aus immer einen Klick auf das Symbolleisten-Symbol entfernt.
+
+Interpretab ist quelloffen, Sie können es also auch aus dem Quellcode betreiben: im
+[Repository](https://github.com/kazunori279/interpretab) ein ZIP herunterladen und entpacken, dann
+`chrome://extensions` öffnen, den **Entwicklermodus** einschalten, auf **Entpackte Erweiterung
+laden** klicken und den entpackten Ordner auswählen.
 
 Die Oberfläche von Interpretab folgt der Sprache Ihres Browsers, in den zehn Sprachen dieser Seite.
 

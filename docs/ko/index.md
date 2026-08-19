@@ -65,16 +65,16 @@ Interpretab은 오픈소스 도구입니다. 비용이 드는 쪽은 번역을 �
 
 Interpretab은 다음과 같이 설치합니다.
 
-1. [Interpretab 저장소](https://github.com/kazunori279/interpretab)에서 `Code` 버튼을 눌러
-   `Download ZIP`을 선택하고 압축을 풉니다.
-2. Chrome에서 `chrome://extensions`를 열고 **개발자 모드**를 켠 다음, **압축해제된 확장 프로그램을
-   로드합니다**를 눌러 압축을 푼 폴더를 고릅니다.
-3. [aistudio.google.com/apikey](https://aistudio.google.com/apikey)에서 무료 Gemini API 키를 받아
+1. [Chrome 웹 스토어의 Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)을
+   열고 **Chrome에 추가**를 누릅니다.
+2. [aistudio.google.com/apikey](https://aistudio.google.com/apikey)에서 무료 Gemini API 키를 받아
    확장 프로그램의 **옵션** 페이지에 붙여넣습니다.
-4. 번역할 페이지를 열고, **그 탭에서 툴바의 Interpretab 아이콘을 클릭합니다.** 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
-5. 사이드 패널에서 언어를 고르고 **Start**를 누릅니다.
+3. 번역할 페이지를 열고, **그 탭에서 툴바의 Interpretab 아이콘을 클릭합니다.** 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
+4. 사이드 패널에서 언어를 고르고 **Start**를 누릅니다.
 
 Chrome 116 이상이 필요합니다. 사이드 패널을 닫아도 번역은 멈추지 않습니다. **Stop**은 어느 탭에서든 툴바 아이콘 클릭 한 번이면 됩니다.
+
+Interpretab은 오픈 소스이므로 소스에서 직접 실행할 수도 있습니다. [저장소](https://github.com/kazunori279/interpretab)에서 `Code` 버튼을 눌러 `Download ZIP`으로 받아 압축을 풀고, `chrome://extensions`를 열어 **개발자 모드**를 켠 다음 **압축해제된 확장 프로그램을 로드합니다**로 그 폴더를 고르면 됩니다.
 
 Interpretab의 인터페이스는 브라우저 언어를 따라가며, 이 페이지에 있는 열 개 언어를 지원합니다.
 
