@@ -1182,6 +1182,34 @@ open is the likely case, and left `optionsFocus` in session storage to ambush so
 The page now takes the request as a `chrome.storage.session` change as well as on load. Step 6 of
 the walkthrough is that bug.
 
+**`tests/store-shots.mjs` — the store screenshots that are pure extension UI.**
+
+```bash
+node tests/store-shots.mjs            # headless, ~10 seconds
+```
+
+Three of the five — the glossary, the panel, the key field — are the Options page and the side
+panel photographed at 1280×800, and they used to be taken by hand. Which meant they aged: the set
+that was sitting in `store/` still said "source auto-detected" and "Original volume while
+speaking", and showed an Options page from before it grew its two groups. A screenshot that has to
+be re-taken by hand is a screenshot that is out of date, so this takes all three from the same
+throwaway profile the onboarding walk uses. It needs no key either — the one it shows is the
+obvious fake `AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000`, written into a profile that is deleted on
+the way out.
+
+The composition is `tests/store-frame.html`, a 1280×800 extension page with one iframe on it. A
+browser window is never 1280×800, and the pages being shot are `chrome-extension://` URLs that
+only a page at the same origin can size, scroll, or ask whether they have finished localizing
+themselves. Each shot lays its page out at some width and height in CSS pixels and scales it up
+with `zoom`, the product being the frame: the Options page at 916×574 zoomed 1.4, which is what
+makes 14px body text legible once the store scales the image down, and the panel at 460×540 zoomed
+1.43 on a gradient, wider than the 400px a side panel actually opens at because at 400 the
+rewritten sentences wrap enough to push Start off the bottom of the card.
+
+The other two are a live session with a real video playing and a real side panel open. Nothing
+inside a page can photograph browser UI and no harness can supply the video, so those stay manual —
+as do the two `spare-*.png`, which are from the same sitting and were not re-taken.
+
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is
 in the panel's disabled list, the mark and the subtitles read the one recorded tab — but the

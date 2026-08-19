@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interpretab — store frame</title>
+    <!--
+      A 1280×800 stage for `store-shots.mjs`, and nothing else. It exists only
+      so the extension's own pages can be photographed at the size the store
+      demands: a browser window is never 1280×800, and a screenshot of one is
+      neither the right shape nor legible once the store scales it down.
+
+      Being an extension page is the point. The pages it frames are
+      `chrome-extension://<id>/…`, so a host anywhere else could not size them,
+      scroll them, or read whether they had finished localizing themselves.
+
+      Everything variable — which page, how big, how far zoomed, card or
+      full-bleed — is set from the driver rather than from a query string, so
+      this file has no script and needs no CSP exception for one.
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 800px;
+        overflow: hidden;
+        background: #fff;
+      }
+      iframe {
+        display: block;
+        border: 0;
+        background: #fff;
+      }
+      /* Shot 4 is the panel alone, and a white panel on a white page has no
+         edge. The gradient is neutral and cool enough to read as "not part of
+         the product", and the shadow is what makes the 620px column look like
+         a panel rather than a crop. */
+      body.card {
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at 88% 8%, #f5f6f9, rgba(245, 246, 249, 0) 62%),
+          radial-gradient(circle at 4% 96%, #f1f2f5, rgba(241, 242, 245, 0) 58%), #dedfe6;
+      }
+      body.card iframe {
+        border-radius: 14px;
+        box-shadow: 0 18px 50px rgba(31, 41, 66, 0.18), 0 2px 6px rgba(31, 41, 66, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="stage"></iframe>
+  </body>
+</html>

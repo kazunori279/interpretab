@@ -146,11 +146,18 @@ which reads as more window rather than as a border. 2 ended up being the microph
 alone rather than both directions at once: the panel's `HEARD (MIC)` / `TRANSLATION (MIC)` pair
 tells the two-way story more legibly than two subtitle lines stacked on one page.
 
-The three that are pure extension UI were taken by loading the page into a 1280×800 iframe on an
-extension page and setting `zoom` on it: the window is whatever size it is, and a screenshot of it
-is neither the right shape nor legible once the store scales it down. The key in 5 is a fake
-written into the field, never saved — `saveKey` runs on `change`, which a script setting `.value`
-does not fire. `tests/assets.test.js` checks the dimensions of everything in here.
+The three that are pure extension UI — 3, 4 and 5 — are taken by `node tests/store-shots.mjs`,
+which installs the unpacked extension into a throwaway Chrome profile and photographs the pages in
+a 1280×800 iframe on an extension page with `zoom` set on it: the window is whatever size it is,
+and a screenshot of it is neither the right shape nor legible once the store scales it down. They
+were taken by hand until the plain-language rewrite aged all three at once, which is the argument
+for the script — re-take them after any wording change rather than noticing later that the store
+is showing sentences the extension no longer says. The key in 5 is the obvious fake
+`AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000`, seeded into a profile that is deleted on the way out.
+`tests/assets.test.js` checks the dimensions of everything in here.
+
+The two `spare-*.png` are from the original manual sitting and have not been re-taken, so they show
+the pre-rewrite wording. Neither is uploaded; promoting one into the set means shooting it again.
 
 ## Promotional tile — 440×280
 
