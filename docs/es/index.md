@@ -115,6 +115,11 @@ entre 78.
   español. Sin cambiar nada. 97 idiomas, y es el único modo al que llega un
   [glosario](#glossary).
 
+La primera vez que enciendes el micrófono, Chrome tiene que concederlo: una sola vez, y a la
+extensión entera. El panel te lo dice y enlaza a **Opciones → Micrófono**, donde está el botón
+Conceder micrófono: Chrome solo muestra su aviso de permiso en una página propia, nunca en el
+panel lateral.
+
 Encender a la vez el audio de la pestaña y el micrófono se factura como dos sesiones distintas, así
 que el coste es la suma de las dos.
 

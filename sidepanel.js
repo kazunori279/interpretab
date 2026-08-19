@@ -20,6 +20,7 @@ import {
   simulLanguageCode,
 } from "./lib/languages.js";
 import { localize, setMessage, t } from "./lib/i18n.js";
+import { nextStep } from "./lib/next-step.js";
 
 const AGENT_LANGUAGES = { langs: LANGUAGES, popular: POPULAR_LANGUAGES };
 const SIMUL = { langs: SIMUL_LANGUAGES, popular: SIMUL_POPULAR_LANGUAGES };
@@ -72,6 +73,15 @@ const openLines = new Map();
 let myTabId = null;
 let runTabId = null;
 let runTabTitle = "";
+/**
+ * Chrome's microphone permission for this extension, or null for "not known".
+ *
+ * Null is the honest state and not just the initial one: the query is answered
+ * asynchronously, and it can also throw. `lib/next-step.js` says nothing at all
+ * while it is null, because a banner asking for something the panel cannot
+ * confirm is unmet is a banner that will not go away when it is.
+ */
+let micPermission = null;
 
 init();
 
@@ -83,6 +93,7 @@ async function init() {
   myTabId = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id ?? null;
   await populateLanguages();
   bind();
+  watchMicPermission();
   render();
   const state = await send({ type: "getState" });
   running = !!state?.running;
@@ -253,13 +264,56 @@ function bind() {
   // to bind to. `i18n.js` marks it `data-action` instead, and this catches it
   // wherever the message put it.
   document.addEventListener("click", (event) => {
-    if (event.target.closest?.('[data-action="options"]')) openOptions(event);
+    const action = event.target.closest?.("[data-action]")?.dataset.action;
+    if (action === "options") openOptions(event);
+    else if (action === "optionsMic") openOptions(event, "mic");
   });
 }
 
-function openOptions(event) {
+/**
+ * Open Options, optionally at a section rather than at the top.
+ *
+ * `chrome.runtime.openOptionsPage()` takes no fragment and there is no other
+ * way to pass one — the page is opened by Chrome, not navigated to — so where
+ * to land goes through `chrome.storage.session`, which the Options page reads
+ * once on load and clears. Session storage rather than local because this is
+ * true for exactly one navigation: a flag that outlived the browser would send
+ * somebody to the microphone section a week later for no reason.
+ *
+ * Written before the page is opened, not after. The other order is a race the
+ * fast case loses.
+ */
+async function openOptions(event, focus) {
   event.preventDefault();
+  if (focus) await chrome.storage.session.set({ optionsFocus: focus });
   chrome.runtime.openOptionsPage();
+}
+
+/**
+ * Follow Chrome's microphone permission for as long as this panel exists.
+ *
+ * The grant is obtained on another page — a side panel cannot raise the prompt,
+ * which is the whole reason `panelStepMic` is a link — so the state this panel
+ * is showing goes stale in a tab it cannot see. `onchange` is what takes the
+ * banner down the moment the user presses Allow over there, instead of leaving
+ * it up until they switch tabs and Chrome rebuilds this document.
+ *
+ * Everything about the query is optional: `permissions.query` can reject for a
+ * name a browser does not know, and the panel is not the place to care. A
+ * failure leaves `micPermission` null, which `nextStep` reads as "say nothing".
+ */
+function watchMicPermission() {
+  navigator.permissions
+    ?.query({ name: "microphone" })
+    .then((status) => {
+      micPermission = status.state;
+      status.onchange = () => {
+        micPermission = status.state;
+        render();
+      };
+      render();
+    })
+    .catch(() => {});
 }
 
 /**
@@ -329,7 +383,22 @@ function render() {
   el("costNote").hidden = !(settings.tabEnabled && settings.micEnabled) || !!usage;
 
   const hasKey = !!(settings.apiKey || "").trim();
-  el("keyNote").hidden = hasKey;
+  const step = nextStep({
+    hasKey,
+    tabEnabled: settings.tabEnabled,
+    micEnabled: settings.micEnabled,
+    micPermission,
+  });
+  const note = el("nextStep");
+  note.hidden = !step;
+  if (step) {
+    // Both are set every time, empty included: a `data-link2` left over from
+    // the previous step would point the next one's `<a2>` — if its translation
+    // has one — somewhere nobody chose. An empty one renders as text.
+    note.dataset.link1 = step.link1;
+    note.dataset.link2 = step.link2;
+    setMessage(note, step.key);
+  }
 
   // One engine, one run, one tab. This panel is on a different tab from the run
   // whenever the user has switched away and clicked the icon somewhere else.

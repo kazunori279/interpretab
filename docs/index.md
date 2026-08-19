@@ -114,6 +114,10 @@ choice of 78.
   Japanese, it says English. No switching. 97 languages, and it is the only mode a
   [glossary](#glossary) reaches.
 
+The first time you switch the microphone on, Chrome has to grant it — once, to the extension as a
+whole. The panel says so and links to **Options → Microphone**, where the Grant button is: Chrome
+will only show its permission prompt on a page of its own, never in the side panel.
+
 Turning tab audio and the microphone on together bills them as two separate sessions, so the cost
 is the sum of the two.
 

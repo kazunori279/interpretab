@@ -28,6 +28,16 @@ let settings = { ...DEFAULTS };
 
 init();
 
+// `openOptionsPage()` does not always load a page. If this one is already open
+// it is focused as it stands, `init` does not run again, and a request that
+// only `init` reads would do nothing at all — and then sit in session storage
+// until some later visit scrolled a reader who came for the glossary down to
+// the microphone. Right after the install-time open, an Options tab is exactly
+// what is already open, so this is the common path rather than the odd one.
+chrome.storage.session.onChanged.addListener((changes) => {
+  if (changes.optionsFocus?.newValue) focusRequestedSection();
+});
+
 async function init() {
   // First, and before the first `await`: the page ships with empty elements, so
   // until this runs there is nothing on it to read.
@@ -42,6 +52,37 @@ async function init() {
   await refreshMicStatus();
   await loadDevices();
   renderGlossary(await ensureGlossary());
+  await focusRequestedSection();
+}
+
+/**
+ * Land on the section the panel sent the reader here for.
+ *
+ * `chrome.runtime.openOptionsPage()` takes no fragment, so the panel leaves the
+ * destination in `chrome.storage.session` and this reads it. Cleared on the way
+ * past: it describes one navigation, and a flag still set on the next visit
+ * would scroll a reader who came here for the glossary down to the microphone.
+ *
+ * Last in `init`, after the sections above it have been filled — scrolling to
+ * an element whose siblings are still empty scrolls to the wrong place, because
+ * they are about to grow. The change listener above calls it a second way, for
+ * the page that was already open when the request arrived; whichever call gets
+ * there first takes the value away from the other.
+ */
+async function focusRequestedSection() {
+  let focus;
+  try {
+    ({ optionsFocus: focus } = await chrome.storage.session.get("optionsFocus"));
+    if (focus) await chrome.storage.session.remove("optionsFocus");
+  } catch {
+    return;
+  }
+  if (focus !== "mic") return;
+  el("micHeading").scrollIntoView({ block: "start" });
+  // The button is hidden once the permission is granted, in which case the
+  // reader has come for a thing that already happened and the heading with
+  // "Granted." under it is the whole answer.
+  if (!el("grantMic").hidden) el("grantMic").focus();
 }
 
 function bind() {

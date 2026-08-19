@@ -115,6 +115,10 @@ entre 78.
   português. Sem alternar nada. 97 idiomas, e é o único modo que uma
   [lista de termos](#glossary) alcança.
 
+Na primeira vez que você liga o microfone, o Chrome precisa concedê-lo — uma única vez, e para a
+extensão inteira. O painel avisa e leva a **Opções → Microfone**, onde fica o botão Conceder
+microfone: o Chrome só mostra o aviso de permissão em uma página própria, nunca no painel lateral.
+
 Ligar o áudio da aba e o microfone ao mesmo tempo cobra as duas como sessões separadas, então o
 custo é a soma das duas.
 

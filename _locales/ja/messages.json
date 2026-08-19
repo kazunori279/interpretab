@@ -12,8 +12,14 @@
   "statusStopped": { "message": "停止しました" },
   "statusError": { "message": "エラー" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab は<b>あなた自身の API キー</b>で Gemini と通信します。<a1>aistudio.google.com/apikey</a1> で無料のキーを取得し、<a2>オプション</a2>に貼り付けてください。"
+  },
+  "panelStepDirection": {
+    "message": "まだ何も ON になっていません。<b>タブ音声</b>か<b>マイク</b>、またはその両方を ON にしてください。"
+  },
+  "panelStepMic": {
+    "message": "マイク音声の翻訳には、Chrome のマイク許可が一度だけ必要です。<a1>オプション</a1>で許可してください。"
   },
   "panelRunningOn": {
     "message": "Interpretab は「{1}」で動作中です。同時に動かせるタブは 1 つだけなので、操作はそのタブのパネルから行ってください。Stop はここからでも効きます。"

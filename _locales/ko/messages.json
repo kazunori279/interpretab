@@ -12,8 +12,14 @@
   "statusStopped": { "message": "중지됨" },
   "statusError": { "message": "오류" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab은 <b>내 API 키</b>로 Gemini와 통신합니다. <a1>aistudio.google.com/apikey</a1>에서 무료로 발급받아 <a2>옵션</a2>에 붙여 넣으세요."
+  },
+  "panelStepDirection": {
+    "message": "아직 아무것도 켜지 않았습니다. <b>탭 오디오</b>나 <b>마이크</b>, 또는 둘 다 켜세요."
+  },
+  "panelStepMic": {
+    "message": "마이크 번역에는 Chrome의 마이크 권한이 한 번 필요합니다. <a1>옵션</a1>에서 허용하세요."
   },
   "panelRunningOn": {
     "message": "Interpretab이 “{1}”에서 실행 중입니다. 한 번에 한 탭에서만 동작하며, 조작은 그 탭에서 합니다 — Stop은 여기서도 됩니다."

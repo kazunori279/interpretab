@@ -48,8 +48,8 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 /* The plain banners are statements of fact, not failures — the one-time setup
    prompt and "the run is on another tab" — so they stay informational and a
    fresh install does not open on a wall of red. */
-#keyNote, #elsewhereNote { background: #e8f0fe; color: #174ea6; font-size: 12px; }
-#keyNote a { color: inherit; }
+#nextStep, #elsewhereNote { background: #e8f0fe; color: #174ea6; font-size: 12px; }
+#nextStep a { color: inherit; }
 
 .direction {
   border: 1px solid var(--border);

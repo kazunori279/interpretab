@@ -20,14 +20,11 @@
 
     <div id="error" class="banner error" hidden></div>
 
-    <div
-      id="keyNote"
-      class="banner"
-      hidden
-      data-i18n="panelKeyNote"
-      data-link1="https://aistudio.google.com/apikey"
-      data-link2="options"
-    ></div>
+    <!-- The first precondition not yet met, in the order `lib/next-step.js`
+         puts them. No `data-i18n` and no `data-link*`: which sentence this is
+         and where its links point both change with the state, so `render()`
+         fills it rather than `localize()`. -->
+    <div id="nextStep" class="banner" hidden></div>
 
     <!-- One engine, one run, one tab — and the toolbar icon opens this panel
          anywhere, so this is the panel a bystander tab gets: what is running,

@@ -46,6 +46,23 @@ const TAB_MARKS = { tab: "💬", mic: "🔴" };
  */
 chrome.sidePanel.setOptions({ enabled: false }).catch(() => {});
 
+/**
+ * Open Options once, the first time this extension is installed.
+ *
+ * Opening a tab on install is mildly rude, and it is the standard move for a
+ * reason: it is the one moment a new user is certainly looking, and Interpretab
+ * can do nothing whatsoever until an API key has been typed into that page.
+ * Before this there was no first run at all — installing opened nothing and
+ * said nothing, and whatever a new user learned they learned from whichever
+ * surface they happened to click.
+ *
+ * On `install` only. An update is not a first run, and a browser that has just
+ * restored twenty tabs after an auto-update does not need a twenty-first.
+ */
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === "install") chrome.runtime.openOptionsPage();
+});
+
 // The action click is what grants `activeTab` on the current tab, and
 // `tabCapture` is gated on exactly that grant. Opening the side panel has to
 // happen inside the click handler too — `sidePanel.open()` requires a user

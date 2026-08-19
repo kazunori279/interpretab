@@ -12,9 +12,17 @@
   "statusStopped": { "message": "Stopped" },
   "statusError": { "message": "Error" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab talks to Gemini with <b>your own API key</b>. Get a free one at <a1>aistudio.google.com/apikey</a1>, then paste it into <a2>Options</a2>.",
-    "description": "Shown until a key is saved. <a1> is AI Studio, <a2> opens this extension's Options page."
+    "description": "First of the ordered next-step banners: shown until a key is saved. <a1> is AI Studio, <a2> opens this extension's Options page."
+  },
+  "panelStepDirection": {
+    "message": "Nothing is switched on yet. Turn on <b>Tab audio</b>, <b>Microphone</b>, or both.",
+    "description": "Next-step banner shown once a key is saved and neither direction is on, which is also when Start is disabled. The two bold names are the headings of the panel's two sections."
+  },
+  "panelStepMic": {
+    "message": "Microphone translation needs Chrome's permission, once. Grant it in <a1>Options</a1>.",
+    "description": "Next-step banner shown when the microphone direction is on and Chrome has not granted the microphone. <a1> opens this extension's Options page at its Microphone section — a side panel cannot show the permission prompt itself."
   },
   "panelRunningOn": {
     "message": "Interpretab is running on “{1}”, and it runs on one tab at a time. Its controls are on that tab — Stop works from here.",

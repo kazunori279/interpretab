@@ -96,6 +96,49 @@ the icon on that tab again restores it, the same click that brings the subtitles
 
 Chrome 116 or newer.
 
+### The first run
+
+Installing opens the Options page once, on `install` and not on `update` — the one moment a new
+user is certainly looking, and Interpretab can do nothing at all until a key has been typed into
+that page. Before this there was no first run of any kind: installing opened nothing and said
+nothing, and whatever a new user learned they learned from whichever surface they clicked first.
+
+After that the panel says what is left. Three things must be true before Start does anything — a
+key, a direction switched on, and, if that direction is the microphone, Chrome's permission to
+open one — and they used to be treated three different ways. The key was prevented with an
+explanation and two links. Both directions off disabled Start and said nothing, which is a dead
+button. The microphone was not prevented at all: Start ran preflight, captured the tab, opened a
+socket, and *then* failed on `getUserMedia`, so the user paid for the whole round trip to learn
+something knowable before they pressed it.
+
+`lib/next-step.js` is one ordered list and the panel shows the first unmet entry. The order is
+not the order they fail in; it is the order they are worth mentioning in. The key first, because
+nothing works without it. A direction next, because that is what Start is waiting on once there
+is a key. The microphone last, because it is the only one that depends on a choice the user has
+just made — raised before they have switched the microphone on, it answers a question nobody
+asked. A fourth precondition stays out of the list: the toolbar click that grants `activeTab` is
+the only one nothing can check in advance, because nothing can ask whether the grant is live
+except the capture that needs it.
+
+**A side panel cannot show Chrome's microphone prompt.** This is why the microphone step is a
+link to Options and not a button that just asks. `getUserMedia` is permission-aware, and Chrome
+refuses to raise its prompt from a popup or a side panel: the promise rejects as though the user
+had clicked Deny, with no prompt ever shown. It is [confirmed by the Chrome team on
+chromium-extensions](https://groups.google.com/a/chromium.org/g/chromium-extensions/c/V09VMCLzvWM)
+— "request web permission will also fail in the popup page and side panel page" — and it is the
+same constraint that put a Grant button on the Options page in the first place, since the
+offscreen document where capture actually happens has no UI either. A prompt needs a document
+Chrome will anchor one to, which means a tab. `chrome.runtime.openOptionsPage()` takes no
+fragment, so which section to land on goes through `chrome.storage.session`, read once and
+cleared: without it the reader arrives at the top of a page with eight sections and the grant
+button under the fifth.
+
+The permission is watched rather than sampled. The grant happens in a tab this panel cannot see,
+so `navigator.permissions.query({ name: "microphone" })` is subscribed to and its `onchange`
+takes the banner down the moment Allow is pressed over there. Until the query answers — and it
+can also reject outright — the state is null, and null says nothing: a banner asking for
+something the panel cannot confirm is unmet is a banner that will not go away when it is.
+
 ### About the key
 
 The key is kept in `chrome.storage.local` and is sent to exactly one host,
@@ -1066,6 +1109,43 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
+
+**`tests/onboarding.mjs` — does the first run still guide anyone?**
+
+```bash
+node tests/onboarding.mjs             # headless, ~15 seconds
+node tests/onboarding.mjs --headed --keep    # watch it, and leave the browser up
+```
+
+This one needs a Chrome binary rather than a key, and spends nothing: the key it types is the
+string `not-a-real-key` and it opens no socket. It installs the unpacked directory into a
+throwaway profile over the DevTools Protocol and walks the whole of [the first run](#the-first-run)
+— the install opening Options, each of the three banner steps in order, the link landing on the
+Microphone section of a page with eight of them, the grant taking the banner down from another
+tab, and a revoke bringing it back. Twenty-seven assertions and eight screenshots, written to
+`tests/onboarding/report.md`. `lib/next-step.js` is unit-tested and none of that is: the ordered
+list is pure and testable, and everything the user actually meets is browser behaviour.
+
+`--load-extension` is ignored by current Chrome, so the install goes through the protocol's
+`Extensions.loadUnpacked`. That is the better door anyway — the browser is already attached when
+`onInstalled` fires, so the install-time tab is observable, which a command-line load cannot
+offer. There is no driver library: Chrome speaks the DevTools Protocol over a WebSocket, Node has
+had one of those for several releases, and `tests/chrome-harness.mjs` is the four commands a UI
+test needs. Every run gets a fresh `--user-data-dir`, which is what makes install-time behaviour
+testable more than once and keeps the test away from the browser the user is signed in to.
+
+Three things it does not reproduce, and the report says so: the side panel is browser UI, so the
+panel is walked as an ordinary tab of the same document; Chrome's permission prompt cannot be
+clicked over the protocol, so the states either side of it are set directly — this says nothing
+about the finding that the prompt cannot be raised in a panel at all; and a headless browser has
+no microphone, so the permission is granted and never used.
+
+It found one thing on its first run. `openOptionsPage()` focuses an Options tab that is already
+open instead of loading a new one, and `init` does not run again in a page that never reloaded —
+so the microphone link did nothing at all when Options was open, which after the install-time
+open is the likely case, and left `optionsFocus` in session storage to ambush some later visit.
+The page now takes the request as a `chrome.storage.session` change as well as on load. Step 6 of
+the walkthrough is that bug.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is

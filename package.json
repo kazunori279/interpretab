@@ -6,6 +6,7 @@
   "description": "Chrome extension that interprets tab audio and your microphone in real time via the Gemini Live API.",
   "scripts": {
     "test": "node --test 'tests/**/*.test.js'",
+    "test:onboarding": "node tests/onboarding.mjs",
     "package": "zip -r interpretab.zip . -x '.git/*' 'store/*' 'tests/*' 'docs/*' 'node_modules/*' 'package.json' 'README.md' '*.zip' '.*'"
   }
 }

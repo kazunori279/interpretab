@@ -12,8 +12,14 @@
   "statusStopped": { "message": "متوقف" },
   "statusError": { "message": "خطأ" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "يتحدث Interpretab إلى Gemini باستخدام <b>مفتاح API الخاص بك</b>. احصل على مفتاح مجاني من <a1>aistudio.google.com/apikey</a1>، ثم الصقه في <a2>الخيارات</a2>."
+  },
+  "panelStepDirection": {
+    "message": "لم يُشغَّل شيء بعد. شغّل <b>صوت علامة التبويب</b> أو <b>الميكروفون</b> أو كليهما."
+  },
+  "panelStepMic": {
+    "message": "تحتاج ترجمة الميكروفون إلى إذن Chrome مرة واحدة. امنحه من <a1>الخيارات</a1>."
   },
   "panelRunningOn": {
     "message": "‏Interpretab يعمل على «{1}»، وهو يعمل على علامة تبويب واحدة في كل مرة. عناصر التحكم موجودة في تلك العلامة — أما Stop فيعمل من هنا."

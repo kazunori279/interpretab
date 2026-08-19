@@ -12,8 +12,14 @@
   "statusStopped": { "message": "Gestoppt" },
   "statusError": { "message": "Fehler" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab spricht mit Gemini über <b>Ihren eigenen API-Schlüssel</b>. Kostenlos zu bekommen auf <a1>aistudio.google.com/apikey</a1> — danach in den <a2>Optionen</a2> einfügen."
+  },
+  "panelStepDirection": {
+    "message": "Noch ist nichts eingeschaltet. Schalten Sie <b>Tab-Audio</b>, <b>Mikrofon</b> oder beides ein."
+  },
+  "panelStepMic": {
+    "message": "Die Mikrofonübersetzung braucht Chromes Erlaubnis, einmalig. Erteilen Sie sie in den <a1>Optionen</a1>."
   },
   "panelRunningOn": {
     "message": "Interpretab läuft auf „{1}“, und es läuft immer nur auf einem Tab. Die Bedienelemente sind auf jenem Tab — Stop funktioniert auch von hier."

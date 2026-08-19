@@ -208,7 +208,7 @@ test("a link goes where the element says, not where the message does", () => {
   const host = fakeDocument();
   host.dataset.link1 = "https://aistudio.google.com/apikey";
   host.dataset.link2 = "options";
-  setMessage(host, "panelKeyNote");
+  setMessage(host, "panelStepKey");
   const links = host.childNodes.filter((n) => n.tagName === "A");
   assert.equal(links.length, 2);
   // An https destination opens in a tab of its own; anything else names
@@ -226,7 +226,7 @@ test("an anchor with no destination behind it is text, not a dead link", () => {
   // `<a2>` in translation would otherwise render one.
   const host = fakeDocument();
   host.dataset.link1 = "https://aistudio.google.com/apikey";
-  setMessage(host, "panelKeyNote");
+  setMessage(host, "panelStepKey");
   assert.equal(host.childNodes.filter((n) => n.tagName === "A").length, 1);
   assert.match(host.textContent, /Options/);
 });

@@ -79,7 +79,10 @@
     </div>
     <div id="captionPreview"><span data-i18n="optSizePreview"></span></div>
 
-    <h2 data-i18n="optMicHeading"></h2>
+    <!-- Where the panel's microphone step lands. A side panel cannot raise
+         Chrome's permission prompt, so the grant has to happen on this page,
+         and this page has eight sections. -->
+    <h2 id="micHeading" data-i18n="optMicHeading"></h2>
     <p class="note" data-i18n="optMicNote"></p>
     <div class="row">
       <button id="grantMic" class="ghost" data-i18n="optMicGrant"></button>

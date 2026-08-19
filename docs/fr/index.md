@@ -116,6 +116,11 @@ parmi 78.
   japonais ; s'il entend du japonais il dit du français. Aucun basculement. 97 langues, et c'est le
   seul mode qu'atteint un [glossaire](#glossary).
 
+La première fois que vous activez le microphone, Chrome doit l'autoriser — une seule fois, et pour
+l'extension entière. Le panneau vous le dit et renvoie vers **Options → Microphone**, où se trouve
+le bouton Autoriser le microphone : Chrome n'affiche son invite d'autorisation que sur une page à
+part, jamais dans le panneau latéral.
+
 Activer l'audio de l'onglet et le microphone ensemble les facture comme deux sessions distinctes,
 donc le coût est la somme des deux.
 

@@ -12,8 +12,14 @@
   "statusStopped": { "message": "Interrompido" },
   "statusError": { "message": "Erro" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "O Interpretab fala com o Gemini usando <b>a sua própria chave de API</b>. Pegue uma gratuita em <a1>aistudio.google.com/apikey</a1> e cole em <a2>Opções</a2>."
+  },
+  "panelStepDirection": {
+    "message": "Ainda não há nada ligado. Ligue o <b>Áudio da aba</b>, o <b>Microfone</b>, ou os dois."
+  },
+  "panelStepMic": {
+    "message": "A tradução do microfone precisa da permissão do Chrome, uma única vez. Conceda em <a1>Opções</a1>."
   },
   "panelRunningOn": {
     "message": "O Interpretab está rodando em “{1}”, e ele roda em uma aba por vez. Os controles estão naquela aba — o Stop funciona daqui."

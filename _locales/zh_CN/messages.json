@@ -12,8 +12,14 @@
   "statusStopped": { "message": "已停止" },
   "statusError": { "message": "出错" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab 使用<b>你自己的 API 密钥</b>与 Gemini 通信。可在 <a1>aistudio.google.com/apikey</a1> 免费获取一个，然后粘贴到<a2>选项</a2>页面。"
+  },
+  "panelStepDirection": {
+    "message": "还没有开启任何一项。请开启<b>标签页音频</b>或<b>麦克风</b>，或者两者都开。"
+  },
+  "panelStepMic": {
+    "message": "麦克风翻译需要 Chrome 的麦克风权限，只需授权一次。请在<a1>选项</a1>中授权。"
   },
   "panelRunningOn": {
     "message": "Interpretab 正在“{1}”上运行，而它一次只能在一个标签页上运行。控制项在那个标签页上——Stop 在这里也有效。"

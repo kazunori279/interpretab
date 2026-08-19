@@ -12,8 +12,14 @@
   "statusStopped": { "message": "रुका हुआ" },
   "statusError": { "message": "त्रुटि" },
 
-  "panelKeyNote": {
+  "panelStepKey": {
     "message": "Interpretab <b>आपकी अपनी API कुंजी</b> से Gemini से बात करता है। <a1>aistudio.google.com/apikey</a1> पर मुफ़्त कुंजी लें और उसे <a2>विकल्प</a2> में चिपकाएँ।"
+  },
+  "panelStepDirection": {
+    "message": "अभी कुछ भी चालू नहीं है। <b>टैब का ऑडियो</b>, <b>माइक्रोफ़ोन</b>, या दोनों चालू करें।"
+  },
+  "panelStepMic": {
+    "message": "माइक्रोफ़ोन अनुवाद के लिए Chrome की अनुमति एक बार चाहिए। उसे <a1>विकल्प</a1> में दें।"
   },
   "panelRunningOn": {
     "message": "Interpretab “{1}” पर चल रहा है, और यह एक बार में एक ही टैब पर चलता है। इसके नियंत्रण उसी टैब पर हैं — Stop यहाँ से भी काम करता है।"

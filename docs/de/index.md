@@ -113,6 +113,11 @@ Möglichkeiten.
   hört es Deutsch und sagt Japanisch; hört es Japanisch, sagt es Deutsch. Kein Umschalten. 97
   Sprachen, und es ist der einzige Modus, den ein [Glossar](#glossary) erreicht.
 
+Wenn Sie das Mikrofon zum ersten Mal einschalten, muss Chrome es erlauben — einmalig, und der
+Erweiterung als Ganzem. Das Panel sagt das und verlinkt auf **Optionen → Mikrofon**, wo die
+Schaltfläche „Mikrofon erlauben“ steht: Chrome zeigt seine Berechtigungsabfrage nur auf einer
+eigenen Seite an, nie im Seitenbereich.
+
 Tab-Audio und Mikrofon zusammen einzuschalten wird als zwei getrennte Sitzungen abgerechnet, die
 Kosten sind also die Summe der beiden.
 
