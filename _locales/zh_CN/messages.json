@@ -95,6 +95,15 @@
   "optTitle": { "message": "Interpretab — 选项" },
   "optHeading": { "message": "Interpretab 选项" },
 
+  "optSetupHeading": { "message": "开始之前" },
+  "optSetupNote": {
+    "message": "没有密钥就什么都不能用。另外两项也只需在粘贴密钥时一并回答一次：这个密钥属于哪种方案，以及——仅当你要口译自己的声音时——Chrome 的麦克风权限。"
+  },
+  "optRestHeading": { "message": "其余设置" },
+  "optRestNote": {
+    "message": "这些都有可用的默认值，只有当某一项不合适时才需要来这里改。"
+  },
+
   "optKeyHeading": { "message": "Gemini API 密钥" },
   "optKeyNote": {
     "message": "Interpretab 没有服务器。你的音频从这个浏览器直接发往 Gemini Live API，用你自己的密钥认证——可在 <a1>aistudio.google.com/apikey</a1> 免费获取。密钥保存在此浏览器的扩展存储中，除 <code>generativelanguage.googleapis.com</code> 外不会发往任何地方。用量会计入该密钥所属的 Google 账号，所以请把它当密码对待：不要分享，也不要粘贴到别处。万一泄露，请在<a2>当初创建它的同一个页面</a2>上删除，然后在这里粘贴一个新的。"
@@ -149,9 +158,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "敏捷的棕色狐狸 — The quick brown fox" },
 
-  "optMicHeading": { "message": "麦克风" },
+  "optMicHeading": { "message": "麦克风权限" },
   "optMicNote": {
-    "message": "Chrome 把麦克风权限授予整个扩展。引擎运行在一个无法弹出权限提示的后台文档里，所以如果麦克风方向失败，请在这里授权一次。"
+    "message": "只有使用麦克风方向时才需要，而且只需一次。Chrome 把麦克风权限授予整个扩展；引擎所在的后台文档和侧边栏都无法弹出权限提示，所以在这里授权。"
   },
   "optMicGrant": { "message": "授予麦克风权限" },
   "optMicGranted": { "message": "已授权。" },

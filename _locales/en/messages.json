@@ -134,6 +134,21 @@
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Interpretab options" },
 
+  "optSetupHeading": {
+    "message": "Before you start",
+    "description": "Group label over the three settings a first run needs: the key, the plan, and Chrome's microphone permission. It labels the section headings under it rather than a control of its own."
+  },
+  "optSetupNote": {
+    "message": "Nothing works without the key. The other two are answered once, at the same time as it: which plan the key is on, and — only if you will interpret your own voice — Chrome's permission for the microphone."
+  },
+  "optRestHeading": {
+    "message": "Everything else",
+    "description": "Group label over the rest of the page — the settings that already have a working default."
+  },
+  "optRestNote": {
+    "message": "All of these have a default that works. They are here for when one of them turns out to be the wrong one."
+  },
+
   "optKeyHeading": { "message": "Gemini API key" },
   "optKeyNote": {
     "message": "Interpretab has no server. Your audio goes straight from this browser to the Gemini Live API, authenticated with your own key — get a free one at <a1>aistudio.google.com/apikey</a1>. The key is stored in this browser's extension storage and is sent nowhere except <code>generativelanguage.googleapis.com</code>. Usage is billed to the Google account the key belongs to, so treat it like a password: don't share it, and don't paste it anywhere else. If it ever gets out, delete it on the <a2>same page you made it on</a2> and paste a new one in here.",
@@ -198,9 +213,10 @@
     "description": "Sample text under the size slider. Should show both a Latin and a CJK line if the language has one, since the two set at different heights."
   },
 
-  "optMicHeading": { "message": "Microphone" },
+  "optMicHeading": { "message": "Microphone access" },
   "optMicNote": {
-    "message": "Chrome grants the microphone to the extension as a whole. The engine runs in a background document that cannot show a permission prompt, so if the microphone direction fails, grant it once from here."
+    "message": "Only for the microphone direction, and only once. Chrome grants the microphone to the extension as a whole, and neither the background document the engine runs in nor the side panel can show its prompt — so the grant happens here.",
+    "description": "Under the Microphone access heading. The condition comes first because this section sits in the group a first run is told to work through, and it is the one entry there that not everybody needs."
   },
   "optMicGrant": { "message": "Grant microphone" },
   "optMicGranted": { "message": "Granted." },

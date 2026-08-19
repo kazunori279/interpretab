@@ -97,6 +97,15 @@
   "optTitle": { "message": "Interpretab — Optionen" },
   "optHeading": { "message": "Interpretab-Optionen" },
 
+  "optSetupHeading": { "message": "Bevor Sie anfangen" },
+  "optSetupNote": {
+    "message": "Ohne den Schlüssel funktioniert nichts. Die beiden anderen werden einmal beantwortet, im selben Moment: zu welchem Tarif der Schlüssel gehört und — nur wenn Sie Ihre eigene Stimme dolmetschen lassen wollen — Chromes Mikrofonberechtigung."
+  },
+  "optRestHeading": { "message": "Alles Übrige" },
+  "optRestNote": {
+    "message": "All das hat bereits eine Voreinstellung, die funktioniert. Es steht hier für den Fall, dass eine davon die falsche ist."
+  },
+
   "optKeyHeading": { "message": "Gemini-API-Schlüssel" },
   "optKeyNote": {
     "message": "Interpretab hat keinen Server. Ihr Audio geht direkt aus diesem Browser an die Gemini Live API, authentifiziert mit Ihrem eigenen Schlüssel — einen kostenlosen gibt es auf <a1>aistudio.google.com/apikey</a1>. Der Schlüssel liegt im Erweiterungsspeicher dieses Browsers und wird nirgendwohin gesendet außer an <code>generativelanguage.googleapis.com</code>. Die Nutzung wird dem Google-Konto berechnet, zu dem der Schlüssel gehört: Behandeln Sie ihn wie ein Passwort, geben Sie ihn nicht weiter und fügen Sie ihn nirgendwo sonst ein. Sollte er je nach außen gelangen, löschen Sie ihn auf <a2>derselben Seite, auf der Sie ihn erstellt haben</a2>, und fügen Sie hier einen neuen ein."
@@ -155,9 +164,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "Falsches Üben von Xylophonmusik — 素早い茶色の狐" },
 
-  "optMicHeading": { "message": "Mikrofon" },
+  "optMicHeading": { "message": "Mikrofonzugriff" },
   "optMicNote": {
-    "message": "Chrome erteilt die Mikrofonberechtigung der Erweiterung als Ganzes. Die Engine läuft in einem Hintergrunddokument, das keine Berechtigungsabfrage anzeigen kann — wenn die Mikrofon-Richtung also fehlschlägt, erteilen Sie die Berechtigung einmal von hier aus."
+    "message": "Nur für die Mikrofon-Richtung, und nur einmal. Chrome erteilt die Mikrofonberechtigung der Erweiterung als Ganzes, und weder das Hintergrunddokument, in dem die Engine läuft, noch das Seitenpanel kann die Abfrage anzeigen — deshalb wird sie hier erteilt."
   },
   "optMicGrant": { "message": "Mikrofon erlauben" },
   "optMicGranted": { "message": "Erteilt." },

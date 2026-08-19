@@ -95,6 +95,15 @@
   "optTitle": { "message": "Interpretab — Opciones" },
   "optHeading": { "message": "Opciones de Interpretab" },
 
+  "optSetupHeading": { "message": "Antes de empezar" },
+  "optSetupNote": {
+    "message": "Sin la clave no funciona nada. Las otras dos se responden una sola vez, en el mismo momento: en qué plan está la clave y —solo si vas a interpretar tu propia voz— el permiso de micrófono de Chrome."
+  },
+  "optRestHeading": { "message": "Todo lo demás" },
+  "optRestNote": {
+    "message": "Todo esto ya tiene un valor por defecto que funciona. Está aquí para cuando alguno resulte ser el equivocado."
+  },
+
   "optKeyHeading": { "message": "Clave de la API de Gemini" },
   "optKeyNote": {
     "message": "Interpretab no tiene servidor. Tu audio va directo de este navegador a la Gemini Live API, autenticado con tu propia clave; consigue una gratis en <a1>aistudio.google.com/apikey</a1>. La clave se guarda en el almacenamiento de extensiones de este navegador y no se envía a ningún sitio salvo a <code>generativelanguage.googleapis.com</code>. El uso se factura a la cuenta de Google a la que pertenece la clave, así que trátala como una contraseña: no la compartas y no la pegues en ningún otro sitio. Si alguna vez se filtra, bórrala en la <a2>misma página en la que la creaste</a2> y pega una nueva aquí."
@@ -151,9 +160,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "El veloz zorro marrón — 素早い茶色の狐" },
 
-  "optMicHeading": { "message": "Micrófono" },
+  "optMicHeading": { "message": "Acceso al micrófono" },
   "optMicNote": {
-    "message": "Chrome concede el micrófono a la extensión en su conjunto. El motor se ejecuta en un documento en segundo plano que no puede mostrar un aviso de permiso, así que si falla la dirección del micrófono, concédelo una vez desde aquí."
+    "message": "Solo para la dirección del micrófono, y solo una vez. Chrome concede el micrófono a la extensión en su conjunto, y ni el documento en segundo plano donde corre el motor ni el panel lateral pueden mostrar su aviso, así que el permiso se concede aquí."
   },
   "optMicGrant": { "message": "Conceder micrófono" },
   "optMicGranted": { "message": "Concedido." },

@@ -95,6 +95,15 @@
   "optTitle": { "message": "Interpretab — 옵션" },
   "optHeading": { "message": "Interpretab 옵션" },
 
+  "optSetupHeading": { "message": "시작하기 전에" },
+  "optSetupNote": {
+    "message": "키가 없으면 아무것도 동작하지 않습니다. 나머지 둘도 키를 붙여 넣는 그때 한 번만 답하면 됩니다. 그 키가 어느 요금제인지, 그리고 — 내 목소리를 통역할 경우에만 — Chrome의 마이크 권한입니다."
+  },
+  "optRestHeading": { "message": "그 밖의 설정" },
+  "optRestNote": {
+    "message": "모두 기본값 그대로 동작합니다. 그 기본값이 맞지 않을 때 여기서 바꾸세요."
+  },
+
   "optKeyHeading": { "message": "Gemini API 키" },
   "optKeyNote": {
     "message": "Interpretab에는 서버가 없습니다. 오디오는 이 브라우저에서 Gemini Live API로 바로 가며, 내 키로 인증합니다 — <a1>aistudio.google.com/apikey</a1>에서 무료로 발급받을 수 있습니다. 키는 이 브라우저의 확장 프로그램 저장소에 보관되고 <code>generativelanguage.googleapis.com</code> 외에는 어디로도 전송되지 않습니다. 사용량은 그 키가 속한 Google 계정에 청구되므로 비밀번호처럼 다루세요. 공유하지 말고 다른 곳에 붙여 넣지 마세요. 혹시 유출되면 <a2>키를 만들었던 바로 그 페이지</a2>에서 삭제하고 새 키를 여기에 붙여 넣으세요."
@@ -149,9 +158,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "다람쥐 헌 쳇바퀴에 타고파 — The quick brown fox" },
 
-  "optMicHeading": { "message": "마이크" },
+  "optMicHeading": { "message": "마이크 사용 권한" },
   "optMicNote": {
-    "message": "Chrome은 마이크 권한을 확장 프로그램 전체에 부여합니다. 엔진은 권한 요청 창을 띄울 수 없는 백그라운드 문서에서 돌아가므로, 마이크 방향이 실패하면 여기서 한 번 권한을 주세요."
+    "message": "마이크 방향을 쓸 때만, 그것도 한 번만 필요합니다. Chrome은 마이크 권한을 확장 프로그램 전체에 부여하며, 엔진이 도는 백그라운드 문서도 사이드 패널도 권한 창을 띄울 수 없기 때문에 권한은 여기서 받습니다."
   },
   "optMicGrant": { "message": "마이크 권한 부여" },
   "optMicGranted": { "message": "허용됨." },

@@ -101,6 +101,15 @@
   "optTitle": { "message": "Interpretab — オプション" },
   "optHeading": { "message": "Interpretab のオプション" },
 
+  "optSetupHeading": { "message": "最初に設定するもの" },
+  "optSetupNote": {
+    "message": "キーがなければ何も動きません。残りの 2 つも、キーを貼るのと同じタイミングで一度だけ答えるものです。そのキーがどのプランか、そして——自分の声を通訳する場合にかぎり——Chrome のマイク許可です。"
+  },
+  "optRestHeading": { "message": "あとから調整するもの" },
+  "optRestNote": {
+    "message": "どれも既定のままで動きます。その既定が合わないとわかったときに変えてください。"
+  },
+
   "optKeyHeading": { "message": "Gemini API キー" },
   "optKeyNote": {
     "message": "Interpretab にサーバはありません。音声はこのブラウザから Gemini Live API へ直接送られ、認証にはあなた自身のキーを使います。無料のキーは <a1>aistudio.google.com/apikey</a1> で取得できます。キーはこのブラウザの拡張機能ストレージに保存され、<code>generativelanguage.googleapis.com</code> 以外のどこにも送信されません。利用料はキーの持ち主の Google アカウントに課金されるので、パスワードと同じ扱いにしてください。他人に渡さず、他の場所に貼り付けないこと。もし漏れた場合は<a2>取得したページ</a2>で削除し、新しいキーをここに貼り直してください。"
@@ -155,9 +164,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "素早い茶色の狐 — The quick brown fox" },
 
-  "optMicHeading": { "message": "マイク" },
+  "optMicHeading": { "message": "マイクの使用許可" },
   "optMicNote": {
-    "message": "Chrome はマイクの許可を拡張機能全体に対して与えます。実際の処理は許可ダイアログを出せないバックグラウンドのドキュメントで動くため、マイク音声の翻訳が失敗する場合は、ここから一度だけ許可してください。"
+    "message": "マイク音声の翻訳を使う場合だけ、一度だけ必要です。Chrome のマイク許可は拡張機能全体に対して与えられます。エンジンが動くバックグラウンドのドキュメントにも、サイドパネルにも許可ダイアログは出せないため、ここで許可します。"
   },
   "optMicGrant": { "message": "マイクを許可する" },
   "optMicGranted": { "message": "許可済み。" },

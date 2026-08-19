@@ -117,7 +117,7 @@ parmi 78.
   seul mode qu'atteint un [glossaire](#glossary).
 
 La première fois que vous activez le microphone, Chrome doit l'autoriser — une seule fois, et pour
-l'extension entière. Le panneau vous le dit et renvoie vers **Options → Microphone**, où se trouve
+l'extension entière. Le panneau vous le dit et renvoie vers **Options → Accès au microphone**, où se trouve
 le bouton Autoriser le microphone : Chrome n'affiche son invite d'autorisation que sur une page à
 part, jamais dans le panneau latéral.
 

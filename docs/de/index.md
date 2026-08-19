@@ -114,7 +114,7 @@ Möglichkeiten.
   Sprachen, und es ist der einzige Modus, den ein [Glossar](#glossary) erreicht.
 
 Wenn Sie das Mikrofon zum ersten Mal einschalten, muss Chrome es erlauben — einmalig, und der
-Erweiterung als Ganzem. Das Panel sagt das und verlinkt auf **Optionen → Mikrofon**, wo die
+Erweiterung als Ganzem. Das Panel sagt das und verlinkt auf **Optionen → Mikrofonzugriff**, wo die
 Schaltfläche „Mikrofon erlauben“ steht: Chrome zeigt seine Berechtigungsabfrage nur auf einer
 eigenen Seite an, nie im Seitenbereich.
 

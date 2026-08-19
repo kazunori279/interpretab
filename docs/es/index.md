@@ -116,7 +116,7 @@ entre 78.
   [glosario](#glossary).
 
 La primera vez que enciendes el micrófono, Chrome tiene que concederlo: una sola vez, y a la
-extensión entera. El panel te lo dice y enlaza a **Opciones → Micrófono**, donde está el botón
+extensión entera. El panel te lo dice y enlaza a **Opciones → Acceso al micrófono**, donde está el botón
 Conceder micrófono: Chrome solo muestra su aviso de permiso en una página propia, nunca en el
 panel lateral.
 

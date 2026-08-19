@@ -97,6 +97,15 @@
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Options d'Interpretab" },
 
+  "optSetupHeading": { "message": "Avant de commencer" },
+  "optSetupNote": {
+    "message": "Rien ne fonctionne sans la clé. Les deux autres se règlent une seule fois, au même moment : le forfait auquel la clé appartient et — seulement si vous comptez interpréter votre propre voix — l'autorisation du microphone par Chrome."
+  },
+  "optRestHeading": { "message": "Tout le reste" },
+  "optRestNote": {
+    "message": "Tout cela a déjà une valeur par défaut qui fonctionne. C'est ici pour le jour où l'une d'elles se révèle mauvaise."
+  },
+
   "optKeyHeading": { "message": "Clé d'API Gemini" },
   "optKeyNote": {
     "message": "Interpretab n'a pas de serveur. Votre audio part de ce navigateur directement vers la Gemini Live API, authentifié par votre propre clé — obtenez-en une gratuitement sur <a1>aistudio.google.com/apikey</a1>. La clé est conservée dans le stockage d'extensions de ce navigateur et n'est envoyée nulle part sauf à <code>generativelanguage.googleapis.com</code>. L'usage est facturé au compte Google auquel la clé appartient : traitez-la comme un mot de passe, ne la partagez pas et ne la collez nulle part ailleurs. Si elle fuit un jour, supprimez-la sur la <a2>page même où vous l'avez créée</a2> et collez-en une nouvelle ici."
@@ -155,9 +164,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "Portez ce vieux whisky blond — 素早い茶色の狐" },
 
-  "optMicHeading": { "message": "Microphone" },
+  "optMicHeading": { "message": "Accès au microphone" },
   "optMicNote": {
-    "message": "Chrome accorde le microphone à l'extension dans son ensemble. Le moteur tourne dans un document d'arrière-plan qui ne peut pas afficher de demande d'autorisation : si la direction microphone échoue, accordez-le une fois depuis ici."
+    "message": "Uniquement pour la direction microphone, et une seule fois. Chrome accorde le microphone à l'extension dans son ensemble, et ni le document d'arrière-plan où tourne le moteur ni le panneau latéral ne peuvent afficher sa demande : l'autorisation se donne donc ici."
   },
   "optMicGrant": { "message": "Autoriser le microphone" },
   "optMicGranted": { "message": "Autorisé." },

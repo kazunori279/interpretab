@@ -97,6 +97,15 @@
   "optTitle": { "message": "Interpretab — Opções" },
   "optHeading": { "message": "Opções do Interpretab" },
 
+  "optSetupHeading": { "message": "Antes de começar" },
+  "optSetupNote": {
+    "message": "Sem a chave nada funciona. As outras duas se respondem uma vez só, no mesmo momento: em qual plano a chave está e — só se você for interpretar a própria voz — a permissão de microfone do Chrome."
+  },
+  "optRestHeading": { "message": "Todo o resto" },
+  "optRestNote": {
+    "message": "Tudo isto já tem um padrão que funciona. Está aqui para quando um deles se mostrar o errado."
+  },
+
   "optKeyHeading": { "message": "Chave de API do Gemini" },
   "optKeyNote": {
     "message": "O Interpretab não tem servidor. Seu áudio vai direto deste navegador para a Gemini Live API, autenticado com a sua própria chave — pegue uma gratuita em <a1>aistudio.google.com/apikey</a1>. A chave fica no armazenamento de extensões deste navegador e não é enviada a lugar nenhum além de <code>generativelanguage.googleapis.com</code>. O uso é cobrado da conta do Google a que a chave pertence, então trate-a como uma senha: não compartilhe e não cole em nenhum outro lugar. Se algum dia ela vazar, apague-a na <a2>mesma página em que você a criou</a2> e cole uma nova aqui."
@@ -153,9 +162,9 @@
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "A rápida raposa marrom — 素早い茶色の狐" },
 
-  "optMicHeading": { "message": "Microfone" },
+  "optMicHeading": { "message": "Acesso ao microfone" },
   "optMicNote": {
-    "message": "O Chrome concede o microfone à extensão como um todo. O motor roda em um documento de segundo plano que não consegue mostrar um pedido de permissão, então, se a direção do microfone falhar, conceda uma vez a partir daqui."
+    "message": "Só para a direção do microfone, e só uma vez. O Chrome concede o microfone à extensão como um todo, e nem o documento de segundo plano em que o motor roda nem o painel lateral conseguem mostrar o pedido — por isso a permissão é dada aqui."
   },
   "optMicGrant": { "message": "Conceder microfone" },
   "optMicGranted": { "message": "Concedido." },

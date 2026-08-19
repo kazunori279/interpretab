@@ -130,8 +130,22 @@ same constraint that put a Grant button on the Options page in the first place, 
 offscreen document where capture actually happens has no UI either. A prompt needs a document
 Chrome will anchor one to, which means a tab. `chrome.runtime.openOptionsPage()` takes no
 fragment, so which section to land on goes through `chrome.storage.session`, read once and
-cleared: without it the reader arrives at the top of a page with eight sections and the grant
-button under the fifth.
+cleared: without it the reader arrives at the top of a page with eight sections and has to find
+the grant button among them.
+
+**The Options page is two groups, and the microphone is in the first.** "Before you start" holds
+the key, the plan and Microphone access; "Everything else" holds the remaining five, each of
+which already has a default that works. The split is the same list `lib/next-step.js` walks,
+minus the direction switch the panel owns — so what a first run is told to do and what the page
+asks it to read through are one thing rather than two. The plan is in the first group despite
+having a default because it is the only setting on the page whose right value is a fact about
+the key rather than a preference, and getting it wrong fails silently in both directions: a free
+key shown a dollar figure it will never be charged, or a billed key showing none. Microphone
+access also sits above the rule, and third rather than last in its group, because the panel's
+microphone step sends readers straight to it — a section that gets linked to should not be
+somewhere a reader would only reach by scrolling past everything optional. It was called
+"Microphone" until the page grew an "Audio input" section a few lines below asking *which*
+microphone; "Microphone access" is what Chrome and macOS call the permission.
 
 The permission is watched rather than sampled. The grant happens in a tab this panel cannot see,
 so `navigator.permissions.query({ name: "microphone" })` is subscribed to and its `onchange`
@@ -1121,8 +1135,8 @@ This one needs a Chrome binary rather than a key, and spends nothing: the key it
 string `not-a-real-key` and it opens no socket. It installs the unpacked directory into a
 throwaway profile over the DevTools Protocol and walks the whole of [the first run](#the-first-run)
 — the install opening Options, each of the three banner steps in order, the link landing on the
-Microphone section of a page with eight of them, the grant taking the banner down from another
-tab, and a revoke bringing it back. Twenty-seven assertions and eight screenshots, written to
+Microphone access section rather than the top of the page, the grant taking the banner down from
+another tab, and a revoke bringing it back. Twenty-seven assertions and eight screenshots, written to
 `tests/onboarding/report.md`. `lib/next-step.js` is unit-tested and none of that is: the ordered
 list is pure and testable, and everything the user actually meets is browser behaviour.
 
