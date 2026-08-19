@@ -127,12 +127,21 @@ microphone est marquée d'un liseré bleu. **Options → Taille des sous-titres*
 16 à 64 px, en direct pendant que vous regardez.
 
 La voix traduite sort par la sortie audio de votre ordinateur, et un bouton de sourdine la fait
-taire à tout moment. Avec l'audio de l'onglet, le son propre de l'onglet **continue en dessous à
-volume réduit** pendant que la traduction parle, si bien que la musique et les effets d'un film
-restent audibles.
+taire à tout moment.
 
-**Options → Entrée / Sortie audio** choisit par quel périphérique le microphone est entendu, et par
-lequel la traduction est prononcée.
+#### La voix de la traduction de l'audio de l'onglet
+
+La voix traduite depuis l'audio de l'onglet sort par votre périphérique audio par défaut, les
+haut-parleurs ou le casque que l'ordinateur utilise déjà. Le son propre de l'onglet **continue en
+dessous à volume réduit** pendant que la traduction parle, si bien que la musique et les effets
+d'un film restent audibles.
+
+#### La voix de la traduction du microphone
+
+**Options → Entrée / Sortie audio** choisit par quel périphérique la direction microphone écoute,
+et par lequel sa traduction est prononcée. Pour arrêter la traduction un instant, ou quand la pièce
+est assez bruyante pour que des voix non voulues passent, le bouton d'extinction du microphone
+coupe l'entrée à tout moment.
 
 ### L'utiliser en réunion en ligne
 
@@ -140,29 +149,22 @@ lequel la traduction est prononcée.
 activez l'audio de l'onglet, choisissez votre langue et appuyez sur Start. Ce qu'ils disent arrive
 dans votre langue, parlé et sous-titré.
 
-Pointez les deux directions vers des langues *différentes* pour un appel : l'audio de l'onglet vers
-votre langue, le microphone vers la leur. Par défaut les deux visent la même, ce qui renverrait à
-l'autre partie ses propres mots paraphrasés. Utilisez ici le mode **Simultaneous** du microphone, pas
-Two-way conversation : l'autre partie arrive par l'onglet, déjà traduite par l'autre direction.
-
 **Pour qu'ils entendent votre voix traduite**, le plus simple est qu'ils installent Interpretab de
 leur côté et traduisent votre voix chez eux. S'ils ne peuvent pas, la voix traduite doit parvenir à
-la réunion comme un microphone — et Chrome ne donne aux extensions aucun moyen d'en enregistrer un,
-il faut donc la jouer là où la réunion écoute déjà :
+l'application de réunion comme entrée microphone, de cette façon :
 
 1. Installez un périphérique audio virtuel :
    [BlackHole](https://existential.audio/blackhole/) sur macOS,
    [VB-Cable](https://vb-audio.com/Cable/) sur Windows.
-2. **Options → Sortie audio** → choisissez-le. Seule la voix de la direction microphone y va ; la
-   traduction de la direction onglet reste sur vos haut-parleurs, parce que c'est celle que vous
-   écoutez.
-3. Dans la réunion, choisissez ce même périphérique comme microphone.
-4. Portez un casque. Sur haut-parleurs, le micro entend l'appel et l'appel entend la pièce, et les
-   deux directions se mettent à s'interpréter l'une l'autre.
-
-Vous n'entendrez pas votre propre voix traduite pendant qu'elle passe dans le câble. Pour la
-contrôler, faites-la passer par un périphérique à sorties multiples de macOS ou par le répéteur de
-VB-Cable.
+2. Branchez un casque ou des écouteurs sur l'ordinateur — sur haut-parleurs, le micro entend
+   l'appel et les deux directions se mettent à s'interpréter l'une l'autre.
+3. **Options → Sortie audio** → choisissez le périphérique virtuel. C'est là que va la voix
+   traduite de la direction microphone ; celle de la direction onglet arrive dans votre casque.
+4. Dans le réglage d'entrée microphone de l'application de réunion, choisissez le périphérique
+   virtuel.
+5. Activez l'audio de l'onglet — d'eux vers vous — et réglez-le sur votre langue. Activez le
+   microphone — de vous vers eux — et réglez-le sur la leur.
+6. Appuyez sur Start et commencez la réunion.
 
 Comme il s'agit d'une extension Chrome, tout ceci ne marche qu'avec les versions web de ces
 services : les applications de bureau et les clients natifs sont hors de portée.

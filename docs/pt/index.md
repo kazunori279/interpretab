@@ -126,11 +126,20 @@ borda azul. **Opções → Tamanho das legendas** define a altura, de 16 a 64 px
 assiste.
 
 A voz traduzida sai pela saída de áudio do seu computador, e um botão de mudo a silencia a qualquer
-momento. Com o áudio da aba, o som da própria aba **continua tocando por baixo em volume mais
-baixo** enquanto a tradução fala, então a música e os efeitos de um filme continuam lá.
+momento.
 
-**Opções → Entrada / Saída de áudio** escolhe por qual dispositivo o microfone é ouvido e por qual a
-tradução é falada.
+#### A voz da tradução do áudio da aba
+
+A voz traduzida do áudio da aba toca no seu dispositivo de áudio padrão — as caixas de som ou os
+fones que o computador já está usando. O som da própria aba **continua tocando por baixo em volume
+mais baixo** enquanto a tradução fala, então a música e os efeitos de um filme continuam lá.
+
+#### A voz da tradução do microfone
+
+**Opções → Entrada / Saída de áudio** escolhe por qual dispositivo a direção do microfone escuta e
+por qual a tradução dela é falada. Para parar de traduzir por um momento, ou quando o ambiente está
+barulhento a ponto de entrarem vozes que você não queria traduzir, o botão de desligar o microfone
+corta a entrada a qualquer momento.
 
 ### Usando em reuniões online
 
@@ -138,27 +147,21 @@ tradução é falada.
 áudio da aba, escolha o seu idioma e aperte Start. O que disserem chega no seu idioma, falado e
 legendado.
 
-Aponte as duas direções para idiomas *diferentes* numa chamada — o áudio da aba para o seu idioma, o
-microfone para o deles. Os padrões apontam as duas para o mesmo, o que devolveria ao outro lado as
-próprias palavras dele parafraseadas. Use aqui o modo **Simultaneous** do microfone, não o Two-way
-conversation: o outro lado chega pela aba, já traduzido pela outra direção.
-
 **Para que eles ouçam a sua voz traduzida**, o mais simples é que instalem o Interpretab também e
-traduzam a sua voz do lado deles. Se não puderem, a voz traduzida precisa chegar à reunião como um
-microfone — e o Chrome não dá às extensões nenhuma forma de registrar um, então ela tem que ser
-reproduzida em algum lugar que a reunião já esteja ouvindo:
+traduzam a sua voz do lado deles. Se não puderem, a voz traduzida precisa chegar ao aplicativo da
+reunião como entrada de microfone, assim:
 
 1. Instale um dispositivo de áudio virtual:
    [BlackHole](https://existential.audio/blackhole/) no macOS,
    [VB-Cable](https://vb-audio.com/Cable/) no Windows.
-2. **Opções → Saída de áudio** → escolha ele. Só a voz da direção do microfone vai para lá; a
-   tradução da direção da aba fica nas suas caixas de som, porque é essa que você está ouvindo.
-3. Na reunião, escolha o mesmo dispositivo como seu microfone.
-4. Use fones. Em caixas de som, o microfone ouve a chamada e a chamada ouve a sala, e as duas
+2. Ligue fones de ouvido no computador — em caixas de som o microfone ouve a chamada e as duas
    direções começam a interpretar uma à outra.
-
-Você não vai ouvir a sua própria voz traduzida enquanto ela desce pelo cabo. Para monitorar, passe
-por um Dispositivo de Saída Múltipla do macOS ou pelo repetidor do VB-Cable.
+3. **Opções → Saída de áudio** → escolha o dispositivo virtual. É para lá que vai a voz traduzida
+   da direção do microfone; a da direção da aba chega nos seus fones.
+4. Na configuração de entrada de microfone do aplicativo da reunião, escolha o dispositivo virtual.
+5. Ligue o áudio da aba — deles para você — e deixe no seu idioma. Ligue o microfone — de você para
+   eles — e deixe no idioma deles.
+6. Aperte Start e comece a reunião.
 
 Como isto é uma extensão do Chrome, tudo isso só funciona com as versões web desses serviços —
 aplicativos de desktop e clientes nativos estão fora de alcance.

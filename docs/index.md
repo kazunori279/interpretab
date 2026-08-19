@@ -124,11 +124,20 @@ fullscreen. When both tab audio and the microphone are on, the microphone's line
 blue edge. **Options → Subtitle size** sets how tall they are, 16–64 px, live while you watch.
 
 The translated voice comes out of your computer's audio output, and a mute button silences it at
-any time. With tab audio, the tab's own sound **keeps playing underneath at a lower volume** while
-the translation speaks, so a film's music and effects are still there to hear.
+any time.
 
-**Options → Audio input/output** picks which device the microphone is heard on, and which one the
-translation is spoken out of.
+#### The tab audio translation's voice
+
+The voice translated from tab audio plays on your default audio device — whatever speakers or
+headphones the computer is already using. The tab's own sound **keeps playing underneath at a lower
+volume** while the translation speaks, so a film's music and effects are still there to hear.
+
+#### The microphone translation's voice
+
+**Options → Audio input/output** picks which device the microphone direction listens on, and which
+one its translation is spoken out of. To stop translating for a moment, or when the room is noisy
+enough that voices you did not mean to translate are getting through, the microphone-off button
+turns the input off at any time.
 
 ### Using it in online meetings
 
@@ -136,26 +145,20 @@ translation is spoken out of.
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
 and subtitled.
 
-Aim the two directions at *different* languages for a call — tab audio at your language,
-microphone at theirs. The defaults point both at the same one, which would send the other side
-their own words paraphrased back. Use the microphone's **Simultaneous** mode here, not Two-way
-conversation: the other side arrives on the tab, already translated by the other direction.
-
 **For them to hear your voice translated**, the simplest answer is that they install Interpretab
 too and translate your voice on their end. If they cannot, the translated voice has to reach the
-meeting as a microphone — and Chrome gives extensions no way to register one, so it has to be
-played somewhere the meeting is already listening:
+meeting app as a microphone input, like this:
 
 1. Install a virtual audio device: [BlackHole](https://existential.audio/blackhole/) on macOS,
    [VB-Cable](https://vb-audio.com/Cable/) on Windows.
-2. **Options → Audio output** → pick it. Only the microphone direction's voice goes there; the tab
-   direction's translation stays on your speakers, because that is the one you are listening to.
-3. In the meeting, choose the same device as your microphone.
-4. Wear headphones. On speakers the microphone hears the call and the call hears the room, and the
-   two directions start interpreting each other.
-
-You will not hear your own translated voice while it is going down the cable. To monitor it, route
-it through a macOS Multi-Output Device or VB-Cable's repeater.
+2. Plug headphones or earphones into the computer — on speakers the microphone hears the call, and
+   the two directions start interpreting each other.
+3. **Options → Audio output** → pick the virtual device. The microphone direction's translated
+   voice goes there; the tab direction's arrives in your headphones.
+4. In the meeting app's microphone input setting, choose the virtual device.
+5. Turn on tab audio — them to you — and set its language to yours. Turn on the microphone — you to
+   them — and set its language to theirs.
+6. Press Start, and begin the meeting.
 
 Because this is a Chrome extension, all of this only works with the browser versions of these
 services — desktop apps and native clients are out of reach.

@@ -124,12 +124,21 @@ blauen Kante markiert. **Optionen → Untertitelgröße** legt die Höhe fest, 1
 Zuschauen.
 
 Die übersetzte Stimme kommt aus dem Audioausgang Ihres Rechners, und eine Stummschalttaste bringt
-sie jederzeit zum Schweigen. Beim Tab-Audio **läuft der eigene Ton des Tabs leiser darunter
+sie jederzeit zum Schweigen.
+
+#### Die Stimme der Tab-Audio-Übersetzung
+
+Die aus dem Tab-Audio übersetzte Stimme kommt über Ihr Standard-Audiogerät — die Lautsprecher oder
+Kopfhörer, die der Rechner ohnehin benutzt. Der eigene Ton des Tabs **läuft leiser darunter
 weiter**, während die Übersetzung spricht, sodass Musik und Effekte eines Films weiter zu hören
 sind.
 
-**Optionen → Audioeingang/-ausgang** wählt, über welches Gerät das Mikrofon gehört und über welches
-die Übersetzung gesprochen wird.
+#### Die Stimme der Mikrofonübersetzung
+
+**Optionen → Audioeingang/-ausgang** wählt, über welches Gerät die Mikrofonrichtung hört und über
+welches ihre Übersetzung gesprochen wird. Wenn Sie kurz nicht übersetzen wollen oder es so laut im
+Raum ist, dass ungewollte Stimmen mit übersetzt werden, schaltet die Mikrofon-Aus-Taste den Eingang
+jederzeit ab.
 
 ### Einsatz in Online-Meetings
 
@@ -137,30 +146,21 @@ die Übersetzung gesprochen wird.
 einem Tab, schalten Sie Tab-Audio ein, wählen Sie Ihre Sprache und drücken Sie Start. Was gesagt
 wird, kommt in Ihrer Sprache an, gesprochen und untertitelt.
 
-Richten Sie die beiden Richtungen für ein Gespräch auf *verschiedene* Sprachen — Tab-Audio auf Ihre,
-Mikrofon auf deren Sprache. Die Voreinstellung richtet beide auf dieselbe, was der Gegenseite ihre
-eigenen Worte paraphrasiert zurückschicken würde. Nehmen Sie hier den Modus **Simultaneous** des
-Mikrofons, nicht Two-way conversation: die Gegenseite kommt über den Tab an, von der anderen
-Richtung bereits übersetzt.
-
 **Damit die anderen Ihre übersetzte Stimme hören**, ist die einfachste Antwort, dass sie Interpretab
 ebenfalls installieren und Ihre Stimme auf ihrer Seite übersetzen. Geht das nicht, muss die
-übersetzte Stimme als Mikrofon ins Meeting gelangen — und Chrome gibt Erweiterungen keine
-Möglichkeit, eines zu registrieren, sie muss also dort abgespielt werden, wo das Meeting ohnehin
-zuhört:
+übersetzte Stimme als Mikrofoneingang in die Meeting-App gelangen, und zwar so:
 
 1. Ein virtuelles Audiogerät installieren:
    [BlackHole](https://existential.audio/blackhole/) unter macOS,
    [VB-Cable](https://vb-audio.com/Cable/) unter Windows.
-2. **Optionen → Audioausgang** → dieses Gerät wählen. Dorthin geht nur die Stimme der
-   Mikrofonrichtung; die Übersetzung der Tab-Richtung bleibt auf Ihren Lautsprechern, denn die hören
-   Sie selbst.
-3. Im Meeting dasselbe Gerät als Mikrofon auswählen.
-4. Kopfhörer tragen. Über Lautsprecher hört das Mikrofon das Gespräch und das Gespräch hört den
-   Raum, und die beiden Richtungen fangen an, einander zu dolmetschen.
-
-Ihre eigene übersetzte Stimme hören Sie nicht, während sie durch das Kabel geht. Zum Mithören leiten
-Sie sie über ein macOS-Mehrfachausgabegerät oder den Repeater von VB-Cable.
+2. Kopfhörer oder Ohrhörer an den Rechner anschließen — über Lautsprecher hört das Mikrofon das
+   Gespräch, und die beiden Richtungen fangen an, einander zu dolmetschen.
+3. **Optionen → Audioausgang** → das virtuelle Gerät wählen. Dorthin geht die übersetzte Stimme
+   der Mikrofonrichtung; die der Tab-Richtung kommt in Ihren Kopfhörern an.
+4. In der Mikrofoneingangs-Einstellung der Meeting-App das virtuelle Gerät auswählen.
+5. Tab-Audio einschalten — von ihnen zu Ihnen — und auf Ihre Sprache stellen. Das Mikrofon
+   einschalten — von Ihnen zu ihnen — und auf deren Sprache stellen.
+6. Start drücken und das Meeting beginnen.
 
 Weil dies eine Chrome-Erweiterung ist, funktioniert all das nur mit den Browser-Versionen dieser
 Dienste — Desktop-Apps und native Clients sind außer Reichweite.

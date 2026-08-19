@@ -126,12 +126,21 @@ micrófono se marca con un borde azul. **Opciones → Tamaño de los subtítulos
 a 64 px, en vivo mientras miras.
 
 La voz traducida sale por la salida de audio de tu ordenador, y un botón de silencio la calla en
-cualquier momento. Con el audio de la pestaña, el sonido propio de la pestaña **sigue sonando por
-debajo a menor volumen** mientras habla la traducción, así que la música y los efectos de una
-película siguen ahí.
+cualquier momento.
 
-**Opciones → Entrada / Salida de audio** elige por qué dispositivo se escucha el micrófono y por
-cuál se habla la traducción.
+#### La voz de la traducción del audio de la pestaña
+
+La voz traducida del audio de la pestaña suena por tu dispositivo de audio predeterminado, los
+altavoces o auriculares que el ordenador ya esté usando. El sonido propio de la pestaña **sigue
+sonando por debajo a menor volumen** mientras habla la traducción, así que la música y los efectos
+de una película siguen ahí.
+
+#### La voz de la traducción del micrófono
+
+**Opciones → Entrada / Salida de audio** elige por qué dispositivo escucha la dirección del
+micrófono y por cuál se habla su traducción. Para dejar de traducir un momento, o cuando el sitio
+es tan ruidoso que se cuelan voces que no querías traducir, el botón de apagar el micrófono corta
+la entrada en cualquier momento.
 
 ### Usarlo en reuniones en línea
 
@@ -139,28 +148,21 @@ cuál se habla la traducción.
 enciende el audio de la pestaña, elige tu idioma y pulsa Start. Lo que digan llega en tu idioma,
 hablado y subtitulado.
 
-Apunta las dos direcciones a idiomas *distintos* para una llamada: el audio de la pestaña a tu
-idioma, el micrófono al de la otra parte. Los valores por defecto apuntan los dos al mismo, lo que
-devolvería a la otra parte sus propias palabras parafraseadas. Aquí usa el modo **Simultaneous** del
-micrófono, no Two-way conversation: la otra parte llega por la pestaña, ya traducida por la otra
-dirección.
-
 **Para que ellos oigan tu voz traducida**, lo más sencillo es que instalen Interpretab también y
-traduzcan tu voz en su lado. Si no pueden, la voz traducida tiene que llegar a la reunión como un
-micrófono — y Chrome no da a las extensiones ninguna forma de registrar uno, así que hay que
-reproducirla en algún sitio donde la reunión ya esté escuchando:
+traduzcan tu voz en su lado. Si no pueden, la voz traducida tiene que llegar a la aplicación de la
+reunión como entrada de micrófono, así:
 
 1. Instala un dispositivo de audio virtual: [BlackHole](https://existential.audio/blackhole/) en
    macOS, [VB-Cable](https://vb-audio.com/Cable/) en Windows.
-2. **Opciones → Salida de audio** → elígelo. Allí va solo la voz de la dirección del micrófono; la
-   traducción de la dirección de la pestaña se queda en tus altavoces, porque esa es la que estás
-   escuchando.
-3. En la reunión, elige ese mismo dispositivo como tu micrófono.
-4. Ponte auriculares. Con altavoces, el micrófono oye la llamada y la llamada oye la sala, y las
-   dos direcciones empiezan a interpretarse la una a la otra.
-
-No oirás tu propia voz traducida mientras va por el cable. Para monitorizarla, pásala por un
-dispositivo de salida múltiple de macOS o por el repetidor de VB-Cable.
+2. Conecta auriculares al ordenador: con altavoces el micrófono oye la llamada y las dos direcciones
+   empiezan a interpretarse la una a la otra.
+3. **Opciones → Salida de audio** → elige el dispositivo virtual. Allí va la voz traducida de la
+   dirección del micrófono; la de la dirección de la pestaña llega a tus auriculares.
+4. En el ajuste de entrada de micrófono de la aplicación de la reunión, elige el dispositivo
+   virtual.
+5. Enciende el audio de la pestaña —de ellos a ti— y ponlo en tu idioma. Enciende el micrófono —de
+   ti a ellos— y ponlo en el de ellos.
+6. Pulsa Start y empieza la reunión.
 
 Como esto es una extensión de Chrome, todo lo anterior solo funciona con las versiones web de estos
 servicios; las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.
