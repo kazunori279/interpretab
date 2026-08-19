@@ -77,7 +77,7 @@
     "description": "{1} is how long the run has been going, {2} a rough cost. The closing disclaimer is not optional: a figure in dollars reads as a bill without it."
   },
   "panelUsageFree": {
-    "message": "<b>{1}</b> so far, <b>{2}</b> of Gemini audio. The free tier is charged nothing for it.",
+    "message": "<b>{1}</b> so far, <b>{2}</b> of Gemini audio. Google charges nothing for this on the free plan.",
     "description": "{1} is how long the run has been going, {2} the audio it has moved. Must contain no price: the free tier is charged nothing."
   },
   "panelUsageTip": {

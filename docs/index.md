@@ -60,7 +60,7 @@ translate inaccurately, and it can produce speech that is not a translation at a
 ## Free to try, about $2 an hour to keep running
 
 Interpretab is an open-source tool. The Gemini Live API behind the translation is what costs
-money, and its free tier is enough to try it — after that, **the Gemini Live API usage is billed to
+money, and its free plan is enough to try it — after that, **the Gemini Live API usage is billed to
 your own Google account**.
 
 Here are the Gemini Live API rates
@@ -72,7 +72,7 @@ Here are the Gemini Live API rates
 | The microphone in Two-way conversation mode | $0.005/min | $0.018/min | **≈ $1.40** |
 
 Those are hours of *continuous* audio, so less talking costs less. Turning tab audio and the
-microphone on together runs two sessions, so the price is the sum of the two rows.
+microphone on together is two translations at once, so the price is the sum of the two rows.
 
 ## Install
 
@@ -97,9 +97,9 @@ page.
 
 ## Choosing what to translate
 
-Interpretab has two directions, tab audio and microphone. Either on its own, or both at once.
+Interpretab has two switches, **Tab audio** and **Microphone**. Either on its own, or both at once.
 
-[![The Interpretab side panel: two direction cards, language pickers, the original-volume slider, Start](assets/screenshot-4-panel.png)](assets/screenshot-4-panel.png)
+[![The Interpretab side panel: the Tab audio and Microphone cards, language pickers, the original-volume slider, Start](assets/screenshot-4-panel.png)](assets/screenshot-4-panel.png)
 
 **Tab audio** translates whatever the current tab is playing into the language you pick, from a
 choice of 78.
@@ -119,8 +119,8 @@ whole. The panel says so and links to **Options → Microphone access**, where t
 microphone" button is: Chrome will only show its permission prompt on a page of its own, never in
 the side panel.
 
-Turning tab audio and the microphone on together bills them as two separate sessions, so the cost
-is the sum of the two.
+Turning both on at once is two translations at once, so Google charges for both and the cost is the
+sum of the two.
 
 ### Subtitles and the spoken translation
 
@@ -139,8 +139,8 @@ volume** while the translation speaks, so a film's music and effects are still t
 
 #### The microphone translation's voice
 
-**Options → Audio input/output** picks which device the microphone direction listens on, and which
-one its translation is spoken out of. To stop translating for a moment, or when the room is noisy
+**Options → Audio input/output** picks which device **Microphone** listens on, and which one its
+translation is spoken out of. To stop translating for a moment, or when the room is noisy
 enough that voices you did not mean to translate are getting through, the microphone-off button
 turns the input off at any time.
 
@@ -158,8 +158,8 @@ meeting app as a microphone input, like this:
    [VB-Cable](https://vb-audio.com/Cable/) on Windows.
 2. Plug headphones or earphones into the computer — on speakers the microphone hears the call, and
    the two directions start interpreting each other.
-3. **Options → Audio output** → pick the virtual device. The microphone direction's translated
-   voice goes there; the tab direction's arrives in your headphones.
+3. **Options → Audio output** → pick the virtual device. The voice translated from **Microphone**
+   goes there; the one from **Tab audio** arrives in your headphones.
 4. In the meeting app's microphone input setting, choose the virtual device.
 5. Turn on tab audio — them to you — and set its language to yours. Turn on the microphone — you to
    them — and set its language to theirs.
@@ -208,8 +208,8 @@ and the third is what you want the **subtitles to show**.
 - **If you want external speakers with the microphone, use a microphone with a mute button.**
   Speakers feed the translated voice back into the microphone — an echo loop — and the translation
   stops working properly. Unmute only while you are speaking.
-- **Tab audio and the microphone at the same time means two sessions**, and a cost that goes up to
-  match.
+- **Tab audio and the microphone at the same time is two translations at once**, and about twice
+  the cost.
 - **Interpretab runs on one tab at a time.** While it is running, the side panel on any other tab
   names the tab it is running on and offers only **Stop**. Stop it there and Start comes back.
 - **Chrome does not let extensions draw on its own pages or on PDFs**, so subtitles cannot appear
@@ -221,34 +221,35 @@ and the third is what you want the **subtitles to show**.
 ## More about using the Gemini Live API
 
 The side panel keeps a meter of what the run has used so far, and starts again at zero each time
-you press Start. What it shows depends on **Options → Gemini API plan**: pick whether the key you
-are using is on the free tier or on Tier 1.
+you press Start. What it shows depends on **Options → Gemini API plan**, where you say whether your
+key is **Free** or **Paid**.
 
-- **Free** (the default): *12 min so far, 18 min of Gemini audio. The free tier is charged nothing
-  for it.* No price, because there is no price. The audio time is the number worth watching: the
-  free tier is limited by rate rather than by money, so that is what its limits are spent on.
+- **Free** (the default): *12 min so far, 18 min of Gemini audio. Google charges nothing for this
+  on the free plan.* No price, because there is no price. The audio time is the number worth
+  watching: the free plan limits how much you can use at a time rather than charging for it, so
+  that is what gets used up.
 - **Paid**: *12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.*
 
-Set the plan when you paste the key — it is the project you made the key in, and a project is on
-the paid tier once it has a billing account linked. **Your Google account is the only place your
-actual bill exists.**
+Set the plan when you paste the key. A key is paid once the Google account it belongs to has a
+payment method on it, and Google does not tell Interpretab which it is — hence the question.
+**Your Google account is the only place your actual bill exists.**
 
-### Choosing between the free tier and a paid one
+### Choosing between the free plan and a paid one
 
-What a Gemini API key costs, how hard it is rate-limited, and what Google does with what you send
-through it all depend on the project's **usage tier**. The qualifications
+What a Gemini API key costs, how hard it is limited, and what Google does with what you send
+through it all depend on which plan it is on. Google's own documentation calls the paid one **Tier
+1**, which is the same thing Interpretab's Options page calls **Paid**. The qualifications
 [Google publishes](https://ai.google.dev/gemini-api/docs/rate-limits) are:
 
-| Tier | How you qualify | Cost and limits | What Google does with your data | Where it fits Interpretab |
+| Plan | How you qualify | Cost and limits | What Google does with your data | Where it fits Interpretab |
 |---|---|---|---|---|
-| **Free** | No billing account needed | Free of charge, but long or heavy use runs into the rate limits and errors out | **Used to improve Google's products, and subject to human review** | Trying it out |
-| **Tier 1** | Link an active billing account | Pay as you go, up to $10 per 10 minutes and $250 a month | Not used to improve products; logged briefly for abuse detection only | **Where to be if you use it regularly.** Enough for almost any use |
+| **Free** | No payment method needed | Free of charge, but long or heavy use runs into the limits and errors out | **Used to improve Google's products, and subject to human review** | Trying it out |
+| **Paid** (Google's Tier 1) | Add a payment method to the Google account | Pay as you go, up to $10 per 10 minutes and $250 a month | Not used to improve products; logged briefly for abuse detection only | **Where to be if you use it regularly.** Enough for almost any use |
 
-Start on the free tier, and link a billing account to reach Tier 1 once you keep using it. On
-Tier 1 nothing you send is used to improve Google's products, and the ceilings are roomy for a tool
-like this one: about 25 Interpretab sessions running at the same time, and around 110 hours a
-month. Google documents [how to set the billing
-up](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
+Start on the free plan, and add a payment method once you keep using it. On the paid plan nothing
+you send is used to improve Google's products, and the ceilings are roomy for a tool like this one:
+about 25 Interpretab runs going at the same time, and around 110 hours a month. Google documents
+[how to set the billing up](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
 ### Sharing one Gemini API key between machines and people
 
@@ -263,7 +264,7 @@ carry it, so using Interpretab on several computers means pasting the key into e
 
 - **Rate limits are per project, not per key.**
   [Google's documentation](https://ai.google.dev/gemini-api/docs/rate-limits) says so in as many
-  words. Tier 1's $10 per 10 minutes is about 25 Interpretab sessions at once, and anything past
+  words. The paid plan's $10 per 10 minutes is about 25 Interpretab runs at once, and anything past
   that errors out.
 - **A key is a password.** If it gets out,
   [Google's guidance](https://ai.google.dev/gemini-api/docs/api-key) applies: "others can consume
@@ -274,13 +275,14 @@ carry it, so using Interpretab on several computers means pasting the key into e
   Cloud billing account and the payment stays in one place while the keys and the rate limits do
   not.
 - **For users in the EEA, Switzerland or the UK**, the
-  [Gemini API Additional Terms](https://ai.google.dev/gemini-api/terms) require a paid tier.
+  [Gemini API Additional Terms](https://ai.google.dev/gemini-api/terms) require a paid plan.
 - **If a run will not start, the message says which problem it is.** Interpretab asks Google about
-  the key before it opens anything, so a rejected key, an exhausted quota and a key that is not
-  allowed to call the Gemini API are named separately rather than guessed at. Quota is the usual
-  one on the free tier: check the limits in [AI Studio](https://aistudio.google.com/apikey) and
-  wait for them to reset, or set up billing and move to Tier 1. If the message says the key itself
-  was accepted, the problem is the Live API or your network, not the key.
+  the key before it opens anything, so a rejected key, a key that has used up what Google allows
+  for now, and a key that is not allowed to use the Gemini API are named separately rather than
+  guessed at. Running out is the usual one on the free plan: check what is left in
+  [AI Studio](https://aistudio.google.com/apikey) and wait for the limit to reset, or add a payment
+  method. If the message says the key itself was accepted, the problem is Gemini or your network,
+  not the key.
 
 ## Open source
 

@@ -61,7 +61,7 @@ de la parole qui n'est pas du tout une traduction.
 ## Gratuit à l'essai, environ 2 $ de l'heure à l'usage
 
 Interpretab est un outil open source. Ce qui coûte de l'argent, c'est la Gemini Live API derrière la
-traduction, et son offre gratuite suffit pour l'essayer — au-delà, **l'usage de la Gemini Live API
+traduction, et son forfait gratuit suffit pour l'essayer — au-delà, **l'usage de la Gemini Live API
 est facturé sur votre propre compte Google**.
 
 Voici les tarifs de la Gemini Live API que
@@ -73,7 +73,8 @@ Voici les tarifs de la Gemini Live API que
 | Le microphone en mode Two-way conversation | 0,005 $/min | 0,018 $/min | **≈ 1,40 $** |
 
 Ce sont des heures d'audio *continu*, donc parler moins coûte moins. Activer l'audio de l'onglet et
-le microphone ensemble ouvre deux sessions, donc le prix est la somme des deux lignes.
+le microphone ensemble, c'est deux traductions à la fois, donc le prix est la somme des deux
+lignes.
 
 ## Installation
 
@@ -98,10 +99,10 @@ L'interface d'Interpretab suit la langue de votre navigateur, dans les dix langu
 
 ## Choisir ce qui est traduit
 
-Interpretab a deux directions, l'audio de l'onglet et le microphone. L'une ou l'autre, ou les deux à
-la fois.
+Interpretab a deux interrupteurs, **Audio de l'onglet** et **Microphone**. L'un ou l'autre, ou les
+deux à la fois.
 
-[![Le panneau latéral d'Interpretab : deux cartes de direction, les sélecteurs de langue, le curseur du volume d'origine, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+[![Le panneau latéral d'Interpretab : les cartes Audio de l'onglet et Microphone, les sélecteurs de langue, le curseur du volume d'origine, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **L'audio de l'onglet** traduit ce que joue l'onglet courant dans la langue que vous choisissez,
 parmi 78.
@@ -121,8 +122,8 @@ l'extension entière. Le panneau vous le dit et renvoie vers **Options → Accè
 le bouton Autoriser le microphone : Chrome n'affiche son invite d'autorisation que sur une page à
 part, jamais dans le panneau latéral.
 
-Activer l'audio de l'onglet et le microphone ensemble les facture comme deux sessions distinctes,
-donc le coût est la somme des deux.
+Activer les deux à la fois, c'est deux traductions à la fois : Google facture les deux et le coût
+est la somme des deux.
 
 ### Les sous-titres et la traduction parlée
 
@@ -143,8 +144,8 @@ d'un film restent audibles.
 
 #### La voix de la traduction du microphone
 
-**Options → Entrée / Sortie audio** choisit par quel périphérique la direction microphone écoute,
-et par lequel sa traduction est prononcée. Pour arrêter la traduction un instant, ou quand la pièce
+**Options → Entrée / Sortie audio** choisit par quel périphérique **Microphone** écoute, et par
+lequel sa traduction est prononcée. Pour arrêter la traduction un instant, ou quand la pièce
 est assez bruyante pour que des voix non voulues passent, le bouton d'extinction du microphone
 coupe l'entrée à tout moment.
 
@@ -164,7 +165,7 @@ l'application de réunion comme entrée microphone, de cette façon :
 2. Branchez un casque ou des écouteurs sur l'ordinateur — sur haut-parleurs, le micro entend
    l'appel et les deux directions se mettent à s'interpréter l'une l'autre.
 3. **Options → Sortie audio** → choisissez le périphérique virtuel. C'est là que va la voix
-   traduite de la direction microphone ; celle de la direction onglet arrive dans votre casque.
+   traduite de **Microphone** ; celle d'**Audio de l'onglet** arrive dans votre casque.
 4. Dans le réglage d'entrée microphone de l'application de réunion, choisissez le périphérique
    virtuel.
 5. Activez l'audio de l'onglet — d'eux vers vous — et réglez-le sur votre langue. Activez le
@@ -216,8 +217,8 @@ modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-t
 - **Si vous voulez des haut-parleurs externes avec le microphone, prenez un micro avec bouton de
   sourdine.** Les haut-parleurs renvoient la voix traduite dans le micro — une boucle d'écho — et la
   traduction cesse de fonctionner correctement. N'enlevez la sourdine que pendant que vous parlez.
-- **L'audio de l'onglet et le microphone en même temps, c'est deux sessions**, et un coût qui monte
-  en conséquence.
+- **L'audio de l'onglet et le microphone en même temps, c'est deux traductions à la fois**, et à peu
+  près le double du coût.
 - **Interpretab tourne sur un seul onglet à la fois.** Pendant qu'il tourne, le panneau latéral de
   tout autre onglet nomme l'onglet où il tourne et ne propose que **Stop**. Arrêtez-le là et Start
   revient.
@@ -225,41 +226,43 @@ modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-t
   sous-titres ne peuvent pas y apparaître. La traduction parlée et la transcription du panneau
   latéral continuent de fonctionner.
 - **La qualité dépend de la paire de langues.** L'anglais et le japonais sont la paire sur laquelle
-  ceci a été mesuré, sur des sessions d'une heure ; une paire plus éloignée ou moins courante peut
+  ceci a été mesuré, sur des exécutions d'une heure ; une paire plus éloignée ou moins courante peut
   ressortir plus rugueuse, et il n'y a pas moyen de le savoir à l'avance sinon en essayant.
 
 ## En savoir plus sur l'usage de la Gemini Live API
 
-Le panneau latéral tient un compteur de ce que la session a consommé jusqu'ici, et repart de zéro à
-chaque appui sur Start. Ce qu'il affiche dépend de **Options → Forfait de l'API Gemini** : indiquez
-si la clé que vous utilisez est sur l'offre gratuite ou sur le Tier 1.
+Le panneau latéral tient un compteur de ce que l'exécution a consommé jusqu'ici, et repart de zéro à
+chaque appui sur Start. Ce qu'il affiche dépend de **Options → Forfait de l'API Gemini**, où vous
+indiquez si votre clé est **Free** ou **Paid**.
 
-- **Free** (par défaut) : *12 min écoulées, 18 min d'audio Gemini. L'offre gratuite ne le facture
-  pas.* Pas de prix, parce qu'il n'y a pas de prix. Le temps d'audio est le chiffre qui vaut la
-  peine d'être suivi : l'offre gratuite est limitée en débit et non en argent, c'est donc là-dessus
-  que ses limites se dépensent.
-- **Paid** : *12 min écoulées, ~$0.31 d'usage Gemini sur cette session — une estimation, pas votre
+- **Free** (par défaut) : *12 min écoulées, 18 min d'audio Gemini. Le forfait gratuit ne facture
+  rien pour cela.* Pas de prix, parce qu'il n'y a pas de prix. Le temps d'audio est le chiffre qui
+  vaut la peine d'être suivi : le forfait gratuit limite ce que vous pouvez consommer à la fois
+  plutôt que de le facturer, et c'est donc cela qui s'épuise.
+- **Paid** : *12 min écoulées, ~$0.31 d'usage Gemini sur cette exécution — une estimation, pas votre
   facture réelle.*
 
-Réglez le forfait au moment où vous collez la clé : c'est le projet dans lequel vous l'avez créée, et
-un projet passe au palier payant dès qu'un compte de facturation y est rattaché. **Votre compte
-Google est le seul endroit où votre facture réelle existe.**
+Réglez le forfait au moment où vous collez la clé. Une clé est payante dès que le compte Google
+auquel elle appartient a un moyen de paiement, et Google ne dit pas à Interpretab laquelle des deux
+c'est — d'où la question. **Votre compte Google est le seul endroit où votre facture réelle
+existe.**
 
-### Choisir entre l'offre gratuite et une offre payante
+### Choisir entre le forfait gratuit et un forfait payant
 
-Ce que coûte une clé d'API Gemini, la sévérité de ses limites de débit et ce que Google fait de ce
-que vous lui envoyez dépendent tous du **palier d'usage** du projet. Les conditions que
-[Google publie](https://ai.google.dev/gemini-api/docs/rate-limits) sont :
+Ce que coûte une clé d'API Gemini, la sévérité de ses limites et ce que Google fait de ce que vous
+lui envoyez dépendent tous du forfait sur lequel elle se trouve. La documentation de Google appelle
+le payant **Tier 1**, c'est-à-dire ce que la page Options d'Interpretab appelle **Paid**. Les
+conditions que [Google publie](https://ai.google.dev/gemini-api/docs/rate-limits) sont :
 
-| Palier | Comment y accéder | Coût et limites | Ce que Google fait de vos données | Sa place pour Interpretab |
+| Forfait | Comment y accéder | Coût et limites | Ce que Google fait de vos données | Sa place pour Interpretab |
 |---|---|---|---|---|
-| **Free** | Aucun compte de facturation nécessaire | Gratuit, mais un usage long ou intensif se heurte aux limites de débit et échoue | **Utilisées pour améliorer les produits Google, et soumises à relecture humaine** | Pour essayer |
-| **Tier 1** | Rattacher un compte de facturation actif | Paiement à l'usage, jusqu'à 10 $ par 10 minutes et 250 $ par mois | Pas utilisées pour améliorer les produits ; journalisées brièvement pour la seule détection d'abus | **Là où être si vous l'utilisez régulièrement.** Suffisant pour presque tout usage |
+| **Free** | Aucun moyen de paiement nécessaire | Gratuit, mais un usage long ou intensif se heurte aux limites et échoue | **Utilisées pour améliorer les produits Google, et soumises à relecture humaine** | Pour essayer |
+| **Paid** (le Tier 1 de Google) | Ajouter un moyen de paiement au compte Google | Paiement à l'usage, jusqu'à 10 $ par 10 minutes et 250 $ par mois | Pas utilisées pour améliorer les produits ; journalisées brièvement pour la seule détection d'abus | **Là où être si vous l'utilisez régulièrement.** Suffisant pour presque tout usage |
 
-Commencez sur l'offre gratuite, et rattachez un compte de facturation pour atteindre le Tier 1 une
-fois que l'usage s'installe. Sur Tier 1, rien de ce que vous envoyez ne sert à améliorer les
-produits Google, et les plafonds sont larges pour un outil comme celui-ci : environ 25 sessions
-Interpretab en même temps, et à peu près 110 heures par mois. Google documente [comment configurer
+Commencez sur le forfait gratuit, et ajoutez un moyen de paiement une fois que l'usage s'installe.
+Sur le forfait payant, rien de ce que vous envoyez ne sert à améliorer les produits Google, et les
+plafonds sont larges pour un outil comme celui-ci : environ 25 exécutions d'Interpretab en même
+temps, et à peu près 110 heures par mois. Google documente [comment configurer
 la facturation](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
 ### Partager une clé d'API Gemini entre machines et entre personnes
@@ -275,8 +278,8 @@ clé dans chacun. **Utiliser une clé sur vos propres machines est permis.**
 
 - **Les limites de débit sont par projet, pas par clé.** La
   [documentation de Google](https://ai.google.dev/gemini-api/docs/rate-limits) le dit en toutes
-  lettres. Les 10 $ par 10 minutes du Tier 1 font environ 25 sessions Interpretab simultanées, et
-  au-delà c'est une erreur.
+  lettres. Les 10 $ par 10 minutes du forfait payant font environ 25 exécutions d'Interpretab
+  simultanées, et au-delà c'est une erreur.
 - **Une clé est un mot de passe.** Si elle fuite, la
   [recommandation de Google](https://ai.google.dev/gemini-api/docs/api-key) s'applique : « d'autres
   peuvent consommer le quota de votre projet, provoquer des frais inattendus et accéder à des
@@ -287,14 +290,15 @@ clé dans chacun. **Utiliser une clé sur vos propres machines est permis.**
   les limites de débit, non.
 - **Pour les utilisateurs de l'EEE, de Suisse ou du Royaume-Uni**, les
   [Conditions supplémentaires de l'API Gemini](https://ai.google.dev/gemini-api/terms) imposent un
-  palier payant.
-- **Si une session refuse de démarrer, le message dit de quel problème il s'agit.** Interpretab
-  interroge Google sur la clé avant d'ouvrir quoi que ce soit, si bien qu'une clé rejetée, un quota
-  épuisé et une clé qui n'a pas le droit d'appeler l'API Gemini sont nommés séparément plutôt que
-  devinés. Le quota est le cas courant sur l'offre gratuite : vérifiez les limites dans
-  [AI Studio](https://aistudio.google.com/apikey) et attendez leur remise à zéro, ou configurez la
-  facturation et passez au Tier 1. Si le message dit que la clé elle-même a été acceptée, le
-  problème vient de la Live API ou de votre réseau, pas de la clé.
+  forfait payant.
+- **Si une exécution refuse de démarrer, le message dit de quel problème il s'agit.** Interpretab
+  interroge Google sur la clé avant d'ouvrir quoi que ce soit, si bien qu'une clé rejetée, une clé
+  qui a épuisé ce que Google autorise pour l'instant et une clé qui n'a pas le droit d'appeler l'API
+  Gemini sont nommées séparément plutôt que devinées. L'épuisement est le cas courant sur le
+  forfait gratuit : voyez ce qu'il vous reste dans
+  [AI Studio](https://aistudio.google.com/apikey) et attendez la remise à zéro de la limite, ou
+  ajoutez un moyen de paiement. Si le message dit que la clé elle-même a été acceptée, le problème
+  vient de Gemini ou de votre réseau, pas de la clé.
 
 ## Open source
 

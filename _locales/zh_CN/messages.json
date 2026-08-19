@@ -61,7 +61,7 @@
     "message": "已运行 <b>{1}</b>，本次 Gemini 用量约 <b>{2}</b>——这是估算值，不是你的实际账单。"
   },
   "panelUsageFree": {
-    "message": "已运行 <b>{1}</b>，Gemini 音频 <b>{2}</b>。免费层不会为此收费。"
+    "message": "已运行 <b>{1}</b>，Gemini 音频 <b>{2}</b>。免费方案不收费。"
   },
   "panelUsageTip": {
     "message": "已经开始 {1}。这段时间里向 Google 发出了 {2} 的音频，收回了 {3}，两边都要计费。"

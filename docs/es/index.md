@@ -61,7 +61,7 @@ absoluto.
 ## Gratis para probarlo, unos 2 $ la hora para seguir usándolo
 
 Interpretab es una herramienta de código abierto. Lo que cuesta dinero es la Gemini Live API que
-hay detrás de la traducción, y su nivel gratuito basta para probarla — a partir de ahí, **el uso de
+hay detrás de la traducción, y su plan gratuito basta para probarla — a partir de ahí, **el uso de
 la Gemini Live API se factura a tu propia cuenta de Google**.
 
 Estas son las tarifas de la Gemini Live API que
@@ -73,7 +73,8 @@ Estas son las tarifas de la Gemini Live API que
 | El micrófono en modo Two-way conversation | 0,005 $/min | 0,018 $/min | **≈ 1,40 $** |
 
 Son horas de audio *continuo*, así que hablar menos cuesta menos. Encender a la vez el audio de la
-pestaña y el micrófono abre dos sesiones, así que el precio es la suma de las dos filas.
+pestaña y el micrófono son dos traducciones a la vez, así que el precio es la suma de las dos
+filas.
 
 ## Instalación
 
@@ -98,10 +99,10 @@ La interfaz de Interpretab sigue el idioma de tu navegador, en los diez idiomas 
 
 ## Elegir qué traducir
 
-Interpretab tiene dos direcciones, el audio de la pestaña y el micrófono. Cualquiera por su cuenta,
-o las dos a la vez.
+Interpretab tiene dos interruptores, **Audio de la pestaña** y **Micrófono**. Cualquiera por su
+cuenta, o los dos a la vez.
 
-[![El panel lateral de Interpretab: dos tarjetas de dirección, selectores de idioma, el control de volumen original y Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+[![El panel lateral de Interpretab: las tarjetas Audio de la pestaña y Micrófono, selectores de idioma, el control de volumen original y Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **Audio de la pestaña** traduce lo que esté reproduciendo la pestaña actual al idioma que elijas,
 entre 78.
@@ -120,8 +121,8 @@ extensión entera. El panel te lo dice y enlaza a **Opciones → Acceso al micr�
 botón Permitir el micrófono: Chrome solo muestra su aviso de permiso en una página propia, nunca en
 el panel lateral.
 
-Encender a la vez el audio de la pestaña y el micrófono se factura como dos sesiones distintas, así
-que el coste es la suma de las dos.
+Encender los dos a la vez son dos traducciones a la vez, así que Google cobra por ambas y el coste
+es la suma de las dos.
 
 ### Los subtítulos y la traducción hablada
 
@@ -142,8 +143,8 @@ de una película siguen ahí.
 
 #### La voz de la traducción del micrófono
 
-**Opciones → Entrada / Salida de audio** elige por qué dispositivo escucha la dirección del
-micrófono y por cuál se habla su traducción. Para dejar de traducir un momento, o cuando el sitio
+**Opciones → Entrada / Salida de audio** elige por qué dispositivo escucha **Micrófono** y por
+cuál se habla su traducción. Para dejar de traducir un momento, o cuando el sitio
 es tan ruidoso que se cuelan voces que no querías traducir, el botón de apagar el micrófono corta
 la entrada en cualquier momento.
 
@@ -161,8 +162,8 @@ reunión como entrada de micrófono, así:
    macOS, [VB-Cable](https://vb-audio.com/Cable/) en Windows.
 2. Conecta auriculares al ordenador: con altavoces el micrófono oye la llamada y las dos direcciones
    empiezan a interpretarse la una a la otra.
-3. **Opciones → Salida de audio** → elige el dispositivo virtual. Allí va la voz traducida de la
-   dirección del micrófono; la de la dirección de la pestaña llega a tus auriculares.
+3. **Opciones → Salida de audio** → elige el dispositivo virtual. Allí va la voz traducida de
+   **Micrófono**; la de **Audio de la pestaña** llega a tus auriculares.
 4. En el ajuste de entrada de micrófono de la aplicación de la reunión, elige el dispositivo
    virtual.
 5. Enciende el audio de la pestaña —de ellos a ti— y ponlo en tu idioma. Enciende el micrófono —de
@@ -213,8 +214,8 @@ indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos*
 - **Si quieres altavoces externos con el micrófono, usa un micrófono con botón de silencio.** Los
   altavoces devuelven la voz traducida al micrófono — un bucle de eco — y la traducción deja de
   funcionar bien. Quita el silencio solo mientras hablas.
-- **El audio de la pestaña y el micrófono a la vez son dos sesiones**, y un coste que sube en
-  consecuencia.
+- **El audio de la pestaña y el micrófono a la vez son dos traducciones a la vez**, y más o menos el
+  doble de coste.
 - **Interpretab funciona en una pestaña a la vez.** Mientras está en marcha, el panel lateral de
   cualquier otra pestaña nombra la pestaña en la que está corriendo y ofrece solo **Stop**. Párala
   allí y Start vuelve.
@@ -227,36 +228,37 @@ indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos*
 
 ## Más sobre el uso de la Gemini Live API
 
-El panel lateral lleva un medidor de lo que ha consumido la sesión hasta ahora, y vuelve a empezar
-en cero cada vez que pulsas Start. Lo que muestra depende de **Opciones → Plan de la API de
-Gemini**: elige si la clave que usas está en el nivel gratuito o en el Tier 1.
+El panel lateral lleva un medidor de lo que ha consumido la ejecución hasta ahora, y vuelve a
+empezar en cero cada vez que pulsas Start. Lo que muestra depende de **Opciones → Plan de la API de
+Gemini**, donde dices si tu clave es **Free** o **Paid**.
 
 - **Free** (por defecto): *12 min hasta ahora, 18 min de audio de Gemini. En el plan gratuito no se
   cobra nada por ello.* Sin precio, porque no hay precio. El tiempo de audio es el número que
-  merece la pena mirar: el nivel gratuito está limitado por frecuencia y no por dinero, así que es
-  ahí donde se gastan sus límites.
+  merece la pena mirar: el plan gratuito limita cuánto puedes usar a la vez en lugar de cobrarlo,
+  así que es eso lo que se gasta.
 - **Paid**: *12 min hasta ahora, ~$0.31 de uso de Gemini en esta ejecución: es una estimación, no tu
   factura real.*
 
-Configura el plan cuando pegues la clave: es el proyecto en el que la creaste, y un proyecto está en
-el nivel de pago en cuanto tiene una cuenta de facturación vinculada. **Tu cuenta de Google es el
-único sitio donde existe tu factura real.**
+Configura el plan cuando pegues la clave. Una clave es de pago en cuanto la cuenta de Google a la
+que pertenece tiene un método de pago, y Google no le dice a Interpretab cuál de las dos es: de ahí
+la pregunta. **Tu cuenta de Google es el único sitio donde existe tu factura real.**
 
-### Elegir entre el nivel gratuito y uno de pago
+### Elegir entre el plan gratuito y uno de pago
 
 Lo que cuesta una clave de la API de Gemini, con qué dureza está limitada y qué hace Google con lo
-que envías por ella dependen del **nivel de uso** del proyecto. Los requisitos que
+que envías por ella dependen de en qué plan esté. La documentación de Google llama al de pago **Tier
+1**, que es lo mismo que la página de Opciones de Interpretab llama **Paid**. Los requisitos que
 [Google publica](https://ai.google.dev/gemini-api/docs/rate-limits) son:
 
-| Nivel | Cómo se accede | Coste y límites | Qué hace Google con tus datos | Dónde encaja en Interpretab |
+| Plan | Cómo se accede | Coste y límites | Qué hace Google con tus datos | Dónde encaja en Interpretab |
 |---|---|---|---|---|
-| **Free** | No hace falta cuenta de facturación | Gratis, pero el uso largo o intenso choca con los límites de frecuencia y da error | **Se usan para mejorar los productos de Google, y están sujetos a revisión humana** | Para probarlo |
-| **Tier 1** | Vincula una cuenta de facturación activa | Pago por uso, hasta 10 $ cada 10 minutos y 250 $ al mes | No se usan para mejorar productos; se registran brevemente solo para detectar abusos | **Donde conviene estar si lo usas a menudo.** Suficiente para casi cualquier uso |
+| **Free** | No hace falta método de pago | Gratis, pero el uso largo o intenso choca con los límites y da error | **Se usan para mejorar los productos de Google, y están sujetos a revisión humana** | Para probarlo |
+| **Paid** (el Tier 1 de Google) | Añade un método de pago a la cuenta de Google | Pago por uso, hasta 10 $ cada 10 minutos y 250 $ al mes | No se usan para mejorar productos; se registran brevemente solo para detectar abusos | **Donde conviene estar si lo usas a menudo.** Suficiente para casi cualquier uso |
 
-Empieza en el nivel gratuito, y vincula una cuenta de facturación para llegar al Tier 1 cuando veas
-que lo sigues usando. En Tier 1 nada de lo que envías se usa para mejorar los productos de Google, y
-los techos son amplios para una herramienta como esta: unas 25 sesiones de Interpretab a la vez, y
-unas 110 horas al mes. Google documenta [cómo configurar la
+Empieza en el plan gratuito, y añade un método de pago cuando veas que lo sigues usando. En el plan
+de pago nada de lo que envías se usa para mejorar los productos de Google, y los techos son amplios
+para una herramienta como esta: unas 25 ejecuciones de Interpretab a la vez, y unas 110 horas al
+mes. Google documenta [cómo configurar la
 facturación](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
 ### Compartir una clave de la API de Gemini entre máquinas y personas
@@ -272,8 +274,8 @@ cada uno. **Usar una clave en tus propias varias máquinas está bien.**
 
 - **Los límites de frecuencia son por proyecto, no por clave.** La
   [documentación de Google](https://ai.google.dev/gemini-api/docs/rate-limits) lo dice con esas
-  palabras. Los 10 $ cada 10 minutos del Tier 1 son unas 25 sesiones de Interpretab a la vez, y todo
-  lo que pase de ahí da error.
+  palabras. Los 10 $ cada 10 minutos del plan de pago son unas 25 ejecuciones de Interpretab a la
+  vez, y todo lo que pase de ahí da error.
 - **Una clave es una contraseña.** Si se filtra, se aplica la
   [guía de Google](https://ai.google.dev/gemini-api/docs/api-key): «otros pueden consumir la cuota
   de tu proyecto, provocar cargos inesperados y acceder a recursos privados». Cuando te deshagas de
@@ -283,15 +285,15 @@ cada uno. **Usar una clave en tus propias varias máquinas está bien.**
   cuenta de facturación de Google Cloud y el pago se queda en un solo sitio mientras las claves y
   los límites de frecuencia no.
 - **Para usuarios del EEE, Suiza o el Reino Unido**, los
-  [Términos adicionales de la API de Gemini](https://ai.google.dev/gemini-api/terms) exigen un nivel
-  de pago.
-- **Si una sesión no arranca, el mensaje dice cuál es el problema.** Interpretab le pregunta a
-  Google por la clave antes de abrir nada, así que una clave rechazada, una cuota agotada y una
-  clave que no tiene permiso para llamar a la API de Gemini se nombran por separado en vez de
-  adivinarse. La cuota es lo habitual en el nivel gratuito: mira los límites en
-  [AI Studio](https://aistudio.google.com/apikey) y espera a que se reinicien, o configura la
-  facturación y pásate al Tier 1. Si el mensaje dice que la clave sí fue aceptada, el problema es la
-  Live API o tu red, no la clave.
+  [Términos adicionales de la API de Gemini](https://ai.google.dev/gemini-api/terms) exigen un plan de
+  pago.
+- **Si una ejecución no arranca, el mensaje dice cuál es el problema.** Interpretab le pregunta a
+  Google por la clave antes de abrir nada, así que una clave rechazada, una clave que ha agotado lo
+  que Google permite por ahora y una clave que no tiene permiso para llamar a la API de Gemini se
+  nombran por separado en vez de adivinarse. Agotarlo es lo habitual en el plan gratuito: mira lo
+  que te queda en [AI Studio](https://aistudio.google.com/apikey) y espera a que el límite se
+  reinicie, o añade un método de pago. Si el mensaje dice que la clave sí fue aceptada, el problema
+  es Gemini o tu red, no la clave.
 
 ## Código abierto
 

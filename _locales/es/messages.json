@@ -70,7 +70,7 @@
     "message": "La cifra usa los precios publicados por Google tal como estaban en agosto de 2026, no algo leído de tu cuenta, y los precios cambian. Tu factura real solo existe en tu cuenta de Google."
   },
   "panelUsageTipFree": {
-    "message": "Tu clave está puesta en Free en la página de Opciones, y en el plan gratuito Google no cobra nada, así que no hay coste que mostrar. Si la cuenta de Google de la clave tiene una forma de pago, cambia el plan a Paid allí y esta línea estimará lo que cuesta la sesión."
+    "message": "Tu clave está puesta en Free en la página de Opciones, y en el plan gratuito Google no cobra nada, así que no hay coste que mostrar. Si la cuenta de Google de la clave tiene una forma de pago, cambia el plan a Paid allí y esta línea estimará lo que cuesta la ejecución."
   },
   "durationSeconds": { "message": "{1} s" },
   "durationMinutes": { "message": "{1} min" },

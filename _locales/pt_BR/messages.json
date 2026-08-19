@@ -70,7 +70,7 @@
     "message": "O valor usa os preços publicados pelo Google como estavam em agosto de 2026, e não algo lido da sua conta — e preços mudam. Sua conta real só existe na sua conta do Google."
   },
   "panelUsageTipFree": {
-    "message": "Sua chave está em Free na página de Opções, e no plano gratuito o Google não cobra nada, então não há custo a mostrar. Se a conta do Google da chave tiver uma forma de pagamento, mude o plano para Paid lá e esta linha vai estimar o custo da sessão."
+    "message": "Sua chave está em Free na página de Opções, e no plano gratuito o Google não cobra nada, então não há custo a mostrar. Se a conta do Google da chave tiver uma forma de pagamento, mude o plano para Paid lá e esta linha vai estimar o custo da execução."
   },
   "durationSeconds": { "message": "{1} s" },
   "durationMinutes": { "message": "{1} min" },

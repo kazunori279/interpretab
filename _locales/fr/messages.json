@@ -58,10 +58,10 @@
     "message": "Les deux en même temps, ce sont deux traductions en même temps : Google facture environ le double."
   },
   "panelUsagePaid": {
-    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'usage Gemini sur cette session — une estimation, pas votre facture réelle."
+    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'usage Gemini sur cette exécution — une estimation, pas votre facture réelle."
   },
   "panelUsageFree": {
-    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'audio Gemini. L'offre gratuite ne le facture pas."
+    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'audio Gemini. Le forfait gratuit ne facture rien pour cela."
   },
   "panelUsageTip": {
     "message": "Démarré il y a {1}. Depuis, {2} d'audio envoyés à Google et {3} reçus, et les deux sont facturés."
@@ -70,7 +70,7 @@
     "message": "Le chiffre s'appuie sur les tarifs publiés par Google en août 2026, et non sur quoi que ce soit lu dans votre compte ; ces tarifs changent. Votre vraie facture n'existe que dans votre compte Google."
   },
   "panelUsageTipFree": {
-    "message": "Votre clé est réglée sur Free dans les Options, et Google ne facture rien sur l'offre gratuite : il n'y a donc pas de coût à afficher. Si le compte Google de la clé a un moyen de paiement, passez le forfait sur Paid et cette ligne estimera ce que la session coûte."
+    "message": "Votre clé est réglée sur Free dans les Options, et Google ne facture rien sur le forfait gratuit : il n'y a donc pas de coût à afficher. Si le compte Google de la clé a un moyen de paiement, passez le forfait sur Paid et cette ligne estimera ce que l'exécution coûte."
   },
   "durationSeconds": { "message": "{1} s" },
   "durationMinutes": { "message": "{1} min" },
@@ -79,7 +79,7 @@
   "panelUnmuteMic": { "message": "Réactiver le microphone" },
   "panelMuteSound": { "message": "Couper la voix traduite" },
   "panelUnmuteSound": { "message": "Réactiver la voix traduite" },
-  "panelMuteOffElsewhere": { "message": "La session tourne sur un autre onglet." },
+  "panelMuteOffElsewhere": { "message": "La traduction tourne sur un autre onglet." },
   "panelMuteOffMic": { "message": "Le microphone est éteint." },
   "panelMuteOffSound": { "message": "Rien n'est encore activé." },
 
@@ -245,7 +245,7 @@
     "message": "Gemini a rejeté cette clé d'API. Vérifiez-la sur la page Options, ou créez-en une nouvelle sur aistudio.google.com/apikey."
   },
   "errQuota": {
-    "message": "Cette clé a épuisé ce que Google autorise pour le moment. Attendez que la limite se remette à zéro et appuyez de nouveau sur Start, ou ajoutez un moyen de paiement pour quitter l'offre gratuite — c'est elle qui s'épuise en premier."
+    "message": "Cette clé a épuisé ce que Google autorise pour le moment. Attendez que la limite se remette à zéro et appuyez de nouveau sur Start, ou ajoutez un moyen de paiement pour quitter le forfait gratuit — c'est lui qui s'épuise en premier."
   },
   "errKeyForbidden": {
     "message": "Cette clé n'a pas le droit d'utiliser l'API Gemini. Si vous l'avez restreinte, vérifiez que Gemini figure toujours dans sa liste — ou créez une nouvelle clé sur aistudio.google.com/apikey."
@@ -295,7 +295,7 @@
     "message": "Impossible de joindre Gemini, et on ne dit jamais à un navigateur pourquoi. {1}"
   },
   "closeReasonOpaque": {
-    "message": "Impossible de joindre Gemini, et on ne dit jamais à un navigateur pourquoi. C'est en général la clé : absente, refusée, ou au-delà de sa limite — et c'est l'offre gratuite qui l'atteint en premier."
+    "message": "Impossible de joindre Gemini, et on ne dit jamais à un navigateur pourquoi. C'est en général la clé : absente, refusée, ou au-delà de sa limite — et c'est le forfait gratuit qui l'atteint en premier."
   },
   "closeReasonCode": { "message": "Gemini a fermé la connexion (code {1})." },
   "closeBeforeReady": { "message": "La session a été fermée avant d'être prête." },
@@ -303,7 +303,7 @@
     "message": "Votre clé fonctionnait il y a un instant : cela vient donc de Gemini ou de votre réseau, pas de la clé."
   },
   "loopGaveUp": {
-    "message": "{1} Interpretab a cessé d'essayer après {2} tentatives d'affilée. Vérifiez votre clé sur la page Options, et ce qu'il vous reste dans Google AI Studio — l'offre gratuite ne donne pas grand-chose. Appuyez sur Start pour réessayer."
+    "message": "{1} Interpretab a cessé d'essayer après {2} tentatives d'affilée. Vérifiez votre clé sur la page Options, et ce qu'il vous reste dans Google AI Studio — le forfait gratuit ne donne pas grand-chose. Appuyez sur Start pour réessayer."
   },
   "loopDropping": { "message": "La connexion à Gemini n'arrête pas de tomber." },
 

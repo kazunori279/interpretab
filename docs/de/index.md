@@ -60,7 +60,7 @@ ungenau übersetzen und Sprache erzeugen, die überhaupt keine Übersetzung ist.
 ## Kostenlos zum Ausprobieren, etwa 2 $ pro Stunde im Dauerbetrieb
 
 Interpretab ist ein Open-Source-Werkzeug. Geld kostet die Gemini Live API hinter der Übersetzung,
-und ihr kostenloses Kontingent reicht zum Ausprobieren — danach wird **die Nutzung der Gemini Live
+und ihr kostenloser Tarif reicht zum Ausprobieren — danach wird **die Nutzung der Gemini Live
 API Ihrem eigenen Google-Konto in Rechnung gestellt**.
 
 Dies sind die Preise für die Gemini Live API, die
@@ -72,7 +72,8 @@ Dies sind die Preise für die Gemini Live API, die
 | Das Mikrofon im Modus Two-way conversation | 0,005 $/min | 0,018 $/min | **≈ 1,40 $** |
 
 Das sind Stunden *durchgehenden* Audios, weniger Reden kostet also weniger. Tab-Audio und Mikrofon
-zusammen einzuschalten startet zwei Sitzungen, der Preis ist dann die Summe beider Zeilen.
+zusammen einzuschalten sind zwei Übersetzungen gleichzeitig, der Preis ist dann die Summe beider
+Zeilen.
 
 ## Installation
 
@@ -97,9 +98,9 @@ Die Oberfläche von Interpretab folgt der Sprache Ihres Browsers, in den zehn Sp
 
 ## Auswählen, was übersetzt wird
 
-Interpretab hat zwei Richtungen, Tab-Audio und Mikrofon. Jede für sich oder beide gleichzeitig.
+Interpretab hat zwei Schalter, **Tab-Audio** und **Mikrofon**. Jeder für sich oder beide gleichzeitig.
 
-[![Der Seitenbereich von Interpretab: zwei Richtungskarten, Sprachauswahl, der Regler für die Originallautstärke, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+[![Der Seitenbereich von Interpretab: die Karten Tab-Audio und Mikrofon, Sprachauswahl, der Regler für die Originallautstärke, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
 
 **Tab-Audio** übersetzt alles, was der aktuelle Tab abspielt, in die Sprache Ihrer Wahl, aus 78
 Möglichkeiten.
@@ -118,8 +119,8 @@ Erweiterung als Ganzem. Das Panel sagt das und verlinkt auf **Optionen → Mikro
 Schaltfläche „Mikrofon erlauben“ steht: Chrome zeigt seine Berechtigungsabfrage nur auf einer
 eigenen Seite an, nie im Seitenbereich.
 
-Tab-Audio und Mikrofon zusammen einzuschalten wird als zwei getrennte Sitzungen abgerechnet, die
-Kosten sind also die Summe der beiden.
+Beide zusammen einzuschalten sind zwei Übersetzungen gleichzeitig, Google berechnet also beide und
+die Kosten sind die Summe der beiden.
 
 ### Untertitel und die gesprochene Übersetzung
 
@@ -140,8 +141,8 @@ sind.
 
 #### Die Stimme der Mikrofonübersetzung
 
-**Optionen → Audioeingang/-ausgang** wählt, über welches Gerät die Mikrofonrichtung hört und über
-welches ihre Übersetzung gesprochen wird. Wenn Sie kurz nicht übersetzen wollen oder es so laut im
+**Optionen → Audioeingang/-ausgang** wählt, über welches Gerät **Mikrofon** hört und über welches
+seine Übersetzung gesprochen wird. Wenn Sie kurz nicht übersetzen wollen oder es so laut im
 Raum ist, dass ungewollte Stimmen mit übersetzt werden, schaltet die Mikrofon-Aus-Taste den Eingang
 jederzeit ab.
 
@@ -161,7 +162,7 @@ ebenfalls installieren und Ihre Stimme auf ihrer Seite übersetzen. Geht das nic
 2. Kopfhörer oder Ohrhörer an den Rechner anschließen — über Lautsprecher hört das Mikrofon das
    Gespräch, und die beiden Richtungen fangen an, einander zu dolmetschen.
 3. **Optionen → Audioausgang** → das virtuelle Gerät wählen. Dorthin geht die übersetzte Stimme
-   der Mikrofonrichtung; die der Tab-Richtung kommt in Ihren Kopfhörern an.
+   von **Mikrofon**; die von **Tab-Audio** kommt in Ihren Kopfhörern an.
 4. In der Mikrofoneingangs-Einstellung der Meeting-App das virtuelle Gerät auswählen.
 5. Tab-Audio einschalten — von ihnen zu Ihnen — und auf Ihre Sprache stellen. Das Mikrofon
    einschalten — von Ihnen zu ihnen — und auf deren Sprache stellen.
@@ -212,8 +213,8 @@ vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
   Stummschalttaste.** Lautsprecher speisen die übersetzte Stimme zurück ins Mikrofon — eine
   Rückkopplungsschleife — und die Übersetzung arbeitet nicht mehr richtig. Nur beim Sprechen die
   Stummschaltung aufheben.
-- **Tab-Audio und Mikrofon gleichzeitig bedeutet zwei Sitzungen**, und entsprechend steigende
-  Kosten.
+- **Tab-Audio und Mikrofon gleichzeitig sind zwei Übersetzungen gleichzeitig**, und ungefähr die
+  doppelten Kosten.
 - **Interpretab läuft auf einem Tab zur Zeit.** Während es läuft, nennt der Seitenbereich jedes
   anderen Tabs den Tab, auf dem es läuft, und bietet nur **Stop** an. Dort anhalten, dann kommt
   Start zurück.
@@ -227,36 +228,37 @@ vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
 ## Mehr zur Nutzung der Gemini Live API
 
 Der Seitenbereich führt einen Zähler dessen, was der Lauf bisher verbraucht hat, und beginnt bei
-jedem Start wieder bei null. Was er zeigt, hängt von **Optionen → Gemini-API-Tarif** ab: Geben Sie
-an, ob der verwendete Schlüssel im kostenlosen Kontingent oder auf Tier 1 liegt.
+jedem Start wieder bei null. Was er zeigt, hängt von **Optionen → Gemini-API-Tarif** ab, wo Sie
+angeben, ob Ihr Schlüssel **Free** oder **Paid** ist.
 
-- **Free** (die Voreinstellung): *12 Min. bisher, 18 Min. Gemini-Audio. Im kostenlosen Kontingent
-  wird dafür nichts berechnet.* Kein Preis, weil es keinen gibt. Die Audiozeit ist die Zahl, die
-  sich zu beobachten lohnt: das kostenlose Kontingent ist über die Rate begrenzt und nicht über
-  Geld, dafür werden seine Grenzen also ausgegeben.
+- **Free** (die Voreinstellung): *12 Min. bisher, 18 Min. Gemini-Audio. Im kostenlosen Tarif wird
+  dafür nichts berechnet.* Kein Preis, weil es keinen gibt. Die Audiozeit ist die Zahl, die sich zu
+  beobachten lohnt: der kostenlose Tarif begrenzt, wie viel Sie auf einmal nutzen können, statt es
+  zu berechnen, und genau das wird aufgebraucht.
 - **Paid**: *12 Min. bisher, ~$0.31 Gemini-Nutzung in diesem Lauf — eine Schätzung, nicht Ihre
   tatsächliche Rechnung.*
 
-Stellen Sie den Tarif ein, wenn Sie den Schlüssel einfügen — gemeint ist das Projekt, in dem Sie ihn
-erstellt haben, und ein Projekt ist im kostenpflichtigen Tarif, sobald ein Rechnungskonto damit
-verknüpft ist. **Ihr Google-Konto ist der einzige Ort, an dem Ihre tatsächliche Rechnung
-existiert.**
+Stellen Sie den Tarif ein, wenn Sie den Schlüssel einfügen. Ein Schlüssel ist kostenpflichtig,
+sobald das Google-Konto, zu dem er gehört, eine Zahlungsmethode hat, und Google sagt Interpretab
+nicht, welches von beiden es ist — daher die Frage. **Ihr Google-Konto ist der einzige Ort,
+an dem Ihre tatsächliche Rechnung existiert.**
 
-### Die Wahl zwischen kostenlosem und kostenpflichtigem Tarif
+### Die Wahl zwischen dem kostenlosen und einem kostenpflichtigen Tarif
 
 Was ein Gemini-API-Schlüssel kostet, wie hart er begrenzt wird und was Google mit dem macht, was Sie
-darüber senden, hängt alles vom **Nutzungs-Tier** des Projekts ab. Die Bedingungen, die
-[Google veröffentlicht](https://ai.google.dev/gemini-api/docs/rate-limits), lauten:
+darüber senden, hängt alles davon ab, in welchem Tarif er ist. Googles eigene Dokumentation nennt
+den kostenpflichtigen **Tier 1** — dasselbe, was die Optionsseite von Interpretab **Paid** nennt.
+Die Bedingungen, die [Google veröffentlicht](https://ai.google.dev/gemini-api/docs/rate-limits), lauten:
 
-| Tier | Wie man dorthin kommt | Kosten und Grenzen | Was Google mit Ihren Daten macht | Wo es zu Interpretab passt |
+| Tarif | Wie man dorthin kommt | Kosten und Grenzen | Was Google mit Ihren Daten macht | Wo es zu Interpretab passt |
 |---|---|---|---|---|
-| **Free** | Kein Rechnungskonto nötig | Kostenlos, aber lange oder starke Nutzung läuft in die Ratenbegrenzung und bricht mit Fehler ab | **Werden zur Verbesserung von Google-Produkten verwendet und unterliegen menschlicher Prüfung** | Zum Ausprobieren |
-| **Tier 1** | Ein aktives Rechnungskonto verknüpfen | Nutzungsabhängig, bis 10 $ je 10 Minuten und 250 $ im Monat | Nicht zur Produktverbesserung verwendet; nur kurz zur Missbrauchserkennung protokolliert | **Der richtige Ort bei regelmäßiger Nutzung.** Für fast jeden Einsatz genug |
+| **Free** | Keine Zahlungsmethode nötig | Kostenlos, aber lange oder starke Nutzung läuft in die Grenzen und bricht mit Fehler ab | **Werden zur Verbesserung von Google-Produkten verwendet und unterliegen menschlicher Prüfung** | Zum Ausprobieren |
+| **Paid** (Googles Tier 1) | Dem Google-Konto eine Zahlungsmethode hinzufügen | Nutzungsabhängig, bis 10 $ je 10 Minuten und 250 $ im Monat | Nicht zur Produktverbesserung verwendet; nur kurz zur Missbrauchserkennung protokolliert | **Der richtige Ort bei regelmäßiger Nutzung.** Für fast jeden Einsatz genug |
 
-Fangen Sie im kostenlosen Kontingent an und verknüpfen Sie ein Rechnungskonto für Tier 1, sobald Sie
-dabeibleiben. Auf Tier 1 wird nichts, was Sie senden, zur Verbesserung von Google-Produkten
-verwendet, und die Obergrenzen sind für ein Werkzeug wie dieses großzügig: etwa 25
-Interpretab-Sitzungen gleichzeitig und rund 110 Stunden im Monat. Google dokumentiert, [wie man die
+Fangen Sie im kostenlosen Tarif an und fügen Sie eine Zahlungsmethode hinzu, sobald Sie
+dabeibleiben. Im kostenpflichtigen Tarif wird nichts, was Sie senden, zur Verbesserung von
+Google-Produkten verwendet, und die Obergrenzen sind für ein Werkzeug wie dieses großzügig: etwa 25
+Interpretab-Läufe gleichzeitig und rund 110 Stunden im Monat. Google dokumentiert, [wie man die
 Abrechnung einrichtet](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
 ### Einen Gemini-API-Schlüssel zwischen Rechnern und Personen teilen
@@ -272,8 +274,8 @@ einzufügen. **Einen Schlüssel auf Ihren eigenen mehreren Rechnern zu verwenden
 
 - **Ratenbegrenzungen gelten pro Projekt, nicht pro Schlüssel.** Googles
   [Dokumentation](https://ai.google.dev/gemini-api/docs/rate-limits) sagt das wörtlich. Die 10 $ je
-  10 Minuten von Tier 1 sind etwa 25 gleichzeitige Interpretab-Sitzungen, alles darüber bricht mit
-  Fehler ab.
+  10 Minuten des kostenpflichtigen Tarifs sind etwa 25 gleichzeitige Interpretab-Läufe, alles
+  darüber bricht mit Fehler ab.
 - **Ein Schlüssel ist ein Passwort.** Wenn er nach außen gerät, gilt
   [Googles Hinweis](https://ai.google.dev/gemini-api/docs/api-key): „Andere können das Kontingent
   Ihres Projekts verbrauchen, unerwartete Kosten verursachen und auf private Ressourcen zugreifen.“
@@ -287,11 +289,12 @@ einzufügen. **Einen Schlüssel auf Ihren eigenen mehreren Rechnern zu verwenden
   kostenpflichtigen Tarif.
 - **Wenn ein Lauf nicht startet, sagt die Meldung, welches Problem es ist.** Interpretab fragt
   Google nach dem Schlüssel, bevor es irgendetwas öffnet, sodass ein abgelehnter Schlüssel, ein
-  aufgebrauchtes Kontingent und ein Schlüssel ohne Berechtigung für die Gemini API getrennt benannt
-  und nicht geraten werden. Das Kontingent ist der übliche Fall im kostenlosen Tarif: Grenzen in
-  [AI Studio](https://aistudio.google.com/apikey) prüfen und auf ihr Zurücksetzen warten, oder die
-  Abrechnung einrichten und auf Tier 1 wechseln. Sagt die Meldung, der Schlüssel selbst sei
-  angenommen worden, liegt das Problem bei der Live API oder Ihrem Netz, nicht am Schlüssel.
+  Schlüssel, der aufgebraucht hat, was Google im Moment erlaubt, und ein Schlüssel ohne Berechtigung
+  für die Gemini API getrennt benannt und nicht geraten werden. Aufgebraucht ist der übliche Fall im
+  kostenlosen Tarif: in [AI Studio](https://aistudio.google.com/apikey) nachsehen, was übrig ist,
+  und auf das Zurücksetzen der Grenze warten, oder eine Zahlungsmethode hinzufügen. Sagt die
+  Meldung, der Schlüssel selbst sei angenommen worden, liegt das Problem bei Gemini oder Ihrem Netz,
+  nicht am Schlüssel.
 
 ## Open Source
 
