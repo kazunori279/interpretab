@@ -88,7 +88,7 @@ test("a close before setupComplete rejects with the key as the likely cause", as
   const opening = h.live.open();
   h.ws().accept();
   h.ws().drop(1006);
-  await assert.rejects(opening, /API key/);
+  await assert.rejects(opening, /usually the key/);
 });
 
 test("what the preflight learned replaces the guess a 1006 would otherwise get", async () => {

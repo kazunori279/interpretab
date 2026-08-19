@@ -190,9 +190,13 @@ async function refreshMicStatus() {
   try {
     const status = await navigator.permissions.query({ name: "microphone" });
     const granted = status.state === "granted";
+    // `denied` is the state the button cannot get out of — Chrome will not
+    // prompt a second time — so it gets a message that says where to go
+    // instead of one that says to press the button again. The state name
+    // itself stays out of both: "prompt" means nothing to the reader.
     el("micStatus").textContent = granted
       ? t("optMicGranted")
-      : t("optMicNotGranted", [status.state]);
+      : t(status.state === "denied" ? "optMicBlocked" : "optMicNotGranted");
     el("micStatus").className = granted ? "note ok" : "note";
     el("grantMic").hidden = granted;
   } catch {

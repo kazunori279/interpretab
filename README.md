@@ -126,12 +126,12 @@ refuses to raise its prompt from a popup or a side panel: the promise rejects as
 had clicked Deny, with no prompt ever shown. It is [confirmed by the Chrome team on
 chromium-extensions](https://groups.google.com/a/chromium.org/g/chromium-extensions/c/V09VMCLzvWM)
 — "request web permission will also fail in the popup page and side panel page" — and it is the
-same constraint that put a Grant button on the Options page in the first place, since the
+same constraint that put an allow button on the Options page in the first place, since the
 offscreen document where capture actually happens has no UI either. A prompt needs a document
 Chrome will anchor one to, which means a tab. `chrome.runtime.openOptionsPage()` takes no
 fragment, so which section to land on goes through `chrome.storage.session`, read once and
 cleared: without it the reader arrives at the top of a page with eight sections and has to find
-the grant button among them.
+the allow button among them.
 
 **The Options page is two groups, and the microphone is in the first.** "Before you start" holds
 the key, the plan and Microphone access; "Everything else" holds the remaining five, each of
@@ -971,6 +971,27 @@ step with `VOICES`. The two buttons stay `Start` and `Stop` in all ten, and so d
 and the two mode names: the buttons because a sentence elsewhere in the panel tells you to press
 one of them by name, the plan words because they are what Google's own console shows next to the
 key, and the mode names because they are followed by a translated gloss anyway.
+
+**The English is written for someone who has never heard of an API.** The person this is for
+watches a video in a language they don't read, or sits in a call with someone they can't follow;
+they are not a developer, and the catalogue was full of words that only make sense if you are one.
+Every message was rewritten against one rule — say what happens and what to do about it, in the
+words the user already has. *API key* became *key*, *quota* became *what Google allows for now*,
+*tier* became *plan*, *the free tier's limits on the Live models are low* became *the free plan
+does not allow much*. Internal vocabulary went too: a *direction* is not a thing anybody outside
+this repo has a name for, so the switches are called what the switches are called, "Tab audio" and
+"Microphone". Where a message named a mechanism, it now names the consequence: not "two concurrent
+Live sessions, so the API usage is roughly double" but "two translations at once, so Google charges
+about twice as much". What deliberately stayed: `Start`, `Stop`, `Free`, `Paid`, the two mode
+names, and the glossary's CSV header, all for the reasons above — plus `panelUsagePaid`, which
+`tests/assets.test.js` pins to a sentence in all eleven guide pages.
+
+Chrome's own vocabulary leaked in the same way. The microphone status used to render the
+Permissions API state into the sentence — "Not granted (prompt)" — where `prompt` is a word about
+Chrome's state machine and not about anything the reader can do. It is now "Not allowed yet.", and
+`denied` gets a message of its own, `optMicBlocked`, because that is the one state the Allow button
+cannot get out of: Chrome will not raise a second prompt, so telling the reader to press it again
+is telling them to do nothing. The `denied` message sends them to Chrome's settings instead.
 
 `_locales/ja` is the author's. The other eight are machine translation that no native speaker has
 read, which is worth knowing before quoting a sentence from one of them back at a user.

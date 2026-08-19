@@ -13,13 +13,13 @@
   "statusError": { "message": "Error" },
 
   "panelStepKey": {
-    "message": "Interpretab habla con Gemini usando <b>tu propia clave de API</b>. Consigue una gratis en <a1>aistudio.google.com/apikey</a1> y pégala en <a2>Opciones</a2>."
+    "message": "Interpretab necesita <b>tu propia clave de Gemini</b> para traducir. Consigue una gratis en <a1>aistudio.google.com/apikey</a1> y pégala en <a2>Opciones</a2>."
   },
   "panelStepDirection": {
     "message": "Todavía no hay nada encendido. Enciende <b>Audio de la pestaña</b>, <b>Micrófono</b>, o los dos."
   },
   "panelStepMic": {
-    "message": "La traducción del micrófono necesita el permiso de Chrome, una sola vez. Concédelo en <a1>Opciones</a1>."
+    "message": "Chrome tiene que dejar que Interpretab use tu micrófono. Eso se permite una sola vez, en <a1>Opciones</a1>."
   },
   "panelRunningOn": {
     "message": "Interpretab se está ejecutando en «{1}», y funciona en una sola pestaña a la vez. Sus controles están en esa pestaña; Stop funciona desde aquí."
@@ -31,23 +31,23 @@
   "panelTabDirection": { "message": "<b>Audio de la pestaña</b> — esta pestaña, a tu idioma" },
   "panelInto": { "message": "a" },
   "panelTabTargetTitle": { "message": "Idioma en el que quieres escucharlo" },
-  "panelSourceDetected": { "message": "— idioma de origen detectado automáticamente" },
-  "panelDuckLevel": { "message": "Volumen del audio original mientras se habla" },
+  "panelSourceDetected": { "message": "— el idioma original se detecta solo" },
+  "panelDuckLevel": { "message": "Volumen que conserva el audio original" },
   "panelPageSubtitles": { "message": "Subtítulos en la página" },
 
-  "panelMicDirection": { "message": "<b>Micrófono</b> — la sala, interpretada en voz alta" },
-  "panelMicModeTitle": { "message": "Cómo se interpreta el micrófono" },
+  "panelMicDirection": { "message": "<b>Micrófono</b> — lo que se dice en la sala, traducido en voz alta" },
+  "panelMicModeTitle": { "message": "Cómo se traduce tu micrófono" },
   "panelMicModeSimul": { "message": "Simultaneous — tú, mientras hablas" },
   "panelMicModeConversation": { "message": "Two-way conversation — conversación en dos idiomas" },
   "panelMicSourceTitle": { "message": "El idioma en el que hablas" },
   "panelMicNoteMuted": {
-    "message": "La voz interpretada está <b>silenciada</b>. Pulsa el botón de activar el sonido para oírla por los altavoces."
+    "message": "La voz traducida está <b>silenciada</b>. Pulsa el botón de quitar silencio para oírla por los altavoces."
   },
   "panelMicNoteSimul": {
-    "message": "Nota: ponte auriculares para escucharla. Este modo responde mientras sigues hablando, así que no puede silenciar el micrófono mientras habla, y un altavoz devuelve la traducción a la entrada, lo que degrada la traducción misma."
+    "message": "Para este modo, ponte auriculares. Empieza a traducir mientras aún estás hablando, así que no puede apagar el micrófono mientras habla: por un altavoz oye su propia voz, se pone a traducirla también y la traducción empeora."
   },
   "panelMicNoteConversation": {
-    "message": "Para dos personas que comparten este micrófono: de los dos idiomas, oiga el que oiga, habla el otro. En voz alta, por <b>tus altavoces</b>, que es de lo que se trata, pero eso implica que el intérprete se oye a sí mismo, así que mantén el micrófono lejos de ellos. Este modo espera a que termine cada turno, por lo que es algo más lento que Simultaneous, y es el único al que se aplica el <b>glosario</b>."
+    "message": "Para dos personas que comparten un micrófono: oye uno de vuestros dos idiomas y habla el otro, en voz alta por <b>los altavoces</b>, que es de lo que se trata. Aleja el micrófono de los altavoces o se oirá a sí mismo. Espera a que cada uno termine de hablar, así que va un poco más lento que Simultaneous, y es el único modo que usa el <b>glosario</b>."
   },
 
   "panelStart": { "message": "Start" },
@@ -55,7 +55,7 @@
   "panelOptions": { "message": "Opciones" },
 
   "panelCostNote": {
-    "message": "Las dos direcciones abren dos sesiones Live simultáneas, así que el uso de la API es aproximadamente el doble."
+    "message": "Los dos a la vez son dos traducciones a la vez, así que Google cobra alrededor del doble."
   },
   "panelUsagePaid": {
     "message": "<b>{1}</b> hasta ahora, <b>{2}</b> de uso de Gemini en esta ejecución: es una estimación, no tu factura real."
@@ -64,13 +64,13 @@
     "message": "<b>{1}</b> hasta ahora, <b>{2}</b> de audio de Gemini. En el plan gratuito no se cobra nada por ello."
   },
   "panelUsageTip": {
-    "message": "Empezó hace {1}. En ese tiempo ha enviado {2} de audio y ha recibido {3}, ambos tarificados a 25 tokens por segundo."
+    "message": "Empezó hace {1}. Desde entonces ha enviado {2} de audio a Google y ha recibido {3}, y se cobran los dos."
   },
   "panelUsageTipPaid": {
-    "message": "Esos tokens se valoran con las tarifas que Google publica para el modelo, leídas de la página de precios en agosto de 2026 y no de tu cuenta, y las tarifas cambian. Tu cuenta de Google es el único sitio donde existe tu factura real."
+    "message": "La cifra usa los precios publicados por Google tal como estaban en agosto de 2026, no algo leído de tu cuenta, y los precios cambian. Tu factura real solo existe en tu cuenta de Google."
   },
   "panelUsageTipFree": {
-    "message": "Tu clave está marcada como plan gratuito en la página de Opciones, donde Google no cobra nada por nada de esto, así que no hay coste que mostrar. Cambia allí el plan a Paid si el proyecto tiene una cuenta de facturación vinculada y esta línea estimará lo que ha costado la ejecución."
+    "message": "Tu clave está puesta en Free en la página de Opciones, y en el plan gratuito Google no cobra nada, así que no hay coste que mostrar. Si la cuenta de Google de la clave tiene una forma de pago, cambia el plan a Paid allí y esta línea estimará lo que cuesta la sesión."
   },
   "durationSeconds": { "message": "{1} s" },
   "durationMinutes": { "message": "{1} min" },
@@ -80,8 +80,8 @@
   "panelMuteSound": { "message": "Silenciar la voz traducida" },
   "panelUnmuteSound": { "message": "Activar la voz traducida" },
   "panelMuteOffElsewhere": { "message": "La ejecución está en otra pestaña." },
-  "panelMuteOffMic": { "message": "La dirección del micrófono está desactivada." },
-  "panelMuteOffSound": { "message": "No hay ninguna dirección activada." },
+  "panelMuteOffMic": { "message": "El micrófono está apagado." },
+  "panelMuteOffSound": { "message": "Todavía no has encendido nada." },
 
   "panelLangPopular": { "message": "Populares" },
   "panelLangAll": { "message": "Todos los idiomas" },
@@ -97,37 +97,37 @@
 
   "optSetupHeading": { "message": "Antes de empezar" },
   "optSetupNote": {
-    "message": "Sin la clave no funciona nada. Las otras dos se responden una sola vez, en el mismo momento: en qué plan está la clave y —solo si vas a interpretar tu propia voz— el permiso de micrófono de Chrome."
+    "message": "Sin la clave no funciona nada. Las otras dos se responden una sola vez, en el mismo momento: en qué plan está tu clave y —solo si quieres que se traduzca tu propia voz— el permiso para usar el micrófono."
   },
   "optRestHeading": { "message": "Todo lo demás" },
   "optRestNote": {
-    "message": "Todo esto ya tiene un valor por defecto que funciona. Está aquí para cuando alguno resulte ser el equivocado."
+    "message": "Todo esto ya está puesto en algo que funciona. Vuelve a cambiar algo si resulta que no te va bien."
   },
 
   "optKeyHeading": { "message": "Clave de la API de Gemini" },
   "optKeyNote": {
-    "message": "Interpretab no tiene servidor. Tu audio va directo de este navegador a la Gemini Live API, autenticado con tu propia clave; consigue una gratis en <a1>aistudio.google.com/apikey</a1>. La clave se guarda en el almacenamiento de extensiones de este navegador y no se envía a ningún sitio salvo a <code>generativelanguage.googleapis.com</code>. El uso se factura a la cuenta de Google a la que pertenece la clave, así que trátala como una contraseña: no la compartas y no la pegues en ningún otro sitio. Si alguna vez se filtra, bórrala en la <a2>misma página en la que la creaste</a2> y pega una nueva aquí."
+    "message": "Interpretab no tiene servidor propio: tu audio va directo de este navegador a Google, con tu propia clave — consigue una gratis en <a1>aistudio.google.com/apikey</a1>. La clave se guarda en este navegador y no se envía a nadie más que a Google. Lo que gastes se cobra a la cuenta de Google de la que salió la clave, así que trátala como una contraseña: no la compartas ni la pegues en ningún otro sitio. Si alguna vez se te escapa, bórrala en la <a2>misma página donde la creaste</a2> y pega aquí una nueva."
   },
   "optKeyPlaceholder": { "message": "Pega aquí tu clave" },
   "optShow": { "message": "Mostrar" },
   "optHide": { "message": "Ocultar" },
   "optKeyNone": { "message": "Todavía no hay clave. Interpretab no puede empezar sin una." },
   "optKeyStray": {
-    "message": "Guardada, pero eso parece un pegado accidental más que una clave."
+    "message": "Guardada, pero eso no parece una clave. ¿Se ha pegado otra cosa?"
   },
   "optKeyShort": { "message": "Guardada, pero parece demasiado corta: ¿falta parte de la clave?" },
   "optKeySaved": { "message": "Clave guardada en este navegador." },
 
   "optPlanHeading": { "message": "Plan de la API de Gemini" },
   "optPlanNote": {
-    "message": "En qué plan está el proyecto de la clave. Interpretab no tiene forma de saberlo — ninguna respuesta de la API de Gemini lo dice — y necesita saberlo, porque de lo contrario el medidor del panel lateral mostraría un precio a quien Google no cobra nada. En <b>Free</b> el medidor cuenta tiempo y audio; en <b>Paid</b> además estima lo que ha costado la ejecución. Elige el que corresponda a tu clave: es el proyecto en el que la creaste en <a1>aistudio.google.com/apikey</a1>, y un proyecto pasa al plan de pago en cuanto tiene una cuenta de facturación vinculada."
+    "message": "Google no le dice a Interpretab si tu clave es gratuita o de pago, así que indícalo tú. Con <b>Free</b>, el panel lateral muestra cuánto tiempo llevas traduciendo; con <b>Paid</b>, estima además lo que ha costado. Una clave es de pago en cuanto la cuenta de Google a la que pertenece tiene una forma de pago — puedes comprobarlo en <a1>aistudio.google.com/apikey</a1>."
   },
   "optPlanFree": { "message": "Free — Google no cobra nada por esta clave" },
   "optPlanPaid": { "message": "Paid — pago por uso, facturado a tu cuenta" },
 
   "optVoiceHeading": { "message": "Voz" },
   "optVoiceNote": {
-    "message": "La voz predefinida con la que se habla la traducción. Es fija durante toda la sesión, así que un cambio se aplica la próxima vez que pulses Start."
+    "message": "La voz con la que se habla la traducción. No puede cambiar mientras hay una traducción en marcha, así que la nueva se usa la próxima vez que pulses Start."
   },
   "optVoiceOption": { "message": "{1} — {2}" },
   "voiceBright": { "message": "Brillante" },
@@ -155,23 +155,26 @@
 
   "optSizeHeading": { "message": "Tamaño de los subtítulos" },
   "optSizeNote": {
-    "message": "La altura de los subtítulos sobre la página, en píxeles. Se aplica al momento, incluso a una traducción que ya se esté ejecutando: arrástralo mientras ves el vídeo y párate donde se lea bien."
+    "message": "Cómo de grandes son los subtítulos en la página. Se aplica al momento, incluso con una traducción en marcha: arrástralo mientras miras y párate donde se lea bien."
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "El veloz zorro marrón — 素早い茶色の狐" },
 
   "optMicHeading": { "message": "Acceso al micrófono" },
   "optMicNote": {
-    "message": "Solo para la dirección del micrófono, y solo una vez. Chrome concede el micrófono a la extensión en su conjunto, y ni el documento en segundo plano donde corre el motor ni el panel lateral pueden mostrar su aviso, así que el permiso se concede aquí."
+    "message": "Solo hace falta si quieres que se traduzca tu propia voz, y solo la primera vez. Chrome no muestra su ventana de permiso encima del panel lateral, así que el botón está aquí — y lo que permitas aquí vale para todo Interpretab."
   },
-  "optMicGrant": { "message": "Conceder micrófono" },
-  "optMicGranted": { "message": "Concedido." },
-  "optMicNotGranted": { "message": "No concedido ({1})." },
-  "optMicDenied": { "message": "Denegado: {1}" },
+  "optMicGrant": { "message": "Permitir el micrófono" },
+  "optMicGranted": { "message": "Permitido." },
+  "optMicNotGranted": { "message": "Todavía sin permiso." },
+  "optMicBlocked": {
+    "message": "Chrome está bloqueando el micrófono. Abre los ajustes de micrófono de Chrome, quita Interpretab de la lista de bloqueados y vuelve aquí."
+  },
+  "optMicDenied": { "message": "Chrome no permitió el micrófono ({1})." },
 
   "optInputHeading": { "message": "Entrada de audio" },
   "optInputNote": {
-    "message": "Qué micrófono escucha la dirección <b>micrófono</b>. Si lo dejas en el predeterminado del sistema, Chrome usa lo que tu ordenador considere en ese momento la entrada, que puede ser unos auriculares que has desenchufado, un monitor o cualquier otro aparato al que nunca hablas. El fallo es silencioso: la sesión conecta, el panel se pone verde y no se transcribe nada. Si pasa eso, indica aquí el dispositivo. Se aplica la próxima vez que pulses Start."
+    "message": "Qué micrófono escucha <b>Micrófono</b>. Si lo dejas en el predeterminado del sistema, elige tu ordenador — y a veces elige uno al que nunca hablas, como un monitor o unos auriculares que has desenchufado. Cuando pasa eso nada parece ir mal: el panel se pone verde, hablas y no se traduce nada. Si te ocurre, elige aquí el micrófono correcto. Se aplica la próxima vez que pulses Start."
   },
   "optInputSystem": {
     "message": "Predeterminado del sistema — el micrófono que esté usando tu ordenador"
@@ -186,7 +189,7 @@
 
   "optOutputHeading": { "message": "Salida de audio" },
   "optOutputNote": {
-    "message": "Dónde se reproduce la voz traducida de la dirección <b>micrófono</b>. La traducción de la dirección de pestaña se queda siempre en la salida del sistema: es la que estás escuchando. Se aplica la próxima vez que pulses Start."
+    "message": "Por dónde suena la voz de <b>Micrófono</b>. La del audio de la pestaña sale siempre por tus altavoces de siempre, porque es la que estás escuchando tú. Se aplica la próxima vez que pulses Start."
   },
   "optOutputSystem": { "message": "Predeterminada del sistema — los altavoces que estés usando" },
   "optOutputAnonymous": { "message": "Salida {1}…" },
@@ -195,32 +198,32 @@
     "message": "Ese dispositivo no está conectado, así que se usarán los altavoces."
   },
   "optOutputSaved": {
-    "message": "Guardado. Se aplica en el próximo Start, y hay que decirle a lo que escuche ese dispositivo que lo haga."
+    "message": "Guardado. Se aplica la próxima vez que pulses Start — y la aplicación que deba oír esta voz también tiene que estar puesta a escuchar ese dispositivo."
   },
   "optOutputCleared": { "message": "Guardado. La voz traducida sonará por los altavoces." },
 
   "optDeviceListFailed": {
-    "message": "No se han podido listar los dispositivos de audio: {1}."
+    "message": "No se han podido ver tus dispositivos de audio ({1})."
   },
   "optDeviceNamesHidden": {
-    "message": "Concede el micrófono más arriba para ver los nombres de los dispositivos."
+    "message": "Permite el micrófono más arriba para ver los nombres de los dispositivos."
   },
   "optDeviceSavedMissing": { "message": "Dispositivo guardado — ahora mismo no está conectado" },
 
   "optGlossaryHeading": { "message": "Glosario" },
   "optGlossaryNote": {
-    "message": "<code>source,pronunciation,transcript</code> por línea. La segunda columna es lo que se le dice al modelo que diga; la tercera, opcional, es lo que muestran los subtítulos en su lugar. Solo se aplica al micrófono en modo <b>Two-way conversation</b>: todo lo demás — el audio de la pestaña y el modo Simultaneous del micrófono — usa el modelo de traducción simultánea, que no admite instrucciones de sistema y por tanto no tiene dónde poner un glosario."
+    "message": "Nombres y términos que quieres que se digan y se escriban de una manera concreta: productos, personas, jerga. Uno por línea, como <code>source,pronunciation,transcript</code>: la segunda columna es cómo debe decirse y la tercera, opcional, cómo debe escribirse en los subtítulos. Solo funciona con el micrófono en modo <b>Two-way conversation</b>; la traducción más rápida que se usa en todo lo demás no tiene dónde meter un glosario."
   },
   "optGlossaryReplace": { "message": "Reemplazar" },
   "optGlossaryReset": { "message": "Restablecer los valores por defecto" },
   "optGlossaryPickFile": { "message": "Elige antes un archivo .csv." },
   "optGlossaryNotCsv": { "message": "El archivo debe tener la extensión .csv." },
-  "optGlossaryTooBig": { "message": "El archivo supera los {1} bytes." },
+  "optGlossaryTooBig": { "message": "Ese archivo es demasiado grande: el límite son {1} bytes." },
   "optGlossaryReplaced": {
     "message": "Reemplazado por {1} entradas. Se aplica en el próximo Start."
   },
   "optGlossaryWasReset": { "message": "Restablecido a {1} entradas por defecto." },
-  "optGlossaryLoadFailed": { "message": "Error al cargar: {1}" },
+  "optGlossaryLoadFailed": { "message": "No se ha podido leer ese archivo: {1}" },
   "optGlossaryEmpty": { "message": "No hay entradas en el glosario." },
   "optGlossaryColSource": { "message": "Origen" },
   "optGlossaryColPronunciation": { "message": "Pronunciación" },
@@ -236,10 +239,10 @@
     "message": "Gemini ha rechazado esa clave de API. Compruébala en la página de Opciones o crea una nueva en aistudio.google.com/apikey."
   },
   "errQuota": {
-    "message": "Esa clave de API se ha quedado sin cuota. Espera a que se restablezcan los límites o configura la facturación para pasar al Tier 1: el plan gratuito es el que llega antes al límite."
+    "message": "Esa clave ha agotado lo que Google permite por ahora. Espera a que se reinicie el límite y vuelve a pulsar Start, o añade una forma de pago para salir del plan gratuito — el gratuito es el que se agota antes."
   },
   "errKeyForbidden": {
-    "message": "Esa clave de API no tiene permiso para llamar a la API de Gemini. Comprueba las restricciones de la clave y que la Generative Language API esté habilitada en su proyecto."
+    "message": "Esa clave no puede usar la API de Gemini. Si le pusiste restricciones, comprueba que Gemini sigue en su lista — o crea una clave nueva en aistudio.google.com/apikey."
   },
   "errAlreadyRunningOn": {
     "message": "Interpretab ya se está ejecutando en «{1}», y funciona en una sola pestaña a la vez. Pulsa antes Stop: el botón Stop funciona desde cualquier pestaña."
@@ -247,15 +250,15 @@
   "errAlreadyRunningElsewhere": {
     "message": "Interpretab ya se está ejecutando en otra pestaña, y funciona en una sola pestaña a la vez. Pulsa antes Stop: el botón Stop funciona desde cualquier pestaña."
   },
-  "errNoDirection": { "message": "Activa antes al menos una dirección." },
-  "errNoTab": { "message": "No hay ninguna pestaña que capturar." },
+  "errNoDirection": { "message": "Enciende antes Audio de la pestaña o Micrófono." },
+  "errNoTab": { "message": "No hay ninguna pestaña que escuchar." },
   "errClickIcon": {
     "message": "Haz clic en el icono de Interpretab de la barra de herramientas en la pestaña que quieras traducir y vuelve a pulsar Start. ({1})"
   },
-  "errNoStreamId": { "message": "No hay id de flujo de la pestaña." },
-  "errUnknownMessage": { "message": "Tipo de mensaje desconocido: {1}" },
+  "errNoStreamId": { "message": "Chrome no ha entregado el audio de esta pestaña. Vuelve a pulsar Start." },
+  "errUnknownMessage": { "message": "Algo ha ido mal dentro de Interpretab ({1})." },
   "errMicRefused": {
-    "message": "Se ha denegado el acceso al micrófono. Abre la página de Opciones de la extensión, concede el micrófono una vez y vuelve a intentarlo."
+    "message": "Interpretab no ha conseguido permiso para usar el micrófono. Abre su página de Opciones, permite el micrófono una vez y vuelve a intentarlo."
   },
 
   "captionsChromePage": {
@@ -269,10 +272,10 @@
   },
 
   "micNoSoundNamed": {
-    "message": "No ha llegado ningún sonido al micrófono desde Start. Está grabando de «{1}»; si no es aquello a lo que hablas, indica el correcto en Entrada de audio, en Opciones, y vuelve a pulsar Start."
+    "message": "No ha llegado nada al micrófono desde que pulsaste Start. Está escuchando “{1}”: si no es a eso a lo que hablas, elige el correcto en Entrada de audio, en Opciones, y vuelve a pulsar Start."
   },
   "micNoSoundDefault": {
-    "message": "No ha llegado ningún sonido al micrófono desde Start. Está grabando de la entrada predeterminada del sistema; si no es aquello a lo que hablas, indica el correcto en Entrada de audio, en Opciones, y vuelve a pulsar Start."
+    "message": "No ha llegado nada al micrófono desde que pulsaste Start. Está escuchando el micrófono predeterminado de tu ordenador: si no es a eso a lo que hablas, elige el correcto en Entrada de audio, en Opciones, y vuelve a pulsar Start."
   },
   "micDeviceMissing": {
     "message": "El micrófono elegido en Opciones no está disponible ({1}), así que se está usando la entrada predeterminada del sistema."
@@ -283,24 +286,24 @@
 
   "closeReasonGiven": { "message": "Gemini ha cerrado la conexión: {1}" },
   "closeReasonOpaqueHint": {
-    "message": "No se ha podido contactar con la Gemini Live API, y a un navegador no se le dice por qué. {1}"
+    "message": "No se ha podido llegar a Gemini, y a un navegador nunca le dicen por qué. {1}"
   },
   "closeReasonOpaque": {
-    "message": "No se ha podido contactar con la Gemini Live API, y a un navegador no se le dice por qué. Suele ser la clave de API: falta, ha sido rechazada o se ha quedado sin cuota, que es lo primero con lo que se topa el plan gratuito."
+    "message": "No se ha podido llegar a Gemini, y a un navegador nunca le dicen por qué. Suele ser la clave: falta, la han rechazado o ha pasado de su límite — y el plan gratuito llega antes a ese límite."
   },
   "closeReasonCode": { "message": "Gemini ha cerrado la conexión (código {1})." },
   "closeBeforeReady": { "message": "La sesión se cerró antes de estar lista." },
   "hintKeyAccepted": {
-    "message": "La API aceptó la clave hace un momento, así que esto es cosa de la Live API o de la red, no de la clave."
+    "message": "Tu clave funcionaba hace un momento, así que esto es Gemini o tu red, no la clave."
   },
   "loopGaveUp": {
-    "message": "{1} Interpretab ha dejado de intentarlo tras {2} intentos seguidos. Comprueba tu clave de API en la página de Opciones y tu cuota en Google AI Studio: los límites del plan gratuito en los modelos Live son bajos. Pulsa Start para volver a intentarlo."
+    "message": "{1} Interpretab ha dejado de intentarlo tras {2} intentos seguidos. Comprueba tu clave en la página de Opciones y cuánto te queda en Google AI Studio — el plan gratuito no da para mucho. Pulsa Start para volver a intentarlo."
   },
   "loopDropping": { "message": "La conexión con Gemini se cae una y otra vez." },
 
   "glossaryBadLine": {
-    "message": "La línea {1} debe ser 'source,target' (la 3.ª columna es opcional)."
+    "message": "La línea {1} debería ser: la palabra, cómo se dice y —si quieres— cómo se escribe."
   },
-  "glossaryMissingField": { "message": "A la línea {1} le falta source o target." },
+  "glossaryMissingField": { "message": "A la línea {1} le falta la palabra o cómo se dice." },
   "glossaryTooMany": { "message": "Demasiadas entradas (máximo {1})." }
 }

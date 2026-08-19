@@ -176,7 +176,7 @@ try {
   const fresh = await chrome.attach(opened, OPTIONS_VIEW);
   check(
     intoOptions,
-    "the Grant button has the focus",
+    "the allow button has the focus",
     await fresh.waitFor(`document.activeElement?.id === "grantMic"`),
     true
   );
@@ -204,7 +204,7 @@ try {
   await panel.eval(`document.querySelector("#nextStep a").click()`);
   check(
     intoOpenOptions,
-    "the Grant button takes the focus again",
+    "the allow button takes the focus again",
     await fresh.waitFor(`document.activeElement?.id === "grantMic"`),
     true
   );

@@ -115,8 +115,9 @@ choice of 78.
   [glossary](#glossary) reaches.
 
 The first time you switch the microphone on, Chrome has to grant it — once, to the extension as a
-whole. The panel says so and links to **Options → Microphone access**, where the Grant button is: Chrome
-will only show its permission prompt on a page of its own, never in the side panel.
+whole. The panel says so and links to **Options → Microphone access**, where the "Allow the
+microphone" button is: Chrome will only show its permission prompt on a page of its own, never in
+the side panel.
 
 Turning tab audio and the microphone on together bills them as two separate sessions, so the cost
 is the sum of the two.

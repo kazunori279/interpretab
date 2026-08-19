@@ -1,6 +1,6 @@
 # Onboarding walkthrough
 
-Interpretab 1.0.0 · Chrome/151.0.7922.169 · headless · UI language en-US (`_locales/en`) · 2026-08-19T21:16:46.224Z
+Interpretab 1.0.0 · Chrome/151.0.7922.169 · headless · UI language en-US (`_locales/en`) · 2026-08-19T21:39:58.144Z
 
 **27 checks over 8 steps, all passing.**
 
@@ -36,7 +36,7 @@ With nothing configured, the panel names the one thing that has to happen before
 
 | | Check | Expected | Actual |
 | --- | --- | --- | --- |
-| ✅ | the banner is the key step | `Interpretab talks to Gemini with your own API key. Get a free one at aistudio.google.com/apikey, then paste it into Options.` | `Interpretab talks to Gemini with your own API key. Get a free one at aistudio.google.com/apikey, then paste it into Options.` |
+| ✅ | the banner is the key step | `Interpretab needs your own Gemini key to translate. Get a free one at aistudio.google.com/apikey, then paste it into Options.` | `Interpretab needs your own Gemini key to translate. Get a free one at aistudio.google.com/apikey, then paste it into Options.` |
 | ✅ | it links to AI Studio and to Options | `[{"href":"https://aistudio.google.com/apikey","action":""},{"href":"#","action":"options"}]` | `[{"href":"https://aistudio.google.com/apikey","action":""},{"href":"#","action":"options"}]` |
 | ✅ | Start is disabled | `true` | `true` |
 
@@ -62,7 +62,7 @@ The third precondition, and the only one the panel cannot resolve itself: Chrome
 | | Check | Expected | Actual |
 | --- | --- | --- | --- |
 | ✅ | Chrome has not granted the microphone | `prompt` | `prompt` |
-| ✅ | the banner is the microphone step | `Microphone translation needs Chrome's permission, once. Grant it in Options.` | `Microphone translation needs Chrome's permission, once. Grant it in Options.` |
+| ✅ | the banner is the microphone step | `Chrome has to let Interpretab use your microphone. You allow that once, in Options.` | `Chrome has to let Interpretab use your microphone. You allow that once, in Options.` |
 | ✅ | its link goes to the Options microphone section | `[{"href":"#","action":"optionsMic"}]` | `[{"href":"#","action":"optionsMic"}]` |
 | ✅ | Start is not disabled by it | `false` | `false` |
 
@@ -75,7 +75,7 @@ The third precondition, and the only one the panel cannot resolve itself: Chrome
 | | Check | Expected | Actual |
 | --- | --- | --- | --- |
 | ✅ | an Options page opens | `true` | `true` |
-| ✅ | the Grant button has the focus | `true` | `true` |
+| ✅ | the allow button has the focus | `true` | `true` |
 | ✅ | the Microphone heading is at the top of the viewport | `true` | `true` |
 | ✅ | the request is consumed, not left for the next visit | `{}` | `{}` |
 
@@ -88,7 +88,7 @@ The third precondition, and the only one the panel cannot resolve itself: Chrome
 | | Check | Expected | Actual |
 | --- | --- | --- | --- |
 | ✅ | the page starts back at the top | `0` | `0` |
-| ✅ | the Grant button takes the focus again | `true` | `true` |
+| ✅ | the allow button takes the focus again | `true` | `true` |
 | ✅ | the Microphone heading is at the top of the viewport | `true` | `true` |
 | ✅ | no second Options tab was opened | `1` | `1` |
 | ✅ | the request is consumed here too | `{}` | `{}` |
@@ -114,7 +114,7 @@ The same subscription, in the direction a user reaches through Chrome's site set
 | | Check | Expected | Actual |
 | --- | --- | --- | --- |
 | ✅ | the banner returns without a reload | `true` | `true` |
-| ✅ | and it is the microphone step again | `Microphone translation needs Chrome's permission, once. Grant it in Options.` | `Microphone translation needs Chrome's permission, once. Grant it in Options.` |
+| ✅ | and it is the microphone step again | `Chrome has to let Interpretab use your microphone. You allow that once, in Options.` | `Chrome has to let Interpretab use your microphone. You allow that once, in Options.` |
 
 ![Taking it away brings the banner back](08-permission-revoked.png)
 

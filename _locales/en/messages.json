@@ -13,7 +13,7 @@
   "statusError": { "message": "Error" },
 
   "panelStepKey": {
-    "message": "Interpretab talks to Gemini with <b>your own API key</b>. Get a free one at <a1>aistudio.google.com/apikey</a1>, then paste it into <a2>Options</a2>.",
+    "message": "Interpretab needs <b>your own Gemini key</b> to translate. Get a free one at <a1>aistudio.google.com/apikey</a1>, then paste it into <a2>Options</a2>.",
     "description": "First of the ordered next-step banners: shown until a key is saved. <a1> is AI Studio, <a2> opens this extension's Options page."
   },
   "panelStepDirection": {
@@ -21,7 +21,7 @@
     "description": "Next-step banner shown once a key is saved and neither direction is on, which is also when Start is disabled. The two bold names are the headings of the panel's two sections."
   },
   "panelStepMic": {
-    "message": "Microphone translation needs Chrome's permission, once. Grant it in <a1>Options</a1>.",
+    "message": "Chrome has to let Interpretab use your microphone. You allow that once, in <a1>Options</a1>.",
     "description": "Next-step banner shown when the microphone direction is on and Chrome has not granted the microphone. <a1> opens this extension's Options page at its Microphone section — a side panel cannot show the permission prompt itself."
   },
   "panelRunningOn": {
@@ -40,29 +40,29 @@
   },
   "panelTabTargetTitle": { "message": "Language you want to hear" },
   "panelSourceDetected": {
-    "message": "— source auto-detected",
+    "message": "— original language detected for you",
     "description": "Follows the target language dropdown. The language being translated from is not chosen by the user."
   },
   "panelDuckLevel": {
-    "message": "Original volume while speaking",
-    "description": "Slider: how loud the tab's own sound stays under the translated voice."
+    "message": "How loud the original stays",
+    "description": "Slider: how loud the tab's own sound stays while the translated voice is speaking over it."
   },
   "panelPageSubtitles": { "message": "Subtitles on the page" },
 
-  "panelMicDirection": { "message": "<b>Microphone</b> — the room, interpreted out loud" },
-  "panelMicModeTitle": { "message": "How the microphone is interpreted" },
+  "panelMicDirection": { "message": "<b>Microphone</b> — what is said in the room, translated out loud" },
+  "panelMicModeTitle": { "message": "How your microphone is translated" },
   "panelMicModeSimul": { "message": "Simultaneous — you, as you speak" },
   "panelMicModeConversation": { "message": "Two-way conversation" },
   "panelMicSourceTitle": { "message": "The language you speak" },
   "panelMicNoteMuted": {
-    "message": "The interpreted voice is <b>muted</b>. Click the unmute button to play it through your speakers.",
+    "message": "The translated voice is <b>muted</b>. Press the unmute button to hear it through your speakers.",
     "description": "Prefixes panelMicNoteSimul while the sound button is off."
   },
   "panelMicNoteSimul": {
-    "message": "Note: wear headphones when you play it. This mode answers while you are still speaking, so it cannot mute the microphone while it talks, and a speaker feeds the translation straight back in — which degrades the translation itself."
+    "message": "Wear headphones for this one. It starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice, starts translating that too, and the translation gets worse."
   },
   "panelMicNoteConversation": {
-    "message": "For two people sharing this microphone: whichever of the two languages it hears, it speaks the other. Out loud, through <b>your speakers</b>, which is the point — but it means the interpreter can hear itself, so keep the microphone away from them. This mode waits for each turn to finish, so it is a little slower than Simultaneous, and it is the only one the <b>glossary</b> applies to."
+    "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself. It waits until each person has finished talking, so it is a little slower than Simultaneous — and it is the only mode that uses the <b>glossary</b>."
   },
 
   "panelStart": { "message": "Start" },
@@ -70,7 +70,7 @@
   "panelOptions": { "message": "Options" },
 
   "panelCostNote": {
-    "message": "Both directions run two concurrent Live sessions, so the API usage is roughly double."
+    "message": "Running both at once is two translations at once, so Google charges about twice as much."
   },
   "panelUsagePaid": {
     "message": "<b>{1}</b> so far, <b>{2}</b> of Gemini usage this run — an estimate, not your actual bill.",
@@ -81,14 +81,14 @@
     "description": "{1} is how long the run has been going, {2} the audio it has moved. Must contain no price: the free tier is charged nothing."
   },
   "panelUsageTip": {
-    "message": "Started {1} ago. In that time it has sent {2} of audio and been sent {3} back, both charged at 25 tokens a second.",
+    "message": "Started {1} ago. Since then it has sent {2} of audio to Google and got {3} back, and both are charged for.",
     "description": "Tooltip on the usage line. {1} elapsed, {2} audio sent, {3} audio received."
   },
   "panelUsageTipPaid": {
-    "message": "Those tokens are priced at Google's published rates for the model, read from the pricing page in August 2026 rather than from your account, and rates change. Your Google account is the only place your real bill exists."
+    "message": "The figure uses Google's published prices as they stood in August 2026, not anything read from your account, and prices change. Your real bill only ever exists in your Google account."
   },
   "panelUsageTipFree": {
-    "message": "Your key is set to the free tier on the Options page, where Google charges nothing for any of it — so there is no cost to show. Set the plan to Paid there if the project has a billing account linked, and this line estimates what the run has cost."
+    "message": "Your key is set to Free on the Options page, and Google charges nothing on the free plan, so there is no cost to show. If the key's Google account has a payment method on it, set the plan to Paid there and this line will estimate what the run costs."
   },
   "durationSeconds": {
     "message": "{1}s",
@@ -107,8 +107,8 @@
     "message": "The run is on another tab.",
     "description": "Why a mute button is greyed out."
   },
-  "panelMuteOffMic": { "message": "The microphone direction is off." },
-  "panelMuteOffSound": { "message": "Neither direction is on." },
+  "panelMuteOffMic": { "message": "The microphone is switched off." },
+  "panelMuteOffSound": { "message": "Nothing is switched on yet." },
 
   "panelLangPopular": {
     "message": "Popular",
@@ -139,19 +139,19 @@
     "description": "Group label over the three settings a first run needs: the key, the plan, and Chrome's microphone permission. It labels the section headings under it rather than a control of its own."
   },
   "optSetupNote": {
-    "message": "Nothing works without the key. The other two are answered once, at the same time as it: which plan the key is on, and — only if you will interpret your own voice — Chrome's permission for the microphone."
+    "message": "Nothing works without the key. The other two you answer once, at the same time: which plan your key is on, and — only if you want your own voice translated — permission to use the microphone."
   },
   "optRestHeading": {
     "message": "Everything else",
     "description": "Group label over the rest of the page — the settings that already have a working default."
   },
   "optRestNote": {
-    "message": "All of these have a default that works. They are here for when one of them turns out to be the wrong one."
+    "message": "These are all set to something that works. Come back and change one if it turns out not to suit you."
   },
 
   "optKeyHeading": { "message": "Gemini API key" },
   "optKeyNote": {
-    "message": "Interpretab has no server. Your audio goes straight from this browser to the Gemini Live API, authenticated with your own key — get a free one at <a1>aistudio.google.com/apikey</a1>. The key is stored in this browser's extension storage and is sent nowhere except <code>generativelanguage.googleapis.com</code>. Usage is billed to the Google account the key belongs to, so treat it like a password: don't share it, and don't paste it anywhere else. If it ever gets out, delete it on the <a2>same page you made it on</a2> and paste a new one in here.",
+    "message": "Interpretab has no server of its own: your audio goes straight from this browser to Google, using your own key — get a free one at <a1>aistudio.google.com/apikey</a1>. The key is kept in this browser and is sent to nobody but Google. Whatever you use is billed to the Google account the key came from, so treat it like a password: don't share it, and don't paste it anywhere else. If it ever gets out, delete it on the <a2>page you made it on</a2> and paste a new one in here.",
     "description": "Both links go to AI Studio's key page."
   },
   "optKeyPlaceholder": {
@@ -161,20 +161,20 @@
   "optShow": { "message": "Show" },
   "optHide": { "message": "Hide" },
   "optKeyNone": { "message": "No key yet. Interpretab cannot start without one." },
-  "optKeyStray": { "message": "Saved, but that looks like a stray paste rather than a key." },
+  "optKeyStray": { "message": "Saved, but that does not look like a key. Did something else get pasted in?" },
   "optKeyShort": { "message": "Saved, but that looks too short — is some of the key missing?" },
   "optKeySaved": { "message": "Key saved in this browser." },
 
   "optPlanHeading": { "message": "Gemini API plan" },
   "optPlanNote": {
-    "message": "Which plan the key's project is on. Interpretab has no way to tell — no Gemini API response says — and it has to know, because the side panel's meter would otherwise show a price to people Google charges nothing. On <b>Free</b> the meter counts time and audio; on <b>Paid</b> it also estimates what the run has cost. Pick the one your key is on: it is the project you made it in at <a1>aistudio.google.com/apikey</a1>, and a project is on the paid tier once it has a billing account linked."
+    "message": "Google does not tell Interpretab whether your key is free or paid, so please say which it is. On <b>Free</b> the side panel shows how long you have been translating; on <b>Paid</b> it also estimates what that has cost. A key is paid once the Google account it belongs to has a payment method on it — you can check yours at <a1>aistudio.google.com/apikey</a1>."
   },
   "optPlanFree": { "message": "Free — Google charges nothing for this key" },
   "optPlanPaid": { "message": "Paid — pay as you go, billed to your account" },
 
   "optVoiceHeading": { "message": "Voice" },
   "optVoiceNote": {
-    "message": "The prebuilt voice the translation is spoken in. Fixed for the life of a session, so a change applies the next time you press Start."
+    "message": "The voice the translation is spoken in. It cannot change while a translation is running, so a new one is used the next time you press Start."
   },
   "optVoiceOption": {
     "message": "{1} — {2}",
@@ -205,7 +205,7 @@
 
   "optSizeHeading": { "message": "Subtitle size" },
   "optSizeNote": {
-    "message": "How tall the on-page subtitles are, in pixels. Applies immediately, even to a translation already running — drag it while watching the video and stop where it reads well."
+    "message": "How big the subtitles on the page are. This applies straight away, even while a translation is running — drag it as you watch and stop where it reads well."
   },
   "optSizePx": { "message": "{1} px", "description": "{1} is a number of pixels." },
   "optSizePreview": {
@@ -215,23 +215,26 @@
 
   "optMicHeading": { "message": "Microphone access" },
   "optMicNote": {
-    "message": "Only for the microphone direction, and only once. Chrome grants the microphone to the extension as a whole, and neither the background document the engine runs in nor the side panel can show its prompt — so the grant happens here.",
+    "message": "Only needed if you want your own voice translated, and only the first time. Chrome will not show its permission window over the side panel, so the button is here instead — and what you allow here covers the whole of Interpretab.",
     "description": "Under the Microphone access heading. The condition comes first because this section sits in the group a first run is told to work through, and it is the one entry there that not everybody needs."
   },
-  "optMicGrant": { "message": "Grant microphone" },
-  "optMicGranted": { "message": "Granted." },
+  "optMicGrant": { "message": "Allow the microphone" },
+  "optMicGranted": { "message": "Allowed." },
   "optMicNotGranted": {
-    "message": "Not granted ({1}).",
-    "description": "{1} is a Permissions API state, e.g. 'prompt' or 'denied'."
+    "message": "Not allowed yet."
+  },
+  "optMicBlocked": {
+    "message": "Chrome is blocking the microphone. Open Chrome's microphone settings, take Interpretab off the blocked list, and come back here.",
+    "description": "Shown instead of optMicNotGranted once the permission state is 'denied', which the Allow button can no longer change: Chrome does not prompt a second time."
   },
   "optMicDenied": {
-    "message": "Denied: {1}",
+    "message": "Chrome did not allow the microphone ({1}).",
     "description": "{1} is a DOMException name, e.g. 'NotAllowedError'."
   },
 
   "optInputHeading": { "message": "Audio input" },
   "optInputNote": {
-    "message": "Which microphone the <b>microphone</b> direction listens to. Left on the system default, Chrome picks whatever your computer currently calls the input — which may be a headset you have unplugged, a monitor, or some other device you never speak into. That failure is silent: the session connects, the panel goes green, and nothing is ever transcribed. Name the device here if that happens. Applies the next time you press Start."
+    "message": "Which microphone <b>Microphone</b> listens to. Left on the system default, your computer picks — and it sometimes picks one you never speak into, such as a monitor or a headset you have unplugged. Nothing looks wrong when that happens: the panel goes green, you talk, and nothing is ever translated. Pick the right microphone here if that happens. Applies the next time you press Start."
   },
   "optInputSystem": { "message": "System default — whichever microphone your computer is using" },
   "optInputAnonymous": {
@@ -247,7 +250,7 @@
 
   "optOutputHeading": { "message": "Audio output" },
   "optOutputNote": {
-    "message": "Where the <b>microphone</b> direction's translated voice is played. The tab direction's translation always stays on the system output — that is the one you are listening to. Applies the next time you press Start."
+    "message": "Where the voice from <b>Microphone</b> is played. The one from Tab audio always comes out of your usual speakers, since that is what you are listening to. Applies the next time you press Start."
   },
   "optOutputSystem": { "message": "System default — the speakers you are using" },
   "optOutputAnonymous": { "message": "Output {1}…" },
@@ -256,30 +259,30 @@
     "message": "That device is not connected, so the speakers will be used instead."
   },
   "optOutputSaved": {
-    "message": "Saved. Applies on next Start — and whatever listens to that device has to be told to."
+    "message": "Saved. Applies the next time you press Start — and whichever app should hear this voice has to be set to listen to that device too."
   },
   "optOutputCleared": { "message": "Saved. The translated voice will play on the speakers." },
 
   "optDeviceListFailed": {
-    "message": "Could not list audio devices: {1}.",
+    "message": "Could not see your audio devices ({1}).",
     "description": "{1} is a DOMException name."
   },
-  "optDeviceNamesHidden": { "message": "Grant the microphone above to see device names." },
+  "optDeviceNamesHidden": { "message": "Allow the microphone above to see the device names." },
   "optDeviceSavedMissing": { "message": "Saved device — not connected right now" },
 
   "optGlossaryHeading": { "message": "Glossary" },
   "optGlossaryNote": {
-    "message": "<code>source,pronunciation,transcript</code> per line. The second column is what the model is told to say; the optional third is what the captions show instead. Applies to the microphone in <b>Two-way conversation</b> mode only: everything else — tab audio, and the microphone's Simultaneous mode — runs the simultaneous-translation model, which takes no system instruction and so has nowhere to put a glossary.",
+    "message": "Names and terms you want said and spelled a particular way — products, people, jargon. One per line, as <code>source,pronunciation,transcript</code>: the second column is how it should be said, and the optional third is how it should be written in the subtitles. It works with the microphone in <b>Two-way conversation</b> mode only — the faster translation used everywhere else has nowhere to put a glossary.",
     "description": "The <code> content is a CSV header and must not be translated."
   },
   "optGlossaryReplace": { "message": "Replace" },
   "optGlossaryReset": { "message": "Reset to defaults" },
   "optGlossaryPickFile": { "message": "Pick a .csv file first." },
   "optGlossaryNotCsv": { "message": "File must have a .csv extension." },
-  "optGlossaryTooBig": { "message": "File exceeds {1} bytes." },
+  "optGlossaryTooBig": { "message": "That file is too big — the limit is {1} bytes." },
   "optGlossaryReplaced": { "message": "Replaced with {1} entries. Applies on next Start." },
   "optGlossaryWasReset": { "message": "Reset to {1} default entries." },
-  "optGlossaryLoadFailed": { "message": "Load failed: {1}" },
+  "optGlossaryLoadFailed": { "message": "Could not read that file: {1}" },
   "optGlossaryEmpty": { "message": "No glossary entries." },
   "optGlossaryColSource": { "message": "Source" },
   "optGlossaryColPronunciation": { "message": "Pronunciation" },
@@ -293,10 +296,10 @@
     "message": "Gemini rejected that API key. Check it on the Options page, or make a new one at aistudio.google.com/apikey."
   },
   "errQuota": {
-    "message": "That API key is out of quota. Wait for the limits to reset, or set up billing to move to Tier 1 — the free tier is the one this reaches first."
+    "message": "That key has used up what Google allows for now. Wait for the limit to reset and press Start again, or add a payment method to move off the free plan — the free one runs out first."
   },
   "errKeyForbidden": {
-    "message": "That API key is not allowed to call the Gemini API. Check the key's restrictions and that the Generative Language API is enabled on its project."
+    "message": "That key is not allowed to use the Gemini API. If you restricted the key, check that Gemini is still on its list — or make a new key at aistudio.google.com/apikey."
   },
   "errAlreadyRunningOn": {
     "message": "Interpretab is already running on “{1}”, and it runs on one tab at a time. Press Stop first — the Stop button works from any tab.",
@@ -305,16 +308,16 @@
   "errAlreadyRunningElsewhere": {
     "message": "Interpretab is already running on another tab, and it runs on one tab at a time. Press Stop first — the Stop button works from any tab."
   },
-  "errNoDirection": { "message": "Enable at least one direction first." },
-  "errNoTab": { "message": "No tab to capture." },
+  "errNoDirection": { "message": "Turn on Tab audio or Microphone first." },
+  "errNoTab": { "message": "There is no tab to listen to." },
   "errClickIcon": {
     "message": "Click the Interpretab toolbar icon on the tab you want to translate, then press Start again. ({1})",
     "description": "{1} is Chrome's own error text, which is not translated."
   },
-  "errNoStreamId": { "message": "No tab stream id." },
-  "errUnknownMessage": { "message": "Unknown message type: {1}" },
+  "errNoStreamId": { "message": "Chrome did not hand over this tab's audio. Press Start again." },
+  "errUnknownMessage": { "message": "Something went wrong inside Interpretab ({1})." },
   "errMicRefused": {
-    "message": "Microphone access was refused. Open the extension's Options page and grant the microphone once, then try again."
+    "message": "Interpretab was not allowed to use the microphone. Open its Options page, allow the microphone once, and try again."
   },
 
   "captionsChromePage": {
@@ -324,11 +327,11 @@
   "captionsOpenSite": { "message": "Open a website and click the toolbar icon there." },
 
   "micNoSoundNamed": {
-    "message": "No sound has reached the microphone since Start. It is recording from “{1}” — if that is not what you are speaking into, name the right one under Audio input in Options and press Start again.",
+    "message": "Nothing has been heard on the microphone since you pressed Start. It is listening to “{1}” — if that is not what you are speaking into, pick the right one under Audio input in Options and press Start again.",
     "description": "{1} is the device label the operating system reports."
   },
   "micNoSoundDefault": {
-    "message": "No sound has reached the microphone since Start. It is recording from your system's default input — if that is not what you are speaking into, name the right one under Audio input in Options and press Start again."
+    "message": "Nothing has been heard on the microphone since you pressed Start. It is listening to your computer's default microphone — if that is not what you are speaking into, pick the right one under Audio input in Options and press Start again."
   },
   "micDeviceMissing": {
     "message": "The microphone chosen in Options is not available ({1}), so your system's default input is being used instead.",
@@ -343,24 +346,24 @@
     "description": "{1} is the server's own reason, which arrives in English and is not translated."
   },
   "closeReasonOpaqueHint": {
-    "message": "Could not reach the Gemini Live API — a browser is not told why. {1}",
+    "message": "Could not reach Gemini, and a browser is never told why. {1}",
     "description": "{1} is hintKeyAccepted."
   },
   "closeReasonOpaque": {
-    "message": "Could not reach the Gemini Live API — a browser is not told why. Usually the API key: missing, rejected, or out of quota, which the free tier runs into first."
+    "message": "Could not reach Gemini, and a browser is never told why. It is usually the key: missing, refused, or over its limit — which the free plan reaches first."
   },
   "closeReasonCode": { "message": "Gemini closed the connection (code {1})." },
   "closeBeforeReady": { "message": "The session was closed before it was ready." },
   "hintKeyAccepted": {
-    "message": "The key itself was accepted by the API a moment ago, so this is the Live API or the network rather than the key."
+    "message": "Your key worked a moment ago, so this is Gemini or your network rather than the key."
   },
   "loopGaveUp": {
-    "message": "{1} Interpretab stopped trying after {2} attempts in a row. Check your API key on the Options page, and your quota in Google AI Studio — the free tier's limits on the Live models are low. Press Start to try again.",
+    "message": "{1} Interpretab stopped trying after {2} attempts in a row. Check your key on the Options page, and how much you have left in Google AI Studio — the free plan does not allow much. Press Start to try again.",
     "description": "{1} is whichever failure message came last; {2} is a number of attempts."
   },
   "loopDropping": { "message": "The connection to Gemini keeps dropping." },
 
-  "glossaryBadLine": { "message": "Line {1} must be 'source,target' (3rd column optional)." },
-  "glossaryMissingField": { "message": "Line {1} is missing source or target." },
+  "glossaryBadLine": { "message": "Line {1} should be: the word, how to say it, and — if you want — how to write it." },
+  "glossaryMissingField": { "message": "Line {1} is missing the word or how to say it." },
   "glossaryTooMany": { "message": "Too many entries (max {1})." }
 }

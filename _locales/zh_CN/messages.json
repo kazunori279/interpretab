@@ -13,13 +13,13 @@
   "statusError": { "message": "出错" },
 
   "panelStepKey": {
-    "message": "Interpretab 使用<b>你自己的 API 密钥</b>与 Gemini 通信。可在 <a1>aistudio.google.com/apikey</a1> 免费获取一个，然后粘贴到<a2>选项</a2>页面。"
+    "message": "Interpretab 需要<b>你自己的 Gemini 密钥</b>才能翻译。到 <a1>aistudio.google.com/apikey</a1> 免费领一个，然后粘贴到<a2>选项</a2>里。"
   },
   "panelStepDirection": {
     "message": "还没有开启任何一项。请开启<b>标签页音频</b>或<b>麦克风</b>，或者两者都开。"
   },
   "panelStepMic": {
-    "message": "麦克风翻译需要 Chrome 的麦克风权限，只需授权一次。请在<a1>选项</a1>中授权。"
+    "message": "Chrome 需要先允许 Interpretab 使用麦克风。在<a1>选项</a1>里允许一次即可。"
   },
   "panelRunningOn": {
     "message": "Interpretab 正在“{1}”上运行，而它一次只能在一个标签页上运行。控制项在那个标签页上——Stop 在这里也有效。"
@@ -31,23 +31,23 @@
   "panelTabDirection": { "message": "<b>标签页音频</b> — 把这个标签页译成你的语言" },
   "panelInto": { "message": "译为" },
   "panelTabTargetTitle": { "message": "你想听到的语言" },
-  "panelSourceDetected": { "message": "— 源语言自动识别" },
-  "panelDuckLevel": { "message": "朗读时原始音频的音量" },
+  "panelSourceDetected": { "message": "— 原来的语言会自动识别" },
+  "panelDuckLevel": { "message": "原声保留的音量" },
   "panelPageSubtitles": { "message": "在页面上显示字幕" },
 
-  "panelMicDirection": { "message": "<b>麦克风</b> — 把现场的话朗读出来" },
-  "panelMicModeTitle": { "message": "麦克风的口译方式" },
+  "panelMicDirection": { "message": "<b>麦克风</b> — 把现场说的话翻译出来，念给大家听" },
+  "panelMicModeTitle": { "message": "麦克风的声音怎么翻译" },
   "panelMicModeSimul": { "message": "Simultaneous — 边说边译" },
   "panelMicModeConversation": { "message": "Two-way conversation — 两种语言的对话" },
   "panelMicSourceTitle": { "message": "你说的语言" },
   "panelMicNoteMuted": {
-    "message": "口译语音已<b>静音</b>。点击取消静音按钮即可从扬声器播放。"
+    "message": "翻译后的语音已<b>静音</b>。想用扬声器听，请点取消静音按钮。"
   },
   "panelMicNoteSimul": {
-    "message": "注意：播放时请戴耳机。此模式在你还在说话时就开始回应，因此无法在自己说话时静音麦克风；而扬声器会把译文直接送回输入端——这会让译文本身变差。"
+    "message": "这个模式请戴耳机。它在你还在说话时就开始翻译，因此念的时候没法把麦克风关掉。用扬声器的话，麦克风会听见它自己的声音，连那也一起翻译，翻译质量就变差了。"
   },
   "panelMicNoteConversation": {
-    "message": "适合两个人共用一支麦克风：两种语言中听到哪一种，就用另一种说出来。声音从<b>你的扬声器</b>出来，这正是这个模式的用意——但也意味着口译会听见自己，所以请让麦克风离扬声器远一些。此模式会等一方说完再翻译，因此比 Simultaneous 稍慢，而且只有它才会应用<b>术语表</b>。"
+    "message": "两个人共用一支麦克风时用这个模式。它听到你设定的两种语言中的一种，就用另一种从<b>扬声器</b>念出来，这正是这个模式的用意。请把麦克风放得离扬声器远一些，免得它听见自己的声音。它会等每个人说完再翻译，所以比 Simultaneous 稍慢一点，而且只有这个模式用得上<b>术语表</b>。"
   },
 
   "panelStart": { "message": "Start" },
@@ -55,7 +55,7 @@
   "panelOptions": { "message": "选项" },
 
   "panelCostNote": {
-    "message": "两个方向同时开启两个 Live 会话，因此 API 用量大约翻倍。"
+    "message": "两个一起开就是同时跑两份翻译，Google 收的费用大约翻倍。"
   },
   "panelUsagePaid": {
     "message": "已运行 <b>{1}</b>，本次 Gemini 用量约 <b>{2}</b>——这是估算值，不是你的实际账单。"
@@ -64,13 +64,13 @@
     "message": "已运行 <b>{1}</b>，Gemini 音频 <b>{2}</b>。免费层不会为此收费。"
   },
   "panelUsageTip": {
-    "message": "{1}前开始。其间已发送 {2} 音频、收到 {3} 音频，两者都按每秒 25 个 token 计费。"
+    "message": "已经开始 {1}。这段时间里向 Google 发出了 {2} 的音频，收回了 {3}，两边都要计费。"
   },
   "panelUsageTipPaid": {
-    "message": "这些 token 按 Google 公布的该模型价格计算，取自 2026 年 8 月的定价页面而非你的账户，而价格是会变的。只有你的 Google 账户里才有真正的账单。"
+    "message": "这个数字用的是 Google 在 2026 年 8 月公布的价格，不是从你的账号里读来的，而价格是会变的。真正的账单只在你的 Google 账号里。"
   },
   "panelUsageTipFree": {
-    "message": "你的密钥在选项页面上被设为免费层，Google 对这些一概不收费——所以没有费用可显示。如果该项目已关联结算账号，请在那里把方案改为 Paid，这一行就会估算本次运行的花费。"
+    "message": "这个密钥在选项页里设成了 Free，免费方案下 Google 不收费，所以没有金额可显示。如果密钥所属的 Google 账号已经绑定了付款方式，就在选项里改成 Paid，这一行会估算本次的费用。"
   },
   "durationSeconds": { "message": "{1} 秒" },
   "durationMinutes": { "message": "{1} 分钟" },
@@ -80,8 +80,8 @@
   "panelMuteSound": { "message": "将译文语音静音" },
   "panelUnmuteSound": { "message": "取消译文语音静音" },
   "panelMuteOffElsewhere": { "message": "本次运行在另一个标签页上。" },
-  "panelMuteOffMic": { "message": "麦克风方向已关闭。" },
-  "panelMuteOffSound": { "message": "两个方向都没有开启。" },
+  "panelMuteOffMic": { "message": "麦克风已关闭。" },
+  "panelMuteOffSound": { "message": "还没有开启任何一项。" },
 
   "panelLangPopular": { "message": "常用" },
   "panelLangAll": { "message": "所有语言" },
@@ -97,35 +97,35 @@
 
   "optSetupHeading": { "message": "开始之前" },
   "optSetupNote": {
-    "message": "没有密钥就什么都不能用。另外两项也只需在粘贴密钥时一并回答一次：这个密钥属于哪种方案，以及——仅当你要口译自己的声音时——Chrome 的麦克风权限。"
+    "message": "没有密钥就什么都不能用。另外两项也只需在粘贴密钥时一并回答一次：这个密钥属于哪种方案，以及——只有要翻译自己说的话时——使用麦克风的权限。"
   },
   "optRestHeading": { "message": "其余设置" },
   "optRestNote": {
-    "message": "这些都有可用的默认值，只有当某一项不合适时才需要来这里改。"
+    "message": "这些都已经设成了能用的值。哪一项不合适，再回来改。"
   },
 
   "optKeyHeading": { "message": "Gemini API 密钥" },
   "optKeyNote": {
-    "message": "Interpretab 没有服务器。你的音频从这个浏览器直接发往 Gemini Live API，用你自己的密钥认证——可在 <a1>aistudio.google.com/apikey</a1> 免费获取。密钥保存在此浏览器的扩展存储中，除 <code>generativelanguage.googleapis.com</code> 外不会发往任何地方。用量会计入该密钥所属的 Google 账号，所以请把它当密码对待：不要分享，也不要粘贴到别处。万一泄露，请在<a2>当初创建它的同一个页面</a2>上删除，然后在这里粘贴一个新的。"
+    "message": "Interpretab 没有自己的服务器：你的音频从这个浏览器直接送到 Google，用的是你自己的密钥。免费密钥可以到 <a1>aistudio.google.com/apikey</a1> 领。密钥存在这个浏览器里，除了 Google 不会送去任何地方。用掉的额度记在密钥所属的 Google 账号上，所以请把它当密码看待：不要给别人，也不要粘贴到别处。万一泄露了，就到<a2>当初领它的页面</a2>删掉，再把新的粘贴到这里。"
   },
   "optKeyPlaceholder": { "message": "在此粘贴你的密钥" },
   "optShow": { "message": "显示" },
   "optHide": { "message": "隐藏" },
   "optKeyNone": { "message": "还没有密钥。没有密钥 Interpretab 无法启动。" },
-  "optKeyStray": { "message": "已保存，但这看起来像是误粘贴的内容，而不是密钥。" },
+  "optKeyStray": { "message": "已保存，但这看起来不像密钥。是不是粘错了？" },
   "optKeyShort": { "message": "已保存，但看起来太短了——是不是漏掉了一部分？" },
   "optKeySaved": { "message": "密钥已保存在此浏览器中。" },
 
   "optPlanHeading": { "message": "Gemini API 方案" },
   "optPlanNote": {
-    "message": "该密钥所属项目使用的方案。Interpretab 无从得知——Gemini API 的任何响应都不会说明——但它必须知道，否则侧边栏的用量条会向 Google 根本不收费的人显示价格。选择 <b>Free</b> 时，用量条只统计时间和音频；选择 <b>Paid</b> 时，它还会估算本次运行的花费。请按你的密钥实际情况选择：也就是你在 <a1>aistudio.google.com/apikey</a1> 上创建它时所用的项目，而项目一旦关联了结算账号，就属于付费层。"
+    "message": "你的密钥是免费还是付费，Google 不会告诉 Interpretab，所以请在这里说明。选 <b>Free</b> 时，侧边栏只显示你翻译了多久；选 <b>Paid</b> 时还会估算这段时间的花费。密钥所属的 Google 账号绑定了付款方式，就算付费。可以到 <a1>aistudio.google.com/apikey</a1> 查看。"
   },
   "optPlanFree": { "message": "Free — Google 不会为这个密钥收费" },
   "optPlanPaid": { "message": "Paid — 按量付费，计入你的账户" },
 
   "optVoiceHeading": { "message": "语音" },
   "optVoiceNote": {
-    "message": "朗读译文所用的预置语音。一个会话期间固定不变，因此改动会在下次按 Start 时生效。"
+    "message": "念翻译时用的声音。翻译进行中不能换，所以下次按 Start 时才会用新的声音。"
   },
   "optVoiceOption": { "message": "{1} — {2}" },
   "voiceBright": { "message": "明亮" },
@@ -153,23 +153,24 @@
 
   "optSizeHeading": { "message": "字幕大小" },
   "optSizeNote": {
-    "message": "页面上字幕的高度，单位为像素。立即生效，对正在进行的翻译也一样——一边看视频一边拖动，停在读起来舒服的位置。"
+    "message": "页面上字幕的大小。改了马上生效，翻译进行中也一样——边看边拖，停在读着舒服的地方。"
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "敏捷的棕色狐狸 — The quick brown fox" },
 
   "optMicHeading": { "message": "麦克风权限" },
   "optMicNote": {
-    "message": "只有使用麦克风方向时才需要，而且只需一次。Chrome 把麦克风权限授予整个扩展；引擎所在的后台文档和侧边栏都无法弹出权限提示，所以在这里授权。"
+    "message": "只有想翻译自己说的话时才需要，而且只需第一次。Chrome 的权限窗口没法开在侧边栏上面，所以按钮放在这里。在这里允许之后，整个 Interpretab 都能用。"
   },
-  "optMicGrant": { "message": "授予麦克风权限" },
-  "optMicGranted": { "message": "已授权。" },
-  "optMicNotGranted": { "message": "未授权（{1}）。" },
-  "optMicDenied": { "message": "被拒绝：{1}" },
+  "optMicGrant": { "message": "允许使用麦克风" },
+  "optMicGranted": { "message": "已允许。" },
+  "optMicNotGranted": { "message": "还没有允许。" },
+  "optMicBlocked": { "message": "Chrome 正在阻止麦克风。请打开 Chrome 的麦克风设置，把 Interpretab 从阻止名单里移出来，再回到这里。" },
+  "optMicDenied": { "message": "Chrome 没有允许使用麦克风（{1}）。" },
 
   "optInputHeading": { "message": "音频输入" },
   "optInputNote": {
-    "message": "<b>麦克风</b>方向要监听哪个麦克风。若保持系统默认，Chrome 会用你的电脑当前认定的输入设备——那可能是你已经拔掉的耳机、一台显示器，或者别的你根本不会对着说话的设备。这种失败是无声的：会话连上了，面板变绿了，却始终没有任何转写。遇到这种情况，请在这里指定设备。下次按 Start 时生效。"
+    "message": "<b>麦克风</b>翻译要听哪一支麦克风。保持系统默认时由电脑来挑，有时会挑到你根本不会对着说话的那一个，比如显示器，或者已经拔掉的耳麦。这种时候屏幕上看不出毛病：面板照样变绿，你说话，却什么都没有翻译出来。遇到了就在这里挑对的那一支。下次按 Start 时生效。"
   },
   "optInputSystem": { "message": "系统默认 — 你的电脑当前使用的麦克风" },
   "optInputAnonymous": { "message": "麦克风 {1}…" },
@@ -180,33 +181,33 @@
 
   "optOutputHeading": { "message": "音频输出" },
   "optOutputNote": {
-    "message": "<b>麦克风</b>方向的译文语音在哪里播放。标签页方向的译文始终留在系统输出上——那才是你正在听的。下次按 Start 时生效。"
+    "message": "<b>麦克风</b>的翻译语音从哪里放出来。标签页音频的翻译始终走你平时用的扬声器，因为那是给你自己听的。下次按 Start 时生效。"
   },
   "optOutputSystem": { "message": "系统默认 — 你正在使用的扬声器" },
   "optOutputAnonymous": { "message": "输出 {1}…" },
   "optOutputNone": { "message": "看不到任何输出设备。" },
   "optOutputMissing": { "message": "该设备未连接，将改用扬声器。" },
   "optOutputSaved": {
-    "message": "已保存。下次按 Start 时生效——另外还得让监听该设备的一方知道这件事。"
+    "message": "已保存。下次按 Start 时生效——另外，要听这段语音的那个应用，也得设成从这个设备听。"
   },
   "optOutputCleared": { "message": "已保存。译文语音将从扬声器播放。" },
 
-  "optDeviceListFailed": { "message": "无法列出音频设备：{1}。" },
-  "optDeviceNamesHidden": { "message": "请先在上方授予麦克风权限，才能看到设备名称。" },
+  "optDeviceListFailed": { "message": "看不到你的音频设备（{1}）。" },
+  "optDeviceNamesHidden": { "message": "先在上面允许使用麦克风，才能看到设备名称。" },
   "optDeviceSavedMissing": { "message": "已保存的设备 — 目前未连接" },
 
   "optGlossaryHeading": { "message": "术语表" },
   "optGlossaryNote": {
-    "message": "每行一条 <code>source,pronunciation,transcript</code>。第二列是要让模型念出来的读法；可选的第三列是字幕改为显示的写法。仅在麦克风的 <b>Two-way conversation</b> 模式下生效：其余情况——标签页音频，以及麦克风的 Simultaneous 模式——都跑在同声传译模型上，而该模型不接受系统指令，因此无处安放术语表。"
+    "message": "你希望按固定读法和写法处理的名称和术语——产品名、人名、行话。一行一个，格式为 <code>source,pronunciation,transcript</code>：第二列是该怎么念，可省略的第三列是字幕里该怎么写。只有麦克风的 <b>Two-way conversation</b> 模式用得上；其他地方用的是更快的那套翻译，没有地方放术语表。"
   },
   "optGlossaryReplace": { "message": "替换" },
   "optGlossaryReset": { "message": "恢复默认" },
   "optGlossaryPickFile": { "message": "请先选择一个 .csv 文件。" },
   "optGlossaryNotCsv": { "message": "文件扩展名必须是 .csv。" },
-  "optGlossaryTooBig": { "message": "文件超过 {1} 字节。" },
+  "optGlossaryTooBig": { "message": "文件太大了，上限是 {1} 字节。" },
   "optGlossaryReplaced": { "message": "已替换为 {1} 条。下次按 Start 时生效。" },
   "optGlossaryWasReset": { "message": "已恢复为 {1} 条默认词条。" },
-  "optGlossaryLoadFailed": { "message": "加载失败：{1}" },
+  "optGlossaryLoadFailed": { "message": "读不了这个文件：{1}" },
   "optGlossaryEmpty": { "message": "术语表为空。" },
   "optGlossaryColSource": { "message": "原文" },
   "optGlossaryColPronunciation": { "message": "读法" },
@@ -220,10 +221,10 @@
     "message": "Gemini 拒绝了该 API 密钥。请在选项页面核对，或到 aistudio.google.com/apikey 重新创建一个。"
   },
   "errQuota": {
-    "message": "该 API 密钥的配额已用尽。请等待限额重置，或开通结算升级到 Tier 1——免费层是最先撞上限额的。"
+    "message": "这个密钥已经用完了 Google 目前允许的额度。等额度恢复后再按 Start，或者绑定付款方式离开免费方案——先到顶的总是免费方案。"
   },
   "errKeyForbidden": {
-    "message": "该 API 密钥无权调用 Gemini API。请检查密钥的使用限制，以及其所属项目是否已启用 Generative Language API。"
+    "message": "这个密钥不能使用 Gemini API。如果你给密钥加过限制，请确认 Gemini 还在允许的名单里；也可以到 aistudio.google.com/apikey 重新做一个。"
   },
   "errAlreadyRunningOn": {
     "message": "Interpretab 已经在“{1}”上运行，而它一次只能在一个标签页上运行。请先按 Stop——Stop 按钮在任何标签页上都有效。"
@@ -231,15 +232,15 @@
   "errAlreadyRunningElsewhere": {
     "message": "Interpretab 已经在另一个标签页上运行，而它一次只能在一个标签页上运行。请先按 Stop——Stop 按钮在任何标签页上都有效。"
   },
-  "errNoDirection": { "message": "请先至少启用一个方向。" },
-  "errNoTab": { "message": "没有可捕获的标签页。" },
+  "errNoDirection": { "message": "请先开启标签页音频或麦克风。" },
+  "errNoTab": { "message": "没有可以收听的标签页。" },
   "errClickIcon": {
     "message": "请在想翻译的标签页上点击工具栏中的 Interpretab 图标，然后再按一次 Start。（{1}）"
   },
-  "errNoStreamId": { "message": "没有标签页流 id。" },
-  "errUnknownMessage": { "message": "未知的消息类型：{1}" },
+  "errNoStreamId": { "message": "Chrome 没有把这个标签页的声音交过来。请再按一次 Start。" },
+  "errUnknownMessage": { "message": "Interpretab 内部出了问题（{1}）。" },
   "errMicRefused": {
-    "message": "麦克风访问被拒绝。请打开扩展的选项页面，授予一次麦克风权限后重试。"
+    "message": "Interpretab 没有获得使用麦克风的许可。请打开它的选项页允许一次麦克风，然后再试。"
   },
 
   "captionsChromePage": {
@@ -249,10 +250,10 @@
   "captionsOpenSite": { "message": "请打开一个网站，在那里点击工具栏图标。" },
 
   "micNoSoundNamed": {
-    "message": "自 Start 以来麦克风没有收到任何声音。它正在从“{1}”录音——如果你对着说话的不是它，请在选项的「音频输入」中指定正确的设备，然后再按一次 Start。"
+    "message": "按下 Start 之后，麦克风一直没有听到声音。它正在听“{1}”——如果你说话的不是这一支，请到选项的音频输入里挑对的那一支，然后再按一次 Start。"
   },
   "micNoSoundDefault": {
-    "message": "自 Start 以来麦克风没有收到任何声音。它正在从系统默认输入录音——如果你对着说话的不是它，请在选项的「音频输入」中指定正确的设备，然后再按一次 Start。"
+    "message": "按下 Start 之后，麦克风一直没有听到声音。它正在听电脑的默认麦克风——如果你说话的不是这一支，请到选项的音频输入里挑对的那一支，然后再按一次 Start。"
   },
   "micDeviceMissing": {
     "message": "选项中所选的麦克风不可用（{1}），因此改用系统默认输入。"
@@ -263,22 +264,22 @@
 
   "closeReasonGiven": { "message": "Gemini 关闭了连接：{1}" },
   "closeReasonOpaqueHint": {
-    "message": "无法连接到 Gemini Live API——浏览器不会被告知原因。{1}"
+    "message": "连不上 Gemini，而浏览器从来不会被告知原因。{1}"
   },
   "closeReasonOpaque": {
-    "message": "无法连接到 Gemini Live API——浏览器不会被告知原因。通常是 API 密钥的问题：缺失、被拒绝，或配额用尽，而免费层是最先撞上的。"
+    "message": "连不上 Gemini，而浏览器从来不会被告知原因。多半是密钥的问题：没填、被拒，或者超出额度——免费方案总是先到顶。"
   },
   "closeReasonCode": { "message": "Gemini 关闭了连接（代码 {1}）。" },
   "closeBeforeReady": { "message": "会话在就绪前就被关闭了。" },
   "hintKeyAccepted": {
-    "message": "密钥本身刚刚已被 API 接受，所以问题出在 Live API 或网络上，而不是密钥。"
+    "message": "密钥本身刚才还是好用的，所以问题出在 Gemini 或你的网络，而不是密钥。"
   },
   "loopGaveUp": {
-    "message": "{1} 连续尝试 {2} 次后，Interpretab 不再重试。请在选项页面核对你的 API 密钥，并在 Google AI Studio 查看配额——免费层对 Live 模型的限额很低。按 Start 可以再试一次。"
+    "message": "{1} 连续 {2} 次失败后，Interpretab 不再重试。请到选项页检查密钥，并在 Google AI Studio 看看还剩多少额度——免费方案给的不多。想再试就按 Start。"
   },
   "loopDropping": { "message": "与 Gemini 的连接总是断开。" },
 
-  "glossaryBadLine": { "message": "第 {1} 行必须是 'source,target'（第 3 列可选）。" },
-  "glossaryMissingField": { "message": "第 {1} 行缺少 source 或 target。" },
+  "glossaryBadLine": { "message": "第 {1} 行应该是：词、该怎么念，以及（如果需要）该怎么写。" },
+  "glossaryMissingField": { "message": "第 {1} 行缺少词或它的读法。" },
   "glossaryTooMany": { "message": "词条过多（最多 {1} 条）。" }
 }

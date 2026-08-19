@@ -97,7 +97,7 @@ test("a rejected key and an exhausted quota stop the run and say which it was", 
   };
   const out = await preflight("k", { fetchImpl: stub(reply(429, spent)).fetchImpl });
   assert.equal(out.fatal, true);
-  assert.match(out.detail, /out of quota/);
+  assert.match(out.detail, /used up what Google allows/);
   assert.doesNotMatch(out.detail, /Options page/, "the key is not the thing to go and check");
 
   const denied = {
@@ -105,7 +105,7 @@ test("a rejected key and an exhausted quota stop the run and say which it was", 
   };
   const no = await preflight("k", { fetchImpl: stub(reply(403, denied)).fetchImpl });
   assert.equal(no.fatal, true);
-  assert.match(no.detail, /restrictions/);
+  assert.match(no.detail, /restricted the key/);
 });
 
 test("no answer is not a verdict, and never refuses a run", async () => {
