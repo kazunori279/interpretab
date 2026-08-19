@@ -1194,7 +1194,7 @@ that was sitting in `store/` still said "source auto-detected" and "Original vol
 speaking", and showed an Options page from before it grew its two groups. A screenshot that has to
 be re-taken by hand is a screenshot that is out of date, so this takes all three from the same
 throwaway profile the onboarding walk uses. It needs no key either — the one it shows is the
-obvious fake `AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000`, written into a profile that is deleted on
+obvious fake `NOT-A-REAL-KEY-only-a-placeholder-00000`, written into a profile that is deleted on
 the way out.
 
 The composition is `tests/store-frame.html`, a 1280×800 extension page with one iframe on it. A

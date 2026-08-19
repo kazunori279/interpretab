@@ -153,7 +153,7 @@ and a screenshot of it is neither the right shape nor legible once the store sca
 were taken by hand until the plain-language rewrite aged all three at once, which is the argument
 for the script — re-take them after any wording change rather than noticing later that the store
 is showing sentences the extension no longer says. The key in 5 is the obvious fake
-`AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000`, seeded into a profile that is deleted on the way out.
+`NOT-A-REAL-KEY-only-a-placeholder-00000`, seeded into a profile that is deleted on the way out.
 `tests/assets.test.js` checks the dimensions of everything in here.
 
 The two `spare-*.png` are from the original manual sitting and have not been re-taken, so they show

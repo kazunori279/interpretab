@@ -18,7 +18,7 @@
  * so those stay manual and are not touched here.
  *
  * It costs nothing and needs no key. The key it shows is the obvious fake
- * `AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000`, written into a profile that is
+ * `NOT-A-REAL-KEY-only-a-placeholder-00000`, written into a profile that is
  * deleted on the way out, and nothing here opens a socket to the Live API.
  *
  * Composition is `tests/store-frame.html`: a 1280×800 extension page with one
@@ -42,11 +42,18 @@ const keepOpen = process.argv.includes("--keep");
 const FRAME = { width: 1280, height: 800 };
 
 /**
- * An obvious fake, in the shape Google used to issue and long enough to clear
- * the "too short to be a secret" check, so the page shows the saved state
- * rather than a warning. The store's own rules forbid a real one in frame.
+ * An obvious fake, long enough to clear the "too short to be a secret" check so
+ * that the page shows the saved state rather than a warning. The store's own
+ * rules forbid a real one in frame.
+ *
+ * It says what it is rather than wearing the `AIza…` prefix. A string in that
+ * shape is what a secret scanner looks for, and GitHub duly reported this file
+ * as a leaked Google API key — an alert that costs someone a look at the source
+ * to dismiss, every time. Shot 5 reveals the field to show the saved state, so
+ * this is also the sentence a reviewer reads in the frame, which is a better
+ * answer to the store's "no real key" rule than a plausible-looking fake.
  */
-const FAKE_KEY = "AIzaSyA-EXAMPLE-KEY-not-a-real-one-0000";
+const FAKE_KEY = "NOT-A-REAL-KEY-only-a-placeholder-00000";
 
 /**
  * Both directions on, the microphone in conversation mode: the only
