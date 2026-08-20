@@ -112,14 +112,25 @@ is showing sentences the extension no longer says. The key in 5 is the obvious f
 The two `spare-*.png` are from the original manual sitting and have not been re-taken, so they show
 the pre-rewrite wording. Neither is uploaded; promoting one into the set means shooting it again.
 
-## Promotional tile — 440×280
+## Promotional tiles — 440×280 and 1400×560
 
-Required for any chance at featuring. No screenshot content — it renders too small. `promo-440x280.png`
-is the icon plus the name and "Live speech translation, spoken and subtitled.", and comes out of
-`store/icon-source.html` along with the four extension icons, so the wording is one edit away if
-"Hear any tab in your language" turns out to sell it better. It is stored without an alpha
-channel: the upload form asks for 24-bit PNG, and the canvas export was RGBA over an opaque
-background, which is the same picture with a channel nobody needs.
+Required for any chance at featuring, and the marquee is the one the carousel actually shows.
+No screenshot content in either — a screenshot is illegible at 440 wide and no better stretched
+to 1400. Both are the icon plus the name and "Live speech translation, spoken and subtitled.",
+and both come out of `store/icon-source.html` along with the four extension icons, so the wording
+is one edit away if "Hear any tab in your language" turns out to sell it better.
+
+The marquee is indigo edge to edge with the words in white, and it took two tries to get there.
+The first drew the same lockup as the small tile on a white-to-pale-indigo wash, which is legible
+on its own and invisible in place: the carousel sits on the store's own white, so a near-white
+tile has no edges and reads as a gap in the page. Filling the frame with the brand colour is the
+whole fix. The mark changes with the background — the icon is an indigo plate, and a plate on an
+indigo field is a hole, so the marquee knocks the speech bubble out in white and drops the plate.
+
+Neither is stored with an alpha channel: the upload form asks for 24-bit PNG, and the canvas
+export is RGBA over an opaque background, which is the same picture with a channel nobody needs.
+`tests/assets.test.js` checks both the dimensions and the colour type, since the form rejects a
+wrong one only after the rest of the listing has been filled in.
 
 ## Promotional video
 

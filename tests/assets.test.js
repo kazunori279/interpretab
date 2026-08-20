@@ -510,6 +510,14 @@ test("the store artwork is the size the store demands", () => {
     assert.deepEqual(pngSize(path.join(dir, shot)), [1280, 800], `${shot} is the wrong size`);
   }
   assert.deepEqual(pngSize(path.join(dir, "promo-440x280.png")), [440, 280]);
+  assert.deepEqual(pngSize(path.join(dir, "promo-1400x560.png")), [1400, 560]);
+  // Both tiles come off a canvas, which exports RGBA, and the form asks for a
+  // 24-bit PNG. Colour type lives in the byte after the bit depth: 4 and 6 are
+  // the two that carry alpha.
+  for (const tile of ["promo-440x280.png", "promo-1400x560.png"]) {
+    const type = fs.readFileSync(path.join(dir, tile))[25];
+    assert.ok(type !== 4 && type !== 6, `${tile} still has an alpha channel`);
+  }
   // The guide pages' lead image is a frame lifted out of the promo video rather
   // than one of the five, so it lives with the site and not here. Checked to the
   // same size all the same: it can be promoted into the upload set by moving it

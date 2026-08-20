@@ -107,6 +107,79 @@ function promo() {
   return c;
 }
 
+/**
+ * The mark for the marquee: the icon's bubble on its own, knocked out in white.
+ * The icon is an indigo plate, and on an indigo field a plate is a hole — so
+ * the plate goes and the bubble carries the identity by itself. The path lives
+ * in the 128-unit square at x 14..114, y 20..108; `h` is the height of that
+ * box, and the width it takes is returned so the caller can lay text beside it.
+ */
+function bubbleMark(ctx, h) {
+  const k = h / 88;
+  ctx.save();
+  ctx.scale(k, k);
+  ctx.translate(-14, -20);
+  ctx.fillStyle = FG;
+  ctx.fill(new Path2D(BUBBLE));
+  ctx.fillStyle = BG;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = KANA.replace("%SIZE%", 62);
+  ctx.fillText("あ", 64, 55);
+  ctx.restore();
+  return 100 * k;
+}
+
+/**
+ * The store's marquee tile. Same lockup as the small one, drawn large: the
+ * carousel it appears in gives it most of the width of the page, and a tile
+ * that is only a screenshot shrunk down is unreadable there. Indigo edge to
+ * edge, because the carousel sits on the store's own white and the first
+ * version — the lockup on a near-white wash — dissolved into the page around
+ * it. The gradient is barely there on purpose; it stops 1400×560 of one colour
+ * reading as a rendering failure without turning into decoration.
+ */
+function marquee() {
+  const c = document.createElement("canvas");
+  c.width = 1400;
+  c.height = 560;
+  const ctx = c.getContext("2d");
+  const field = ctx.createLinearGradient(0, 0, 1400, 560);
+  field.addColorStop(0, "#4A5CC5");
+  field.addColorStop(1, "#33409A");
+  ctx.fillStyle = field;
+  ctx.fillRect(0, 0, 1400, 560);
+
+  const NAME = '600 104px "Google Sans", system-ui, sans-serif';
+  const TAG = '400 40px "Google Sans", system-ui, sans-serif';
+  const MARK = 240; // the bubble's height, not a 128-square
+  const GAP = 64;
+
+  // Centre the mark and the words as one block, whatever the words measure.
+  ctx.font = NAME;
+  const nameW = ctx.measureText("Interpretab").width;
+  ctx.font = TAG;
+  const tagW = ctx.measureText("Live speech translation, spoken and subtitled.").width;
+  const markW = (100 / 88) * MARK;
+  const left = (1400 - (markW + GAP + Math.max(nameW, tagW))) / 2;
+
+  ctx.save();
+  ctx.translate(left, (560 - MARK) / 2);
+  bubbleMark(ctx, MARK);
+  ctx.restore();
+
+  const x = left + markW + GAP;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = FG;
+  ctx.font = NAME;
+  ctx.fillText("Interpretab", x, 278);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.82)";
+  ctx.font = TAG;
+  ctx.fillText("Live speech translation, spoken and subtitled.", x, 342);
+  return c;
+}
+
 const files = new Map();
 const preview = document.getElementById("preview");
 for (const [size, withBubble] of [[128, true], [48, true], [32, false], [16, false]]) {
@@ -115,6 +188,7 @@ for (const [size, withBubble] of [[128, true], [48, true], [32, false], [16, fal
   preview.appendChild(c);
 }
 files.set("promo-440x280.png", promo());
+files.set("promo-1400x560.png", marquee());
 
 // The toolbar is the hard case: 16 px against both themes.
 for (const cls of ["light", "dark"]) {
@@ -126,6 +200,10 @@ for (const cls of ["light", "dark"]) {
 }
 preview.appendChild(document.createElement("br"));
 preview.appendChild(files.get("promo-440x280.png"));
+preview.appendChild(document.createElement("br"));
+const wide = files.get("promo-1400x560.png");
+wide.style.width = "700px"; // half size, so the page still fits a laptop screen
+preview.appendChild(wide);
 
 document.getElementById("download").addEventListener("click", () => {
   for (const [name, canvas] of files) {
