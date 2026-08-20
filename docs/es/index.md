@@ -45,7 +45,7 @@ idiomas en tiempo real — hablado en voz alta y subtitulado en la página.**
 
 [![Interpretab traduciendo una charla en japonés al inglés: subtítulos en inglés sobre el vídeo y la transcripción en el panel lateral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Verlo funcionar (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Verlo funcionar (2:02)</a></p>
 
 ## Cómo funciona Interpretab, y la privacidad
 

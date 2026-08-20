@@ -40,7 +40,7 @@ description: 一款 Chrome 扩展，把浏览器正在播放的声音和你说�
 
 [![Interpretab 正把一场日语演讲译成英语：视频上是英文字幕，侧边栏是文字记录](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ 观看实际运行（2:45）</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ 观看实际运行（2:02）</a></p>
 
 ## Interpretab 的工作方式与隐私
 

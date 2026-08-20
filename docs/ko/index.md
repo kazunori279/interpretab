@@ -40,7 +40,7 @@ description: 브라우저가 재생하는 소리와 당신이 하는 말을 70�
 
 [![일본어 강연을 영어로 번역 중인 Interpretab: 영상 위에 영어 자막, 사이드 패널에 전사 내용](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ 동작 영상 보기 (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ 동작 영상 보기 (2:02)</a></p>
 
 ## Interpretab의 작동 방식과 개인정보
 

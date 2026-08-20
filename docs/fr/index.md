@@ -45,7 +45,7 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
 
 [![Interpretab traduisant une conférence en japonais vers l'anglais : sous-titres anglais sur la vidéo et la transcription dans le panneau latéral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Le voir tourner (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Le voir tourner (2:02)</a></p>
 
 ## Comment fonctionne Interpretab, et la confidentialité
 

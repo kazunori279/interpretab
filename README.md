@@ -1448,8 +1448,9 @@ conferencing outright.
 
 1.0.2 carries [#9](https://github.com/kazunori279/interpretab/issues/9) — the microphone's
 translated voice into a Meet call with no virtual audio device to install — out from behind its
-flag and into the side panel, and replaces the marquee tile. Both in one review, because a package
-and a listing submitted separately are two reviews and the second waits on the first.
+flag and into the side panel, and replaces the marquee tile and the promotional video. All of it
+in one review, because a package and a listing submitted separately are two reviews and the second
+waits on the first. Submitted 2026-08-20 with auto-publish on approval.
 [The translated microphone](#the-translated-microphone) has what the calls measured; the short
 version is that it works, at about three seconds mouth to far-ear, and that a second of that was
 Meet's Studio Sound.

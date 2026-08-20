@@ -45,7 +45,7 @@ languages in real time — spoken out loud and subtitled on the page.**
 
 [![Interpretab translating a Japanese talk into English: English subtitles on the video and the transcript in the side panel](assets/hero-tab-ja-en.png)](assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Watch it run (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Watch it run (2:02)</a></p>
 
 ## How Interpretab works, and privacy
 

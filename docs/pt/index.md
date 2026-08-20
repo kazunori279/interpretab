@@ -45,7 +45,7 @@ mais de 70 idiomas em tempo real — falado em voz alta e legendado na página.*
 
 [![Interpretab traduzindo uma palestra em japonês para o inglês: legendas em inglês no vídeo e a transcrição no painel lateral](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ Veja funcionando (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Veja funcionando (2:02)</a></p>
 
 ## Como o Interpretab funciona, e a privacidade
 

@@ -45,7 +45,7 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
 
 [![Interpretab übersetzt einen japanischen Vortrag ins Englische: englische Untertitel auf dem Video und das Transkript im Seitenbereich](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ In Aktion ansehen (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ In Aktion ansehen (2:02)</a></p>
 
 ## Wie Interpretab arbeitet, und der Datenschutz
 

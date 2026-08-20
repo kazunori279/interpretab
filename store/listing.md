@@ -137,20 +137,36 @@ wrong one only after the rest of the listing has been filled in.
 The dashboard's 全言語向けプロモーション動画 field, one YouTube URL, optional:
 
 ```
-https://www.youtube.com/watch?v=jiY8WJgeKCA
+https://www.youtube.com/watch?v=3TJnSBS3bkE
 ```
 
-2:45, **unlisted** — a link the store can embed, but not something that shows up on the channel.
-It is a screen recording of a real session rather than a montage: tab audio being interpreted with
-subtitles on the page, then the microphone direction, then the glossary and the options page. Cut
-from six clips shot in one sitting, concatenated and re-encoded CFR 30 (the concat demuxer's
-`-c copy` path produced non-monotonic DTS at the splices), then levelled — the recorded voice sat
-about 20 dB under the translated one, which `dynaudnorm` plus an RMS-detected `agate` and a
-two-pass `loudnorm` to -16 LUFS fixed. Re-cut from the untouched concatenation each time rather
-than from the previous render, so the edits never stack encoder generations.
+2:02, **public**. It is a screen recording of a real session rather than a montage: tab audio being
+interpreted with subtitles on the page, then the microphone direction, then the two-way
+conversation mode, closing on what a session costs. Cut from six clips shot in one sitting,
+concatenated and re-encoded CFR 30 (the concat demuxer's `-c copy` path produced non-monotonic DTS
+at the splices). Re-cut from the untouched concatenation each time rather than from the previous
+render, so the edits never stack encoder generations.
 
-Nothing in frame is a real API key: the options page shows the field masked throughout, and the
-AI Studio sequence stops at the "Create a new key" dialog.
+The narration is not the recorded voice: it is Cloud Text-to-Speech (`en-US-Chirp3-HD-Puck`),
+mixed over a bed with only the presenter's windows muted, so every second of the product working —
+the tab's own audio, the translated voice, the demo spoken into the microphone — is the take as
+recorded. Chirp3-HD ignores `speakingRate`, so a line that overruns its window is fitted with
+`atempo` instead. Levelled by matching the synthetic voice's RMS to the presenter's over the
+narration windows alone, then a two-pass `loudnorm` to -16 LUFS with a limiter at -1.5 dBTP.
+
+Two things in it were never recorded. The opening shot is the English user guide composited over
+the real browser chrome, with the tab title, favicon and URL patched to match; the closing shot is
+the store listing, added the same way. Both patches are rendered by headless Chrome on transparency
+and composited in ffmpeg rather than in the page, because Chrome colour-manages an image it loads
+and the frame comes out a shade off the video it has to sit in.
+
+The pace is machine-cut: `silencedetect` and per-frame `scdet` are intersected to find the stretches
+where nothing is said and nothing moves, and each is trimmed to a 0.3 s beat (0.4 s across a scene
+change, 0.8 s before the end). That took 14 s out of 135.
+
+Nothing in frame is a real API key. The walkthrough of making one is not in this cut at all — the
+guide covers it better than a video can, and it is the one stretch a viewer deciding whether to
+install does not need — so the pricing shot carries the prerequisite in a line instead.
 
 ---
 

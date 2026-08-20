@@ -40,7 +40,7 @@ description: एक Chrome एक्सटेंशन जो आपके ब�
 
 [![Interpretab एक जापानी टॉक का अंग्रेज़ी में अनुवाद करते हुए: वीडियो पर अंग्रेज़ी सबटाइटल और साइड पैनल में ट्रांसक्रिप्ट](../assets/hero-tab-ja-en.png)](../assets/hero-tab-ja-en.png)
 
-<p><a href="https://www.youtube.com/watch?v=jiY8WJgeKCA">▶ चलते हुए देखें (2:45)</a></p>
+<p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ चलते हुए देखें (2:02)</a></p>
 
 ## Interpretab कैसे काम करता है, और निजता
 
