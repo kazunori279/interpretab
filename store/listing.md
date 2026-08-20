@@ -33,90 +33,31 @@ trackers, to-do lists, calendars and document editors; the half of the old Socia
 bucket a meeting tool belongs in is Communication. (Secondary consideration: Accessibility, which
 fits the one-way listening case but not the two-way one.)
 
-## Language
+## Languages
 
-English, and English only until an internationalized package is published. The dashboard's 言語
-field is single-select and links to the `chrome.i18n` docs for a reason: per-locale titles,
-summaries, descriptions and screenshots come from the package's `_locales/`, not from anything you
-can type here. The repository ships all ten (`ar de en es fr hi ja ko pt_BR zh_CN`) behind
-`default_locale`, but the uploaded ZIP predates them, so the store has no locale data to offer and
-serves the English text to every visitor. Uploading a package with `_locales/` is what makes the
-locale selector appear at the top of this page.
+Ten: `en` (default), `ar de es fr hi ja ko pt_BR zh_CN`.
+
+The dashboard's 言語 field is single-select and links to the `chrome.i18n` docs for a reason —
+per-locale listings are a property of the *package*, not of anything you can type into the form.
+Ship `_locales/<code>/messages.json` with `default_locale` and `__MSG_*__` in the manifest, and a
+locale selector appears at the top of 商品の詳細; until you do, the store has no locale data and
+serves English to everyone. 1.0.0 was published before the `_locales` work landed, which is why
+the listing was English-only for its first days.
+
+Title and summary come from the package on every locale, so they are fixed by `_locales`. The
+description is a dashboard field per locale, and it starts as a copy of the English one — filling
+it is a separate step from uploading the package. The small tile and the marquee tile cannot be
+localized at all, and the screenshots here are attached as 全言語向け (all-languages) rather than
+per-locale, so one set covers every language.
 
 ---
 
 ## Detailed description (16,000 chars max)
 
-```
-Interpretab translates what your browser is playing — a video, a webinar, a conference stream, the remote side of a Meet call — into your language, out loud and on the page, as it happens.
-
-It is not a captioning tool bolted onto a player, and not a dubbing tool that hides the words. It gives you both, and it goes both ways.
-
-▍ SUBTITLES ON THE PAGE, NOT JUST A VOICE
-
-The translation is spoken over the video AND written on it — bottom-centre, three lines rolling, following the video into fullscreen. Read the terms you didn't catch, hear the rest. Each direction has its own subtitle switch, so you can subtitle the video without subtitling yourself, and toggle either mid-session without dropping the connection.
-
-▍ BOTH DIRECTIONS, AT THE SAME TIME
-
-Tab audio into your language, and your microphone into theirs. Speak English, be heard in Japanese by the people in the room with you; hear their Japanese back in English. The two run as independent sessions, so either can be switched off. In Two-way conversation mode the microphone is muted while its own translation plays, so the interpreter never interprets itself; Simultaneous mode answers while you are still talking — that is what makes it simultaneous — so wear headphones.
-
-▍ MEET, ZOOM AND TEAMS
-
-Turn both directions on and point them opposite ways: the meeting tab interpreted into your language with subtitles, your microphone interpreted into theirs. Hearing the remote side works immediately. Being heard by them needs a virtual audio device (see WHAT IT CANNOT DO), which Interpretab plays your translated voice into while the remote side's translation stays on your speakers.
-
-▍ ONE MICROPHONE, TWO PEOPLE
-
-The microphone has a second mode. Set English ⇄ Japanese, put the laptop between you, and Interpretab interprets whichever of the two it hears into the other — no button to press, no switching sides. A desk, a counter, a hotel front desk, a taxi. Simultaneous mode, the default, interprets you alone and doesn't wait for you to finish a sentence.
-
-▍ A GLOSSARY THAT GETS YOUR TERMS RIGHT
-
-Product names, people's names and jargon are exactly what a general model mangles, and mangling them is what makes a translation feel unreliable. Upload a CSV and Interpretab is told how to pronounce each term — with a separate column for how it should be spelled in the subtitles, so forcing a pronunciation doesn't force phonetic spelling on your readers.
-
-▍ THE ORIGINAL DUCKS, IT DOESN'T DISAPPEAR
-
-Interpretab plays the tab's own audio back to you and lowers it while the translated voice is speaking, then brings it straight back. Speech-activated, not constant, so a film's score isn't held down through every silence. The level is a slider.
-
-▍ NO SERVER. YOUR KEY. YOUR AUDIO.
-
-Interpretab connects directly to Google's Gemini Live API using an API key you supply. There is no middleman service, because there is no service at all: the developer runs nothing, sees nothing, and stores nothing. Your audio goes from your browser to Google and nowhere else, and the extension is allowed to reach exactly one host — no other destination is even possible.
-
-Get a free key at aistudio.google.com/apikey and paste it into Options.
-
-▍ LANGUAGES
-
-Tab audio: source auto-detected — a tab plays whoever it plays, and a video that cuts to a second speaker shouldn't need you to change a setting. 78 target languages.
-
-Microphone: in Simultaneous mode, the source is detected too and you choose from the same 78 targets. In Two-way conversation mode you name both languages of the pair, from 97. 30 voices to pick from, either way.
-
-▍ HOW TO USE IT
-
-1. Paste your Gemini API key into Options.
-2. Open the page you want translated and click the Interpretab toolbar icon ON THAT TAB. The click is what grants access to it.
-3. Choose your languages in the side panel and press Start.
-
-Closing the side panel does not stop the translation.
-
-▍ WHAT IT CANNOT DO
-
-Honest limits, up front:
-
-• The translation of YOUR voice reaches a Meet or Zoom microphone only through a virtual audio device (BlackHole, VB-Cable) — no extension can register itself as a microphone. Options → Audio output plays it into one; installing the device and selecting it in the meeting is still on you.
-• Running both directions on speakers invites an echo loop. Use headphones. In Two-way conversation mode, where speaking out loud is the point, keep the microphone away from the speakers instead.
-• The glossary applies to the microphone's Two-way conversation mode only. Everything else uses Google's simultaneous-translation model, which accepts no glossary.
-• Two directions means two concurrent Gemini sessions, so roughly double the API usage on your key.
-• Chrome does not allow extensions to draw on its own pages, the Web Store, or PDFs, so subtitles won't appear there. The audio and the side-panel transcript still work.
-
-▍ COST
-
-Interpretab is free and open source. Gemini API usage is billed to your own Google account, at Google's rates; the free tier is enough to try it properly. Treat the key like a password: don't share it, and if it ever gets out, delete it at aistudio.google.com/apikey and paste a new one into Options.
-
-▍ OPEN SOURCE
-
-Source, privacy policy and issue tracker: https://github.com/kazunori279/interpretab
-Apache 2.0.
-
-Requires Chrome 116 or newer.
-```
+One file per locale in [`descriptions/`](descriptions/), named for the `_locales` code:
+`en.txt` is the copy the other nine are translated from, and each is pasted verbatim into that
+locale's 説明 field. Keep them in step — a change to `en.txt` that isn't carried across leaves nine
+listings describing an older extension.
 
 ---
 

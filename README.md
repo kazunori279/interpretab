@@ -1421,18 +1421,18 @@ and [the conversation model](#soak-results--1-hour-microphone-the-conversation-m
 and [registration and submission](https://github.com/kazunori279/interpretab/issues/5).
 
 `store/listing.md` and `store/justifications.md` hold the copy that was pasted into the dashboard
-and the answers to its permission questions. They are the source for the *next* version rather
-than a record of the last one, so the two can drift: the API-key advice in `listing.md` has been
-corrected here and not on the dashboard, which is the sort of thing that only goes in with an
-update.
+and the answers to its permission questions, with the descriptions themselves one file per locale
+in `store/descriptions/`. They are the source for the *next* version rather than a record of the
+last one, so the two can drift; `en.txt` and the dashboard were last checked byte-for-byte
+identical when 1.0.1 went in.
 
-Left for the day it goes live: the install instructions, which tell the reader to download a ZIP
-and load it unpacked, and which are now on ten pages rather than two; the dashboard's homepage
-URL, which still points at this repo rather than at
-[the user guide](https://kazunori279.github.io/interpretab/)
-([#11](https://github.com/kazunori279/interpretab/issues/11)); and the detailed description,
-which needs that API-key correction. The listing's own text is localised in the dashboard and not
-from `_locales`, so the ten catalogues here buy nothing there.
+1.0.0 shipped before the `_locales` work landed, and a listing is localised from the package: no
+`_locales` in the ZIP, no locale selector on the dashboard, English served to everyone whatever
+`hl=` says. 1.0.1 is the fix — the same ten catalogues the extension already used, so the title
+and summary now arrive in the reader's language, and a translated 説明 typed into each of the ten.
+That went in together with the category, which was Workflow & Planning on the reasoning that the
+old Productivity bucket split that way, and is now Communication, whose definition names video
+conferencing outright.
 
 Beyond the listing, [#9](https://github.com/kazunori279/interpretab/issues/9) is the interesting
 one: getting the microphone's translated voice into a call without asking the user to install a

@@ -1,0 +1,68 @@
+Interpretab traduit ce que votre navigateur est en train de lire — une vidéo, un webinaire, la diffusion d'une conférence, l'autre bout d'un appel Meet — dans votre langue, à voix haute et sur la page elle-même, au fil de l'écoute.
+
+Ce n'est pas un outil de sous-titrage greffé sur un lecteur, ni un doublage qui recouvre les mots. Il vous donne les deux, et il fonctionne dans les deux sens.
+
+▍ DES SOUS-TITRES SUR LA PAGE, PAS SEULEMENT UNE VOIX
+
+La traduction est prononcée par-dessus la vidéo ET écrite dessus : en bas au centre, trois lignes qui défilent, et elle suit la vidéo en plein écran. Lisez les termes que vous n'avez pas saisis, écoutez le reste. Chaque sens a son propre interrupteur de sous-titres : vous pouvez sous-titrer la vidéo sans vous sous-titrer vous-même, et basculer l'un ou l'autre en pleine session sans couper la connexion.
+
+▍ LES DEUX SENS, EN MÊME TEMPS
+
+L'audio de l'onglet vers votre langue, et votre micro vers la leur. Parlez français et faites-vous entendre en japonais par les personnes présentes avec vous ; entendez leur japonais revenir en français. Les deux tournent comme des sessions indépendantes, donc l'un ou l'autre peut être coupé. En mode conversation bidirectionnelle, le micro est coupé pendant que sa propre traduction est lue, si bien que l'interprète ne s'interprète jamais lui-même ; le mode simultané répond pendant que vous parlez encore — c'est justement ce qui le rend simultané — alors mettez un casque.
+
+▍ MEET, ZOOM ET TEAMS
+
+Activez les deux sens et orientez-les à l'opposé : l'onglet de la réunion interprété dans votre langue avec sous-titres, votre micro interprété dans la leur. Entendre l'autre partie fonctionne tout de suite. Être entendu par elle demande un périphérique audio virtuel (voir CE QU'IL NE PEUT PAS FAIRE), dans lequel Interpretab envoie votre voix traduite pendant que la traduction de l'autre partie reste sur vos haut-parleurs.
+
+▍ UN MICRO, DEUX PERSONNES
+
+Le micro a un second mode. Réglez français ⇄ japonais, posez l'ordinateur entre vous deux, et Interpretab interprète vers l'autre langue celle des deux qu'il entend — aucun bouton à presser, aucun côté à changer. Un bureau, un comptoir, la réception d'un hôtel, un taxi. Le mode simultané, celui par défaut, vous interprète vous seul et n'attend pas la fin de votre phrase.
+
+▍ UN GLOSSAIRE QUI RESPECTE VOS TERMES
+
+Les noms de produits, les noms de personnes et le jargon sont exactement ce qu'un modèle généraliste écorche, et les écorcher est ce qui rend une traduction peu fiable. Importez un CSV et Interpretab se voit indiquer comment prononcer chaque terme — avec une colonne distincte pour son orthographe dans les sous-titres, de sorte qu'imposer une prononciation n'impose pas une graphie phonétique à vos lecteurs.
+
+▍ L'ORIGINAL BAISSE, IL NE DISPARAÎT PAS
+
+Interpretab vous restitue le son propre de l'onglet et le baisse pendant que la voix traduite parle, puis le remonte aussitôt. Le déclenchement se fait à la voix, pas en continu : la musique d'un film n'est donc pas étouffée pendant chaque silence. Le niveau se règle au curseur.
+
+▍ AUCUN SERVEUR. VOTRE CLÉ. VOTRE AUDIO.
+
+Interpretab se connecte directement à l'API Gemini Live de Google avec une clé d'API que vous fournissez. Il n'y a pas de service intermédiaire, parce qu'il n'y a aucun service du tout : le développeur n'exécute rien, ne voit rien et ne stocke rien. Votre audio va de votre navigateur à Google et nulle part ailleurs, et l'extension a le droit d'atteindre exactement un hôte — aucune autre destination n'est même possible.
+
+Obtenez une clé gratuite sur aistudio.google.com/apikey et collez-la dans les Options.
+
+▍ LANGUES
+
+Audio de l'onglet : la langue source est détectée automatiquement — un onglet joue ce qu'il joue, et une vidéo qui passe à un deuxième intervenant ne devrait pas vous obliger à changer un réglage. 78 langues cibles.
+
+Micro : en mode simultané, la source est détectée elle aussi et vous choisissez parmi les mêmes 78 cibles. En mode conversation bidirectionnelle, vous nommez les deux langues de la paire, parmi 97. 30 voix au choix, dans les deux cas.
+
+▍ COMMENT L'UTILISER
+
+1. Collez votre clé d'API Gemini dans les Options.
+2. Ouvrez la page à traduire et cliquez sur l'icône Interpretab de la barre d'outils DEPUIS CET ONGLET. C'est ce clic qui en accorde l'accès.
+3. Choisissez vos langues dans le panneau latéral et appuyez sur Start.
+
+Fermer le panneau latéral n'arrête pas la traduction.
+
+▍ CE QU'IL NE PEUT PAS FAIRE
+
+Les limites, annoncées d'emblée :
+
+• La traduction de VOTRE voix n'atteint le micro de Meet ou de Zoom qu'à travers un périphérique audio virtuel (BlackHole, VB-Cable) — aucune extension ne peut s'enregistrer comme microphone. Options → Sortie audio l'y envoie ; installer le périphérique et le sélectionner dans la réunion reste à votre charge.
+• Faire tourner les deux sens sur les haut-parleurs invite une boucle d'écho. Utilisez un casque. En mode conversation bidirectionnelle, où parler à voix haute est justement le but, éloignez plutôt le micro des haut-parleurs.
+• Le glossaire ne s'applique qu'au mode conversation bidirectionnelle du micro. Tout le reste utilise le modèle de traduction simultanée de Google, qui n'accepte aucun glossaire.
+• Deux sens, cela veut dire deux sessions Gemini simultanées, donc environ le double d'utilisation de l'API sur votre clé.
+• Chrome n'autorise pas les extensions à dessiner sur ses propres pages, sur le Chrome Web Store ni sur les PDF : les sous-titres n'y apparaîtront pas. L'audio et la transcription du panneau latéral fonctionnent toujours.
+
+▍ COÛT
+
+Interpretab est gratuit et open source. L'utilisation de l'API Gemini est facturée à votre propre compte Google, aux tarifs de Google ; le palier gratuit suffit pour l'essayer sérieusement. Traitez la clé comme un mot de passe : ne la partagez pas et, si elle fuite un jour, supprimez-la sur aistudio.google.com/apikey et collez-en une nouvelle dans les Options.
+
+▍ OPEN SOURCE
+
+Code source, politique de confidentialité et suivi des problèmes : https://github.com/kazunori279/interpretab
+Apache 2.0.
+
+Nécessite Chrome 116 ou une version plus récente.
