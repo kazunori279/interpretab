@@ -1503,6 +1503,13 @@ waits on the first. Submitted 2026-08-20 with auto-publish on approval.
 version is that it works, at about three seconds mouth to far-ear, and that a second of that was
 Meet's Studio Sound.
 
+1.0.3 is two things nobody would notice until the day they mattered. A run whose quota runs out
+mid-sentence now stops and says so, rather than reconnecting ten times and blaming the network —
+[Session expiry](#session-expiry) has what the server actually does, which took an override on the
+project's per-minute limit to find out. And the panel's Meet note no longer spends a clause
+explaining Studio Sound. Not submitted: 1.0.2 is still in review, and a package uploaded over one
+under review replaces it rather than queueing behind it.
+
 A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
 temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,
 so anything that dumps a handshake URL leaks it.
