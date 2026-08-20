@@ -778,6 +778,33 @@ bare 1006 with an empty reason. `closeReason()` used to name the key alone, whic
 quota had run out to check the one thing that was fine. It now names both, and the give-up message
 adds where each is checked: the Options page for the key, AI Studio for the quota.
 
+**A quota that runs out mid-session does not look like that at all**, which took a measurement to
+find out. Everything above is about a close *before* the session is ready; the other case — a run
+that is working and then is not — was reasoned about and never observed, so the branch handling it
+was a guess. `tests/quota-close.mjs` removes the guess by moving the limit instead of the usage:
+for the Live models the free tier's only enforced lever is
+`generate_content_free_tier_input_token_count` at `1/min/{project}/{model}` (every
+requests-per-minute and requests-per-day bucket for every `*-live` model reads -1), so a consumer
+quota override down to a hundred tokens makes one session cross it in six seconds. What the server
+does is close with **1011**, `wasClean` true, a tenth of a second after the last frame, carrying
+
+> You exceeded your current quota, please check your plan and billing details. For more information
+> on this error, head to: h
+
+— 123 bytes, which is the whole of what a close frame allows, so it stops mid-URL. Three things
+follow. The sentence exists, and `LiveSession` was throwing it away: a close after `setupComplete`
+reported the code alone, and 1011 on its own is the generic server-side failure and says nothing.
+The match has to be on the front of the string, because the end is the part that gets cut. And the
+handshake succeeds *either way* — a session opened with the quota already spent still gets
+`setupComplete`, then the same 1011 eight hundred milliseconds later — so this never arrives as a
+failed `open()`, and ten retries would all connect and all die, telling the user after two minutes
+that the connection "keeps dropping". The loop now stops on the first one and shows what `preflight`
+shows for the same limit hit at Start.
+
+The measurement covers the per-minute token bucket, which is the one an override can reach. Whether
+the daily free-tier bucket closes the same way is still unobserved, which is why the 1006 wording
+still lists a spent quota among its guesses rather than ruling it out.
+
 **Measured against the real server**, twelve minutes of continuous tab audio through
 `tests/live-smoke.mjs`: the warning arrived at 9 min 00 s carrying `"50s"`, the replacement was
 ready 0.3 s later, and the swap fired 49.2 s after the warning — the deadline less the
@@ -1098,8 +1125,8 @@ Anything that asserts about a sentence rather than a key imports `tests/messages
 `lib/i18n.js` to `_locales/en/messages.json` off disk — `chrome.i18n` does not exist in Node, and
 without it every message is its own key.
 
-None of that talks to Google. Two scripts do, and both sit outside `npm test` because they need
-a key and spend quota.
+None of that talks to Google. Three scripts do, and all of them sit outside `npm test` because they
+need a key and spend quota.
 
 **`tests/live-smoke.mjs` — does the wire format work?**
 
@@ -1156,6 +1183,27 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
+
+**`tests/quota-close.mjs` — what does running out actually look like?**
+
+```bash
+gcloud alpha services quota update \
+  --service=generativelanguage.googleapis.com --consumer=projects/<project> \
+  --metric=generativelanguage.googleapis.com/generate_content_free_tier_input_token_count \
+  --unit='1/min/{project}/{model}' --dimensions=model=gemini-3.5-live-translate \
+  --value=100 --force
+node tests/quota-close.mjs /tmp/key.txt /tmp/ja.wav --direction mic --mic-mode simul
+gcloud alpha services quota delete … --override-id=<from the list output>   # put it back
+```
+
+The one failure mode that cannot be waited for and should not be paid for. Lowering the limit
+costs nothing and takes seconds; exhausting the real one costs a day and can be done once. It
+drives `LiveSession` directly rather than `SessionLoop`, because the loop exists to hide exactly
+the event being measured, and reports the four things the handling turned on: the close code, the
+verbatim `reason`, the frames either side of it, and how long after the last frame it arrived. The
+dimension is the model *family* — there is no `gemini-3.1-flash-live` bucket at all, so
+`gemini-3.1-flash-live-preview` accounts under `gemini-3-flash-live` — and an override on the id
+the extension sends is accepted and does nothing. What it found is above, under the session loop.
 
 **`tests/onboarding.mjs` — does the first run still guide anyone?**
 

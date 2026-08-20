@@ -96,6 +96,11 @@ const settle = () => new Promise((r) => setImmediate(r));
 /** Frames of PCM, distinguishable by their first byte. */
 const frame = (n) => new Int16Array([n, n]).buffer;
 
+/** A real quota close, verbatim — see the copy in `live-session.test.js`. */
+const QUOTA_CLOSE_REASON =
+  "You exceeded your current quota, please check your plan and billing details. " +
+  "For more information on this error, head to: h";
+
 test("every session the loop opens carries the preflight's verdict", async () => {
   // Including the replacements. A loop that runs for an hour opens six of them,
   // and the sixth failing is exactly when a user wants to be told that the key
@@ -280,6 +285,39 @@ test("a socket that closes mid-drain hands over to the waiting replacement", asy
   h.loop.send(frame(9));
   assert.equal(h.sessions[1].bytes, 4);
   h.loop.close();
+});
+
+test("a quota close stops the run instead of retrying ten times", async () => {
+  // The server takes the handshake whether or not there is quota left, so every
+  // retry gets as far as `setupComplete` and dies a second later. Ten of those
+  // is two minutes of the panel saying the connection keeps dropping, about a
+  // limit that is not going to reset inside them.
+  const h = harness();
+  h.loop.start();
+  await settle();
+
+  h.sessions[0].onEvent({ type: "closed", code: 1011, reason: QUOTA_CLOSE_REASON });
+  await settle();
+
+  assert.equal(h.sessions.length, 1, "no retry");
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.match(h.statuses.at(-1).detail, /used up what Google allows/);
+  assert.ok(h.loop._closed);
+});
+
+test("a quota close mid-drain gives up rather than handing over", async () => {
+  // The replacement is on the same key, so it has nothing to swap to.
+  const h = harness();
+  h.loop.start();
+  await settle();
+  h.sessions[0].onEvent({ type: "goAway", timeLeft: 30000 });
+  await settle();
+
+  h.sessions[0].onEvent({ type: "closed", code: 1011, reason: QUOTA_CLOSE_REASON });
+  await settle();
+
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.ok(h.sessions.every((s) => s.closed));
 });
 
 test("a failed connect backs off instead of spinning", async () => {

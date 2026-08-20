@@ -13,7 +13,17 @@ import assert from "node:assert/strict";
 // Real prose behind every message key, so the assertions below can be about it.
 import "./messages.mjs";
 
-import { LiveSession, UPLINK_RATE } from "../lib/live-session.js";
+import { isQuotaClose, LiveSession, UPLINK_RATE } from "../lib/live-session.js";
+
+/**
+ * A real quota close, verbatim, from `tests/quota-close.mjs`. Copied rather
+ * than shortened: the point of it is that the server's sentence is cut off at
+ * the 123 bytes a close frame allows, and a tidied-up copy would let a matcher
+ * pass here that fails against the wire.
+ */
+const QUOTA_CLOSE_REASON =
+  "You exceeded your current quota, please check your plan and billing details. " +
+  "For more information on this error, head to: h";
 
 /** Enough of the WebSocket surface for LiveSession, driven by hand. */
 class FakeWebSocket {
@@ -125,8 +135,30 @@ test("a close after setupComplete is an event, not a rejection", async () => {
   await opening;
 
   h.ws().drop(1011, "");
-  assert.deepEqual(h.events, [{ type: "closed", code: 1011 }]);
+  assert.deepEqual(h.events, [{ type: "closed", code: 1011, reason: "" }]);
   assert.equal(h.live.ready, false);
+});
+
+test("the close carries the server's reason, not just its code", async () => {
+  // The quota close is the reason this exists: 1011 says nothing, and the
+  // sentence beside it is the only thing that names the cause.
+  const h = session();
+  const opening = h.live.open();
+  h.ws().accept();
+  h.ws().deliver({ setupComplete: {} });
+  await opening;
+
+  h.ws().drop(1011, QUOTA_CLOSE_REASON);
+  assert.deepEqual(h.events, [{ type: "closed", code: 1011, reason: QUOTA_CLOSE_REASON }]);
+});
+
+test("a quota close is recognised from what survives the 123-byte limit", () => {
+  // The real one is cut mid-URL, which is why nothing may match on the tail.
+  assert.equal(QUOTA_CLOSE_REASON.length, 123, "the observed reason, at the frame's limit");
+  assert.ok(isQuotaClose(QUOTA_CLOSE_REASON));
+  assert.ok(isQuotaClose("RESOURCE_EXHAUSTED"));
+  assert.ok(!isQuotaClose(""));
+  assert.ok(!isQuotaClose("Deadline exceeded"));
 });
 
 test("close suppresses the closed event so the loop does not reconnect", async () => {
