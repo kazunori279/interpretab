@@ -312,7 +312,10 @@ clé dans chacun. **Utiliser une clé sur vos propres machines est permis.**
   forfait gratuit : voyez ce qu'il vous reste dans
   [AI Studio](https://aistudio.google.com/apikey) et attendez la remise à zéro de la limite, ou
   ajoutez un moyen de paiement. Si le message dit que la clé elle-même a été acceptée, le problème
-  vient de Gemini ou de votre réseau, pas de la clé.
+  vient de Gemini ou de votre réseau, pas de la clé. **Une exécution peut aussi s'arrêter en cours
+  de route** pour la même raison. Interpretab y met fin et dit la même chose plutôt que de se
+  reconnecter : une limite épuisée laisse quand même la connexion s'ouvrir, puis la ferme une
+  seconde plus tard.
 
 ## Open source
 

@@ -204,7 +204,7 @@ Interpretab 把密钥保存在本机的 `chrome.storage.local` 里。Chrome 的�
 - **团队使用建议一人一个密钥。** 在同一个 Google Cloud 结算账号下给每位成员建立各自的项目，付款集中在一处，而密钥和速率限制彼此分开。
 - **对于欧洲经济区、瑞士或英国的用户**，Gemini API 的[附加条款](https://ai.google.dev/gemini-api/terms)要求使用付费方案。
 - **如果无法开始翻译，错误信息会告诉你原因。** Interpretab 在打开任何连接之前会先向 Google 查询密钥状态，因此密钥被拒、密钥已用完 Google 当前允许的额度、密钥无权调用 Gemini API 这三种情况会分别指明，而不是靠猜。用完额度是免费方案上最常见的：到
-  [AI Studio](https://aistudio.google.com/apikey) 查看还剩多少，等待上限重置，或者添加付款方式。如果提示说密钥本身已被接受，那问题出在 Gemini 或你的网络，而不是密钥。
+  [AI Studio](https://aistudio.google.com/apikey) 查看还剩多少，等待上限重置，或者添加付款方式。如果提示说密钥本身已被接受，那问题出在 Gemini 或你的网络，而不是密钥。**翻译中途停止也是同样的原因。**这时 Interpretab 不会重连，而是就地结束并显示同样的提示：额度用完后连接仍会先建立起来，一秒左右才被断开。
 
 ## 开源
 

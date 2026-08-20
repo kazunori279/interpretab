@@ -308,7 +308,9 @@ cada uno. **Usar una clave en tus propias varias máquinas está bien.**
   nombran por separado en vez de adivinarse. Agotarlo es lo habitual en el plan gratuito: mira lo
   que te queda en [AI Studio](https://aistudio.google.com/apikey) y espera a que el límite se
   reinicie, o añade un método de pago. Si el mensaje dice que la clave sí fue aceptada, el problema
-  es Gemini o tu red, no la clave.
+  es Gemini o tu red, no la clave. **Una ejecución también puede pararse a medias** por el mismo
+  motivo. Interpretab la termina y dice lo mismo en lugar de reconectar: un límite agotado deja que
+  la conexión se abra igualmente, y la cierra un segundo después.
 
 ## Código abierto
 

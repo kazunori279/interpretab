@@ -298,7 +298,9 @@ carry it, so using Interpretab on several computers means pasting the key into e
   guessed at. Running out is the usual one on the free plan: check what is left in
   [AI Studio](https://aistudio.google.com/apikey) and wait for the limit to reset, or add a payment
   method. If the message says the key itself was accepted, the problem is Gemini or your network,
-  not the key.
+  not the key. **A run can also stop partway** for the same reason. Interpretab ends it and says
+  the same thing rather than reconnecting: a limit that is spent still lets the connection open,
+  and closes it a second later.
 
 ## Open source
 

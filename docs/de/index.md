@@ -307,7 +307,9 @@ einzufügen. **Einen Schlüssel auf Ihren eigenen mehreren Rechnern zu verwenden
   kostenlosen Tarif: in [AI Studio](https://aistudio.google.com/apikey) nachsehen, was übrig ist,
   und auf das Zurücksetzen der Grenze warten, oder eine Zahlungsmethode hinzufügen. Sagt die
   Meldung, der Schlüssel selbst sei angenommen worden, liegt das Problem bei Gemini oder Ihrem Netz,
-  nicht am Schlüssel.
+  nicht am Schlüssel. **Ein Lauf kann aus demselben Grund auch mittendrin abbrechen.** Interpretab
+  beendet ihn dann und sagt dasselbe, statt neu zu verbinden: Eine aufgebrauchte Grenze lässt die
+  Verbindung noch zustande kommen und schließt sie eine Sekunde später.
 
 ## Open Source
 

@@ -303,7 +303,9 @@ em cada um. **Usar uma chave nas suas próprias várias máquinas é permitido.*
   separadamente em vez de adivinhadas. Acabar o que é permitido é o caso comum no plano gratuito:
   veja quanto sobrou no [AI Studio](https://aistudio.google.com/apikey) e espere o limite zerar, ou
   adicione uma forma de pagamento. Se a mensagem disser que a chave em si foi aceita, o problema é o
-  Gemini ou a sua rede, não a chave.
+  Gemini ou a sua rede, não a chave. **Uma execução também pode parar no meio** pelo mesmo motivo.
+  O Interpretab a encerra e diz a mesma coisa em vez de reconectar: um limite esgotado ainda deixa a
+  conexão abrir, e a fecha um segundo depois.
 
 ## Código aberto
 
