@@ -115,6 +115,18 @@ test("the manifest is v3 and declares every permission the code uses", () => {
   }
 });
 
+test("the two version numbers are the same number", () => {
+  // `package.json` is not in the ZIP, so a stale version there is invisible
+  // until something reads it — and something does. `preflight` sends the
+  // manifest's version to Google as `x-goog-api-client`, the harnesses stamp
+  // their reports with it, and a release is tagged from the other one. Nothing
+  // fails when they drift; the reports just start describing a version that was
+  // never shipped, which is worse than failing.
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
+  assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
+  assert.equal(pkg.version, manifest.version);
+});
+
 test("nothing at the root is named in a way Chrome refuses to load", () => {
   // `Cannot load extension with file or directory name _includes. Filenames
   // starting with "_" are reserved for use by the system. Could not load
