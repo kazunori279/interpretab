@@ -367,6 +367,39 @@ test("a panel that does not own the run may stop it and nothing else", () => {
   );
 });
 
+test("the translated microphone is offered on exactly the page it can be injected into", () => {
+  // Two decisions that have to agree and are made in two files: the panel shows
+  // the switch, the service worker injects the shim. A second copy of the
+  // origin is how they come to disagree — the switch appears on a page the
+  // injection would refuse, and the user is left with a checkbox that does
+  // nothing and no way of knowing why. One exported constant, imported twice.
+  const settings = read("lib/settings.js");
+  assert.match(settings, /export const CALL_ORIGIN = "https:\/\/meet\.google\.com\/";/);
+  for (const file of ["sidepanel.js", "service-worker.js"]) {
+    const src = read(file);
+    assert.match(src, /import \{[^}]*\bCALL_ORIGIN\b[^}]*\} from "\.\/lib\/settings\.js";/, file);
+    assert.equal(
+      (src.match(/meet\.google\.com/g) || []).length,
+      0,
+      `${file} names meet.google.com itself instead of importing CALL_ORIGIN`
+    );
+  }
+  assert.match(read("sidepanel.js"), /myTabUrl\.startsWith\(CALL_ORIGIN\)/);
+  assert.match(read("service-worker.js"), /url\.startsWith\(CALL_ORIGIN\)/);
+
+  // On by default. What it costs when it is not wanted is one more entry in
+  // Meet's microphone list; what it saves when it is wanted is a kernel
+  // extension and a reboot.
+  assert.match(settings, /micToCall: true,/);
+
+  // And when the injection fails the panel says so. The symptom is otherwise
+  // invisible from here: the session connects, the transcript fills, and the
+  // only evidence is a device that never appears in a menu in another window.
+  const failure = body(read("service-worker.js"), "ensureCallTab");
+  assert.match(failure, /target: "ui", type: "output"/);
+  assert.doesNotMatch(failure, /console\./);
+});
+
 test("the run belongs to the tab whose panel started it, not the last one clicked", () => {
   // `invokedTabId` is the last tab the toolbar icon was clicked on, and two tabs
   // that both have a panel are switched between without any click at all — so

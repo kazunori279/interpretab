@@ -158,21 +158,32 @@ la entrada en cualquier momento.
 enciende el audio de la pestaña, elige tu idioma y pulsa Start. Lo que digan llega en tu idioma,
 hablado y subtitulado.
 
-**Para que ellos oigan tu voz traducida**, lo más sencillo es que instalen Interpretab también y
-traduzcan tu voz en su lado. Si no pueden, la voz traducida tiene que llegar a la aplicación de la
-reunión como entrada de micrófono, así:
+**Para que ellos oigan tu voz traducida en Google Meet, no hay nada que instalar.**
 
-1. Instala un dispositivo de audio virtual: [BlackHole](https://existential.audio/blackhole/) en
-   macOS, [VB-Cable](https://vb-audio.com/Cable/) en Windows.
-2. Conecta auriculares al ordenador: con altavoces el micrófono oye la llamada y las dos direcciones
+1. Conecta auriculares al ordenador: con altavoces el micrófono oye la llamada y las dos direcciones
    empiezan a interpretarse la una a la otra.
+2. Enciende el audio de la pestaña —de ellos a ti— y ponlo en tu idioma. Enciende el micrófono —de
+   ti a ellos— y ponlo en el de ellos.
+3. En una pestaña de Meet, la tarjeta Microphone muestra un interruptor más: **Enviar la traducción
+   a esta llamada de Meet**. Déjalo encendido.
+4. Pulsa Start.
+5. En Meet, **Configuración → Audio → Micrófono** → elige **Interpretab (translated)**. Aprovecha
+   para desactivar **Studio Sound**.
+
+Tu propia voz va mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete.
+Cuenta con unos tres segundos entre lo que dices y lo que oye el otro lado.
+
+**En cualquier otro servicio**, la voz traducida tiene que llegar a la aplicación de la reunión como
+entrada de micrófono, y eso pide un dispositivo de audio virtual. Lo más sencillo sigue siendo que
+instalen Interpretab también y traduzcan tu voz en su lado; si no pueden:
+
+1. Instala un dispositivo de audio virtual: [BlackHole](https://existential.audio/blackhole/) en macOS, [VB-Cable](https://vb-audio.com/Cable/) en Windows.
+2. Conecta auriculares, como arriba.
 3. **Opciones → Salida de audio** → elige el dispositivo virtual. Allí va la voz traducida de
    **Micrófono**; la de **Audio de la pestaña** llega a tus auriculares.
 4. En el ajuste de entrada de micrófono de la aplicación de la reunión, elige el dispositivo
    virtual.
-5. Enciende el audio de la pestaña —de ellos a ti— y ponlo en tu idioma. Enciende el micrófono —de
-   ti a ellos— y ponlo en el de ellos.
-6. Pulsa Start y empieza la reunión.
+5. Enciende el audio de la pestaña y el micrófono, pon los dos idiomas y pulsa Start.
 
 Como esto es una extensión de Chrome, todo lo anterior solo funciona con las versiones web de estos
 servicios; las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.

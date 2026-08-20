@@ -11,7 +11,7 @@
  * minting a tab-capture stream id, and creating the offscreen document.
  */
 
-import { loadSettings, requireApiKey } from "./lib/settings.js";
+import { CALL_ORIGIN, loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 import { preflight } from "./lib/preflight.js";
 import { t } from "./lib/i18n.js";
@@ -655,19 +655,15 @@ async function sendToCaptions(payload) {
   }
 }
 
-/** Where the translated microphone is allowed to exist at all. */
-const CALL_ORIGIN = "https://meet.google.com/";
-
 /**
- * Offer the page a microphone carrying the translation (#9, prototype).
+ * Offer the page a microphone carrying the translation (#9).
  *
- * Three gates, and all three are the point of the prototype rather than
- * caution for its own sake. The flag, because this is unmeasured and there is
- * no UI for it yet. The microphone direction, because the tab direction's
- * translation is the one you are listening to and putting it into a call would
- * play the room its own voice. And Meet, because "how much of the plumbing does
- * it tolerate" is a question about one application's device picker, and the
- * answer will not generalise to Zoom or Teams without being asked again.
+ * Three gates. The switch, which the side panel shows on a Meet tab and nowhere
+ * else. The microphone direction, because the tab direction's translation is
+ * the one you are listening to and putting it into a call would play the room
+ * its own voice. And Meet, because "how much of the plumbing does it tolerate"
+ * is a question about one application's device picker, and the answer will not
+ * generalise to Zoom or Teams without being asked again.
  *
  * No host permission for any of it: the shim goes in under `activeTab`, the
  * same grant that puts the subtitles on a page, which is why the run tab is the
@@ -707,9 +703,15 @@ async function ensureCallTab(settings) {
       ownVoice: settings.micToCallOwnVoice,
     });
   } catch (err) {
-    // Nowhere for this to go on screen yet, which is the honest state of a
-    // prototype with no UI. The console is the instrument.
-    console.warn("Translated microphone unavailable on this page:", err.message);
+    // The switch is on, the panel is green, the transcript is filling, and the
+    // one symptom is that "Interpretab (translated)" never appears in Meet's
+    // list — a failure whose only evidence is somewhere the user is not
+    // looking. It goes to the same note as an output device that went away,
+    // because it is the same sentence: the translated voice is not arriving
+    // where it was sent.
+    chrome.runtime
+      .sendMessage({ target: "ui", type: "output", detail: t("callShimFailed", [err.message]) })
+      .catch(() => {});
   }
 }
 

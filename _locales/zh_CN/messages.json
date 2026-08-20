@@ -49,6 +49,8 @@
   "panelMicNoteConversation": {
     "message": "两个人共用一支麦克风时用这个模式。它听到你设定的两种语言中的一种，就用另一种从<b>扬声器</b>念出来，这正是这个模式的用意。请把麦克风放得离扬声器远一些，免得它听见自己的声音。它会等每个人说完再翻译，所以比 Simultaneous 稍慢一点，而且只有这个模式用得上<b>术语表</b>。"
   },
+  "panelMicToCall": { "message": "把译文语音送进这个 Meet 通话" },
+  "panelMicToCallNote": { "message": "在 Meet 里打开<b>设置 → 音频 → 麦克风</b>，选 <b>Interpretab (translated)</b>。顺手把 <b>Studio Sound</b> 关掉——它会给本来就够慢的这条路再加上约一秒。你自己的声音也低低地混在下面，所以通话里既听得到译文，也听得到你。" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
@@ -261,6 +263,7 @@
   "outputDeviceMissing": {
     "message": "选项中所选的音频输出不可用（{1}），因此你的译文语音改从扬声器播放。请在选项中另选一个。"
   },
+  "callShimFailed": { "message": "无法把译文麦克风交给这个页面（{1}），通话里听不到它。请重新加载 Meet 标签页，再按一次 Start。" },
 
   "closeReasonGiven": { "message": "Gemini 关闭了连接：{1}" },
   "closeReasonOpaqueHint": {

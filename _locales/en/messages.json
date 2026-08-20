@@ -64,6 +64,13 @@
   "panelMicNoteConversation": {
     "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself. It waits until each person has finished talking, so it is a little slower than Simultaneous — and it is the only mode that uses the <b>glossary</b>."
   },
+  "panelMicToCall": {
+    "message": "Send the translation into this Meet call",
+    "description": "Checkbox, shown only on a meet.google.com tab."
+  },
+  "panelMicToCallNote": {
+    "message": "In Meet, open <b>Settings → Audio → Microphone</b> and pick <b>Interpretab (translated)</b>. Turn <b>Studio Sound</b> off while you are in there — it adds about a second to a path that already has too much of it. Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter."
+  },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
@@ -339,6 +346,10 @@
   },
   "outputDeviceMissing": {
     "message": "The audio output chosen in Options is not available ({1}), so your translated voice is coming out of the speakers instead. Pick another one in Options."
+  },
+  "callShimFailed": {
+    "message": "Could not offer the translated microphone to this page ({1}), so the call will not hear it. Reload the Meet tab and press Start again.",
+    "description": "{1} is the reason the injection failed."
   },
 
   "closeReasonGiven": {

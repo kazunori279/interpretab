@@ -12,7 +12,9 @@ O áudio da aba para o seu idioma, e o seu microfone para o idioma deles. Fale p
 
 ▍ MEET, ZOOM E TEAMS
 
-Ligue os dois sentidos e aponte-os em direções opostas: a aba da reunião interpretada para o seu idioma com legendas, o seu microfone interpretado para o idioma deles. Ouvir o outro lado funciona de imediato. Ser ouvido por ele exige um dispositivo de áudio virtual (veja O QUE ELE NÃO FAZ), no qual o Interpretab toca a sua voz traduzida enquanto a tradução do outro lado continua nas suas caixas de som.
+Ligue os dois sentidos e aponte-os em direções opostas: a aba da reunião interpretada para o seu idioma com legendas, o seu microfone interpretado para o idioma deles. Ouvir o outro lado funciona de imediato, em qualquer serviço.
+
+No Google Meet, ser ouvido também funciona sem instalar nada: o painel lateral oferece à chamada um microfone que carrega a sua voz traduzida, e você escolhe “Interpretab (translated)” nas próprias configurações de áudio do Meet. A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete. Em qualquer outro serviço é preciso um dispositivo de áudio virtual (veja O QUE ELE NÃO FAZ), no qual o Interpretab toca a sua voz traduzida enquanto a tradução do outro lado continua nas suas caixas de som.
 
 ▍ UM MICROFONE, DUAS PESSOAS
 
@@ -50,7 +52,7 @@ Fechar o painel lateral não interrompe a tradução.
 
 Os limites, ditos de saída:
 
-• A tradução da SUA voz só chega ao microfone do Meet ou do Zoom por meio de um dispositivo de áudio virtual (BlackHole, VB-Cable) — nenhuma extensão consegue se registrar como microfone. Opções → Saída de áudio toca a voz em um deles; instalar o dispositivo e selecioná-lo na reunião continua sendo com você.
+• Fora do Google Meet, a tradução da SUA voz só chega ao microfone de uma reunião por meio de um dispositivo de áudio virtual (BlackHole, VB-Cable) — nenhuma extensão consegue se registrar como microfone do sistema. Opções → Saída de áudio toca a voz em um deles; instalar o dispositivo e selecioná-lo na reunião continua sendo com você.
 • Rodar os dois sentidos nas caixas de som convida a um loop de eco. Use fones. No modo de conversa bidirecional, em que falar em voz alta é justamente o objetivo, afaste o microfone das caixas.
 • O glossário se aplica apenas ao modo de conversa bidirecional do microfone. Todo o resto usa o modelo de tradução simultânea do Google, que não aceita glossário.
 • Dois sentidos significam duas sessões simultâneas do Gemini, ou seja, cerca do dobro de uso da API na sua chave.

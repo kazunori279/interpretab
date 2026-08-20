@@ -154,20 +154,32 @@ turns the input off at any time.
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
 and subtitled.
 
-**For them to hear your voice translated**, the simplest answer is that they install Interpretab
-too and translate your voice on their end. If they cannot, the translated voice has to reach the
-meeting app as a microphone input, like this:
+**On Google Meet, for them to hear your voice translated, there is nothing to install.**
+
+1. Plug headphones or earphones into the computer — on speakers the microphone hears the call, and
+   the two directions start interpreting each other.
+2. Turn on tab audio — them to you — and set its language to yours. Turn on the microphone — you to
+   them — and set its language to theirs.
+3. On a Meet tab the Microphone card shows an extra switch, **Send the translation into this Meet
+   call**. Leave it on.
+4. Press Start.
+5. In Meet, **Settings → Audio → Microphone** → choose **Interpretab (translated)**. While you are
+   in that dialog, **turn Studio Sound off**.
+
+Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter.
+Expect the far end to hear the translation about three seconds after you speak.
+
+**On any other service** the translated voice has to reach the meeting app as a microphone input,
+and that needs a virtual audio device. The simplest answer is still that the other side installs
+Interpretab too and translates your voice on their end; failing that:
 
 1. Install a virtual audio device: [BlackHole](https://existential.audio/blackhole/) on macOS,
    [VB-Cable](https://vb-audio.com/Cable/) on Windows.
-2. Plug headphones or earphones into the computer — on speakers the microphone hears the call, and
-   the two directions start interpreting each other.
+2. Plug in headphones, as above.
 3. **Options → Audio output** → pick the virtual device. The voice translated from **Microphone**
    goes there; the one from **Tab audio** arrives in your headphones.
 4. In the meeting app's microphone input setting, choose the virtual device.
-5. Turn on tab audio — them to you — and set its language to yours. Turn on the microphone — you to
-   them — and set its language to theirs.
-6. Press Start, and begin the meeting.
+5. Turn on tab audio and the microphone, set both languages, and press Start.
 
 Because this is a Chrome extension, all of this only works with the browser versions of these
 services — desktop apps and native clients are out of reach.

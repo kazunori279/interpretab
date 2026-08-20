@@ -43,13 +43,13 @@ Stores the user's own settings on their device: their Gemini API key, chosen lan
 ## `activeTab`
 
 ```
-Grants temporary access to the tab the user clicked the toolbar icon on, which is used to display subtitles over the video on that page. activeTab is requested instead of a broad host permission specifically so the extension has no standing access to any site: the access exists only for the tab the user explicitly invoked it on, and only after that click.
+Grants temporary access to the tab the user clicked the toolbar icon on, which is used to display subtitles over the video on that page and, on a Google Meet tab, to offer that page a microphone carrying the translated voice. activeTab is requested instead of a broad host permission specifically so the extension has no standing access to any site: the access exists only for the tab the user explicitly invoked it on, and only after that click.
 ```
 
 ## `scripting`
 
 ```
-Used with activeTab to inject content/captions.js into the tab the user started translation on, which draws the subtitle overlay inside a closed shadow root at the bottom of the page. Injecting on demand avoids declaring a content script that would otherwise run on every page the user visits. The script only writes the overlay; it does not read page content.
+Used with activeTab to inject the extension's own scripts into the tab the user started translation on, never into any other tab and never on page load. content/captions.js draws the subtitle overlay inside a closed shadow root at the bottom of the page. On a https://meet.google.com/ tab, and only when the user has left the side panel's "Send the translation into this Meet call" switch on, content/mic-bridge.js and content/mic-shim.js are injected as well: they add one entry named "Interpretab (translated)" to the microphone list the page sees, so the user can select it in Meet's own audio settings and have the call hear the translation without installing a virtual audio device. mic-shim.js runs in the page's main world because navigator.mediaDevices in an isolated world is a different object from the page's. None of the three scripts read page content or the DOM; they write the overlay and provide an audio stream the extension itself produced. All are removed when the user presses Stop.
 ```
 
 ## Host permission — `https://generativelanguage.googleapis.com/*`

@@ -9,7 +9,7 @@
  */
 
 import { LIVE_KEYS } from "./lib/live-session.js";
-import { DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import { CALL_ORIGIN, DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
 import { formatCost, formatDuration } from "./lib/usage.js";
 import {
   agentLanguageCode,
@@ -43,6 +43,7 @@ const RUN_CONTROLS = [
   "duckLevel",
   "micEnabled",
   "micCaptions",
+  "micToCall",
   "micMode",
   "micSource",
   "micTarget",
@@ -74,6 +75,16 @@ let myTabId = null;
 let runTabId = null;
 let runTabTitle = "";
 /**
+ * This tab's URL, for the one control that is only offered on one site.
+ *
+ * Read from the same `tabs.query` as the id and never refreshed. It is a URL
+ * and not an origin because that is what the service worker matches on, and the
+ * two have to agree — a switch shown on a page the shim would refuse is worse
+ * than no switch. Empty when the `activeTab` grant is not there, which is the
+ * same condition under which the injection would fail anyway.
+ */
+let myTabUrl = "";
+/**
  * Chrome's microphone permission for this extension, or null for "not known".
  *
  * Null is the honest state and not just the initial one: the query is answered
@@ -90,7 +101,9 @@ async function init() {
   // element until this fills it, so anything that paints before it is blank.
   localize();
   settings = await loadSettings();
-  myTabId = (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id ?? null;
+  const myTab = (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+  myTabId = myTab?.id ?? null;
+  myTabUrl = myTab?.url || "";
   await populateLanguages();
   bind();
   watchMicPermission();
@@ -226,6 +239,10 @@ function bind() {
     ["tabEnabled", "tabEnabled"],
     ["tabCaptions", "tabCaptions"],
     ["micCaptions", "micCaptions"],
+    // Not a live key, so `update` restarts the run — which is what applies it
+    // in both directions: Start injects the shim, and the Stop on the way there
+    // tears it out of the page again.
+    ["micToCall", "micToCall"],
   ]) {
     el(id).addEventListener("change", () => update({ [key]: el(id).checked }));
   }
@@ -357,6 +374,7 @@ function render() {
   el("tabCaptions").checked = settings.tabCaptions;
   el("micEnabled").checked = settings.micEnabled;
   el("micCaptions").checked = settings.micCaptions;
+  el("micToCall").checked = settings.micToCall;
   el("tabTarget").value = settings.tabTarget;
   el("micMode").value = settings.micMode;
   el("micSource").value = settings.micSource;
@@ -375,6 +393,14 @@ function render() {
   el("micSource").hidden = micSimul;
   el("micArrow").hidden = micSimul;
   el("micNoteConversation").hidden = micSimul;
+
+  // A call is the one place the translated voice has somewhere else to go, and
+  // this is the only page where it can get there without a virtual cable. The
+  // instructions below it are two things the user has to do in Meet, so they
+  // are worth their line only once the switch is actually on.
+  const onCall = myTabUrl.startsWith(CALL_ORIGIN);
+  el("micToCallRow").hidden = !onCall;
+  el("micToCallNote").hidden = !onCall || !settings.micToCall;
 
   renderDirection("tabEnabled", settings.tabEnabled);
   renderDirection("micEnabled", settings.micEnabled);

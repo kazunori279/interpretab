@@ -12,7 +12,9 @@ L'audio de l'onglet vers votre langue, et votre micro vers la leur. Parlez fran�
 
 ▍ MEET, ZOOM ET TEAMS
 
-Activez les deux sens et orientez-les à l'opposé : l'onglet de la réunion interprété dans votre langue avec sous-titres, votre micro interprété dans la leur. Entendre l'autre partie fonctionne tout de suite. Être entendu par elle demande un périphérique audio virtuel (voir CE QU'IL NE PEUT PAS FAIRE), dans lequel Interpretab envoie votre voix traduite pendant que la traduction de l'autre partie reste sur vos haut-parleurs.
+Activez les deux sens et orientez-les à l'opposé : l'onglet de la réunion interprété dans votre langue avec sous-titres, votre micro interprété dans la leur. Entendre l'autre partie fonctionne tout de suite, sur n'importe quel service.
+
+Sur Google Meet, être entendu fonctionne aussi sans rien installer : le panneau latéral propose à l'appel un micro qui porte votre voix traduite, et vous choisissez « Interpretab (translated) » dans les réglages audio de Meet. Votre propre voix est mixée en dessous, en sourdine, donc l'appel vous entend en plus de l'interprète. Sur tout autre service, il faut un périphérique audio virtuel (voir CE QU'IL NE PEUT PAS FAIRE), dans lequel Interpretab envoie votre voix traduite pendant que la traduction de l'autre partie reste sur vos haut-parleurs.
 
 ▍ UN MICRO, DEUX PERSONNES
 
@@ -50,7 +52,7 @@ Fermer le panneau latéral n'arrête pas la traduction.
 
 Les limites, annoncées d'emblée :
 
-• La traduction de VOTRE voix n'atteint le micro de Meet ou de Zoom qu'à travers un périphérique audio virtuel (BlackHole, VB-Cable) — aucune extension ne peut s'enregistrer comme microphone. Options → Sortie audio l'y envoie ; installer le périphérique et le sélectionner dans la réunion reste à votre charge.
+• Hors de Google Meet, la traduction de VOTRE voix n'atteint le micro d'une réunion qu'à travers un périphérique audio virtuel (BlackHole, VB-Cable) — aucune extension ne peut s'enregistrer comme microphone du système. Options → Sortie audio l'y envoie ; installer le périphérique et le sélectionner dans la réunion reste à votre charge.
 • Faire tourner les deux sens sur les haut-parleurs invite une boucle d'écho. Utilisez un casque. En mode conversation bidirectionnelle, où parler à voix haute est justement le but, éloignez plutôt le micro des haut-parleurs.
 • Le glossaire ne s'applique qu'au mode conversation bidirectionnelle du micro. Tout le reste utilise le modèle de traduction simultanée de Google, qui n'accepte aucun glossaire.
 • Deux sens, cela veut dire deux sessions Gemini simultanées, donc environ le double d'utilisation de l'API sur votre clé.

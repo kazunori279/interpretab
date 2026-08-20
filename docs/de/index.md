@@ -156,21 +156,30 @@ jederzeit ab.
 einem Tab, schalten Sie Tab-Audio ein, wählen Sie Ihre Sprache und drücken Sie Start. Was gesagt
 wird, kommt in Ihrer Sprache an, gesprochen und untertitelt.
 
-**Damit die anderen Ihre übersetzte Stimme hören**, ist die einfachste Antwort, dass sie Interpretab
-ebenfalls installieren und Ihre Stimme auf ihrer Seite übersetzen. Geht das nicht, muss die
-übersetzte Stimme als Mikrofoneingang in die Meeting-App gelangen, und zwar so:
+**Damit die anderen Ihre übersetzte Stimme hören, ist auf Google Meet nichts zu installieren.**
 
-1. Ein virtuelles Audiogerät installieren:
-   [BlackHole](https://existential.audio/blackhole/) unter macOS,
-   [VB-Cable](https://vb-audio.com/Cable/) unter Windows.
-2. Kopfhörer oder Ohrhörer an den Rechner anschließen — über Lautsprecher hört das Mikrofon das
+1. Kopfhörer oder Ohrhörer an den Rechner anschließen — über Lautsprecher hört das Mikrofon das
    Gespräch, und die beiden Richtungen fangen an, einander zu dolmetschen.
+2. Tab-Audio einschalten — von ihnen zu Ihnen — und auf Ihre Sprache stellen. Das Mikrofon
+   einschalten — von Ihnen zu ihnen — und auf deren Sprache stellen.
+3. Auf einem Meet-Tab zeigt die Karte Microphone einen zusätzlichen Schalter: **Die Übersetzung in
+   dieses Meet-Gespräch senden**. Eingeschaltet lassen.
+4. Start drücken.
+5. In Meet **Einstellungen → Audio → Mikrofon** öffnen und **Interpretab (translated)** wählen. Schalten Sie bei der Gelegenheit **Studio Sound** aus.
+
+Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme.
+Rechnen Sie mit etwa drei Sekunden zwischen dem, was Sie sagen, und dem, was drüben ankommt.
+
+**Bei jedem anderen Dienst** muss die übersetzte Stimme als Mikrofoneingang in die Meeting-App
+gelangen, und dafür braucht es ein virtuelles Audiogerät. Am einfachsten ist es nach wie vor, wenn
+die anderen Interpretab ebenfalls installieren; geht das nicht:
+
+1. Ein virtuelles Audiogerät installieren: [BlackHole](https://existential.audio/blackhole/) unter macOS, [VB-Cable](https://vb-audio.com/Cable/) unter Windows.
+2. Kopfhörer anschließen, wie oben.
 3. **Optionen → Audioausgang** → das virtuelle Gerät wählen. Dorthin geht die übersetzte Stimme
    von **Mikrofon**; die von **Tab-Audio** kommt in Ihren Kopfhörern an.
 4. In der Mikrofoneingangs-Einstellung der Meeting-App das virtuelle Gerät auswählen.
-5. Tab-Audio einschalten — von ihnen zu Ihnen — und auf Ihre Sprache stellen. Das Mikrofon
-   einschalten — von Ihnen zu ihnen — und auf deren Sprache stellen.
-6. Start drücken und das Meeting beginnen.
+5. Tab-Audio und Mikrofon einschalten, beide Sprachen einstellen und Start drücken.
 
 Weil dies eine Chrome-Erweiterung ist, funktioniert all das nur mit den Browser-Versionen dieser
 Dienste — Desktop-Apps und native Clients sind außer Reichweite.

@@ -49,6 +49,8 @@
   "panelMicNoteConversation": {
     "message": "1 本のマイクを 2 人で使うモードです。設定した 2 つの言語のうち聞こえたほうを、もう一方の言語で<b>スピーカー</b>から声に出して読み上げます。それがこのモードの目的ですが、マイクがその声を拾わないよう、スピーカーからは離して置いてください。話し終わるのを待ってから訳すので Simultaneous より少し遅く、<b>用語集</b>が使えるのはこのモードだけです。"
   },
+  "panelMicToCall": { "message": "この Meet 通話に通訳音声を流す" },
+  "panelMicToCallNote": { "message": "Meet の<b>設定 → 音声 → マイク</b>を開いて <b>Interpretab (translated)</b> を選んでください。ついでに <b>Studio Sound</b> は切っておきます — ただでさえ遅れの多い経路に 1 秒ほど足すからです。あなた自身の声も小さく混ぜてあるので、通話には通訳と一緒にあなたの声も届きます。" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
@@ -279,6 +281,7 @@
   "outputDeviceMissing": {
     "message": "オプションで指定した音声出力が使えないため（{1}）、通訳音声はスピーカーから流れています。オプションで別のデバイスを選んでください。"
   },
+  "callShimFailed": { "message": "このページに通訳マイクを渡せませんでした（{1}）。このままでは通話に音声が届きません。Meet のタブを再読み込みして、もう一度 Start を押してください。" },
 
   "closeReasonGiven": { "message": "Gemini が接続を閉じました: {1}" },
   "closeReasonOpaqueHint": {

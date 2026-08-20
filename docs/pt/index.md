@@ -156,21 +156,31 @@ corta a entrada a qualquer momento.
 áudio da aba, escolha o seu idioma e aperte Start. O que disserem chega no seu idioma, falado e
 legendado.
 
-**Para que eles ouçam a sua voz traduzida**, o mais simples é que instalem o Interpretab também e
-traduzam a sua voz do lado deles. Se não puderem, a voz traduzida precisa chegar ao aplicativo da
-reunião como entrada de microfone, assim:
+**Para que eles ouçam a sua voz traduzida no Google Meet, não há nada a instalar.**
 
-1. Instale um dispositivo de áudio virtual:
-   [BlackHole](https://existential.audio/blackhole/) no macOS,
-   [VB-Cable](https://vb-audio.com/Cable/) no Windows.
-2. Ligue fones de ouvido no computador — em caixas de som o microfone ouve a chamada e as duas
+1. Ligue fones de ouvido no computador — em caixas de som o microfone ouve a chamada e as duas
    direções começam a interpretar uma à outra.
+2. Ligue o áudio da aba — deles para você — e deixe no seu idioma. Ligue o microfone — de você para
+   eles — e deixe no idioma deles.
+3. Numa aba do Meet, o cartão Microphone mostra um interruptor a mais: **Enviar a tradução para esta
+   chamada do Meet**. Deixe ligado.
+4. Aperte Start.
+5. No Meet, **Configurações → Áudio → Microfone** → escolha **Interpretab (translated)**. Já que
+   está lá, desligue o **Studio Sound**.
+
+A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete.
+Conte com uns três segundos entre o que você diz e o que o outro lado ouve.
+
+**Em qualquer outro serviço**, a voz traduzida precisa chegar ao aplicativo da reunião como entrada
+de microfone, e isso pede um dispositivo de áudio virtual. O mais simples continua sendo que eles
+instalem o Interpretab também; se não puderem:
+
+1. Instale um dispositivo de áudio virtual: [BlackHole](https://existential.audio/blackhole/) no macOS, [VB-Cable](https://vb-audio.com/Cable/) no Windows.
+2. Ligue os fones, como acima.
 3. **Opções → Saída de áudio** → escolha o dispositivo virtual. É para lá que vai a voz traduzida
    do **Microfone**; a do **Áudio da aba** chega nos seus fones.
 4. Na configuração de entrada de microfone do aplicativo da reunião, escolha o dispositivo virtual.
-5. Ligue o áudio da aba — deles para você — e deixe no seu idioma. Ligue o microfone — de você para
-   eles — e deixe no idioma deles.
-6. Aperte Start e comece a reunião.
+5. Ligue o áudio da aba e o microfone, ajuste os dois idiomas e aperte Start.
 
 Como isto é uma extensão do Chrome, tudo isso só funciona com as versões web desses serviços —
 aplicativos de desktop e clientes nativos estão fora de alcance.

@@ -80,6 +80,16 @@
           <span data-i18n="panelPageSubtitles"></span>
         </label>
       </div>
+      <!-- Only on a Meet tab. The shim reaches exactly the page the run was
+           started on, so a switch offered anywhere else is a promise the code
+           has no way of keeping. -->
+      <div class="row indent" id="micToCallRow" hidden>
+        <label class="inline">
+          <input type="checkbox" id="micToCall" />
+          <span data-i18n="panelMicToCall"></span>
+        </label>
+      </div>
+      <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"></p>
       <!-- Two spans and not one sentence: the first is shown only while the
            sound button is off, and a message that had to be spliced into
            another one would decide the word order of both. -->

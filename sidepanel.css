@@ -65,6 +65,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 .direction.off > :not(.heading) { opacity: 0.55; }
 
 .row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+/* The same trap as `.note.usage` below: a row that starts hidden — the Meet
+   switch is the one — would show itself anyway, because this `display` outranks
+   what [hidden] gives it. */
+.row[hidden] { display: none; }
 .row.heading { font-weight: 400; }
 /* Logical, not physical: the indent is under the switch that governs the row,
    and in Arabic the switch is on the right. Same for the `output` below. */

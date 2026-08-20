@@ -12,7 +12,9 @@ Der Tab-Ton in Ihre Sprache, Ihr Mikrofon in deren Sprache. Sprechen Sie Deutsch
 
 ▍ MEET, ZOOM UND TEAMS
 
-Schalten Sie beide Richtungen ein und richten Sie sie gegenläufig aus: der Meeting-Tab mit Untertiteln in Ihre Sprache gedolmetscht, Ihr Mikrofon in deren Sprache. Die Gegenseite zu hören funktioniert sofort. Von ihr gehört zu werden, braucht ein virtuelles Audiogerät (siehe WAS ES NICHT KANN), in das Interpretab Ihre übersetzte Stimme spielt, während die Übersetzung der Gegenseite auf Ihren Lautsprechern bleibt.
+Schalten Sie beide Richtungen ein und richten Sie sie gegenläufig aus: der Meeting-Tab mit Untertiteln in Ihre Sprache gedolmetscht, Ihr Mikrofon in deren Sprache. Die Gegenseite zu hören funktioniert sofort, bei jedem Dienst.
+
+Auf Google Meet funktioniert auch das Gehörtwerden, ohne dass etwas zu installieren wäre: Das Seitenpanel bietet dem Gespräch ein Mikrofon an, das Ihre übersetzte Stimme trägt, und Sie wählen in Meets eigenen Audioeinstellungen „Interpretab (translated)“. Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme. Bei jedem anderen Dienst braucht es ein virtuelles Audiogerät (siehe WAS ES NICHT KANN), in das Interpretab Ihre übersetzte Stimme spielt, während die Übersetzung der Gegenseite auf Ihren Lautsprechern bleibt.
 
 ▍ EIN MIKROFON, ZWEI PERSONEN
 
@@ -50,7 +52,7 @@ Das Schließen des Seitenbereichs beendet die Übersetzung nicht.
 
 Die Grenzen, gleich vorweg:
 
-• Die Übersetzung IHRER Stimme erreicht ein Meet- oder Zoom-Mikrofon nur über ein virtuelles Audiogerät (BlackHole, VB-Cable) — keine Erweiterung kann sich selbst als Mikrofon registrieren. Optionen → Audioausgabe spielt sie in ein solches Gerät; das Gerät zu installieren und im Meeting auszuwählen, bleibt Ihre Sache.
+• Außerhalb von Google Meet erreicht die Übersetzung IHRER Stimme das Mikrofon eines Meetings nur über ein virtuelles Audiogerät (BlackHole, VB-Cable) — keine Erweiterung kann sich selbst als Systemmikrofon registrieren. Optionen → Audioausgabe spielt sie in ein solches Gerät; das Gerät zu installieren und im Meeting auszuwählen, bleibt Ihre Sache.
 • Beide Richtungen über Lautsprecher laufen zu lassen, lädt zu einer Rückkopplungsschleife ein. Nehmen Sie Kopfhörer. Im Zwei-Wege-Gesprächsmodus, wo lautes Sprechen ja der Zweck ist, halten Sie stattdessen das Mikrofon von den Lautsprechern fern.
 • Das Glossar gilt nur für den Zwei-Wege-Gesprächsmodus des Mikrofons. Alles andere nutzt Googles Simultanübersetzungsmodell, das kein Glossar annimmt.
 • Zwei Richtungen bedeuten zwei parallele Gemini-Sitzungen und damit ungefähr die doppelte API-Nutzung auf Ihrem Schlüssel.

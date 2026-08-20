@@ -272,10 +272,20 @@ words paraphrased back. And Two-way conversation is the wrong microphone mode he
 two people at one microphone, and in a call the other side arrives on the tab, already
 interpreted by the other direction.
 
-**Hearing them works out of the box. Being heard needs a virtual audio device.** An extension has
-no API that registers an audio *input*, and Manifest V3 has nothing planned, so the translated
-voice cannot be handed to Meet as a microphone — it can only be played somewhere Meet is already
-listening:
+**Hearing them works out of the box everywhere. Being heard is where the meeting client matters.**
+
+**On Google Meet, nothing to install.** Start a run from the `https://meet.google.com/` tab with
+**Microphone** on, and the panel's microphone card grows a switch — **Send the translation into
+this Meet call**, on by default and shown on no other site. Then, in Meet, **Settings → Audio →
+Microphone → Interpretab (translated)**, and **turn Studio Sound off** while you are in there: it
+is a second of latency on a path that has too much of it already, and what it removes is
+background noise from a microphone this device is not. Your own voice is mixed in underneath at
+`micToCallOwnVoice` (0.15, the same level the passthrough ducks to) so the call hears you as well
+as the interpreter. How that is possible at all is [below](#the-translated-microphone).
+
+**Everywhere else, being heard needs a virtual audio device.** An extension has no API that
+registers an audio *input*, and Manifest V3 has nothing planned, so on any other site the
+translated voice can only be played somewhere the meeting is already listening:
 
 1. Install a virtual cable: [BlackHole](https://existential.audio/blackhole/) (macOS),
    [VB-Cable](https://vb-audio.com/Cable/) (Windows).
@@ -295,27 +305,21 @@ capture and no page to inject into, and `getDisplayMedia` captures system audio 
 and ChromeOS. The virtual-device recipe above is the only thing that reaches them, and it reaches
 them completely.
 
-### A microphone the page can pick — prototype, off by default
+### The translated microphone
 
-The sentence above is true of the *system*: no extension can register an audio input, and nothing
-in Manifest V3 is going to change that. It is not quite true of a single web page. A page asks
+"No extension can register an audio input" is true of the *system*, and nothing in Manifest V3 is
+going to change it. It is not quite true of a single web page. A page asks
 `navigator.mediaDevices` what microphones exist and then asks it for one, and both of those are
 functions living in that page's own JavaScript world — so a script injected into that world can
 add a device to the answer and hand back a stream of its own when the page picks it. That is
-[#9](https://github.com/kazunori279/interpretab/issues/9), and this is the plumbing for it, behind
-a flag and with no UI, because the issue asks for a measurement on a real call before anything is
-designed around it. From the extension's own console:
+[#9](https://github.com/kazunori279/interpretab/issues/9).
 
-```js
-chrome.storage.local.set({ micToCall: true })
-```
-
-Then start a run with **Microphone** on, from a `https://meet.google.com/` tab, and pick
-**Interpretab (translated)** in Meet's microphone list. **Turn Studio Sound off** while you are
-in there: it is a second of latency on a path that has too much of it already, and what it
-removes is background noise from a microphone this device is not. Nothing to install, and your
-own voice is mixed in underneath at `micToCallOwnVoice` (0.15, the same level the passthrough
-ducks to) so the room hears you as well as the interpreter.
+Meet only, and that is a decision rather than a first step. "How much of the plumbing does this
+tolerate" was answered by running it against one application's device picker, and the answer does
+not carry to Zoom or Teams without being asked again — so `CALL_ORIGIN` is one exported constant
+in `lib/settings.js` that the panel and the service worker both import, the panel to decide
+whether the switch exists and the worker to decide whether the shim goes in. Two copies of that
+string is how the two come to disagree, which shows up as a checkbox that does nothing.
 
 Three files, and each does the half the other cannot. `content/mic-shim.js` goes into the page's
 world with `world: "MAIN"` — a content script's `navigator.mediaDevices` is a *different object*
@@ -387,10 +391,10 @@ the microphone and the far end hears it in Japanese. That is the whole of what
 [#9](https://github.com/kazunori279/interpretab/issues/9) asked for, and the questions left below
 are about how well it does it rather than whether it does it.
 
-Worth knowing while the flag has no UI: `micToCall` is read once, at `start()`, and it is not in
-`LIVE_KEYS`. Setting it during a run does nothing at all — not in the offscreen document, which
-keeps the settings it was handed, and not in the service worker, where `ensureCallTab()` is only
-called from `start()`. Set it, then Start.
+`micToCall` is read once, at `start()`, and it is deliberately *not* in `LIVE_KEYS` — so the panel
+toggling it restarts the run, which is exactly what applies it in both directions: Start injects
+the shim, and the Stop on the way there pulls it back out of the page. A live key would have
+needed two more messages to say the same thing.
 
 What that first call answered, and what it did not:
 
@@ -424,7 +428,10 @@ What that first call answered, and what it did not:
 - **A second of it was Studio Sound**, and turning that off is the whole fix for that second.
   Which settles part of the question above: at least half of the two seconds was Meet's, not the
   queue's. Three seconds is still too many, and where the last one lives — the queue, or Meet's
-  jitter buffer — is still open, pending a reading of the range described above.
+  jitter buffer — is still open, pending a reading of the range described above. A third call, on
+  the build that ships the switch, came back at **about three seconds** again: the figure is
+  reproducible rather than a bad afternoon, and nothing about promoting the flag to a default
+  moved it either way.
 - **Meet did not take the microphone back.** Not once, across the call. The silent failure that
   would have sunk this did not happen, which is a weaker statement than "cannot happen" and worth
   re-checking on a reconnection and a network drop.
@@ -439,18 +446,22 @@ What that first call answered, and what it did not:
   `AudioContext` — but it is a neural denoiser in the path, and the path cannot afford one. The
   setup instructions above now say to switch it off.
 
-The prototype's only instrumentation is `console.info` from the service worker, which is the
-correct amount for something with no UI and this many open questions.
+The lead reports still go to `console.info` from the service worker, and stay there: they are a
+diagnostic for the open question above, not something a user of a working call has any use for.
+What did come out of the console is the failure — an injection that does not take is invisible
+from the panel, because the session connects and the transcript fills and the only symptom is a
+device that never appears in a menu in another window — so that one goes to the panel's output
+note, next to "the audio output device went away", which is the same sentence.
 
 ## Limitations
 
-- **The microphone direction's translated speech reaches a call only through a virtual audio
-  device.** No extension can register a microphone, so the last hop is the user's: install
-  [BlackHole](https://existential.audio/blackhole/) or
+- **Off Google Meet, the microphone direction's translated speech reaches a call only through a
+  virtual audio device.** On Meet the extension offers the page a microphone of its own
+  ([#9](https://github.com/kazunori279/interpretab/issues/9)) and nothing needs installing. That
+  works by injecting into one page's JavaScript world, so it reaches one site; anywhere else the
+  last hop is the user's: install [BlackHole](https://existential.audio/blackhole/) or
   [VB-Cable](https://vb-audio.com/Cable/), point **Options → Audio output** at it, and select it
-  as the microphone in the meeting. See [Meetings](#meetings), which also covers the flagged
-  prototype that skips the cable on Meet by offering the page a microphone of our own
-  ([#9](https://github.com/kazunori279/interpretab/issues/9)).
+  as the microphone in the meeting. See [Meetings](#meetings).
 - **Running the microphone on speakers invites an echo loop.** Echo cancellation is what handles
   it in Simultaneous mode, because the duplex gate deliberately does not run there — nor on the
   tab direction's voice. Headphones are the real answer. Two-way conversation mode is the awkward
@@ -1394,7 +1405,8 @@ There is no build. The extension directory is what ships.
 npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
-Verified 2026-08-17: 26 files, 184 KB unpacked and 79 KB zipped, `manifest.json` at the root,
+Verified 2026-08-20 at 1.0.2: 44 files, 503 KB unpacked and 184 KB zipped — most of the growth is
+the ten `_locales` catalogues, which do not compress the way code does. `manifest.json` at the root,
 nothing from `.git`, `tests/`, `store/`, `docs/` or `package.json`. This file is excluded too —
 37 KB of developer documentation that no user or reviewer opens, and it was a quarter of the
 package. `LICENSE` and `PRIVACY.md` do ship: two files, a few KB, and both are documents a user is
@@ -1411,8 +1423,8 @@ true. The guide now lives in `docs/`; see [Ten languages, one guide](#ten-langua
 
 ## The store submission
 
-Submitted on 17 August 2026 and waiting for review, with auto-publish on approval left on.
-Everything that blocked it is closed:
+1.0.1 is published, with auto-publish on approval left on. Everything that blocked the first
+submission is closed:
 [the five screenshots](https://github.com/kazunori279/interpretab/issues/1),
 [the manual checklist in Chrome](https://github.com/kazunori279/interpretab/issues/2),
 [the hour-long tab soak](https://github.com/kazunori279/interpretab/issues/3) — the third of the
@@ -1434,10 +1446,13 @@ That went in together with the category, which was Workflow & Planning on the re
 old Productivity bucket split that way, and is now Communication, whose definition names video
 conferencing outright.
 
-Beyond the listing, [#9](https://github.com/kazunori279/interpretab/issues/9) is the interesting
-one: getting the microphone's translated voice into a call without asking the user to install a
-virtual audio device first. [Meetings](#meetings) is what ships instead, and it is the whole
-feature apart from that one hop.
+1.0.2 carries [#9](https://github.com/kazunori279/interpretab/issues/9) — the microphone's
+translated voice into a Meet call with no virtual audio device to install — out from behind its
+flag and into the side panel, and replaces the marquee tile. Both in one review, because a package
+and a listing submitted separately are two reviews and the second waits on the first.
+[The translated microphone](#the-translated-microphone) has what the calls measured; the short
+version is that it works, at about three seconds mouth to far-ear, and that a second of that was
+Meet's Studio Sound.
 
 A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
 temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,

@@ -49,6 +49,8 @@
   "panelMicNoteConversation": {
     "message": "Für zwei Personen, die sich ein Mikrofon teilen: Er hört eine Ihrer beiden Sprachen und spricht die andere, laut über <b>Ihre Lautsprecher</b> — genau darum geht es in diesem Modus. Halten Sie das Mikrofon von den Lautsprechern fern, sonst hört er sich selbst. Er wartet, bis jemand ausgeredet hat, ist also etwas langsamer als Simultaneous — und er ist der einzige Modus, der das <b>Glossar</b> verwendet."
   },
+  "panelMicToCall": { "message": "Die Übersetzung in dieses Meet-Gespräch senden" },
+  "panelMicToCallNote": { "message": "Öffnen Sie in Meet <b>Einstellungen → Audio → Mikrofon</b> und wählen Sie <b>Interpretab (translated)</b>. Schalten Sie bei der Gelegenheit <b>Studio Sound</b> aus — es legt rund eine Sekunde auf einen Weg, der schon zu viel davon hat. Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
@@ -289,6 +291,7 @@
   "outputDeviceMissing": {
     "message": "Der in den Optionen gewählte Audioausgang ist nicht verfügbar ({1}), daher kommt Ihre übersetzte Stimme aus den Lautsprechern. Wählen Sie in den Optionen einen anderen."
   },
+  "callShimFailed": { "message": "Das übersetzte Mikrofon konnte dieser Seite nicht angeboten werden ({1}), das Gespräch hört es also nicht. Laden Sie den Meet-Tab neu und drücken Sie erneut auf Start." },
 
   "closeReasonGiven": { "message": "Gemini hat die Verbindung geschlossen: {1}" },
   "closeReasonOpaqueHint": {
