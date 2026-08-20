@@ -50,7 +50,7 @@
     "message": "Para dos personas que comparten un micrófono: oye uno de vuestros dos idiomas y habla el otro, en voz alta por <b>los altavoces</b>, que es de lo que se trata. Aleja el micrófono de los altavoces o se oirá a sí mismo. Espera a que cada uno termine de hablar, así que va un poco más lento que Simultaneous, y es el único modo que usa el <b>glosario</b>."
   },
   "panelMicToCall": { "message": "Enviar la traducción a esta llamada de Meet" },
-  "panelMicToCallNote": { "message": "En Meet, abre <b>Configuración → Audio → Micrófono</b> y elige <b>Interpretab (translated)</b>. Aprovecha para desactivar <b>Studio Sound</b>: añade cerca de un segundo a un camino que ya tiene de sobra. Tu propia voz va mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete." },
+  "panelMicToCallNote": { "message": "En Meet, abre <b>Configuración → Audio → Micrófono</b> y elige <b>Interpretab (translated)</b>. Aprovecha para desactivar <b>Studio Sound</b>. Tu propia voz va mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

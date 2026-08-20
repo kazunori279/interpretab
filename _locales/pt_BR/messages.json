@@ -50,7 +50,7 @@
     "message": "Para duas pessoas dividindo um microfone: ele ouve um dos seus dois idiomas e fala o outro, em voz alta pelas <b>suas caixas de som</b>, que é justamente a ideia deste modo. Deixe o microfone longe das caixas, senão ele ouve a si mesmo. Ele espera cada um terminar de falar, então é um pouco mais lento que o Simultaneous — e é o único modo que usa o <b>glossário</b>."
   },
   "panelMicToCall": { "message": "Enviar a tradução para esta chamada do Meet" },
-  "panelMicToCallNote": { "message": "No Meet, abra <b>Configurações → Áudio → Microfone</b> e escolha <b>Interpretab (translated)</b>. Já que está lá, desligue o <b>Studio Sound</b> — ele acrescenta perto de um segundo a um caminho que já tem demais. A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete." },
+  "panelMicToCallNote": { "message": "No Meet, abra <b>Configurações → Áudio → Microfone</b> e escolha <b>Interpretab (translated)</b>. Já que está lá, desligue o <b>Studio Sound</b>. A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
