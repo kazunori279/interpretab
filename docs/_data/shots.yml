@@ -1,0 +1,47 @@
+# Where each photographed picture in the install slideshow is, and where the one
+# thing it is about sits inside it.
+#
+# Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not
+# this: the next run overwrites the file.
+#
+# `mark` is a rectangle in percentages of the picture, and it is what lets
+# `_includes/install-steps.html` put a ring and an arrow on the right button
+# without anybody measuring a screenshot by hand. Re-take a picture and the
+# ring moves with the button. `side` is where the arrow stands, which is
+# wherever it fits — see `arrowSide()`. `width` and `height` are the picture's own, and
+# are there for the `aspect-ratio` the slideshow reserves space with — a
+# picture that arrives after the text around it has been laid out moves the
+# text, and a reader who has started reading is the one it moves under.
+
+store:
+  file: install-1-store.png
+  width: 1244
+  height: 248
+  side: left
+  mark:
+    x: 83.4
+    y: 29
+    width: 11.8
+    height: 16.1
+
+key:
+  file: install-2-key.png
+  width: 1165
+  height: 376
+  side: left
+  mark:
+    x: 4.9
+    y: 52.8
+    width: 90.1
+    height: 12.8
+
+start:
+  file: install-4-start.png
+  width: 672
+  height: 798
+  side: right
+  mark:
+    x: 2.9
+    y: 90.7
+    width: 15.9
+    height: 6.5

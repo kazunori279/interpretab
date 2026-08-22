@@ -61,16 +61,11 @@ Interpretab はオープンソースのツールです。翻訳機能を提供�
 
 これは音声が**途切れずに続いた場合**のおおよその費用です。翻訳の分量が少ない場合は発生する費用も下がります。タブ音声翻訳とマイク音声翻訳を同時に使うと 2 つ同時に翻訳することになるので、費用は 2 行の合計になります。
 
-## インストール
+## 5 分ではじめる
 
 Interpretab は以下の手順でインストールできます。
 
-1. [Chrome ウェブストアの Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm) を開き、**Chrome に追加**を押す。
-2. [aistudio.google.com/apikey](https://aistudio.google.com/apikey) で無料の Gemini API キーを取得し、
-   拡張機能の**オプション**ページに貼り付ける。
-3. 翻訳したいページを開き、**そのタブで Interpretab のツールバーアイコンをクリックする**。この
-   クリックが「このタブの音声を聞いていいですよ」という許可になります。押さずに始めるとエラーが発生します。
-4. サイドパネルで言語を選び、**Start** を押す。
+{% include install-steps.html %}
 
 Chrome 116 以降が必要です。サイドパネルを閉じても翻訳は止まりません。**Stop** はどのタブからでも
 ツールバーアイコンをクリックすれば届きます。

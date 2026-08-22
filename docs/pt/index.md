@@ -75,20 +75,11 @@ Estes são os preços da Gemini Live API que o
 São horas de áudio *contínuo*, então falar menos custa menos. Ligar o áudio da aba e o microfone ao
 mesmo tempo são duas traduções ao mesmo tempo, então o preço é a soma das duas linhas.
 
-## Instalação
+## Comece em 5 minutos
 
 O Interpretab se instala assim:
 
-1. Abra o [Interpretab na Chrome Web
-   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
-   e clique em **Usar no Chrome**.
-2. Pegue uma chave de API do Gemini gratuita em
-   [aistudio.google.com/apikey](https://aistudio.google.com/apikey) e cole na página de **Opções**
-   da extensão.
-3. Abra a página que quer traduzir e **clique no ícone do Interpretab na barra de ferramentas
-   estando naquela aba**. Esse clique é como você dá permissão para ouvir a aba — sem ele, aparece
-   um erro.
-4. Escolha o seu idioma no painel lateral e aperte **Start**.
+{% include install-steps.html %}
 
 Chrome 116 ou mais novo. Fechar o painel lateral não interrompe a tradução — o botão **Stop** está
 sempre a um clique no ícone da barra de ferramentas, de qualquer aba.

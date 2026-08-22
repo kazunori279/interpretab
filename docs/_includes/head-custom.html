@@ -20,6 +20,259 @@
          content is ASCII, and the column order of a CSV is not a sentence. */
       [dir="rtl"] pre,
       [dir="rtl"] code { direction: ltr; text-align: left; }
+
+      /* The Install slideshow — `_includes/install-steps.html`.
+         `--stage` is the height of the frame a picture sits in and `--pad` its
+         breathing room; both are here rather than in the rules below because
+         the figure has to know them to work out how wide it is allowed to be.
+         The drawings are written with logical properties, because one of the
+         ten pages runs the other way and a hard-coded `left` would put the
+         cursor on the wrong side of the icon it points at. The photographs are
+         not: a photograph of an English browser does not flip. */
+      .install { --stage: 30rem; --pad: 1rem; margin: 1.25rem 0 1.5rem; }
+      /* Hidden, not removed: `display:none` would take the radios out of the
+         focus order, and the arrow keys walking the steps is the whole of the
+         keyboard support this thing needs. */
+      .install-pick {
+        position: absolute; width: 1px; height: 1px;
+        margin: -1px; padding: 0; border: 0; clip-path: inset(50%); overflow: hidden;
+      }
+      .install-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
+      .install-tab {
+        display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer;
+        padding: 0.3rem 0.8rem 0.3rem 0.35rem; border: 1px solid #d0d7de; border-radius: 2rem;
+        font-size: 0.9rem; line-height: 1.5; color: #24292f; background: #fff;
+        -webkit-user-select: none; user-select: none;
+      }
+      [dir="rtl"] .install-tab { padding: 0.3rem 0.35rem 0.3rem 0.8rem; }
+      .install-tab:hover { background: #f6f8fa; }
+      .install-n {
+        display: inline-grid; place-items: center; flex: none;
+        width: 1.5rem; height: 1.5rem; border-radius: 50%;
+        background: #eaeef2; color: #57606a; font-size: 0.78rem; font-weight: 600;
+      }
+      .install-pane { display: none; }
+      .install-shot {
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
+        height: var(--stage); padding: var(--pad); background: #f6f8fa;
+        border: 1px solid #d0d7de; border-radius: 6px;
+      }
+      /* `object-fit` would fit the picture and leave the box it is in the size
+         of the frame, and the ring is positioned in percentages of that box. So
+         the box is given the picture's own ratio and made exactly as wide as it
+         can be without growing taller than the frame — which is the same size
+         `contain` would have arrived at, but with the box around it. */
+      .install-figure {
+        position: relative;
+        aspect-ratio: var(--wpx) / var(--hpx);
+        width: min(100%, calc((var(--stage) - var(--pad) * 2) * var(--wpx) / var(--hpx)));
+      }
+      .install-figure img {
+        display: block; width: 100%; height: 100%;
+        border: 1px solid #eaeef2; border-radius: 4px;
+      }
+      /* Two class names deep, and not one: the theme's `.markdown-body p` is
+         the more specific of the two otherwise, and this paragraph would sit
+         flush against the picture above it. */
+      .install .install-say { margin: 0.85rem 0 0; }
+      @media (max-width: 40rem) { .install { --stage: 19rem; --pad: 0.6rem; } }
+
+      /* The marker: a ring around the button the step is about, and an arrow
+         beside it. `--x`, `--y`, `--w` and `--h` are percentages of the picture
+         and come from `_data/shots.yml`, which `tests/guide-shots.mjs` measures
+         off the live page — so re-taking a picture moves the ring with the
+         button instead of leaving it behind. */
+      .install-mark {
+        position: absolute; left: var(--x); top: var(--y);
+        width: var(--w); height: var(--h); border-radius: 5px;
+        animation: install-ring 1.9s ease-out infinite;
+      }
+      .install-arrow { width: 2rem; height: 1.5rem; }
+      @media (max-width: 40rem) { .install-arrow { width: 1.4rem; height: 1.05rem; } }
+      .install-mark .install-arrow, .install-viewport .install-arrow, .install-cta .install-arrow {
+        position: absolute;
+      }
+      /* Which side the arrow stands on is decided in the include, by where
+         there is room for it. The `translate` property rather than `transform`:
+         the arrow that points the other way is a flipped `transform`, and an
+         animation that owned both would have to repeat the flip in every
+         keyframe. */
+      .install-mark--left .install-arrow {
+        top: 50%; right: 100%; translate: -0.5rem -50%;
+        animation: install-nudge-e 1.4s ease-in-out infinite;
+      }
+      .install-mark--right .install-arrow {
+        top: 50%; left: 100%; translate: 0.5rem -50%; transform: scaleX(-1);
+        animation: install-nudge-w 1.4s ease-in-out infinite;
+      }
+      .install-mark--above .install-arrow {
+        left: 3%; bottom: 100%; translate: 0 -0.55rem; transform: rotate(90deg);
+        animation: install-nudge-s 1.4s ease-in-out infinite;
+      }
+      @keyframes install-ring {
+        0%, 100% { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
+        55% { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 12px rgba(63, 81, 181, 0); }
+      }
+      @keyframes install-nudge-e { 0%, 100% { translate: -0.5rem -50%; } 50% { translate: 0 -50%; } }
+      @keyframes install-nudge-w { 0%, 100% { translate: 0.5rem -50%; } 50% { translate: 0 -50%; } }
+      @keyframes install-nudge-s { 0%, 100% { translate: 0 -0.55rem; } 50% { translate: 0 -0.05rem; } }
+      @keyframes install-nudge-n { 0%, 100% { translate: 0 0.45rem; } 50% { translate: 0 0; } }
+
+      /* The drawings: the top of a browser window, with everything but the one
+         thing the step is about reduced to a grey shape. Three steps use it —
+         the address bar with AI Studio typed into it, that page's Create API
+         key button, and the click on Chrome's own toolbar. */
+      .install-browser {
+        width: 100%; overflow: hidden;
+        background: #dee1e6; border: 1px solid #c9ccd1; border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(31, 35, 40, 0.12);
+      }
+      .install-tabstrip { display: flex; align-items: flex-end; height: 2.5rem; padding: 0.55rem 0.6rem 0; }
+      .install-tabchip { width: 14rem; height: 1.95rem; border-radius: 8px 8px 0 0; background: #fff; }
+      .install-omni { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.75rem; background: #fff; }
+      .install-nav, .install-ext, .install-avatar { flex: none; border-radius: 50%; background: #e8eaed; }
+      .install-nav { width: 1.15rem; height: 1.15rem; }
+      .install-ext, .install-avatar { width: 1.75rem; height: 1.75rem; }
+      .install-url { flex: 1; height: 1.75rem; border-radius: 0.9rem; background: #f1f3f4; }
+      /* The address bar with something in it, which is the one drawing where
+         the text is the point rather than a grey bar standing in for it.
+         `--typed` is being typed and is what its step is about; `--page` is
+         just where the reader already is. */
+      .install-url--typed, .install-url--page {
+        display: flex; align-items: center; gap: 0.2rem;
+        padding: 0 0.8rem; overflow: hidden;
+        color: #3c4043; font-size: 0.85rem; white-space: nowrap; direction: ltr;
+      }
+      .install-url--typed { animation: install-ring 1.9s ease-out infinite; }
+      .install-url--page { color: #5f6368; }
+      .install-caret {
+        flex: none; width: 2px; height: 1rem; background: #3f51b5;
+        animation: install-blink 1.1s steps(1) infinite;
+      }
+      .install-target { position: relative; flex: none; }
+      .install-target img { display: block; width: 1.6rem; height: 1.6rem; border-radius: 6px; }
+      .install-target::before {
+        content: ""; position: absolute; inset: -0.5rem; border-radius: 50%;
+        border: 2px solid #3f51b5; animation: install-pulse 1.9s ease-out infinite;
+      }
+      .install-pointer {
+        position: absolute; inset-inline-start: 55%; inset-block-start: 60%;
+        width: 1.4rem; height: 1.4rem;
+        animation: install-click 1.9s ease-in-out infinite;
+      }
+      [dir="rtl"] .install-pointer { transform: scaleX(-1); }
+      .install-viewport { position: relative; height: 9rem; background: #fff; border-top: 1px solid #ebedf0; }
+      /* The arrow the address-bar step points back up with, standing in the
+         empty page below the bar. */
+      .install-arrow--up {
+        left: 20%; top: 0.6rem; transform: rotate(-90deg);
+        animation: install-nudge-n 1.4s ease-in-out infinite;
+      }
+      [dir="rtl"] .install-arrow--up { left: auto; right: 20%; }
+
+      /* AI Studio, drawn: a heading, a line of text, and the button. */
+      .install-page { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.2rem 1.3rem; }
+      .install-line { height: 0.55rem; width: 72%; border-radius: 0.3rem; background: #eceff3; }
+      .install-line--head { width: 40%; height: 0.85rem; background: #dfe3e8; }
+      .install-cta {
+        position: relative; align-self: center; margin-top: 0.4rem;
+        padding: 0.4rem 0.95rem; border-radius: 2rem; background: #0b57d0;
+        color: #fff; font-size: 0.82rem; line-height: 1.4; white-space: nowrap; direction: ltr;
+        animation: install-cta-ring 1.9s ease-out infinite;
+      }
+      .install-cta .install-arrow {
+        top: 50%; right: 100%; translate: -0.5rem -50%;
+        animation: install-nudge-e 1.4s ease-in-out infinite;
+      }
+      [dir="rtl"] .install-cta .install-arrow {
+        right: auto; left: 100%; transform: scaleX(-1);
+        animation-name: install-nudge-w;
+      }
+      /* The button beside the marked one — drawn, so the dialog is recognisable,
+         and still, so it is clear which of the two the step is asking for. */
+      .install-cta--still { animation: none; }
+      /* The project picker, and the key it hands back. The key is dots: a
+         picture of a plausible key is a thing somebody eventually types in. */
+      .install-select {
+        position: relative; align-self: center;
+        padding: 0.4rem 2rem 0.4rem 0.9rem; border: 1px solid #c4c7cc; border-radius: 6px;
+        background: #fff; color: #3c4043; font-size: 0.82rem; line-height: 1.4;
+        white-space: nowrap; direction: ltr;
+        animation: install-cta-ring 1.9s ease-out infinite;
+      }
+      .install-select::after {
+        content: ""; position: absolute; inset-inline-end: 0.7rem; top: 50%;
+        margin-top: -0.1rem; border: 0.28rem solid transparent; border-top-color: #5f6368;
+      }
+      .install-select .install-arrow {
+        top: 50%; right: 100%; translate: -0.5rem -50%;
+        animation: install-nudge-e 1.4s ease-in-out infinite;
+      }
+      [dir="rtl"] .install-select .install-arrow {
+        right: auto; left: 100%; transform: scaleX(-1);
+        animation-name: install-nudge-w;
+      }
+      .install-keyline {
+        align-self: center; max-width: 100%; overflow: hidden;
+        padding: 0.35rem 0.8rem; border-radius: 6px; background: #f1f3f4;
+        color: #5f6368; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.72rem; letter-spacing: 0.02em; white-space: nowrap; direction: ltr;
+      }
+      /* The page the toolbar step is looking at, which the step now names. */
+      .install-video {
+        position: absolute; inset-inline-start: 50%; top: 1.6rem; translate: -50% 0;
+        display: flex; align-items: center; justify-content: center;
+        width: 11rem; height: 6.2rem; border-radius: 6px; background: #1f2328;
+      }
+
+      @keyframes install-pulse {
+        0% { transform: scale(0.8); opacity: 1; }
+        70% { transform: scale(1.3); opacity: 0; }
+        100% { transform: scale(1.3); opacity: 0; }
+      }
+      @keyframes install-click {
+        0%, 60%, 100% { translate: 0 0; }
+        70%, 80% { translate: -0.12rem 0.12rem; }
+      }
+      @keyframes install-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+      @keyframes install-cta-ring {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
+        55% { box-shadow: 0 0 0 12px rgba(63, 81, 181, 0); }
+      }
+      /* Everything above moves, and none of it has to. A ring that is drawn but
+         still, and an arrow parked beside the thing it points at, say the same
+         sentence to somebody who has asked their machine to stop animating. */
+      @media (prefers-reduced-motion: reduce) {
+        .install-target::before, .install-pointer, .install-mark, .install-arrow,
+        .install-url--typed, .install-caret, .install-cta, .install-select { animation: none; }
+        .install-mark { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
+        .install-url--typed { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
+        .install-cta, .install-select { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
+        .install-cta--still { box-shadow: none; }
+      }
+
+      {%- comment -%}
+        One pair of rules per step, and there is no way around the indices: CSS
+        can say "the second pane" but not "the pane belonging to the radio that
+        is checked". The count comes from the data, so a step added to
+        `_data/install.yml` is styled without anybody remembering this file —
+        from English, because that is the language every other one is checked
+        against and a translation that is short a step should show the gap
+        rather than quietly restyle the section.
+      {%- endcomment -%}
+      {%- assign step_count = site.data.install.en.steps | size -%}
+      {%- for i in (1..step_count) %}
+      #install-step-{{ i }}:checked ~ .install-tabs .install-tab:nth-child({{ i }}) {
+        background: #0969da; border-color: #0969da; color: #fff;
+      }
+      #install-step-{{ i }}:checked ~ .install-tabs .install-tab:nth-child({{ i }}) .install-n {
+        background: rgba(255, 255, 255, 0.25); color: #fff;
+      }
+      #install-step-{{ i }}:focus-visible ~ .install-tabs .install-tab:nth-child({{ i }}) {
+        outline: 2px solid #0969da; outline-offset: 2px;
+      }
+      #install-step-{{ i }}:checked ~ .install-panes .install-pane:nth-child({{ i }}) { display: block; }
+      {%- endfor %}
     </style>
     <script>
 {% include lang-redirect.js %}

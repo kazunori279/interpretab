@@ -680,6 +680,113 @@ test("the site knows about every guide page, and every page declares its languag
   }
 });
 
+test("the install slideshow has its pictures, its steps and its ten translations", () => {
+  // The install section is the one part of the guide that is markup rather than
+  // markdown: `_includes/install-steps.html` is the slideshow, `_data/install.yml`
+  // is its words in ten languages, `_data/shots.yml` is where the pictures and
+  // their markers are, and the CSS that decides which pane is on screen is a
+  // Liquid loop in `_includes/head-custom.html`. Four files that have to agree,
+  // none of which mentions the others in a way a reader would notice, and the
+  // failure is silent: a step added in one language only, or a language added to
+  // `languages.yml` and not here, renders a blank pane or an English one on a
+  // page that is not English.
+  const include = fs.readFileSync(path.join(SITE, "_includes", "install-steps.html"), "utf8");
+  const pictures = [...include.matchAll(/"(\/assets\/[^"]+)" \| relative_url/g)].map(([, p]) => p);
+  for (const picture of pictures) {
+    assert.ok(
+      fs.existsSync(path.join(SITE, picture.slice(1))),
+      `the slideshow points at ${picture}, which does not exist — run tests/guide-shots.mjs`
+    );
+  }
+
+  // The photographs, which the include names by `figures` and finds in
+  // `shots.yml` rather than spelling out. A name in one and not the other draws
+  // a step with no picture in it.
+  const shots = fs.readFileSync(path.join(SITE, "_data", "shots.yml"), "utf8");
+  const figures = include.match(/assign figures = "([^"]+)"/)[1].split(",");
+  const photographed = [...shots.matchAll(/^([a-z]+):$/gm)].map(([, name]) => name);
+  for (const name of photographed) {
+    assert.ok(
+      figures.includes(name),
+      `docs/_data/shots.yml has a picture called ${name} that no step in the slideshow uses`
+    );
+    const file = shots.match(new RegExp(`^${name}:\\n  file: (\\S+)`, "m"))[1];
+    assert.ok(
+      fs.existsSync(path.join(SITE, "assets", file)),
+      `docs/_data/shots.yml points at ${file}, which does not exist — run tests/guide-shots.mjs`
+    );
+  }
+  for (const side of [...shots.matchAll(/^  side: (\S+)$/gm)].map(([, s]) => s)) {
+    assert.ok(
+      include.includes("install-mark--{{ shot.side }}"),
+      "the slideshow no longer takes the arrow's side from the data that measures it"
+    );
+    assert.match(
+      fs.readFileSync(path.join(SITE, "_includes", "head-custom.html"), "utf8"),
+      new RegExp(`\\.install-mark--${side} \\.install-arrow`),
+      `docs/_data/shots.yml asks for an arrow on the ${side}, which head-custom.html cannot draw`
+    );
+  }
+
+  // Blocks, because a real YAML parser is a dependency and this file is two
+  // levels deep: a language, its steps, and a `tab` and a `body` on each.
+  const yaml = fs.readFileSync(path.join(SITE, "_data", "install.yml"), "utf8");
+  const languages = yaml.split(/^(?=[a-z]{2}:$)/m).slice(1);
+  const translated = languages.map((block) => block.split(":")[0]);
+  assert.deepEqual(
+    translated.slice().sort(),
+    ["en", ...guideDirs()].sort(),
+    "docs/_data/install.yml and the guide pages on disk disagree"
+  );
+  // Every link in a step leaves the guide, and the slideshow's state is a radio
+  // button — so a reader who follows one and comes back lands on step one again.
+  // The `target` is added once, by the include, over bodies that are written
+  // without one; a translation that wrote its own would end up with two.
+  assert.match(
+    include,
+    /replace: '<a href=', '<a target="_blank" rel="noopener" href='/,
+    "install-steps.html no longer opens the steps' links in a new tab"
+  );
+  for (const anchor of yaml.match(/<a [^>]*>/g) || []) {
+    assert.match(anchor, /^<a href="https:/, `install.yml writes a link the include cannot retarget: ${anchor}`);
+  }
+
+  // English is the count everything else is measured against: it is the fallback
+  // every page falls back to, and the one the CSS counts its panes from. A
+  // language a step short renders a tab that opens onto nothing.
+  const english = languages[translated.indexOf("en")];
+  const count = [...english.matchAll(/^ {4}- tab: \S/gm)].length;
+  assert.ok(count >= 4, `install.yml: English is down to ${count} steps`);
+  for (const [i, block] of languages.entries()) {
+    const steps = [...block.matchAll(/^ {4}- tab: \S/gm)].length;
+    const bodies = [...block.matchAll(/^ {6}body: \S/gm)].length;
+    assert.equal(steps, count, `install.yml: ${translated[i]} has ${steps} steps, not ${count}`);
+    assert.equal(bodies, count, `install.yml: ${translated[i]} has ${bodies} of its ${count} sentences`);
+  }
+  assert.equal(
+    figures.length,
+    count,
+    `install-steps.html names ${figures.length} pictures for ${count} steps`
+  );
+
+  // The CSS counts the panes rather than being told, so the only thing left to
+  // check is that it is still counting the same list.
+  const css = fs.readFileSync(path.join(SITE, "_includes", "head-custom.html"), "utf8");
+  assert.match(css, /assign step_count = site\.data\.install\.en\.steps \| size/);
+  assert.match(css, /for i in \(1\.\.step_count\)/);
+
+  // And the pages, each of which is now a one-line call rather than its own copy
+  // of the list. A page that lost the line lost its install section outright.
+  for (const code of ["en", ...guideDirs()]) {
+    const file = code === "en" ? "index.md" : path.join(code, "index.md");
+    assert.match(
+      fs.readFileSync(path.join(SITE, file), "utf8"),
+      /\{%\s*include install-steps\.html\s*%\}/,
+      `docs/${file} does not include the install slideshow`
+    );
+  }
+});
+
 test("the free tier is never shown a price", () => {
   // Google charges a free-tier key nothing, so a dollar figure there is a bill
   // that does not exist — and the natural reading of one is that a bill is

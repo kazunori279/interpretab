@@ -76,20 +76,11 @@ Ce sont des heures d'audio *continu*, donc parler moins coûte moins. Activer l'
 le microphone ensemble, c'est deux traductions à la fois, donc le prix est la somme des deux
 lignes.
 
-## Installation
+## Commencez en 5 minutes
 
 Interpretab s'installe ainsi :
 
-1. Ouvrez [Interpretab sur le Chrome Web
-   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
-   et cliquez sur **Ajouter à Google Chrome**.
-2. Obtenez une clé d'API Gemini gratuite sur
-   [aistudio.google.com/apikey](https://aistudio.google.com/apikey) et collez-la dans la page
-   **Options** de l'extension.
-3. Ouvrez la page à traduire et **cliquez sur l'icône Interpretab de la barre d'outils depuis cet
-   onglet**. Ce clic est la façon dont vous donnez la permission d'écouter l'onglet : sans lui, vous
-   obtenez une erreur.
-4. Choisissez votre langue dans le panneau latéral et appuyez sur **Start**.
+{% include install-steps.html %}
 
 Chrome 116 ou plus récent. Fermer le panneau latéral n'arrête pas la traduction : le bouton **Stop**
 est toujours à un clic sur l'icône de la barre d'outils, depuis n'importe quel onglet.

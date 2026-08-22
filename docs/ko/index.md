@@ -61,16 +61,11 @@ Interpretab은 오픈소스 도구입니다. 비용이 드는 쪽은 번역을 �
 
 *끊김 없이* 이어지는 오디오 기준이므로, 말이 적으면 비용도 줄어듭니다. 탭 오디오와 마이크를 함께 켜면 번역을 두 개 동시에 돌리는 것이므로 요금은 두 줄의 합이 됩니다.
 
-## 설치
+## 5분 만에 시작하기
 
 Interpretab은 다음과 같이 설치합니다.
 
-1. [Chrome 웹 스토어의 Interpretab](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)을
-   열고 **Chrome에 추가**를 누릅니다.
-2. [aistudio.google.com/apikey](https://aistudio.google.com/apikey)에서 무료 Gemini API 키를 받아
-   확장 프로그램의 **옵션** 페이지에 붙여넣습니다.
-3. 번역할 페이지를 열고, **그 탭에서 툴바의 Interpretab 아이콘을 클릭합니다.** 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
-4. 사이드 패널에서 언어를 고르고 **Start**를 누릅니다.
+{% include install-steps.html %}
 
 Chrome 116 이상이 필요합니다. 사이드 패널을 닫아도 번역은 멈추지 않습니다. **Stop**은 어느 탭에서든 툴바 아이콘 클릭 한 번이면 됩니다.
 

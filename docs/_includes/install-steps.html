@@ -1,0 +1,182 @@
+{%- comment -%}
+  The install slideshow, under "Get started in 5 minutes": one step showing at a time, each with a
+  picture and a marker on the one thing the step asks the reader to press.
+  Words come from `_data/install.yml`, so the ten guide pages share this markup
+  and differ only in their sentences.
+
+  No script. The state is a radio button per step — visually hidden, still
+  focusable, so the arrow keys walk the steps the way they walk any radio group
+  — and the tabs are `<label>`s pointing at them. Everything else is `:checked ~`
+  in `_includes/head-custom.html`. A slideshow that needs JavaScript to show its
+  first slide is a slideshow that shows nothing while the page is still loading,
+  and this one is the first thing a new reader is looking for.
+
+  All the panes are in the DOM whether or not they are on screen, which is what
+  makes the section still readable to a search engine, to Reader mode, and to
+  anyone who prints it.
+
+  `figures` is the one thing here that is positional: the nth step gets the nth
+  picture, and a step added to `install.yml` needs a name added here. Three of
+  the eight are photographs, taken by `tests/guide-shots.mjs`, and the rectangle
+  their ring goes around comes from `_data/shots.yml`, which the same script
+  writes — so the ring follows the button rather than being typed in as a
+  percentage somebody measured once. The other five are drawings: four of them
+  are AI Studio, which is behind a Google sign-in, and one is a click on
+  Chrome's own toolbar, which nothing running inside a page can photograph.
+
+  Every link in a step opens in a new tab, and the `target` is added here rather
+  than written into `install.yml`. A reader who follows the Chrome Web Store
+  link in step one and comes back with the back button comes back to step one —
+  the slideshow's state is a radio button, and a fresh page has it on the first
+  step again. Adding it here is also the version that cannot be forgotten in one
+  of the nine translations.
+{%- endcomment -%}
+{%- assign copy = site.data.install[page.lang] | default: site.data.install.en -%}
+{%- assign steps = copy.steps -%}
+{%- assign figures = "store,studio,create,project,copy,key,toolbar,start" | split: "," -%}
+<div class="install">
+  {%- for step in steps %}
+  <input class="install-pick" type="radio" name="install-step" id="install-step-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+  {%- endfor %}
+
+  <div class="install-tabs">
+    {%- for step in steps %}
+    <label class="install-tab" for="install-step-{{ forloop.index }}"><span class="install-n">{{ forloop.index }}</span>{{ step.tab }}</label>
+    {%- endfor %}
+  </div>
+
+  <div class="install-panes">
+    {%- for step in steps %}
+    {%- assign figure = figures[forloop.index0] -%}
+    {%- assign shot = site.data.shots[figure] -%}
+    <div class="install-pane">
+      <div class="install-shot">
+        {%- if shot -%}
+        {%- comment -%}
+          A photograph, with the ring where `shots.yml` says the button is and
+          the arrow on whichever side of it `shots.yml` found room on. Both were
+          measured on the live page when the picture was taken.
+        {%- endcomment -%}
+        <div class="install-figure" style="--wpx: {{ shot.width }}; --hpx: {{ shot.height }}">
+          <img src="{{ "/assets/" | append: shot.file | relative_url }}" alt="{{ step.tab }}" width="{{ shot.width }}" height="{{ shot.height }}">
+          <span class="install-mark install-mark--{{ shot.side }}" aria-hidden="true"
+                style="--x: {{ shot.mark.x }}%; --y: {{ shot.mark.y }}%; --w: {{ shot.mark.width }}%; --h: {{ shot.mark.height }}%">
+            <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        {%- else -%}
+        {%- comment -%}
+          A drawing, and the same drawing five times: a browser window with
+          everything but the one thing the step is about reduced to a grey
+          shape. Blank where a real window would have a page in it, except on
+          the step that is about something on the page — a mocked-up web page is
+          detail a reader will try to read.
+        {%- endcomment -%}
+        <div class="install-browser" aria-hidden="true">
+          <div class="install-tabstrip"><span class="install-tabchip"></span></div>
+          <div class="install-omni">
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            {%- if figure == "studio" %}
+            <span class="install-url install-url--typed">aistudio.google.com/apikey<span class="install-caret"></span></span>
+            {%- elsif figure == "toolbar" %}
+            <span class="install-url install-url--page">youtube.com</span>
+            {%- else %}
+            <span class="install-url"></span>
+            {%- endif %}
+            <span class="install-ext"></span>
+            {%- if figure == "toolbar" %}
+            <span class="install-target">
+              <img src="{{ "/assets/icon-128.png" | relative_url }}" alt="" width="24" height="24">
+              <svg class="install-pointer" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M5 2.6 19 12.4l-6.1.6-3 5.6z" fill="#fff" stroke="#1f2328" stroke-width="1.6" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            {%- else %}
+            <span class="install-ext"></span>
+            {%- endif %}
+            <span class="install-avatar"></span>
+          </div>
+          <div class="install-viewport">
+            {%- if figure == "create" %}
+            {%- comment -%}
+              AI Studio, drawn: a heading, a line of text and the button, which
+              is the only part of that page this step is about. The button keeps
+              its English label, like every other picture in the guide — the
+              sentence under it is the translated half.
+            {%- endcomment -%}
+            <div class="install-page">
+              <span class="install-line install-line--head"></span>
+              <span class="install-line"></span>
+              <span class="install-cta">Create API key
+                <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            {%- endif %}
+            {%- if figure == "project" %}
+            {%- comment -%}
+              The dialog the Create API key button opens: which Google Cloud
+              project the key belongs to. Two controls, and only the first of
+              them is what this step is about, so only the first is marked.
+            {%- endcomment -%}
+            <div class="install-page">
+              <span class="install-line install-line--head"></span>
+              <span class="install-select">Default project
+                <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="install-cta install-cta--still">Create key</span>
+            </div>
+            {%- endif %}
+            {%- if figure == "copy" %}
+            {%- comment -%}
+              The key, once it exists. The characters are dots on purpose: a
+              picture of a key is a thing readers try to read, and a plausible
+              one is a thing somebody eventually types in.
+            {%- endcomment -%}
+            <div class="install-page">
+              <span class="install-line install-line--head"></span>
+              <span class="install-keyline">AIzaSy••••••••••••••••••••••••••••••</span>
+              <span class="install-cta">Copy
+                <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            {%- endif %}
+            {%- if figure == "toolbar" %}
+            {%- comment -%}
+              A video, because the step says to try one: a dark rectangle and a
+              play triangle is as much of YouTube as a diagram should draw.
+            {%- endcomment -%}
+            <div class="install-video">
+              <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                <path d="M9 6.5 18 12l-9 5.5z" fill="#fff"/>
+              </svg>
+            </div>
+            {%- endif %}
+            {%- if figure == "studio" %}
+            <svg class="install-arrow install-arrow--up" viewBox="0 0 32 24" width="32" height="24" fill="none">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {%- endif %}
+          </div>
+        </div>
+        {%- endif %}
+      </div>
+      <p class="install-say">{{ step.body | replace: '<a href=', '<a target="_blank" rel="noopener" href=' }}</p>
+    </div>
+    {%- endfor %}
+  </div>
+</div>

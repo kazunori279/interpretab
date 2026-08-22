@@ -75,20 +75,11 @@ Das sind Stunden *durchgehenden* Audios, weniger Reden kostet also weniger. Tab-
 zusammen einzuschalten sind zwei Übersetzungen gleichzeitig, der Preis ist dann die Summe beider
 Zeilen.
 
-## Installation
+## In 5 Minuten loslegen
 
 Interpretab installieren Sie so:
 
-1. [Interpretab im Chrome Web
-   Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm)
-   öffnen und auf **Hinzufügen** klicken.
-2. Einen kostenlosen Gemini-API-Schlüssel unter
-   [aistudio.google.com/apikey](https://aistudio.google.com/apikey) holen und auf der Seite
-   **Optionen** der Erweiterung einfügen.
-3. Die zu übersetzende Seite öffnen und **auf diesem Tab das Interpretab-Symbol in der
-   Symbolleiste anklicken**. Mit diesem Klick geben Sie die Erlaubnis, den Tab mitzuhören — ohne ihn
-   bekommen Sie eine Fehlermeldung.
-4. Im Seitenbereich Ihre Sprache wählen und **Start** drücken.
+{% include install-steps.html %}
 
 Chrome 116 oder neuer. Das Schließen des Seitenbereichs beendet die Übersetzung nicht — die
 Schaltfläche **Stop** ist von jedem Tab aus immer einen Klick auf das Symbolleisten-Symbol entfernt.

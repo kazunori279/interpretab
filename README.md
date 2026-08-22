@@ -1110,6 +1110,37 @@ agree about a reader without being told to. The trap it is built around is the b
 it points at the page that redirects, so without the stored choice a German reader could never
 reach English.
 
+The guide's install section — "Get started in 5 minutes" — is the one part of it that is markup
+rather than markdown: a slideshow of eight steps, a picture each, one showing at a time. It was a
+numbered list, and a numbered list is what an installer reads *after* deciding to install — the
+sentences said what to do without ever showing what any of it looks like, and one of them was
+"get a free Gemini API key", which is a sign-in, a button, a project picker and a copy compressed
+into six words. So the key is now four steps of its own, and the step that starts a session names
+a page to try it on — a talking video on YouTube — rather than leaving the reader to think of one.
+`docs/_includes/install-steps.html` is the markup once, `docs/_data/install.yml` is its words ten
+times, and the CSS is in `head-custom.html` with the rest. There is no script in it. State is a
+radio button per step, hidden but still focusable, so the arrow keys walk the steps the way they
+walk any radio group, and the tabs are `<label>`s pointing at them; everything else is
+`:checked ~`. A slideshow that needs JavaScript to show its first slide shows nothing while the
+page is still loading, which is exactly when a new reader is looking at it, and every pane is in
+the DOM either way — which keeps the section readable to a search engine, to Reader mode, and on
+paper.
+
+Each step also marks the one thing it is asking the reader to press: a ring that pulses around it
+and an SVG arrow that nudges towards it, both CSS, both off under `prefers-reduced-motion`. On the
+three photographs the ring is not a percentage somebody measured once — `tests/guide-shots.mjs`
+reads the button's box off the live DOM as it takes the picture, works out which side of it there is
+room for an arrow on, and writes both to `docs/_data/shots.yml`, so re-taking a screenshot moves the
+ring with the button. The other five pictures are drawings sharing one CSS browser mock: four are AI
+Studio, which is behind a Google sign-in, and one is a click on Chrome's own toolbar, which no page
+can photograph — that one has the extension's real icon in it. The drawn key is dots rather than
+characters, because a plausible-looking key in a picture is a thing somebody eventually types in.
+
+Links in a step open in a new tab, and the `target` is added by the include rather than written
+into the data. The state is a radio button, so a reader who follows the Web Store link and comes
+back with the back button comes back to step one — and putting it in one place is the version that
+cannot be missed in one of the nine translations.
+
 ## Development
 
 ```bash
@@ -1269,6 +1300,63 @@ rewritten sentences wrap enough to push Start off the bottom of the card.
 The other two are a live session with a real video playing and a real side panel open. Nothing
 inside a page can photograph browser UI and no harness can supply the video, so those stay manual —
 as do the two `spare-*.png`, which are from the same sitting and were not re-taken.
+
+**`tests/guide-shots.mjs` — the three photographs in the guide's install slideshow.**
+
+```bash
+node tests/guide-shots.mjs            # headless, ~15 seconds
+```
+
+`docs/assets/install-1-store.png`, `-2-key.png` and `-4-start.png`: the store listing with its Add
+to Chrome button, the Options page with a key in it, and the side panel with tab audio on and Start
+underneath. Same reasoning as the store shots and deliberately a different script. Those three are
+1280×800 because the store demands it and are composed to be looked at full size; these are crops,
+sized to be legible in the guide's 980px column, and one of them is not an extension page at all.
+
+Cropping happens in Chrome, through `Page.captureScreenshot`'s `clip`, and the rectangle is
+measured off the DOM rather than typed in — the key shot runs from the top of the "Gemini API key"
+heading to the bottom of the line under the field, so a section that grows a line is still framed.
+`scale` is the other half: the pages are laid out narrow, so their own text is large relative to
+the frame, and then rasterized at 1.6× so the frame is still wide enough to fill the column.
+
+The listing is the one page here that belongs to somebody else, so the thing the picture is *for*
+is checked rather than assumed: the Add to Chrome button's rectangle is read off the page and has
+to be inside the crop, and a layout change on Google's side fails the run instead of quietly
+shipping a picture of a button that is no longer in it. The crop starts below the store's own
+header bar, because headless Chrome will not draw the store's logo and a broken-image glyph in the
+corner of a picture meant to build confidence undoes the picture. It needs no key either, and
+shows the same obvious fake the store shots do.
+
+The script writes `docs/_data/shots.yml` as well as the pictures. Every rectangle it already
+measured to crop by, it measures again relative to the crop — the button's box as a percentage of
+the picture, and which side of it the arrow will fit on at the width the guide gives it. That is
+the marker the slideshow draws, so the ring is generated by the same run that takes the photograph
+and cannot drift away from it. The file says not to edit it by hand, and `npm test` checks that
+each picture it names is on disk and each side it asks for is one the CSS can draw.
+
+**`tests/guide-preview.mjs` — the install slideshow, in a browser, before it is pushed.**
+
+```bash
+npm run preview                       # opens English; `node tests/guide-preview.mjs ja` for another
+```
+
+GitHub Pages builds the guide and nothing here builds it locally — there is no Gemfile, and the
+Ruby macOS ships is too old for a Jekyll new enough to match Pages. Everything else on those pages
+is markdown and renders the same wherever it is read; the slideshow is the one part that is markup,
+so it is the one part with a preview. This is not Jekyll. It is a small interpreter for the subset
+of Liquid the include and the stylesheet actually use — `assign`, `if`, `for`, ranges, and seven
+filters — run against the real `_data/install.yml` and `_data/shots.yml`, writing one file per
+language into a temp directory with a strip along the top to move between them. A tag or filter it
+does not know throws rather than rendering as nothing: the include has branches in it now, and a
+preview that quietly shows the wrong branch is worse than no preview.
+
+What it is for is the part a diff cannot show: whether the tabs wrap, whether a translated label is
+too long, whether the ring lands on the button, whether the arrow has room on the side the data
+picked, and whether Arabic comes out mirrored. It loads the published site's own stylesheet rather
+than Primer from a CDN. The theme's `.markdown-body` rules are half of what the slideshow is laid
+out against — one of them is more specific than a single class — and Primer on its own leaves its
+colours unset, so links came out the colour of body text and the preview was lying about the one
+thing it is there to show.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is
