@@ -1498,7 +1498,9 @@ conferencing outright.
 translated voice into a Meet call with no virtual audio device to install — out from behind its
 flag and into the side panel, and replaces the marquee tile and the promotional video. All of it
 in one review, because a package and a listing submitted separately are two reviews and the second
-waits on the first. Submitted 2026-08-20 with auto-publish on approval.
+waits on the first. Submitted 2026-08-20 with auto-publish on approval, and published 2026-08-22 —
+two days for a review that covered a package, a new marquee tile and a new video at once, which is
+the argument for having bundled them.
 [The translated microphone](#the-translated-microphone) has what the calls measured; the short
 version is that it works, at about three seconds mouth to far-ear, and that a second of that was
 Meet's Studio Sound.
@@ -1507,8 +1509,9 @@ Meet's Studio Sound.
 mid-sentence now stops and says so, rather than reconnecting ten times and blaming the network —
 [Session expiry](#session-expiry) has what the server actually does, which took an override on the
 project's per-minute limit to find out. And the panel's Meet note no longer spends a clause
-explaining Studio Sound. Not submitted: 1.0.2 is still in review, and a package uploaded over one
-under review replaces it rather than queueing behind it.
+explaining Studio Sound. Not submitted yet — it was held while 1.0.2 was in review, because a
+package uploaded over one under review replaces it rather than queueing behind it, and that hold
+is now over.
 
 A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
 temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,
