@@ -1,66 +1,65 @@
-O Interpretab traduz o que o seu navegador está reproduzindo — um vídeo, um webinar, a transmissão de uma conferência, o outro lado de uma chamada do Meet — para o seu idioma, em voz alta e sobre a própria página, enquanto acontece.
+O Interpretab traduz em tempo real, pela Gemini Live API, o que a aba do navegador está tocando e o que você fala no microfone. A tradução é lida em voz alta e, ao mesmo tempo, escrita na página como legenda.
 
-Não é uma ferramenta de legendas parafusada em um player, nem uma dublagem que encobre as palavras. Ele dá as duas coisas, e funciona nos dois sentidos.
+• Assista a vídeos, transmissões, podcasts e reuniões on-line em 78 idiomas, ouvindo e lendo ao mesmo tempo.
+• Em apresentações e transmissões, legende a sua própria voz no idioma do público, na página que você está compartilhando.
+• No Google Meet, as pessoas da chamada ouvem a sua voz dublada no idioma delas.
+• Use o microfone do seu PC ou Mac como intérprete em tempo real para a pessoa à sua frente.
 
-▍ LEGENDAS NA PÁGINA, NÃO SÓ UMA VOZ
+O navegador se conecta direto à Gemini API com uma chave fornecida por você. Não há servidor no meio do caminho, e com uma chave do plano gratuito não custa nada usar.
 
-A tradução é falada por cima do vídeo E escrita sobre ele: embaixo, ao centro, três linhas rolando, acompanhando o vídeo até a tela cheia. Leia os termos que você não pegou e ouça o resto. Cada sentido tem o seu próprio interruptor de legenda, então dá para legendar o vídeo sem legendar você mesmo, e alternar qualquer um dos dois no meio da sessão sem derrubar a conexão.
+Guia: https://kazunori279.github.io/interpretab/
 
-▍ OS DOIS SENTIDOS, AO MESMO TEMPO
+▍ FALADO EM VOZ ALTA E LEGENDADO NA PÁGINA
 
-O áudio da aba para o seu idioma, e o seu microfone para o idioma deles. Fale português e seja ouvido em japonês pelas pessoas que estão na sala com você; ouça o japonês delas de volta em português. Os dois rodam como sessões independentes, então qualquer um pode ser desligado. No modo de conversa bidirecional o microfone fica mudo enquanto a própria tradução toca, de modo que o intérprete nunca interpreta a si mesmo; o modo simultâneo responde enquanto você ainda está falando — é isso que o torna simultâneo — então use fones de ouvido.
+As legendas ficam na parte inferior central, três linhas que vão rolando, e funcionam também em tela cheia. O tamanho é um controle deslizante nas Opções, de 16 a 64 px.
 
-▍ MEET, ZOOM E TEAMS
+▍ A ABA E O MICROFONE, AO MESMO TEMPO
 
-Ligue os dois sentidos e aponte-os em direções opostas: a aba da reunião interpretada para o seu idioma com legendas, o seu microfone interpretado para o idioma deles. Ouvir o outro lado funciona de imediato, em qualquer serviço.
+O áudio da aba é traduzido para o seu idioma, e o seu microfone para o idioma da outra pessoa. Fale em português e quem está na sala ouve inglês; o inglês dessa pessoa volta para você em português. A tradução do microfone tem dois modos: Simultaneous, que começa a traduzir enquanto você ainda está falando, e Two-way conversation, que traduz por turnos uma conversa entre dois idiomas.
 
-No Google Meet, ser ouvido também funciona sem instalar nada: o painel lateral oferece à chamada um microfone que carrega a sua voz traduzida, e você escolhe “Interpretab (translated)” nas próprias configurações de áudio do Meet. A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete. Em qualquer outro serviço é preciso um dispositivo de áudio virtual (veja O QUE ELE NÃO FAZ), no qual o Interpretab toca a sua voz traduzida enquanto a tradução do outro lado continua nas suas caixas de som.
+▍ EM REUNIÕES ON-LINE
 
-▍ UM MICROFONE, DUAS PESSOAS
+Em uma reunião on-line, o áudio do outro lado é traduzido, reproduzido e legendado (para ferramentas de reunião que rodam em uma aba do navegador).
 
-O microfone tem um segundo modo. Configure português ⇄ japonês, ponha o notebook entre vocês, e o Interpretab interpreta para o outro idioma aquele dos dois que ele ouvir — sem botão para apertar, sem trocar de lado. Uma mesa, um balcão, a recepção de um hotel, um táxi. O modo simultâneo, o padrão, interpreta só você e não espera você terminar a frase.
+No Google Meet, basta escolher "Interpretab (translated)" nas configurações de áudio do próprio Meet para enviar a sua voz traduzida ao outro lado. Qualquer outro serviço precisa de um dispositivo de áudio virtual (veja O QUE VOCÊ PRECISA SABER).
+
+▍ O ÁUDIO ORIGINAL ABAIXA, NÃO SOME
+
+O Interpretab continua reproduzindo o áudio da própria aba e só abaixa o volume enquanto a voz traduzida fala; depois ele volta na hora. A redução é acionada pela fala, não fica ligada o tempo todo. O nível é um controle deslizante.
 
 ▍ UM GLOSSÁRIO QUE ACERTA OS SEUS TERMOS
 
-Nomes de produtos, nomes de pessoas e jargão são exatamente o que um modelo genérico estraga, e estragá-los é o que faz uma tradução parecer pouco confiável. Envie um CSV e o Interpretab passa a saber como pronunciar cada termo — com uma coluna separada para como ele deve ser escrito nas legendas, de modo que fixar uma pronúncia não imponha uma grafia fonética a quem lê.
+No modo Two-way conversation, você pode cadastrar nomes de produtos, nomes de pessoas e termos técnicos, com a pronúncia e com a grafia que deve aparecer nas legendas.
 
-▍ O ORIGINAL ABAIXA, NÃO SOME
+▍ SEM SERVIDOR NO MEIO. SEU NAVEGADOR FALA DIRETO COM A GEMINI LIVE API.
 
-O Interpretab devolve a você o áudio da própria aba e o abaixa enquanto a voz traduzida fala, trazendo-o de volta logo em seguida. É acionado pela fala, não fica constante, então a trilha de um filme não permanece abafada durante cada silêncio. O nível é um controle deslizante.
-
-▍ SEM SERVIDOR. SUA CHAVE. SEU ÁUDIO.
-
-O Interpretab se conecta diretamente à Gemini Live API do Google usando uma chave de API que você fornece. Não há serviço intermediário, porque não há serviço nenhum: o desenvolvedor não roda nada, não vê nada e não guarda nada. Seu áudio vai do seu navegador para o Google e para lugar nenhum além disso, e a extensão tem permissão para alcançar exatamente um host — nenhum outro destino é sequer possível.
-
-Pegue uma chave gratuita em aistudio.google.com/apikey e cole nas Opções.
+O Interpretab se conecta à Gemini Live API do Google com uma chave de API que você mesmo obtém. Não há servidor externo nem serviço intermediário no meio. Seu áudio e suas legendas não chegam a ninguém além do Google.
 
 ▍ IDIOMAS
 
-Áudio da aba: o idioma de origem é detectado automaticamente — uma aba toca quem ela toca, e um vídeo que corta para um segundo palestrante não deveria exigir que você mudasse uma configuração. 78 idiomas de destino.
+Tradução do áudio da aba: o idioma de origem é detectado automaticamente. Uma aba toca quem ela toca, e mudar uma configuração toda vez que o vídeo passa para outro palestrante seria um incômodo. 78 idiomas de destino.
 
-Microfone: no modo simultâneo a origem também é detectada e você escolhe entre esses mesmos 78 destinos. No modo de conversa bidirecional você indica os dois idiomas do par, entre 97. 30 vozes para escolher, nos dois casos.
+Tradução do microfone: no modo Simultaneous a origem também é detectada e você escolhe entre os mesmos 78 destinos. No modo Two-way conversation, você indica os dois idiomas do par, entre 97.
 
 ▍ COMO USAR
 
-1. Cole a sua chave da API do Gemini nas Opções.
+1. Cole a sua chave da Gemini API nas Opções e informe se ela está no plano Free ou Paid do Google.
 2. Abra a página que você quer traduzir e clique no ícone do Interpretab na barra de ferramentas NAQUELA ABA. É esse clique que concede o acesso.
-3. Escolha os idiomas no painel lateral e aperte Start.
+3. Escolha os idiomas no painel lateral e pressione Start.
 
-Fechar o painel lateral não interrompe a tradução.
+Os detalhes estão no guia: https://kazunori279.github.io/interpretab/
 
-▍ O QUE ELE NÃO FAZ
+▍ O QUE VOCÊ PRECISA SABER
 
-Os limites, ditos de saída:
-
-• Fora do Google Meet, a tradução da SUA voz só chega ao microfone de uma reunião por meio de um dispositivo de áudio virtual (BlackHole, VB-Cable) — nenhuma extensão consegue se registrar como microfone do sistema. Opções → Saída de áudio toca a voz em um deles; instalar o dispositivo e selecioná-lo na reunião continua sendo com você.
-• Rodar os dois sentidos nas caixas de som convida a um loop de eco. Use fones. No modo de conversa bidirecional, em que falar em voz alta é justamente o objetivo, afaste o microfone das caixas.
-• O glossário se aplica apenas ao modo de conversa bidirecional do microfone. Todo o resto usa o modelo de tradução simultânea do Google, que não aceita glossário.
-• Dois sentidos significam duas sessões simultâneas do Gemini, ou seja, cerca do dobro de uso da API na sua chave.
-• O Chrome não permite que extensões desenhem nas próprias páginas dele, na Chrome Web Store ou em PDFs, então as legendas não aparecem ali. O áudio e a transcrição do painel lateral continuam funcionando.
+• Isto é tradução automática. Ela ouve errado, chuta nomes e às vezes diz algo que a pessoa não disse. Não use onde um erro de tradução vá custar caro.
+• Fora do Google Meet, enviar o áudio traduzido do seu microfone para um app de reunião exige um dispositivo de áudio virtual (BlackHole, VB-Cable).
+• O glossário vale só para o modo Two-way conversation do microfone. Todo o resto usa o modelo de tradução simultânea do Google, que não aceita glossário.
 
 ▍ CUSTO
 
-O Interpretab é gratuito e de código aberto. O uso da API do Gemini é cobrado na sua própria conta do Google, pelos preços do Google; o nível gratuito dá para testar direito. Trate a chave como uma senha: não compartilhe e, se ela vazar, apague-a em aistudio.google.com/apikey e cole uma nova nas Opções.
+A Gemini Live API por trás da tradução tem um plano gratuito para experimentar e um plano pago para uso contínuo. No plano pago, pelos preços de agosto de 2026, a tradução do áudio da aba custa cerca de US$ 2,20 por hora, e o modo Two-way conversation cerca de US$ 1,40 por hora.
+
+Para a diferença entre o plano gratuito e o pago, veja o guia: https://kazunori279.github.io/interpretab/
 
 ▍ CÓDIGO ABERTO
 

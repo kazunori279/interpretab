@@ -1,66 +1,65 @@
-Interpretab übersetzt, was Ihr Browser gerade abspielt — ein Video, ein Webinar, einen Konferenz-Stream, die Gegenseite eines Meet-Anrufs — in Ihre Sprache, hörbar und auf der Seite selbst, während es läuft.
+Interpretab übersetzt über die Gemini Live API in Echtzeit, was Ihr Browser-Tab abspielt und was Sie ins Mikrofon sprechen. Die Übersetzung wird laut vorgelesen und gleichzeitig als Untertitel auf die Seite geschrieben.
 
-Es ist kein Untertitel-Werkzeug, das an einen Player geschraubt wurde, und keine Synchronisation, die die Worte zudeckt. Es gibt Ihnen beides, und es geht in beide Richtungen.
+• Videos, Streams, Podcasts und Online-Meetings in 78 Sprachen hören und zugleich mitlesen.
+• Bei Präsentationen und Streams die eigene Stimme in der Sprache des Publikums untertiteln, direkt auf der geteilten Seite.
+• In Google Meet hören die anderen Teilnehmenden Ihre Stimme in ihre Sprache synchronisiert.
+• Das Mikrofon Ihres PCs oder Macs als Echtzeit-Dolmetscher für die Person gegenüber nutzen.
 
-▍ UNTERTITEL AUF DER SEITE, NICHT NUR EINE STIMME
+Ihr Browser verbindet sich direkt mit der Gemini API, über einen Schlüssel, den Sie selbst bereitstellen. Dazwischen liegt kein Server, und mit einem Schlüssel im kostenlosen Tarif entstehen keine Kosten.
 
-Die Übersetzung wird über das Video gesprochen UND darauf geschrieben: unten mittig, drei mitlaufende Zeilen, die dem Video auch in den Vollbildmodus folgen. Lesen Sie die Begriffe nach, die Sie nicht verstanden haben, und hören Sie den Rest. Jede Richtung hat ihren eigenen Untertitel-Schalter — Sie können also das Video untertiteln, ohne sich selbst zu untertiteln, und beides mitten in der Sitzung umschalten, ohne die Verbindung zu verlieren.
+Anleitung: https://kazunori279.github.io/interpretab/
 
-▍ BEIDE RICHTUNGEN, GLEICHZEITIG
+▍ VORGELESEN UND ALS UNTERTITEL AUF DER SEITE
 
-Der Tab-Ton in Ihre Sprache, Ihr Mikrofon in deren Sprache. Sprechen Sie Deutsch und werden Sie von den Leuten im Raum auf Japanisch gehört; hören Sie deren Japanisch auf Deutsch zurück. Beide laufen als eigenständige Sitzungen, jede lässt sich einzeln abschalten. Im Zwei-Wege-Gesprächsmodus wird das Mikrofon stummgeschaltet, solange die eigene Übersetzung läuft, damit der Dolmetscher nie sich selbst dolmetscht; der Simultanmodus antwortet, während Sie noch sprechen — genau das macht ihn simultan — tragen Sie also Kopfhörer.
+Die Untertitel stehen unten mittig, drei Zeilen rollend, und funktionieren auch im Vollbild. Ihre Größe stellen Sie in den Optionen per Schieberegler ein, 16 bis 64 px.
 
-▍ MEET, ZOOM UND TEAMS
+▍ TAB-AUDIO UND MIKROFON GLEICHZEITIG
 
-Schalten Sie beide Richtungen ein und richten Sie sie gegenläufig aus: der Meeting-Tab mit Untertiteln in Ihre Sprache gedolmetscht, Ihr Mikrofon in deren Sprache. Die Gegenseite zu hören funktioniert sofort, bei jedem Dienst.
+Das Audio des Browser-Tabs wird in Ihre Sprache übersetzt, Ihr Mikrofon in die der anderen. Sprechen Sie Deutsch, und die Menschen im Raum hören Englisch; ihr Englisch kommt als Deutsch zurück. Für die Mikrofonübersetzung gibt es zwei Modi: Simultaneous übersetzt schon, während Sie sprechen, und Two-way conversation übersetzt ein Gespräch zwischen zwei Sprachen Beitrag für Beitrag.
 
-Auf Google Meet funktioniert auch das Gehörtwerden, ohne dass etwas zu installieren wäre: Das Seitenpanel bietet dem Gespräch ein Mikrofon an, das Ihre übersetzte Stimme trägt, und Sie wählen in Meets eigenen Audioeinstellungen „Interpretab (translated)“. Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme. Bei jedem anderen Dienst braucht es ein virtuelles Audiogerät (siehe WAS ES NICHT KANN), in das Interpretab Ihre übersetzte Stimme spielt, während die Übersetzung der Gegenseite auf Ihren Lautsprechern bleibt.
+▍ IN ONLINE-MEETINGS
 
-▍ EIN MIKROFON, ZWEI PERSONEN
+In einem Online-Meeting wird das Audio der Gegenseite übersetzt, vorgelesen und untertitelt (bei Meeting-Tools, die im Browser-Tab laufen).
 
-Das Mikrofon hat einen zweiten Modus. Stellen Sie Deutsch ⇄ Japanisch ein, legen Sie den Laptop zwischen sich, und Interpretab dolmetscht das, was es von einer der beiden Seiten hört, in die andere Sprache — kein Knopfdruck, kein Umschalten der Richtung. Ein Schreibtisch, ein Tresen, eine Hotelrezeption, ein Taxi. Der Simultanmodus, die Voreinstellung, dolmetscht nur Sie und wartet nicht, bis Sie den Satz beendet haben.
+In Google Meet genügt es, in den Audioeinstellungen von Meet "Interpretab (translated)" auszuwählen, um Ihre übersetzte Stimme an die Gegenseite zu senden. Jeder andere Dienst braucht ein virtuelles Audiogerät (siehe WAS SIE WISSEN SOLLTEN).
+
+▍ DER ORIGINALTON WIRD LEISER, NICHT STUMM
+
+Interpretab spielt den Originalton des Tabs weiter und senkt ihn nur ab, solange die übersetzte Stimme spricht; danach ist er sofort wieder da. Abgesenkt wird bei Sprache, nicht durchgehend. Der Pegel ist ein Schieberegler.
 
 ▍ EIN GLOSSAR, DAS IHRE BEGRIFFE TRIFFT
 
-Produktnamen, Personennamen und Fachjargon sind genau das, was ein allgemeines Modell verhunzt — und verhunzte Begriffe sind der Grund, warum eine Übersetzung unzuverlässig wirkt. Laden Sie eine CSV-Datei hoch, und Interpretab bekommt gesagt, wie jeder Begriff auszusprechen ist — mit einer eigenen Spalte für die Schreibweise in den Untertiteln, damit eine festgelegte Aussprache Ihren Lesern keine lautschriftliche Schreibweise aufzwingt.
+Im Modus Two-way conversation können Sie Produktnamen, Personennamen und Fachbegriffe hinterlegen, mit der Aussprache und mit der Schreibweise für die Untertitel.
 
-▍ DAS ORIGINAL WIRD LEISER, ES VERSCHWINDET NICHT
+▍ KEIN SERVER DAZWISCHEN. IHR BROWSER SPRICHT DIREKT MIT DER GEMINI LIVE API.
 
-Interpretab spielt Ihnen den Originalton des Tabs weiter vor und senkt ihn ab, solange die übersetzte Stimme spricht, um ihn danach sofort wieder anzuheben. Das geschieht sprachgesteuert, nicht dauerhaft, damit die Filmmusik nicht durch jede Pause hindurch gedrückt bleibt. Der Pegel ist ein Schieberegler.
-
-▍ KEIN SERVER. IHR SCHLÜSSEL. IHR AUDIO.
-
-Interpretab verbindet sich mit einem API-Schlüssel, den Sie selbst bereitstellen, direkt mit Googles Gemini Live API. Es gibt keinen Zwischendienst, weil es überhaupt keinen Dienst gibt: Der Entwickler betreibt nichts, sieht nichts und speichert nichts. Ihr Ton geht von Ihrem Browser zu Google und sonst nirgendwohin, und die Erweiterung darf genau einen Host erreichen — kein anderes Ziel ist überhaupt möglich.
-
-Einen kostenlosen Schlüssel erhalten Sie unter aistudio.google.com/apikey; fügen Sie ihn in den Optionen ein.
+Interpretab verbindet sich mit einem API-Schlüssel, den Sie selbst besorgen, direkt mit Googles Gemini Live API. Dazwischen liegt kein externer Server und kein Vermittlungsdienst. Ihr Audio und Ihre Untertitel erreichen niemanden außer Google.
 
 ▍ SPRACHEN
 
-Tab-Ton: Die Ausgangssprache wird automatisch erkannt — ein Tab spielt, wen er eben spielt, und ein Video, das zu einer zweiten Sprecherin schneidet, sollte Sie nicht zwingen, eine Einstellung zu ändern. 78 Zielsprachen.
+Tab-Audio-Übersetzung: Die Ausgangssprache wird automatisch erkannt. Ein Tab spielt ab, wen er eben abspielt, und bei jedem Sprecherwechsel im Video eine Einstellung zu ändern wäre lästig. 78 Zielsprachen.
 
-Mikrofon: Im Simultanmodus wird die Ausgangssprache ebenfalls erkannt, und Sie wählen aus denselben 78 Zielen. Im Zwei-Wege-Gesprächsmodus benennen Sie beide Sprachen des Paares, aus 97. In beiden Fällen stehen 30 Stimmen zur Wahl.
+Mikrofonübersetzung: Im Modus Simultaneous wird die Ausgangssprache ebenfalls erkannt, und Sie wählen aus denselben 78 Zielsprachen. Im Modus Two-way conversation geben Sie beide Sprachen des Paares an, aus 97.
 
-▍ SO WIRD ES BENUTZT
+▍ SO VERWENDEN SIE ES
 
-1. Fügen Sie Ihren Gemini-API-Schlüssel in den Optionen ein.
-2. Öffnen Sie die Seite, die übersetzt werden soll, und klicken Sie AUF DIESEM TAB auf das Interpretab-Symbol in der Symbolleiste. Dieser Klick ist es, der den Zugriff erteilt.
-3. Wählen Sie Ihre Sprachen im Seitenbereich und drücken Sie Start.
+1. Fügen Sie Ihren Gemini-API-Schlüssel in den Optionen ein und geben Sie an, ob er auf Googles Tarif Free oder Paid läuft.
+2. Öffnen Sie die Seite, die Sie übersetzen möchten, und klicken Sie AUF DIESEM TAB auf das Interpretab-Symbol in der Symbolleiste. Erst dieser Klick gewährt den Zugriff.
+3. Wählen Sie in der Seitenleiste Ihre Sprachen und drücken Sie Start.
 
-Das Schließen des Seitenbereichs beendet die Übersetzung nicht.
+Einzelheiten stehen in der Anleitung: https://kazunori279.github.io/interpretab/
 
-▍ WAS ES NICHT KANN
+▍ WAS SIE WISSEN SOLLTEN
 
-Die Grenzen, gleich vorweg:
-
-• Außerhalb von Google Meet erreicht die Übersetzung IHRER Stimme das Mikrofon eines Meetings nur über ein virtuelles Audiogerät (BlackHole, VB-Cable) — keine Erweiterung kann sich selbst als Systemmikrofon registrieren. Optionen → Audioausgabe spielt sie in ein solches Gerät; das Gerät zu installieren und im Meeting auszuwählen, bleibt Ihre Sache.
-• Beide Richtungen über Lautsprecher laufen zu lassen, lädt zu einer Rückkopplungsschleife ein. Nehmen Sie Kopfhörer. Im Zwei-Wege-Gesprächsmodus, wo lautes Sprechen ja der Zweck ist, halten Sie stattdessen das Mikrofon von den Lautsprechern fern.
-• Das Glossar gilt nur für den Zwei-Wege-Gesprächsmodus des Mikrofons. Alles andere nutzt Googles Simultanübersetzungsmodell, das kein Glossar annimmt.
-• Zwei Richtungen bedeuten zwei parallele Gemini-Sitzungen und damit ungefähr die doppelte API-Nutzung auf Ihrem Schlüssel.
-• Chrome erlaubt Erweiterungen nicht, auf seinen eigenen Seiten, im Web Store oder auf PDFs zu zeichnen — dort erscheinen keine Untertitel. Ton und das Transkript im Seitenbereich funktionieren weiterhin.
+• Das ist maschinelle Übersetzung. Sie verhört sich, rät bei Namen und sagt manchmal etwas, das die sprechende Person nie gesagt hat. Setzen Sie sie nicht dort ein, wo eine Fehlübersetzung Sie etwas kostet.
+• Außerhalb von Google Meet braucht es ein virtuelles Audiogerät (BlackHole, VB-Cable), um Ihr übersetztes Mikrofonaudio an eine Meeting-App zu senden.
+• Das Glossar gilt nur für den Modus Two-way conversation der Mikrofonübersetzung. Alles andere nutzt Googles Simultanübersetzungsmodell, das kein Glossar annimmt.
 
 ▍ KOSTEN
 
-Interpretab ist kostenlos und quelloffen. Die Nutzung der Gemini API wird zu Googles Preisen Ihrem eigenen Google-Konto berechnet; das kostenlose Kontingent reicht aus, um es ordentlich auszuprobieren. Behandeln Sie den Schlüssel wie ein Passwort: nicht weitergeben, und falls er doch einmal nach außen gelangt, löschen Sie ihn unter aistudio.google.com/apikey und fügen einen neuen in den Optionen ein.
+Die Gemini Live API hinter der Übersetzung hat einen kostenlosen Tarif zum Ausprobieren und einen kostenpflichtigen für den regelmäßigen Einsatz. Im kostenpflichtigen Tarif kostet die Tab-Audio-Übersetzung nach den Preisen vom August 2026 rund 2,20 $ pro Stunde, der Modus Two-way conversation rund 1,40 $ pro Stunde.
+
+Zum Unterschied zwischen kostenlosem und kostenpflichtigem Tarif siehe die Anleitung: https://kazunori279.github.io/interpretab/
 
 ▍ OPEN SOURCE
 
