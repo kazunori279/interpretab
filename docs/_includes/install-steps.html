@@ -17,12 +17,12 @@
 
   `figures` is the one thing here that is positional: the nth step gets the nth
   picture, and a step added to `install.yml` needs a name added here. Three of
-  the eight are photographs, taken by `tests/guide-shots.mjs`, and the rectangle
+  the ten are photographs, taken by `tests/guide-shots.mjs`, and the rectangle
   their ring goes around comes from `_data/shots.yml`, which the same script
   writes — so the ring follows the button rather than being typed in as a
-  percentage somebody measured once. The other five are drawings: four of them
-  are AI Studio, which is behind a Google sign-in, and one is a click on
-  Chrome's own toolbar, which nothing running inside a page can photograph.
+  percentage somebody measured once. The other seven are drawings: five of them
+  are AI Studio, which is behind a Google sign-in, and two are Chrome's own
+  toolbar, which nothing running inside a page can photograph.
 
   Every link in a step opens in a new tab, and the `target` is added here rather
   than written into `install.yml`. A reader who follows the Chrome Web Store
@@ -33,7 +33,7 @@
 {%- endcomment -%}
 {%- assign copy = site.data.install[page.lang] | default: site.data.install.en -%}
 {%- assign steps = copy.steps -%}
-{%- assign figures = "store,studio,create,project,copy,key,toolbar,start" | split: "," -%}
+{%- assign figures = "store,studio,create,keyname,project,copy,key,pin,toolbar,start" | split: "," -%}
 <div class="install">
   {%- for step in steps %}
   <input class="install-pick" type="radio" name="install-step" id="install-step-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
@@ -84,6 +84,8 @@
             <span class="install-nav"></span>
             {%- if figure == "studio" %}
             <span class="install-url install-url--typed">aistudio.google.com/apikey<span class="install-caret"></span></span>
+            {%- elsif figure == "pin" %}
+            <span class="install-url install-url--page">youtube.com</span>
             {%- elsif figure == "toolbar" %}
             <span class="install-url install-url--page">youtube.com</span>
             {%- else %}
@@ -97,12 +99,23 @@
                 <path d="M5 2.6 19 12.4l-6.1.6-3 5.6z" fill="#fff" stroke="#1f2328" stroke-width="1.6" stroke-linejoin="round"/>
               </svg>
             </span>
+            {%- elsif figure == "pin" %}
+            {%- comment -%}
+              Chrome's extensions button, which is where the icon actually is
+              after an install: the toolbar itself shows nothing new, and a
+              reader told to click an icon that is not there stops here.
+            {%- endcomment -%}
+            <span class="install-puzzle">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10.5 2a2.6 2.6 0 0 1 2.6 2.6V6H16a1 1 0 0 1 1 1v2.9h1.4a2.6 2.6 0 1 1 0 5.2H17V18a1 1 0 0 1-1 1h-3.9v-1.4a2.6 2.6 0 1 0-5.2 0V19H3a1 1 0 0 1-1-1v-3.9h1.4a2.6 2.6 0 1 0 0-5.2H2V7a1 1 0 0 1 1-1h4.9V4.6A2.6 2.6 0 0 1 10.5 2z"/>
+              </svg>
+            </span>
             {%- else %}
             <span class="install-ext"></span>
             {%- endif %}
             <span class="install-avatar"></span>
           </div>
-          <div class="install-viewport">
+          <div class="install-viewport install-viewport--{{ figure }}">
             {%- if figure == "create" %}
             {%- comment -%}
               AI Studio, drawn: a heading, a line of text and the button, which
@@ -121,21 +134,61 @@
               </span>
             </div>
             {%- endif %}
+            {%- if figure == "keyname" %}
+            {%- comment -%}
+              The dialog the Create API key button opens: a name for the key,
+              and the Google Cloud project it belongs to. The project list is
+              drawn empty because that is what an account that has never used
+              the API sees, and it is the reason there is a next step at all.
+              Create key is drawn and still: it is there, and it does nothing
+              until the project exists.
+            {%- endcomment -%}
+            <div class="install-dialog">
+              <span class="install-line install-line--head"></span>
+              <span class="install-field install-field--marked">Interpretab<span class="install-caret"></span></span>
+              <span class="install-select install-select--still">No Cloud Projects Available</span>
+              <span class="install-cta install-cta--off">Create key</span>
+            </div>
+            {%- endif %}
             {%- if figure == "project" %}
             {%- comment -%}
-              The dialog the Create API key button opens: which Google Cloud
-              project the key belongs to. Two controls, and only the first of
-              them is what this step is about, so only the first is marked.
+              The second dialog: name the project. The name AI Studio fills in
+              is in the reader's own language, and the field takes Latin
+              letters only — so the picture shows the box already cleared and
+              retyped, which is the whole of what this step asks for.
             {%- endcomment -%}
-            <div class="install-page">
+            <div class="install-dialog">
               <span class="install-line install-line--head"></span>
-              <span class="install-select">Default project
+              <span class="install-field">Interpretab<span class="install-caret"></span></span>
+              <span class="install-cta">Create project
                 <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </span>
-              <span class="install-cta install-cta--still">Create key</span>
+            </div>
+            {%- endif %}
+            {%- if figure == "pin" %}
+            {%- comment -%}
+              The menu that button opens. Chrome lists the extension there and
+              offers a pin; the pin is what puts the icon on the toolbar, and
+              the toolbar is where every later step says to click.
+            {%- endcomment -%}
+            <div class="install-menu">
+              <span class="install-menu-head"></span>
+              <span class="install-menu-row">
+                <img src="{{ "/assets/icon-128.png" | relative_url }}" alt="" width="24" height="24">
+                <span class="install-menu-name">Interpretab</span>
+                <span class="install-pin">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9.6 2h4.8a1 1 0 0 1 0 2H14v5.3l2.7 2.7a1 1 0 0 1-.7 1.7H13v4.8L12 21l-1-2.5v-4.8H8a1 1 0 0 1-.7-1.7L10 9.3V4h-.4a1 1 0 0 1 0-2z"/>
+                  </svg>
+                  <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
+                    <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </span>
             </div>
             {%- endif %}
             {%- if figure == "copy" %}

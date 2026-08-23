@@ -65,9 +65,10 @@ there. To work on it, load it unpacked instead.
    and pick this directory.
 3. Get a Gemini API key from [aistudio.google.com/apikey](https://aistudio.google.com/apikey) —
    the free tier is enough to try it — and paste it into the extension's **Options** page.
-4. Open the page you want to translate and **click the Interpretab toolbar icon on that tab**.
-   This is not optional: the click is what grants access to that tab, and Start fails without
-   it.
+4. Open the page you want to translate and **click the Interpretab toolbar icon on that tab**. A
+   newly loaded extension has no icon there yet — it is behind Chrome's puzzle-piece button, with
+   a pin beside it. The click is not optional: it is what grants access to that tab, and Start
+   fails without it.
 5. Pick your languages in the side panel and click **Start**.
 
 The panel belongs to the tab you opened it on. Switch to another tab and it is not there —
@@ -1112,12 +1113,16 @@ it points at the page that redirects, so without the stored choice a German read
 reach English.
 
 The guide's install section — "Get started in 5 minutes" — is the one part of it that is markup
-rather than markdown: a slideshow of eight steps, a picture each, one showing at a time. It was a
+rather than markdown: a slideshow of ten steps, a picture each, one showing at a time. It was a
 numbered list, and a numbered list is what an installer reads *after* deciding to install — the
 sentences said what to do without ever showing what any of it looks like, and one of them was
-"get a free Gemini API key", which is a sign-in, a button, a project picker and a copy compressed
-into six words. So the key is now four steps of its own, and the step that starts a session names
-a page to try it on — a talking video on YouTube — rather than leaving the reader to think of one.
+"get a free Gemini API key", which is a sign-in, a button, two dialogs and a copy compressed
+into six words. So the key is now five steps of its own, written for an account that has never
+called the API — there is no project to put the key in yet, and the name AI Studio fills in for a
+new one is in the reader's language, which the field rejects. Pinning the icon is a step for the
+same reason: a freshly installed extension has none on the toolbar, so the step that told the
+reader to click it pointed at nothing. The step that starts a session names a page to try it on —
+a talking video on YouTube — rather than leaving the reader to think of one.
 `docs/_includes/install-steps.html` is the markup once, `docs/_data/install.yml` is its words ten
 times, and the CSS is in `head-custom.html` with the rest. There is no script in it. State is a
 radio button per step, hidden but still focusable, so the arrow keys walk the steps the way they
@@ -1130,7 +1135,7 @@ paper.
 The sentence for a step is inside the frame, above the picture, rather than under it: outside, it
 read as a caption for something the reader had already looked at, and inside it is the first thing
 in the box with the picture as its illustration. The room it takes is reserved whether it fills it
-or not and the picture is centred in what is left, so walking the eight steps does not resize the
+or not and the picture is centred in what is left, so walking the ten steps does not resize the
 frame or move the tabs above it.
 
 Each step also marks the one thing it is asking the reader to press: a ring that pulses around it
@@ -1138,10 +1143,11 @@ and an SVG arrow that nudges towards it, both CSS, both off under `prefers-reduc
 three photographs the ring is not a percentage somebody measured once — `tests/guide-shots.mjs`
 reads the button's box off the live DOM as it takes the picture, works out which side of it there is
 room for an arrow on, and writes both to `docs/_data/shots.yml`, so re-taking a screenshot moves the
-ring with the button. The other five pictures are drawings sharing one CSS browser mock: four are AI
-Studio, which is behind a Google sign-in, and one is a click on Chrome's own toolbar, which no page
-can photograph — that one has the extension's real icon in it. The drawn key is dots rather than
-characters, because a plausible-looking key in a picture is a thing somebody eventually types in.
+ring with the button. The other seven pictures are drawings sharing one CSS browser mock: five are
+AI Studio, which is behind a Google sign-in, and two are Chrome's own toolbar and extensions menu,
+which no page can photograph — those have the extension's real icon in them. The drawn key is dots
+rather than characters, because a plausible-looking key in a picture is a thing somebody eventually
+types in.
 
 Links in a step open in a new tab, and the `target` is added by the include rather than written
 into the data. The state is a radio button, so a reader who follows the Web Store link and comes

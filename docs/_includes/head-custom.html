@@ -138,9 +138,10 @@
       @keyframes install-nudge-n { 0%, 100% { translate: 0 0.45rem; } 50% { translate: 0 0; } }
 
       /* The drawings: the top of a browser window, with everything but the one
-         thing the step is about reduced to a grey shape. Three steps use it —
+         thing the step is about reduced to a grey shape. Seven steps use it —
          the address bar with AI Studio typed into it, that page's Create API
-         key button, and the click on Chrome's own toolbar. */
+         key button, the two dialogs behind it, the key it hands back, and the
+         two clicks on Chrome's own toolbar. */
       .install-browser {
         width: 100%; overflow: hidden;
         background: #dee1e6; border: 1px solid #c9ccd1; border-radius: 10px;
@@ -181,6 +182,11 @@
       }
       [dir="rtl"] .install-pointer { transform: scaleX(-1); }
       .install-viewport { position: relative; height: 9rem; background: #fff; border-top: 1px solid #ebedf0; }
+      /* The dialog steps size to their card instead: four rows do not fit in
+         the height the page drawings are happy with. */
+      .install-viewport--keyname, .install-viewport--project {
+        display: grid; place-items: center; height: auto; padding: 1rem;
+      }
       /* The arrow the address-bar step points back up with, standing in the
          empty page below the bar. */
       .install-arrow--up {
@@ -207,16 +213,43 @@
         right: auto; left: 100%; transform: scaleX(-1);
         animation-name: install-nudge-w;
       }
-      /* The button beside the marked one — drawn, so the dialog is recognisable,
-         and still, so it is clear which of the two the step is asking for. */
-      .install-cta--still { animation: none; }
+      /* The control beside the marked one — drawn, so the dialog is
+         recognisable, and still, so it is clear which of them the step is
+         asking for. */
+      .install-cta--still, .install-select--still { animation: none; }
+      /* Create key with no project to create it in: AI Studio greys the button
+         out, and a drawing that leaves it blue is a drawing of a step that
+         works. */
+      .install-cta--off {
+        animation: none; background: #fff;
+        border: 1px solid #dadce0; color: #b4b7bb;
+      }
+      /* The two dialogs: a card in the middle of the page, which is what both
+         of them are. Their rows stretch, unlike the page's own centred ones. */
+      .install-dialog {
+        display: flex; flex-direction: column; gap: 0.5rem;
+        width: min(21rem, 92%); padding: 0.85rem 1rem;
+        background: #fff; border: 1px solid #d7dadd; border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(31, 35, 40, 0.14);
+      }
+      .install-dialog .install-select { align-self: stretch; }
+      .install-dialog .install-cta { align-self: flex-end; margin-top: 0.2rem; }
+      /* A text field with something typed into it. The caret is the difference
+         between a box the reader fills in and a box that is already filled. */
+      .install-field {
+        position: relative; display: flex; align-items: center; gap: 0.15rem;
+        padding: 0.4rem 0.7rem; border: 1px solid #c4c7cc; border-radius: 6px;
+        background: #fff; color: #3c4043; font-size: 0.82rem; line-height: 1.4;
+        white-space: nowrap; direction: ltr;
+      }
+      .install-field--marked { animation: install-cta-ring 1.9s ease-out infinite; }
       /* The project picker, and the key it hands back. The key is dots: a
          picture of a plausible key is a thing somebody eventually types in. */
       .install-select {
         position: relative; align-self: center;
         padding: 0.4rem 2rem 0.4rem 0.9rem; border: 1px solid #c4c7cc; border-radius: 6px;
         background: #fff; color: #3c4043; font-size: 0.82rem; line-height: 1.4;
-        white-space: nowrap; direction: ltr;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr;
         animation: install-cta-ring 1.9s ease-out infinite;
       }
       .install-select::after {
@@ -236,6 +269,50 @@
         padding: 0.35rem 0.8rem; border-radius: 6px; background: #f1f3f4;
         color: #5f6368; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 0.72rem; letter-spacing: 0.02em; white-space: nowrap; direction: ltr;
+      }
+      /* Chrome's extensions button and the menu behind it. A freshly installed
+         extension is in there and not on the toolbar, so the step that says to
+         click the icon needs a step before it that puts the icon somewhere. */
+      .install-puzzle {
+        position: relative; flex: none; display: grid; place-items: center;
+        width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #e8eaed;
+      }
+      .install-puzzle svg { display: block; width: 1.05rem; height: 1.05rem; fill: #3c4043; }
+      .install-puzzle::before {
+        content: ""; position: absolute; inset: -0.35rem; border-radius: 50%;
+        border: 2px solid #3f51b5; animation: install-pulse 1.9s ease-out infinite;
+      }
+      .install-menu {
+        position: absolute; inset-inline-end: 1.2rem; top: 0.7rem;
+        display: flex; flex-direction: column; gap: 0.5rem;
+        width: 13rem; padding: 0.7rem;
+        background: #fff; border: 1px solid #e3e5e8; border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(31, 35, 40, 0.16);
+      }
+      .install-menu-head { height: 0.55rem; width: 55%; border-radius: 0.3rem; background: #eceff3; }
+      .install-menu-row { display: flex; align-items: center; gap: 0.5rem; }
+      .install-menu-row img { flex: none; width: 1.2rem; height: 1.2rem; border-radius: 4px; }
+      .install-menu-name {
+        flex: 1; color: #3c4043; font-size: 0.8rem; line-height: 1.4;
+        white-space: nowrap; direction: ltr;
+      }
+      /* The name is Latin either way, so it keeps its own direction — but in an
+         RTL row it has to sit against the icon rather than against the pin,
+         which is where the arrow is. */
+      [dir="rtl"] .install-menu-name { text-align: right; }
+      .install-pin {
+        position: relative; flex: none; display: grid; place-items: center;
+        width: 1.4rem; height: 1.4rem; border-radius: 50%;
+        animation: install-ring 1.9s ease-out infinite;
+      }
+      .install-pin svg { display: block; width: 0.95rem; height: 0.95rem; fill: #3c4043; }
+      .install-pin .install-arrow {
+        position: absolute; top: 50%; right: 100%; translate: -0.5rem -50%;
+        animation: install-nudge-e 1.4s ease-in-out infinite;
+      }
+      [dir="rtl"] .install-pin .install-arrow {
+        right: auto; left: 100%; transform: scaleX(-1);
+        animation-name: install-nudge-w;
       }
       /* The page the toolbar step is looking at, which the step now names. */
       .install-video {
@@ -263,11 +340,14 @@
          sentence to somebody who has asked their machine to stop animating. */
       @media (prefers-reduced-motion: reduce) {
         .install-target::before, .install-pointer, .install-mark, .install-arrow,
-        .install-url--typed, .install-caret, .install-cta, .install-select { animation: none; }
-        .install-mark { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
+        .install-url--typed, .install-caret, .install-cta, .install-select,
+        .install-field--marked, .install-puzzle::before, .install-pin { animation: none; }
+        .install-mark, .install-pin { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
         .install-url--typed { box-shadow: 0 0 0 2px #3f51b5, 0 0 0 4px rgba(63, 81, 181, 0.32); }
-        .install-cta, .install-select { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
-        .install-cta--still { box-shadow: none; }
+        .install-cta, .install-select, .install-field--marked {
+          box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32);
+        }
+        .install-cta--still, .install-cta--off, .install-select--still { box-shadow: none; }
       }
 
       {%- comment -%}

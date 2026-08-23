@@ -7,10 +7,20 @@
 # one page and not the other nine. `_includes/install-steps.html` is the markup,
 # once; this is the words, ten times.
 #
-# Getting the key is four of the steps and not one. It is the only part of the
+# Getting the key is five of the steps and not one. It is the only part of the
 # install that leaves Chrome, it is where somebody who has never seen a console
 # gives up, and "get a free key at aistudio.google.com/apikey" was one clause
-# covering a sign-in, a button, a project picker and a copy.
+# covering a sign-in, a button, two dialogs and a copy. The two dialogs are
+# written for an account that has never used the API, which is the account the
+# guide is for: there is no project to put the key in yet, and the name AI
+# Studio offers for the new one is in the reader's language, which the field
+# refuses. The key and the project are both named Interpretab, so a reader who
+# comes back to that page later can see what the key was for.
+#
+# Pinning is its own step for the same reason. A freshly installed extension has
+# no icon on the toolbar, so "click the Interpretab icon" pointed at nothing —
+# and the click is what grants the tab the permission to be listened to, so a
+# reader who cannot find the icon gets an error instead of subtitles.
 #
 # The count is not fixed here — `_includes/head-custom.html` styles as many
 # steps as English has — but every language has to have the same number of them,
@@ -21,7 +31,7 @@
 # Links are written plainly, with no `target`: the include adds one to every
 # link it renders, so a translation cannot be the one that sends a reader out of
 # the slideshow and loses their place in it.
-# `tab` is the label on the step's button and has to stay short — eight of them
+# `tab` is the label on the step's button and has to stay short — ten of them
 # wrap to a second row in every language.
 #
 # The keys are the `code` values in `languages.yml`, and a page whose language
@@ -42,26 +52,36 @@ en:
       body: >-
         The page lists the keys you have, which on a new account is none. Press
         <b>Create API key</b>.
-    - tab: Pick a project
+    - tab: Name the key
       body: >-
-        A key belongs to a Google Cloud project, and AI Studio asks which one. Pick <b>Default
-        project</b>, the one already in the list, and press <b>Create key</b>. Any project will do —
-        the key is the same either way.
+        A key needs a name, and a Google Cloud project to belong to. Type <b>Interpretab</b> as the
+        name. Underneath it, an account that has never used the API has nothing to choose from:
+        <b>No Cloud Projects Available</b>.
+    - tab: Make a project
+      body: >-
+        Open that list and pick <b>Create new project</b>. The name it fills in for you is in your
+        own language, and the field takes Latin letters only — clear it, type <b>Interpretab</b>,
+        and press <b>Create project</b>.
     - tab: Copy the key
       body: >-
-        The key appears as soon as the project is ready. Press <b>Copy</b>. It stays on the API keys
-        page, so you can come back for it later.
+        The key dialog comes back with the new project in it. Press <b>Create key</b> and the key
+        appears — press <b>Copy</b>. It stays on the API keys page, so you can come back for it
+        later.
     - tab: Paste it in
       body: >-
         Interpretab's <b>Options</b> page opens by itself the first time, and the <b>Options</b>
         button at the bottom of the side panel opens it again. Paste the key into <b>Gemini API
         key</b>. It is kept in this browser and goes to nobody but Google.
-    - tab: Click the icon
+    - tab: Pin the icon
       body: >-
         Open the page you want translated — a video with talking in it on
-        <a href="https://www.youtube.com/">youtube.com</a> is the easiest first test — and <b>click
-        the Interpretab toolbar icon on that tab</b>. That click is how you give permission to listen
-        to the tab; skip it and you get an error.
+        <a href="https://www.youtube.com/">youtube.com</a> is the easiest first test. A new
+        extension has no icon on the toolbar yet: click Chrome's <b>puzzle-piece button</b>, find
+        <b>Interpretab</b> in the list, and press the pin beside it.
+    - tab: Click the icon
+      body: >-
+        The icon is on the toolbar now. <b>Click it, on the tab you want translated.</b> That click
+        is how you give permission to listen to the tab; skip it and you get an error.
     - tab: Press Start
       body: >-
         Pick your language in the side panel and press <b>Start</b>. Tab audio is on from the
@@ -78,14 +98,18 @@ ja:
       body: 翻訳するのは Google の Gemini で、Gemini には自分専用の API キーが必要です。取得は無料です。<a href="https://aistudio.google.com/apikey">Google AI Studio</a> を開き、Google アカウントでログインします。
     - tab: キーを作成
       body: このページには持っているキーが並びます。新しいアカウントならまだ一つもありません。<b>Create API key</b> を押します。
-    - tab: プロジェクトを選ぶ
-      body: キーは Google Cloud のプロジェクトに属するので、どのプロジェクトかを聞かれます。一覧にある <b>Default project</b> を選び、<b>Create key</b> を押します。どのプロジェクトでもかまいません。キーの働きは同じです。
+    - tab: キーに名前を付ける
+      body: キーには名前と、所属する Google Cloud のプロジェクトが必要です。名前には <b>Interpretab</b> と入力します。その下のプロジェクト欄は、API を使ったことのないアカウントでは <b>No Cloud Projects Available</b> と出て、選べるものがありません。
+    - tab: プロジェクトを作る
+      body: その一覧を開き、<b>Create new project</b> を選びます。あらかじめ入っている名前は日本語で、この欄は英字しか受け付けません。消して <b>Interpretab</b> と入力し、<b>Create project</b> を押します。
     - tab: キーをコピー
-      body: プロジェクトの準備ができるとキーが表示されます。<b>Copy</b> を押します。キーは API keys のページに残るので、あとから取り直せます。
+      body: キーのダイアログに戻ると、作ったプロジェクトが入っています。<b>Create key</b> を押すとキーが表示されるので、<b>Copy</b> を押します。キーは API keys のページに残るので、あとから取り直せます。
     - tab: キーを貼り付け
       body: 拡張機能の<b>オプション</b>ページは初回に自動で開きます。サイドパネル下部の <b>Options</b> ボタンからも開けます。<b>Gemini API key</b> にキーを貼り付けてください。キーはこのブラウザに保存され、Google 以外には送られません。
+    - tab: アイコンを固定
+      body: 翻訳したいページを開きます。最初の確認には <a href="https://www.youtube.com/">youtube.com</a> の話し声が入った動画が手軽です。入れたばかりの拡張機能はツールバーにアイコンが出ていません。Chrome の<b>パズルピースのボタン</b>を押し、一覧の <b>Interpretab</b> の横にあるピンを押してください。
     - tab: アイコンをクリック
-      body: 翻訳したいページを開きます。最初の確認には <a href="https://www.youtube.com/">youtube.com</a> の話し声が入った動画が手軽です。そのうえで<b>そのタブで Interpretab のツールバーアイコンをクリックします</b>。このクリックが、このタブの音声を聞いてよいという許可になります。押さずに始めるとエラーになります。
+      body: これでツールバーにアイコンが出ました。<b>翻訳したいタブで、そのアイコンをクリックします。</b>このクリックが、このタブの音声を聞いてよいという許可になります。押さずに始めるとエラーになります。
     - tab: Start を押す
       body: サイドパネルで言語を選び、<b>Start</b> を押します。タブ音声は最初からオンなので、ほかに入れる設定はありません。
 
@@ -97,14 +121,18 @@ zh:
       body: 翻译由 Google 的 Gemini 完成，而 Gemini 需要一个属于你自己的 API 密钥。申请是免费的：打开 <a href="https://aistudio.google.com/apikey">Google AI Studio</a>，用 Google 账号登录。
     - tab: 创建密钥
       body: 这个页面会列出你已有的密钥，新账号还是空的。点击 <b>Create API key</b>。
-    - tab: 选择项目
-      body: 密钥属于某个 Google Cloud 项目，AI Studio 会问用哪一个。选列表里已经有的 <b>Default project</b>，然后点 <b>Create key</b>。用哪个项目都行，密钥是一样的。
+    - tab: 给密钥命名
+      body: 密钥需要一个名字，还需要一个所属的 Google Cloud 项目。名字填 <b>Interpretab</b>。下面的项目一栏，在从没用过 API 的账号上会显示 <b>No Cloud Projects Available</b>，没有可选的项目。
+    - tab: 新建项目
+      body: 打开那个列表，选 <b>Create new project</b>。里面预填的名字是中文的，而这个输入框只收拉丁字母——清空它，输入 <b>Interpretab</b>，然后点 <b>Create project</b>。
     - tab: 复制密钥
-      body: 项目准备好之后密钥就会出现。点 <b>Copy</b>。密钥会留在 API keys 页面上，之后还能回去再拿。
+      body: 回到密钥的对话框，新建的项目已经在里面了。点 <b>Create key</b>，密钥就会出现，再点 <b>Copy</b>。密钥会留在 API keys 页面上，之后还能回去再拿。
     - tab: 粘贴密钥
       body: 扩展的<b>选项</b>页面第一次会自己打开，侧边栏底部的 <b>Options</b> 按钮也能再把它打开。把密钥粘贴到 <b>Gemini API key</b> 里。它保存在这个浏览器中，除了 Google 不会发给任何人。
+    - tab: 固定图标
+      body: 打开要翻译的页面。第一次试的话，<a href="https://www.youtube.com/">youtube.com</a> 上一段有人说话的视频最方便。刚装好的扩展在工具栏上还没有图标：点 Chrome 的<b>拼图按钮</b>，在列表里找到 <b>Interpretab</b>，按一下旁边的图钉。
     - tab: 点击图标
-      body: 打开要翻译的页面。第一次试的话，<a href="https://www.youtube.com/">youtube.com</a> 上一段有人说话的视频最方便。然后<b>在那个标签页上点击工具栏中的 Interpretab 图标</b>。这次点击就是你授权它收听该标签页的方式——跳过它就会报错。
+      body: 现在图标在工具栏上了。<b>在要翻译的那个标签页上点它。</b>这次点击就是你授权它收听该标签页的方式——跳过它就会报错。
     - tab: 按 Start
       body: 在侧边栏选择语言，按 <b>Start</b>。标签页声音一开始就是开着的，不用再打开别的开关。
 
@@ -123,26 +151,37 @@ es:
       body: >-
         La página lista las claves que tienes, que en una cuenta nueva son ninguna. Pulsa
         <b>Create API key</b>.
-    - tab: Elige proyecto
+    - tab: Nombra la clave
       body: >-
-        Una clave pertenece a un proyecto de Google Cloud, y AI Studio pregunta a cuál. Elige
-        <b>Default project</b>, el que ya está en la lista, y pulsa <b>Create key</b>. Vale
-        cualquier proyecto: la clave es la misma.
+        Una clave necesita un nombre y un proyecto de Google Cloud al que pertenecer. Escribe
+        <b>Interpretab</b> como nombre. Debajo, una cuenta que nunca ha usado la API no tiene nada
+        que elegir: <b>No Cloud Projects Available</b>.
+    - tab: Crea el proyecto
+      body: >-
+        Abre esa lista y elige <b>Create new project</b>. El nombre que viene puesto está en tu
+        idioma y el campo solo acepta letras latinas: bórralo, escribe <b>Interpretab</b> y pulsa
+        <b>Create project</b>.
     - tab: Copia la clave
       body: >-
-        La clave aparece en cuanto el proyecto está listo. Pulsa <b>Copy</b>. Se queda en la página
-        de API keys, así que puedes volver a por ella.
+        Vuelves al cuadro de la clave, ya con el proyecto nuevo. Pulsa <b>Create key</b> y aparece
+        la clave: pulsa <b>Copy</b>. Se queda en la página de API keys, así que puedes volver a por
+        ella.
     - tab: Pégala
       body: >-
         La página de <b>Opciones</b> de la extensión se abre sola la primera vez, y el botón
         <b>Options</b> del panel lateral la vuelve a abrir. Pega la clave en <b>Gemini API key</b>. Se guarda en
         este navegador y no se envía a nadie más que a Google.
-    - tab: Pulsa el icono
+    - tab: Fija el icono
       body: >-
         Abre la página que quieras traducir — un vídeo con voz en
-        <a href="https://www.youtube.com/">youtube.com</a> es la prueba más fácil para empezar — y
-        <b>pulsa el icono de Interpretab en la barra de herramientas estando en esa pestaña</b>. Ese
-        clic es como das permiso para escuchar la pestaña; si te lo saltas, obtendrás un error.
+        <a href="https://www.youtube.com/">youtube.com</a> es la prueba más fácil para empezar. Una
+        extensión recién instalada aún no tiene icono en la barra: pulsa el <b>botón de la pieza de
+        puzle</b> de Chrome, busca <b>Interpretab</b> en la lista y pulsa la chincheta que hay al
+        lado.
+    - tab: Pulsa el icono
+      body: >-
+        Ya tienes el icono en la barra. <b>Púlsalo estando en la pestaña que quieras traducir.</b>
+        Ese clic es como das permiso para escuchar la pestaña; si te lo saltas, obtendrás un error.
     - tab: Pulsa Start
       body: >-
         Elige tu idioma en el panel lateral y pulsa <b>Start</b>. El audio de la pestaña ya viene
@@ -163,27 +202,38 @@ fr:
       body: >-
         La page liste les clés que vous avez, c'est-à-dire aucune sur un compte neuf. Cliquez sur
         <b>Create API key</b>.
-    - tab: Choisissez le projet
+    - tab: Nommez la clé
       body: >-
-        Une clé appartient à un projet Google Cloud, et AI Studio demande lequel. Choisissez
-        <b>Default project</b>, celui qui est déjà dans la liste, puis cliquez sur <b>Create
-        key</b>. N'importe quel projet convient : la clé est la même.
+        Une clé a besoin d'un nom et d'un projet Google Cloud auquel appartenir. Saisissez
+        <b>Interpretab</b> comme nom. En dessous, un compte qui n'a jamais utilisé l'API n'a rien à
+        choisir : <b>No Cloud Projects Available</b>.
+    - tab: Créez le projet
+      body: >-
+        Ouvrez cette liste et choisissez <b>Create new project</b>. Le nom déjà inscrit est dans
+        votre langue et le champ n'accepte que les lettres latines : effacez-le, tapez
+        <b>Interpretab</b>, puis cliquez sur <b>Create project</b>.
     - tab: Copiez la clé
       body: >-
-        La clé apparaît dès que le projet est prêt. Cliquez sur <b>Copy</b>. Elle reste sur la page
-        API keys, vous pouvez donc y revenir plus tard.
+        La boîte de dialogue revient avec le nouveau projet. Cliquez sur <b>Create key</b> : la clé
+        apparaît, cliquez sur <b>Copy</b>. Elle reste sur la page API keys, vous pouvez donc y
+        revenir plus tard.
     - tab: Collez-la
       body: >-
         La page <b>Options</b> de l'extension s'ouvre d'elle-même la première fois, et le bouton
         <b>Options</b> du panneau latéral la rouvre. Collez la clé dans <b>Gemini API key</b>. Elle
         reste dans ce navigateur et n'est envoyée à personne d'autre que Google.
-    - tab: Cliquez sur l'icône
+    - tab: Épinglez l'icône
       body: >-
         Ouvrez la page à traduire — une vidéo où quelqu'un parle sur
-        <a href="https://www.youtube.com/">youtube.com</a> est le test le plus simple pour commencer
-        — et <b>cliquez sur l'icône Interpretab de la barre d'outils depuis cet onglet</b>. Ce clic
-        est la façon dont vous donnez la permission d'écouter l'onglet : sans lui, vous obtenez une
-        erreur.
+        <a href="https://www.youtube.com/">youtube.com</a> est le test le plus simple pour commencer.
+        Une extension qui vient d'être installée n'a pas encore d'icône dans la barre d'outils :
+        cliquez sur le <b>bouton en forme de pièce de puzzle</b> de Chrome, trouvez
+        <b>Interpretab</b> dans la liste et cliquez sur l'épingle à côté.
+    - tab: Cliquez sur l'icône
+      body: >-
+        L'icône est maintenant dans la barre d'outils. <b>Cliquez dessus depuis l'onglet à
+        traduire.</b> Ce clic est la façon dont vous donnez la permission d'écouter l'onglet : sans
+        lui, vous obtenez une erreur.
     - tab: Appuyez sur Start
       body: >-
         Choisissez votre langue dans le panneau latéral et appuyez sur <b>Start</b>. L'audio de
@@ -204,26 +254,38 @@ de:
       body: >-
         Die Seite listet Ihre Schlüssel auf — bei einem neuen Konto also keinen. Auf <b>Create API
         key</b> klicken.
-    - tab: Projekt wählen
+    - tab: Schlüssel benennen
       body: >-
-        Ein Schlüssel gehört zu einem Google-Cloud-Projekt, und AI Studio fragt, zu welchem.
-        <b>Default project</b> wählen, das schon in der Liste steht, und auf <b>Create key</b>
-        klicken. Jedes Projekt geht; der Schlüssel ist derselbe.
+        Ein Schlüssel braucht einen Namen und ein Google-Cloud-Projekt, zu dem er gehört. Als Namen
+        <b>Interpretab</b> eintragen. Darunter hat ein Konto, das die API noch nie benutzt hat,
+        nichts zur Auswahl: <b>No Cloud Projects Available</b>.
+    - tab: Projekt anlegen
+      body: >-
+        Diese Liste öffnen und <b>Create new project</b> wählen. Der Name, der dort schon steht, ist
+        in Ihrer Sprache, und das Feld nimmt nur lateinische Buchstaben — also löschen,
+        <b>Interpretab</b> eintippen und auf <b>Create project</b> klicken.
     - tab: Schlüssel kopieren
       body: >-
-        Sobald das Projekt bereit ist, erscheint der Schlüssel. Auf <b>Copy</b> klicken. Er bleibt
-        auf der Seite API keys, Sie können ihn also später wieder holen.
+        Der Dialog kommt mit dem neuen Projekt zurück. Auf <b>Create key</b> klicken, und der
+        Schlüssel erscheint — auf <b>Copy</b> klicken. Er bleibt auf der Seite API keys, Sie können
+        ihn also später wieder holen.
     - tab: Schlüssel einfügen
       body: >-
         Die Seite <b>Optionen</b> der Erweiterung öffnet sich beim ersten Mal von selbst, und die
         Schaltfläche <b>Options</b> im Seitenbereich öffnet sie wieder. Den Schlüssel in <b>Gemini API key</b>
         einfügen. Er bleibt in diesem Browser und geht an niemanden außer Google.
-    - tab: Symbol anklicken
+    - tab: Symbol anheften
       body: >-
         Die zu übersetzende Seite öffnen — ein Video mit Sprache auf
-        <a href="https://www.youtube.com/">youtube.com</a> ist der einfachste erste Test — und <b>auf
-        diesem Tab das Interpretab-Symbol in der Symbolleiste anklicken</b>. Mit diesem Klick geben
-        Sie die Erlaubnis, den Tab mitzuhören — ohne ihn bekommen Sie eine Fehlermeldung.
+        <a href="https://www.youtube.com/">youtube.com</a> ist der einfachste erste Test. Eine frisch
+        installierte Erweiterung hat noch kein Symbol in der Symbolleiste: auf Chromes
+        <b>Puzzleteil-Schaltfläche</b> klicken, <b>Interpretab</b> in der Liste suchen und auf die
+        Stecknadel daneben klicken.
+    - tab: Symbol anklicken
+      body: >-
+        Jetzt ist das Symbol in der Symbolleiste. <b>Auf dem Tab, den Sie übersetzen wollen,
+        daraufklicken.</b> Mit diesem Klick geben Sie die Erlaubnis, den Tab mitzuhören — ohne ihn
+        bekommen Sie eine Fehlermeldung.
     - tab: Start drücken
       body: >-
         Im Seitenbereich Ihre Sprache wählen und <b>Start</b> drücken. Der Ton des Tabs ist von
@@ -244,26 +306,37 @@ pt:
       body: >-
         A página lista as chaves que você tem, que numa conta nova é nenhuma. Clique em <b>Create
         API key</b>.
-    - tab: Escolha o projeto
+    - tab: Nomeie a chave
       body: >-
-        Uma chave pertence a um projeto do Google Cloud, e o AI Studio pergunta a qual. Escolha
-        <b>Default project</b>, o que já está na lista, e clique em <b>Create key</b>. Qualquer
-        projeto serve: a chave é a mesma.
+        Uma chave precisa de um nome e de um projeto do Google Cloud ao qual pertencer. Digite
+        <b>Interpretab</b> como nome. Logo abaixo, uma conta que nunca usou a API não tem nada para
+        escolher: <b>No Cloud Projects Available</b>.
+    - tab: Crie o projeto
+      body: >-
+        Abra essa lista e escolha <b>Create new project</b>. O nome que já vem preenchido está no seu
+        idioma, e o campo só aceita letras latinas — apague, digite <b>Interpretab</b> e clique em
+        <b>Create project</b>.
     - tab: Copie a chave
       body: >-
-        A chave aparece assim que o projeto fica pronto. Clique em <b>Copy</b>. Ela fica na página
-        API keys, então dá para voltar e pegá-la depois.
+        A caixa da chave volta com o projeto novo. Clique em <b>Create key</b> e a chave aparece —
+        clique em <b>Copy</b>. Ela fica na página API keys, então dá para voltar e pegá-la depois.
     - tab: Cole a chave
       body: >-
         A página de <b>Opções</b> da extensão abre sozinha na primeira vez, e o botão <b>Options</b> do
         painel lateral abre de novo. Cole a chave em <b>Gemini API key</b>. Ela fica guardada neste
         navegador e não vai para ninguém além do Google.
-    - tab: Clique no ícone
+    - tab: Fixe o ícone
       body: >-
         Abra a página que quer traduzir — um vídeo com fala no
-        <a href="https://www.youtube.com/">youtube.com</a> é o teste mais fácil para começar — e
-        <b>clique no ícone do Interpretab na barra de ferramentas estando naquela aba</b>. Esse
-        clique é como você dá permissão para ouvir a aba — sem ele, aparece um erro.
+        <a href="https://www.youtube.com/">youtube.com</a> é o teste mais fácil para começar. Uma
+        extensão recém-instalada ainda não tem ícone na barra de ferramentas: clique no <b>botão de
+        peça de quebra-cabeça</b> do Chrome, ache <b>Interpretab</b> na lista e clique no alfinete ao
+        lado.
+    - tab: Clique no ícone
+      body: >-
+        Agora o ícone está na barra de ferramentas. <b>Clique nele estando na aba que quer
+        traduzir.</b> Esse clique é como você dá permissão para ouvir a aba — sem ele, aparece um
+        erro.
     - tab: Aperte Start
       body: >-
         Escolha o seu idioma no painel lateral e aperte <b>Start</b>. O áudio da aba já vem ligado,
@@ -277,14 +350,18 @@ ko:
       body: 번역은 Google의 Gemini가 하고, Gemini에는 본인 명의의 API 키가 필요합니다. 발급은 무료입니다. <a href="https://aistudio.google.com/apikey">Google AI Studio</a>를 열고 Google 계정으로 로그인합니다.
     - tab: 키 만들기
       body: 이 페이지에는 가지고 있는 키가 나열됩니다. 새 계정이라면 아직 하나도 없습니다. <b>Create API key</b>를 누릅니다.
-    - tab: 프로젝트 선택
-      body: 키는 Google Cloud 프로젝트에 속하므로 어느 프로젝트인지 물어봅니다. 목록에 이미 있는 <b>Default project</b>를 고르고 <b>Create key</b>를 누릅니다. 어느 프로젝트를 골라도 키는 똑같습니다.
+    - tab: 키 이름 짓기
+      body: 키에는 이름과, 키가 속할 Google Cloud 프로젝트가 필요합니다. 이름에는 <b>Interpretab</b>을 입력합니다. 그 아래에는, API를 한 번도 쓴 적 없는 계정이라면 고를 것이 없습니다. <b>No Cloud Projects Available</b>이라고 나옵니다.
+    - tab: 프로젝트 만들기
+      body: 그 목록을 열고 <b>Create new project</b>를 고릅니다. 미리 채워져 있는 이름은 사용자의 언어로 되어 있는데, 이 칸은 라틴 문자만 받습니다. 지우고 <b>Interpretab</b>을 입력한 뒤 <b>Create project</b>를 누릅니다.
     - tab: 키 복사
-      body: 프로젝트가 준비되면 키가 나타납니다. <b>Copy</b>를 누릅니다. 키는 API keys 페이지에 남아 있어서 나중에 다시 가져올 수 있습니다.
+      body: 새 프로젝트가 들어간 채로 키 대화상자가 다시 나옵니다. <b>Create key</b>를 누르면 키가 나타나니 <b>Copy</b>를 누릅니다. 키는 API keys 페이지에 남아 있어서 나중에 다시 가져올 수 있습니다.
     - tab: 키 붙여넣기
       body: 확장 프로그램의 <b>옵션</b> 페이지는 처음에 저절로 열리고, 사이드 패널의 <b>Options</b> 버튼으로 다시 열 수 있습니다. <b>Gemini API key</b>에 키를 붙여넣습니다. 키는 이 브라우저에 저장되며 Google 외에는 어디로도 보내지 않습니다.
+    - tab: 아이콘 고정
+      body: 번역할 페이지를 엽니다. 처음 시험해 볼 때는 <a href="https://www.youtube.com/">youtube.com</a>에서 사람이 말하는 영상이 가장 간편합니다. 새로 설치한 확장 프로그램은 아직 툴바에 아이콘이 없습니다. Chrome의 <b>퍼즐 조각 버튼</b>을 누르고 목록에서 <b>Interpretab</b>을 찾아 옆에 있는 핀을 누릅니다.
     - tab: 아이콘 클릭
-      body: 번역할 페이지를 엽니다. 처음 시험해 볼 때는 <a href="https://www.youtube.com/">youtube.com</a>에서 사람이 말하는 영상이 가장 간편합니다. 그런 다음 <b>그 탭에서 툴바의 Interpretab 아이콘을 클릭합니다.</b> 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
+      body: 이제 툴바에 아이콘이 있습니다. <b>번역할 탭에서 그 아이콘을 클릭합니다.</b> 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
     - tab: Start 누르기
       body: 사이드 패널에서 언어를 고르고 <b>Start</b>를 누릅니다. 탭 소리는 처음부터 켜져 있어서 따로 켤 것은 없습니다.
 
@@ -302,24 +379,32 @@ hi:
     - tab: कुंजी बनाएँ
       body: >-
         यह पेज आपकी मौजूदा कुंजियाँ दिखाता है — नए खाते में एक भी नहीं। <b>Create API key</b> दबाएँ।
-    - tab: प्रोजेक्ट चुनें
+    - tab: कुंजी का नाम रखें
       body: >-
-        कुंजी किसी Google Cloud प्रोजेक्ट की होती है, और AI Studio पूछता है कि किस प्रोजेक्ट की। सूची में पहले से मौजूद
-        <b>Default project</b> चुनें और <b>Create key</b> दबाएँ। कोई भी प्रोजेक्ट चलेगा — कुंजी एक जैसी ही रहती है।
+        कुंजी को एक नाम चाहिए, और एक Google Cloud प्रोजेक्ट जिसकी वह हो। नाम में <b>Interpretab</b> लिखें। उसके नीचे,
+        जिस खाते ने API कभी इस्तेमाल नहीं की उसके पास चुनने को कुछ नहीं होता: <b>No Cloud Projects Available</b>।
+    - tab: प्रोजेक्ट बनाएँ
+      body: >-
+        उस सूची को खोलें और <b>Create new project</b> चुनें। जो नाम पहले से भरा आता है वह आपकी भाषा में होता है, और यह
+        खाना सिर्फ़ लैटिन अक्षर लेता है — उसे मिटाएँ, <b>Interpretab</b> टाइप करें और <b>Create project</b> दबाएँ।
     - tab: कुंजी कॉपी करें
       body: >-
-        प्रोजेक्ट तैयार होते ही कुंजी दिख जाती है। <b>Copy</b> दबाएँ। वह API keys पेज पर बनी रहती है, इसलिए बाद में
-        दोबारा ली जा सकती है।
+        कुंजी वाला डायलॉग नए प्रोजेक्ट के साथ वापस आ जाता है। <b>Create key</b> दबाएँ और कुंजी दिख जाती है — <b>Copy</b>
+        दबाएँ। वह API keys पेज पर बनी रहती है, इसलिए बाद में दोबारा ली जा सकती है।
     - tab: कुंजी पेस्ट करें
       body: >-
         एक्सटेंशन का <b>विकल्प</b> पेज पहली बार अपने आप खुलता है, और साइड पैनल का <b>Options</b> बटन उसे दोबारा खोल देता है।
         कुंजी को <b>Gemini API key</b> में पेस्ट करें। वह इसी ब्राउज़र में रहती है और Google के अलावा किसी को नहीं
         भेजी जाती।
-    - tab: आइकॉन क्लिक करें
+    - tab: आइकॉन पिन करें
       body: >-
         जिस पेज का अनुवाद चाहिए उसे खोलें — पहली जाँच के लिए <a href="https://www.youtube.com/">youtube.com</a> पर
-        बोलने वाला कोई वीडियो सबसे आसान है — और <b>उसी टैब पर टूलबार में Interpretab का आइकॉन क्लिक
-        करें</b>। यही क्लिक उस टैब को सुनने की अनुमति है — इसे छोड़ देने पर त्रुटि मिलेगी।
+        बोलने वाला कोई वीडियो सबसे आसान है। अभी-अभी इंस्टॉल हुए एक्सटेंशन का आइकॉन टूलबार में नहीं होता: Chrome का
+        <b>पहेली के टुकड़े वाला बटन</b> दबाएँ, सूची में <b>Interpretab</b> ढूँढें और उसके बगल की पिन दबाएँ।
+    - tab: आइकॉन क्लिक करें
+      body: >-
+        अब आइकॉन टूलबार में है। <b>जिस टैब का अनुवाद चाहिए, उसी पर रहते हुए उसे क्लिक करें।</b> यही क्लिक उस टैब को
+        सुनने की अनुमति है — इसे छोड़ देने पर त्रुटि मिलेगी।
     - tab: Start दबाएँ
       body: >-
         साइड पैनल में अपनी भाषा चुनें और <b>Start</b> दबाएँ। टैब की आवाज़ शुरू से चालू रहती है, इसलिए और कुछ चालू
@@ -338,26 +423,34 @@ ar:
     - tab: أنشئ المفتاح
       body: >-
         تعرض الصفحة المفاتيح التي لديك، ولا يوجد أي مفتاح في حساب جديد. اضغط <b>Create API key</b>.
-    - tab: اختر المشروع
+    - tab: سمِّ المفتاح
       body: >-
-        ينتمي المفتاح إلى مشروع في Google Cloud، ويسألك AI Studio عن المشروع. اختر <b>Default
-        project</b> الموجود في القائمة، ثم اضغط <b>Create key</b>. أي مشروع يفي بالغرض؛ والمفتاح
-        واحد في الحالتين.
+        يحتاج المفتاح إلى اسم وإلى مشروع في Google Cloud ينتمي إليه. اكتب <b>Interpretab</b> اسمًا
+        له. وتحته، الحساب الذي لم يستخدم الـ API من قبل لا يجد ما يختاره: <b>No Cloud Projects
+        Available</b>.
+    - tab: أنشئ المشروع
+      body: >-
+        افتح تلك القائمة واختر <b>Create new project</b>. الاسم المكتوب سلفًا يكون بلغتك، والحقل لا
+        يقبل غير الحروف اللاتينية — امسحه واكتب <b>Interpretab</b> ثم اضغط <b>Create project</b>.
     - tab: انسخ المفتاح
       body: >-
-        يظهر المفتاح بمجرد أن يصبح المشروع جاهزًا. اضغط <b>Copy</b>. يبقى المفتاح في صفحة API keys،
-        فيمكنك العودة إليه لاحقًا.
+        يعود مربّع المفتاح ومعه المشروع الجديد. اضغط <b>Create key</b> فيظهر المفتاح — اضغط
+        <b>Copy</b>. يبقى المفتاح في صفحة API keys، فيمكنك العودة إليه لاحقًا.
     - tab: الصق المفتاح
       body: >-
         تُفتح صفحة <b>الخيارات</b> في الإضافة من تلقاء نفسها في المرة الأولى، ويعيد فتحها زر <b>Options</b>
         في اللوحة الجانبية. الصق المفتاح في <b>Gemini API key</b>. يبقى في هذا المتصفح ولا يُرسَل إلى
         أحد غير Google.
-    - tab: اضغط الأيقونة
+    - tab: ثبِّت الأيقونة
       body: >-
         افتح الصفحة التي تريد ترجمتها — وأسهل تجربة أولى مقطع فيه كلام على
-        <a href="https://www.youtube.com/">youtube.com</a> — و<b>اضغط أيقونة Interpretab في شريط
-        الأدوات وأنت على تلك العلامة</b>. تلك النقرة هي إذنك بالاستماع إلى علامة التبويب —
-        وتجاوُزها يعني رسالة خطأ.
+        <a href="https://www.youtube.com/">youtube.com</a>. الإضافة المثبَّتة حديثًا ليس لها أيقونة
+        في شريط الأدوات بعد: اضغط <b>زر قطعة الأحجية</b> في Chrome، وابحث عن <b>Interpretab</b> في
+        القائمة، ثم اضغط الدبوس بجانبها.
+    - tab: اضغط الأيقونة
+      body: >-
+        صارت الأيقونة في شريط الأدوات. <b>اضغطها وأنت على العلامة التي تريد ترجمتها.</b> تلك النقرة
+        هي إذنك بالاستماع إلى علامة التبويب — وتجاوُزها يعني رسالة خطأ.
     - tab: اضغط Start
       body: >-
         اختر لغتك في اللوحة الجانبية واضغط <b>Start</b>. صوت علامة التبويب مفعَّل من البداية، فلا شيء
