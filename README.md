@@ -69,7 +69,9 @@ there. To work on it, load it unpacked instead.
    newly loaded extension has no icon there yet — it is behind Chrome's puzzle-piece button, with
    a pin beside it. The click is not optional: it is what grants access to that tab, and Start
    fails without it.
-5. Pick your languages in the side panel and click **Start**.
+5. Pick your languages in the side panel and click **Start**. Play the video: the voice comes
+   back in that language — if it sounds unchanged, the language is still on the default
+   **English**.
 
 The panel belongs to the tab you opened it on. Switch to another tab and it is not there —
 Interpretab is translating *that* page, and its controls have no business following you onto
