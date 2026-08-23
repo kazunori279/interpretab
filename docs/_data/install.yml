@@ -86,8 +86,8 @@ en:
       body: >-
         Pick your language in the side panel and press <b>Start</b>. Tab audio is on from the
         beginning, so there is nothing else to switch on. Play the video: the voice comes back in
-        that language — if it sounds unchanged, the language is still on the default
-        <b>English</b>.
+        that language. If you hear no translation, pick a language other than the one the video is
+        already in.
 
 # Chinese, Japanese and Korean below are one line per `body` on purpose. A
 # folded scalar joins its lines with a space, and a space between two kanji is a
@@ -113,7 +113,7 @@ ja:
     - tab: アイコンをクリック
       body: これでツールバーにアイコンが出ました。<b>翻訳したいタブで、そのアイコンをクリックします。</b>このクリックが、このタブの音声を聞いてよいという許可になります。押さずに始めるとエラーになります。
     - tab: Start を押す
-      body: サイドパネルで言語を選び、<b>Start</b> を押します。タブ音声は最初からオンなので、ほかに入れる設定はありません。動画を再生すると、その言語で声が返ってきます。変わらないときは、言語が既定の <b>English</b> のままです。
+      body: サイドパネルで言語を選び、<b>Start</b> を押します。タブ音声は最初からオンなので、ほかに入れる設定はありません。動画を再生すると、その言語で声が返ってきます。訳された声が聞こえないときは、動画そのものの言語とは別の言語を選んでみてください。
 
 zh:
   steps:
@@ -136,7 +136,7 @@ zh:
     - tab: 点击图标
       body: 现在图标在工具栏上了。<b>在要翻译的那个标签页上点它。</b>这次点击就是你授权它收听该标签页的方式——跳过它就会报错。
     - tab: 按 Start
-      body: 在侧边栏选择语言，按 <b>Start</b>。标签页声音一开始就是开着的，不用再打开别的开关。播放视频，声音就会用那个语言回来。要是没有变化，语言还停在默认的 <b>English</b> 上。
+      body: 在侧边栏选择语言，按 <b>Start</b>。标签页声音一开始就是开着的，不用再打开别的开关。播放视频，声音就会用那个语言回来。要是听不到翻译，就换一个和视频本身不同的语言试试。
 
 es:
   steps:
@@ -187,8 +187,8 @@ es:
     - tab: Pulsa Start
       body: >-
         Elige tu idioma en el panel lateral y pulsa <b>Start</b>. El audio de la pestaña ya viene
-        activado, así que no hay nada más que encender. Dale al vídeo: la voz vuelve en ese idioma
-        — si no cambia nada, el idioma sigue en <b>English</b>, que es el que viene puesto.
+        activado, así que no hay nada más que encender. Dale al vídeo: la voz vuelve en ese idioma.
+        Si no oyes ninguna traducción, elige un idioma distinto del que ya habla el vídeo.
 
 fr:
   steps:
@@ -241,8 +241,8 @@ fr:
       body: >-
         Choisissez votre langue dans le panneau latéral et appuyez sur <b>Start</b>. L'audio de
         l'onglet est activé dès le départ, il n'y a rien d'autre à allumer. Lancez la vidéo : la
-        voix revient dans cette langue — si rien ne change, la langue est restée sur <b>English</b>,
-        celle d'origine.
+        voix revient dans cette langue. Si vous n'entendez aucune traduction, choisissez une langue
+        autre que celle que parle déjà la vidéo.
 
 de:
   steps:
@@ -295,8 +295,8 @@ de:
       body: >-
         Im Seitenbereich Ihre Sprache wählen und <b>Start</b> drücken. Der Ton des Tabs ist von
         Anfang an eingeschaltet, es ist sonst nichts einzuschalten. Das Video abspielen: die Stimme
-        kommt in dieser Sprache zurück — ändert sich nichts, steht die Sprache noch auf
-        <b>English</b>, der Voreinstellung.
+        kommt in dieser Sprache zurück. Hören Sie keine Übersetzung, dann eine andere Sprache
+        wählen als die, die im Video ohnehin gesprochen wird.
 
 pt:
   steps:
@@ -347,8 +347,8 @@ pt:
     - tab: Aperte Start
       body: >-
         Escolha o seu idioma no painel lateral e aperte <b>Start</b>. O áudio da aba já vem ligado,
-        então não há mais nada para ativar. Dê play no vídeo: a voz volta nesse idioma — se nada
-        mudar, o idioma ainda está em <b>English</b>, que é o que vem marcado.
+        então não há mais nada para ativar. Dê play no vídeo: a voz volta nesse idioma. Se você não
+        ouvir tradução nenhuma, escolha um idioma diferente do que o vídeo já fala.
 
 ko:
   steps:
@@ -371,7 +371,7 @@ ko:
     - tab: 아이콘 클릭
       body: 이제 툴바에 아이콘이 있습니다. <b>번역할 탭에서 그 아이콘을 클릭합니다.</b> 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다.
     - tab: Start 누르기
-      body: 사이드 패널에서 언어를 고르고 <b>Start</b>를 누릅니다. 탭 소리는 처음부터 켜져 있어서 따로 켤 것은 없습니다. 영상을 재생하면 그 언어로 목소리가 돌아옵니다. 그대로라면 언어가 기본값인 <b>English</b>에 머물러 있는 것입니다.
+      body: 사이드 패널에서 언어를 고르고 <b>Start</b>를 누릅니다. 탭 소리는 처음부터 켜져 있어서 따로 켤 것은 없습니다. 영상을 재생하면 그 언어로 목소리가 돌아옵니다. 번역된 목소리가 들리지 않으면, 영상에서 원래 쓰는 언어가 아닌 다른 언어를 골라 보세요.
 
 hi:
   steps:
@@ -416,7 +416,8 @@ hi:
     - tab: Start दबाएँ
       body: >-
         साइड पैनल में अपनी भाषा चुनें और <b>Start</b> दबाएँ। टैब की आवाज़ शुरू से चालू रहती है, इसलिए और कुछ चालू
-        नहीं करना है। वीडियो चलाएँ — आवाज़ उसी भाषा में लौटती है। कुछ न बदले तो भाषा अब भी डिफ़ॉल्ट <b>English</b> पर है।
+        नहीं करना है। वीडियो चलाएँ — आवाज़ उसी भाषा में लौटती है। अनुवाद सुनाई न दे तो वीडियो जिस भाषा में है, उससे अलग
+        कोई भाषा चुनें।
 
 ar:
   steps:
@@ -462,5 +463,5 @@ ar:
     - tab: اضغط Start
       body: >-
         اختر لغتك في اللوحة الجانبية واضغط <b>Start</b>. صوت علامة التبويب مفعَّل من البداية، فلا شيء
-        آخر عليك تشغيله. شغّل الفيديو: يعود الصوت بتلك اللغة — وإن لم يتغيّر شيء فاللغة ما زالت على
-        <b>English</b>، وهي الافتراضية.
+        آخر عليك تشغيله. شغّل الفيديو: يعود الصوت بتلك اللغة. وإن لم تسمع أي ترجمة فاختر لغة غير
+        التي يتحدث بها الفيديو أصلًا.
