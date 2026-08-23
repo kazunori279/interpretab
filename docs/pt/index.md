@@ -12,7 +12,7 @@ description: Uma extensão do Chrome que traduz o que o seu navegador está repr
 **Uma extensão do Chrome que traduz o que o seu navegador está reproduzindo, e o que você fala, para
 mais de 70 idiomas em tempo real — falado em voz alta e legendado na página.**
 
-## Para que serve
+## 💡 Para que serve
 
 <div style="margin:1rem 0 1.5rem">
   <p style="margin:0 0 .6rem"><b>Traduzir o áudio do navegador</b></p>
@@ -47,7 +47,7 @@ mais de 70 idiomas em tempo real — falado em voz alta e legendado na página.*
 
 <p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Veja funcionando (2:02)</a></p>
 
-## Como o Interpretab funciona, e a privacidade
+## 🔒 Como o Interpretab funciona, e a privacidade
 
 O Interpretab traduz pela
 [Gemini Live API](https://ai.google.dev/gemini-api/docs/live) do Google. Seu áudio, suas legendas e
@@ -58,7 +58,7 @@ tradução alguma.
 
 - [Política de privacidade](../PRIVACY.html) (em inglês)
 
-## Gratuito para experimentar, cerca de US$ 2 por hora para manter rodando
+## 💰 Gratuito para experimentar, cerca de US$ 2 por hora para manter rodando
 
 O Interpretab é uma ferramenta de código aberto. O que custa dinheiro é a Gemini Live API por trás
 da tradução, e o plano gratuito dela basta para experimentar — depois disso, **o uso da Gemini Live
@@ -75,7 +75,7 @@ Estes são os preços da Gemini Live API que o
 São horas de áudio *contínuo*, então falar menos custa menos. Ligar o áudio da aba e o microfone ao
 mesmo tempo são duas traduções ao mesmo tempo, então o preço é a soma das duas linhas.
 
-## Comece em 5 minutos
+## 🚀 Comece em 5 minutos
 
 O Interpretab se instala assim:
 
@@ -84,14 +84,9 @@ O Interpretab se instala assim:
 Chrome 116 ou mais novo. Fechar o painel lateral não interrompe a tradução — o botão **Stop** está
 sempre a um clique no ícone da barra de ferramentas, de qualquer aba.
 
-O Interpretab é de código aberto, então você também pode rodá-lo a partir do código: baixe um ZIP
-no [repositório](https://github.com/kazunori279/interpretab), descompacte, abra
-`chrome://extensions`, ative o **modo do desenvolvedor**, clique em **Carregar sem compactação** e
-escolha a pasta descompactada.
-
 A interface do Interpretab acompanha o idioma do seu navegador, nos dez idiomas desta página.
 
-## Escolhendo o que traduzir
+## 🎛️ Escolhendo o que traduzir
 
 O Interpretab tem dois interruptores, **Áudio da aba** e **Microfone**. Cada um sozinho, ou os dois
 ao mesmo tempo.
@@ -118,7 +113,7 @@ painel lateral.
 Ligar os dois ao mesmo tempo são duas traduções ao mesmo tempo, então o Google cobra pelas duas e o
 custo é a soma delas.
 
-### As legendas e a tradução falada
+### 💬 As legendas e a tradução falada
 
 As legendas aparecem embaixo, no centro da página, três linhas por vez, e acompanham o vídeo em tela
 cheia. Quando o áudio da aba e o microfone estão ligados, a linha do microfone é marcada com uma
@@ -128,20 +123,20 @@ assiste.
 A voz traduzida sai pela saída de áudio do seu computador, e um botão de mudo a silencia a qualquer
 momento.
 
-#### A voz da tradução do áudio da aba
+#### 🔊 A voz da tradução do áudio da aba
 
 A voz traduzida do áudio da aba toca no seu dispositivo de áudio padrão — as caixas de som ou os
 fones que o computador já está usando. O som da própria aba **continua tocando por baixo em volume
 mais baixo** enquanto a tradução fala, então a música e os efeitos de um filme continuam lá.
 
-#### A voz da tradução do microfone
+#### 🎤 A voz da tradução do microfone
 
 **Opções → Entrada / Saída de áudio** escolhe por qual dispositivo o **Microfone** escuta e
 por qual a tradução dele é falada. Para parar de traduzir por um momento, ou quando o ambiente está
 barulhento a ponto de entrarem vozes que você não queria traduzir, o botão de desligar o microfone
 corta a entrada a qualquer momento.
 
-### Usando em reuniões online
+### 👥 Usando em reuniões online
 
 **Ouvir o outro lado é o que esta ferramenta faz de fábrica.** Abra a reunião em uma aba, ligue o
 áudio da aba, escolha o seu idioma e aperte Start. O que disserem chega no seu idioma, falado e
@@ -176,7 +171,7 @@ instalem o Interpretab também; se não puderem:
 Como isto é uma extensão do Chrome, tudo isso só funciona com as versões web desses serviços —
 aplicativos de desktop e clientes nativos estão fora de alcance.
 
-### Os modelos por trás da tradução, e a qualidade dela
+### 🤖 Os modelos por trás da tradução, e a qualidade dela
 
 O áudio da aba e o modo Simultaneous do microfone rodam no modelo
 [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview) da
@@ -188,7 +183,7 @@ aceita a lista de termos abaixo.
 De um jeito ou de outro, o modelo pode errar, e as legendas podem sair com o conteúdo errado, ou no
 idioma errado.
 
-### Glossário
+### 📖 Glossário
 {: #glossary }
 
 Nomes de produtos, nomes de pessoas e jargão são o que um modelo geral mais erra, tanto na pronúncia
@@ -209,7 +204,7 @@ terceira é o que você quer que as **legendas mostrem**.
 
 [![A página de Opções com uma tabela de glossário preenchida](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
-### O que é bom saber
+### ⚠️ O que é bom saber
 
 - **Use fones de ouvido para o modo Simultaneous do microfone.** Esse modo fala por cima de você,
   então o microfone capta de volta a própria voz traduzida — um loop de eco — e a qualidade da
@@ -228,7 +223,7 @@ terceira é o que você quer que as **legendas mostrem**.
   medido, em execuções de uma hora; um par mais distante ou menos comum pode sair mais tosco, e não
   há como saber de antemão a não ser testando.
 
-## Mais sobre o uso da Gemini Live API
+## 📊 Mais sobre o uso da Gemini Live API
 
 O painel lateral mantém um medidor do que a execução consumiu até agora, e recomeça do zero cada vez
 que você aperta Start. O que ele mostra depende de **Opções → Plano da API do Gemini**, onde você
@@ -245,7 +240,7 @@ Configure o plano na hora de colar a chave. Uma chave é paga assim que a conta 
 pertence tem uma forma de pagamento, e o Google não conta ao Interpretab qual das duas é — daí a
 pergunta. **A sua conta do Google é o único lugar onde a sua fatura real existe.**
 
-### Escolhendo entre o plano gratuito e um pago
+### 💳 Escolhendo entre o plano gratuito e um pago
 
 Quanto custa uma chave da API do Gemini, com que rigor ela é limitada e o que o Google faz com o que
 você envia por ela dependem de em qual plano ela está. A documentação do próprio Google chama o pago
@@ -263,7 +258,7 @@ ferramenta como esta: cerca de 25 execuções do Interpretab ao mesmo tempo, e p
 por mês. O Google documenta [como configurar o
 faturamento](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-### Compartilhar uma chave da API do Gemini entre máquinas e pessoas
+### 🔑 Compartilhar uma chave da API do Gemini entre máquinas e pessoas
 
 O Interpretab guarda a chave na máquina, em `chrome.storage.local`. A sincronização de perfil do
 Chrome não leva ela junto, então usar o Interpretab em vários computadores significa colar a chave
@@ -272,7 +267,7 @@ em cada um. **Usar uma chave nas suas próprias várias máquinas é permitido.*
 **Entregar a chave para outra pessoa não é**, pelos
 [Termos de Serviço das APIs](https://developers.google.com/terms) do Google.
 
-### O que é bom saber sobre a sua chave da API do Gemini
+### 🛡️ O que é bom saber sobre a sua chave da API do Gemini
 
 - **Os limites de taxa são por projeto, não por chave.** A
   [documentação do Google](https://ai.google.dev/gemini-api/docs/rate-limits) diz isso com todas as
@@ -298,7 +293,7 @@ em cada um. **Usar uma chave nas suas próprias várias máquinas é permitido.*
   O Interpretab a encerra e diz a mesma coisa em vez de reconectar: um limite esgotado ainda deixa a
   conexão abrir, e a fecha um segundo depois.
 
-## Código aberto
+## 🛠️ Código aberto
 
 Apache 2.0. O código, as notas de engenharia por trás de tudo isso, e o rastreador de problemas:
 

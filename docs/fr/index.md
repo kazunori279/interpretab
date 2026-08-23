@@ -12,7 +12,7 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
 **Une extension Chrome qui traduit ce que votre navigateur joue, et ce que vous dites, dans plus de
 70 langues en temps réel — à voix haute et sous-titré sur la page.**
 
-## À quoi ça sert
+## 💡 À quoi ça sert
 
 <div style="margin:1rem 0 1.5rem">
   <p style="margin:0 0 .6rem"><b>Traduire l'audio du navigateur</b></p>
@@ -47,7 +47,7 @@ description: Une extension Chrome qui traduit ce que votre navigateur joue, et c
 
 <p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Le voir tourner (2:02)</a></p>
 
-## Comment fonctionne Interpretab, et la confidentialité
+## 🔒 Comment fonctionne Interpretab, et la confidentialité
 
 Interpretab traduit via la
 [Gemini Live API](https://ai.google.dev/gemini-api/docs/live) de Google. Votre audio, vos
@@ -58,7 +58,7 @@ de la parole qui n'est pas du tout une traduction.
 
 - [Politique de confidentialité](../PRIVACY.html) (en anglais)
 
-## Gratuit à l'essai, environ 2 $ de l'heure à l'usage
+## 💰 Gratuit à l'essai, environ 2 $ de l'heure à l'usage
 
 Interpretab est un outil open source. Ce qui coûte de l'argent, c'est la Gemini Live API derrière la
 traduction, et son forfait gratuit suffit pour l'essayer — au-delà, **l'usage de la Gemini Live API
@@ -76,7 +76,7 @@ Ce sont des heures d'audio *continu*, donc parler moins coûte moins. Activer l'
 le microphone ensemble, c'est deux traductions à la fois, donc le prix est la somme des deux
 lignes.
 
-## Commencez en 5 minutes
+## 🚀 Commencez en 5 minutes
 
 Interpretab s'installe ainsi :
 
@@ -85,14 +85,9 @@ Interpretab s'installe ainsi :
 Chrome 116 ou plus récent. Fermer le panneau latéral n'arrête pas la traduction : le bouton **Stop**
 est toujours à un clic sur l'icône de la barre d'outils, depuis n'importe quel onglet.
 
-Interpretab est open source, vous pouvez donc aussi le lancer depuis les sources : téléchargez un
-ZIP depuis [le dépôt](https://github.com/kazunori279/interpretab), décompressez-le, puis ouvrez
-`chrome://extensions`, activez le **mode développeur**, cliquez sur **Charger l'extension non
-empaquetée** et choisissez le dossier décompressé.
-
 L'interface d'Interpretab suit la langue de votre navigateur, dans les dix langues de cette page.
 
-## Choisir ce qui est traduit
+## 🎛️ Choisir ce qui est traduit
 
 Interpretab a deux interrupteurs, **Audio de l'onglet** et **Microphone**. L'un ou l'autre, ou les
 deux à la fois.
@@ -120,7 +115,7 @@ part, jamais dans le panneau latéral.
 Activer les deux à la fois, c'est deux traductions à la fois : Google facture les deux et le coût
 est la somme des deux.
 
-### Les sous-titres et la traduction parlée
+### 💬 Les sous-titres et la traduction parlée
 
 Les sous-titres apparaissent en bas au centre de la page, trois lignes à la fois, et suivent la
 vidéo en plein écran. Quand l'audio de l'onglet et le microphone sont tous deux actifs, la ligne du
@@ -130,21 +125,21 @@ microphone est marquée d'un liseré bleu. **Options → Taille des sous-titres*
 La voix traduite sort par la sortie audio de votre ordinateur, et un bouton de sourdine la fait
 taire à tout moment.
 
-#### La voix de la traduction de l'audio de l'onglet
+#### 🔊 La voix de la traduction de l'audio de l'onglet
 
 La voix traduite depuis l'audio de l'onglet sort par votre périphérique audio par défaut, les
 haut-parleurs ou le casque que l'ordinateur utilise déjà. Le son propre de l'onglet **continue en
 dessous à volume réduit** pendant que la traduction parle, si bien que la musique et les effets
 d'un film restent audibles.
 
-#### La voix de la traduction du microphone
+#### 🎤 La voix de la traduction du microphone
 
 **Options → Entrée / Sortie audio** choisit par quel périphérique **Microphone** écoute, et par
 lequel sa traduction est prononcée. Pour arrêter la traduction un instant, ou quand la pièce
 est assez bruyante pour que des voix non voulues passent, le bouton d'extinction du microphone
 coupe l'entrée à tout moment.
 
-### L'utiliser en réunion en ligne
+### 👥 L'utiliser en réunion en ligne
 
 **Entendre l'autre partie est ce que fait cet outil d'origine.** Ouvrez la réunion dans un onglet,
 activez l'audio de l'onglet, choisissez votre langue et appuyez sur Start. Ce qu'ils disent arrive
@@ -180,7 +175,7 @@ Interpretab de leur côté ; s'ils ne peuvent pas :
 Comme il s'agit d'une extension Chrome, tout ceci ne marche qu'avec les versions web de ces
 services : les applications de bureau et les clients natifs sont hors de portée.
 
-### Les modèles derrière la traduction, et sa qualité
+### 🤖 Les modèles derrière la traduction, et sa qualité
 
 L'audio de l'onglet et le mode Simultaneous du microphone tournent sur le modèle
 [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview) de
@@ -192,7 +187,7 @@ est le seul à accepter le glossaire ci-dessous.
 Dans les deux cas, le modèle peut se tromper, et les sous-titres peuvent sortir avec le mauvais
 contenu, ou dans la mauvaise langue.
 
-### Glossaire
+### 📖 Glossaire
 {: #glossary }
 
 Les noms de produits, les noms de personnes et le jargon sont ce qu'un modèle généraliste rate le
@@ -214,7 +209,7 @@ modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-t
 
 [![La page Options avec un tableau de glossaire rempli](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
-### Bon à savoir
+### ⚠️ Bon à savoir
 
 - **Utilisez des écouteurs ou un casque pour le mode Simultaneous du microphone.** Ce mode parle
   par-dessus vous, donc le micro récupère sa propre voix traduite — une boucle d'écho — et la
@@ -234,7 +229,7 @@ modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-t
   ceci a été mesuré, sur des exécutions d'une heure ; une paire plus éloignée ou moins courante peut
   ressortir plus rugueuse, et il n'y a pas moyen de le savoir à l'avance sinon en essayant.
 
-## En savoir plus sur l'usage de la Gemini Live API
+## 📊 En savoir plus sur l'usage de la Gemini Live API
 
 Le panneau latéral tient un compteur de ce que l'exécution a consommé jusqu'ici, et repart de zéro à
 chaque appui sur Start. Ce qu'il affiche dépend de **Options → Forfait de l'API Gemini**, où vous
@@ -252,7 +247,7 @@ auquel elle appartient a un moyen de paiement, et Google ne dit pas à Interpret
 c'est — d'où la question. **Votre compte Google est le seul endroit où votre facture réelle
 existe.**
 
-### Choisir entre le forfait gratuit et un forfait payant
+### 💳 Choisir entre le forfait gratuit et un forfait payant
 
 Ce que coûte une clé d'API Gemini, la sévérité de ses limites et ce que Google fait de ce que vous
 lui envoyez dépendent tous du forfait sur lequel elle se trouve. La documentation de Google appelle
@@ -270,7 +265,7 @@ plafonds sont larges pour un outil comme celui-ci : environ 25 exécutions d'Int
 temps, et à peu près 110 heures par mois. Google documente [comment configurer
 la facturation](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-### Partager une clé d'API Gemini entre machines et entre personnes
+### 🔑 Partager une clé d'API Gemini entre machines et entre personnes
 
 Interpretab garde la clé sur la machine, dans `chrome.storage.local`. La synchronisation de profil
 de Chrome ne l'emporte pas, donc utiliser Interpretab sur plusieurs ordinateurs veut dire coller la
@@ -279,7 +274,7 @@ clé dans chacun. **Utiliser une clé sur vos propres machines est permis.**
 **La confier à quelqu'un d'autre ne l'est pas**, au titre des
 [Conditions d'utilisation des API](https://developers.google.com/terms) de Google.
 
-### Bon à savoir sur votre clé d'API Gemini
+### 🛡️ Bon à savoir sur votre clé d'API Gemini
 
 - **Les limites de débit sont par projet, pas par clé.** La
   [documentation de Google](https://ai.google.dev/gemini-api/docs/rate-limits) le dit en toutes
@@ -308,7 +303,7 @@ clé dans chacun. **Utiliser une clé sur vos propres machines est permis.**
   reconnecter : une limite épuisée laisse quand même la connexion s'ouvrir, puis la ferme une
   seconde plus tard.
 
-## Open source
+## 🛠️ Open source
 
 Apache 2.0. Le code source, les notes d'ingénierie derrière tout ce qui précède, et le suivi des
 tickets :

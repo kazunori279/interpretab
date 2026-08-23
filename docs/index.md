@@ -12,7 +12,7 @@ description: A Chrome extension that translates what your browser plays, and wha
 **A Chrome extension that translates what your browser plays, and what you say, into 70+
 languages in real time — spoken out loud and subtitled on the page.**
 
-## What you can use it for
+## 💡 What you can use it for
 
 <div style="margin:1rem 0 1.5rem">
   <p style="margin:0 0 .6rem"><b>Translating browser audio</b></p>
@@ -47,7 +47,7 @@ languages in real time — spoken out loud and subtitled on the page.**
 
 <p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Watch it run (2:02)</a></p>
 
-## How Interpretab works, and privacy
+## 🔒 How Interpretab works, and privacy
 
 Interpretab translates through Google's
 [Gemini Live API](https://ai.google.dev/gemini-api/docs/live). Your audio, your subtitles and your
@@ -57,7 +57,7 @@ translate inaccurately, and it can produce speech that is not a translation at a
 
 - [Privacy policy](PRIVACY.html)
 
-## Free to try, about $2 an hour to keep running
+## 💰 Free to try, about $2 an hour to keep running
 
 Interpretab is an open-source tool. The Gemini Live API behind the translation is what costs
 money, and its free plan is enough to try it — after that, **the Gemini Live API usage is billed to
@@ -74,7 +74,7 @@ Here are the Gemini Live API rates
 Those are hours of *continuous* audio, so less talking costs less. Turning tab audio and the
 microphone on together is two translations at once, so the price is the sum of the two rows.
 
-## Get started in 5 minutes
+## 🚀 Get started in 5 minutes
 
 Interpretab installs like this:
 
@@ -83,15 +83,10 @@ Interpretab installs like this:
 Chrome 116 or newer. Closing the side panel does not stop the translation — the **Stop** button is
 always one click on the toolbar icon away, from any tab.
 
-Interpretab is open source, so you can also run it from the source instead: download a ZIP from
-[the repository](https://github.com/kazunori279/interpretab), unzip it, then open
-`chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and pick the unzipped
-folder.
-
 Interpretab's interface follows your browser's language, in the ten languages at the top of this
 page.
 
-## Choosing what to translate
+## 🎛️ Choosing what to translate
 
 Interpretab has two switches, **Tab audio** and **Microphone**. Either on its own, or both at once.
 
@@ -118,7 +113,7 @@ the side panel.
 Turning both on at once is two translations at once, so Google charges for both and the cost is the
 sum of the two.
 
-### Subtitles and the spoken translation
+### 💬 Subtitles and the spoken translation
 
 Subtitles appear bottom-centre of the page, three lines at a time, and they follow the video into
 fullscreen. When both tab audio and the microphone are on, the microphone's line is marked with a
@@ -127,20 +122,20 @@ blue edge. **Options → Subtitle size** sets how tall they are, 16–64 px, liv
 The translated voice comes out of your computer's audio output, and a mute button silences it at
 any time.
 
-#### The tab audio translation's voice
+#### 🔊 The tab audio translation's voice
 
 The voice translated from tab audio plays on your default audio device — whatever speakers or
 headphones the computer is already using. The tab's own sound **keeps playing underneath at a lower
 volume** while the translation speaks, so a film's music and effects are still there to hear.
 
-#### The microphone translation's voice
+#### 🎤 The microphone translation's voice
 
 **Options → Audio input/output** picks which device **Microphone** listens on, and which one its
 translation is spoken out of. To stop translating for a moment, or when the room is noisy
 enough that voices you did not mean to translate are getting through, the microphone-off button
 turns the input off at any time.
 
-### Using it in online meetings
+### 👥 Using it in online meetings
 
 **Hearing the other side is what this tool does out of the box.** Open the meeting in a tab, turn
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
@@ -176,7 +171,7 @@ Interpretab too and translates your voice on their end; failing that:
 Because this is a Chrome extension, all of this only works with the browser versions of these
 services — desktop apps and native clients are out of reach.
 
-### The models behind the translation, and its quality
+### 🤖 The models behind the translation, and its quality
 
 Tab audio and the microphone's Simultaneous mode run on the Gemini Live API's
 [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview)
@@ -188,7 +183,8 @@ does, and is the only one that takes the glossary below.
 Either way, the model can misfire, and subtitles can come out with the wrong content, or in the
 wrong language.
 
-### Glossary
+### 📖 Glossary
+{: #glossary }
 
 Product names, people's names and jargon are what a general model most often gets wrong, in both
 pronunciation and spelling. The **microphone's Two-way conversation mode** takes a glossary to cut
@@ -208,7 +204,7 @@ and the third is what you want the **subtitles to show**.
 
 [![The Options page with a glossary table filled in](assets/screenshot-3-glossary.png)](assets/screenshot-3-glossary.png)
 
-### Things to know
+### ⚠️ Things to know
 
 - **Use earphones or headphones for the microphone's Simultaneous mode.** That mode speaks over
   you, so the microphone picks its own translated voice back up — an echo loop — and translation
@@ -226,7 +222,7 @@ and the third is what you want the **subtitles to show**.
   has been measured on, in hour-long runs; a more distant or less common pair can come out
   rougher, and there is no way to know in advance except to try it.
 
-## More about using the Gemini Live API
+## 📊 More about using the Gemini Live API
 
 The side panel keeps a meter of what the run has used so far, and starts again at zero each time
 you press Start. What it shows depends on **Options → Gemini API plan**, where you say whether your
@@ -242,7 +238,7 @@ Set the plan when you paste the key. A key is paid once the Google account it be
 payment method on it, and Google does not tell Interpretab which it is — hence the question.
 **Your Google account is the only place your actual bill exists.**
 
-### Choosing between the free plan and a paid one
+### 💳 Choosing between the free plan and a paid one
 
 What a Gemini API key costs, how hard it is limited, and what Google does with what you send
 through it all depend on which plan it is on. Google's own documentation calls the paid one **Tier
@@ -259,7 +255,7 @@ you send is used to improve Google's products, and the ceilings are roomy for a 
 about 25 Interpretab runs going at the same time, and around 110 hours a month. Google documents
 [how to set the billing up](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-### Sharing one Gemini API key between machines and people
+### 🔑 Sharing one Gemini API key between machines and people
 
 Interpretab keeps the key on the machine, in `chrome.storage.local`. Chrome's profile sync does not
 carry it, so using Interpretab on several computers means pasting the key into each of them.
@@ -268,7 +264,7 @@ carry it, so using Interpretab on several computers means pasting the key into e
 **Handing the key to someone else is not**, under Google's
 [API Terms of Service](https://developers.google.com/terms).
 
-### Things to know about your Gemini API key
+### 🛡️ Things to know about your Gemini API key
 
 - **Rate limits are per project, not per key.**
   [Google's documentation](https://ai.google.dev/gemini-api/docs/rate-limits) says so in as many
@@ -294,7 +290,7 @@ carry it, so using Interpretab on several computers means pasting the key into e
   the same thing rather than reconnecting: a limit that is spent still lets the connection open,
   and closes it a second later.
 
-## Open source
+## 🛠️ Open source
 
 Apache 2.0. Source, the engineering notes behind all of the above, and the issue tracker:
 

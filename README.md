@@ -59,7 +59,8 @@ Store](https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgm
 **Add to Chrome**, and the [user guide](https://kazunori279.github.io/interpretab/) takes it from
 there. To work on it, load it unpacked instead.
 
-1. Clone this repo.
+1. Clone this repo — or, without git, **Code → Download ZIP** on the repository page, and unzip
+   it.
 2. Open `chrome://extensions`, turn on **Developer mode** (top right), click **Load unpacked**
    and pick this directory.
 3. Get a Gemini API key from [aistudio.google.com/apikey](https://aistudio.google.com/apikey) —

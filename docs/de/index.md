@@ -12,7 +12,7 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
 **Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das, was Sie sagen, in Echtzeit in
 über 70 Sprachen übersetzt — laut gesprochen und auf der Seite untertitelt.**
 
-## Wofür Sie es benutzen können
+## 💡 Wofür Sie es benutzen können
 
 <div style="margin:1rem 0 1.5rem">
   <p style="margin:0 0 .6rem"><b>Browser-Audio übersetzen</b></p>
@@ -47,7 +47,7 @@ description: Eine Chrome-Erweiterung, die das, was Ihr Browser abspielt, und das
 
 <p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ In Aktion ansehen (2:02)</a></p>
 
-## Wie Interpretab arbeitet, und der Datenschutz
+## 🔒 Wie Interpretab arbeitet, und der Datenschutz
 
 Interpretab übersetzt über Googles
 [Gemini Live API](https://ai.google.dev/gemini-api/docs/live). Ihr Audio, Ihre Untertitel und Ihr
@@ -57,7 +57,7 @@ ungenau übersetzen und Sprache erzeugen, die überhaupt keine Übersetzung ist.
 
 - [Datenschutzerklärung](../PRIVACY.html) (auf Englisch)
 
-## Kostenlos zum Ausprobieren, etwa 2 $ pro Stunde im Dauerbetrieb
+## 💰 Kostenlos zum Ausprobieren, etwa 2 $ pro Stunde im Dauerbetrieb
 
 Interpretab ist ein Open-Source-Werkzeug. Geld kostet die Gemini Live API hinter der Übersetzung,
 und ihr kostenloser Tarif reicht zum Ausprobieren — danach wird **die Nutzung der Gemini Live
@@ -75,7 +75,7 @@ Das sind Stunden *durchgehenden* Audios, weniger Reden kostet also weniger. Tab-
 zusammen einzuschalten sind zwei Übersetzungen gleichzeitig, der Preis ist dann die Summe beider
 Zeilen.
 
-## In 5 Minuten loslegen
+## 🚀 In 5 Minuten loslegen
 
 Interpretab installieren Sie so:
 
@@ -84,14 +84,9 @@ Interpretab installieren Sie so:
 Chrome 116 oder neuer. Das Schließen des Seitenbereichs beendet die Übersetzung nicht — die
 Schaltfläche **Stop** ist von jedem Tab aus immer einen Klick auf das Symbolleisten-Symbol entfernt.
 
-Interpretab ist quelloffen, Sie können es also auch aus dem Quellcode betreiben: im
-[Repository](https://github.com/kazunori279/interpretab) ein ZIP herunterladen und entpacken, dann
-`chrome://extensions` öffnen, den **Entwicklermodus** einschalten, auf **Entpackte Erweiterung
-laden** klicken und den entpackten Ordner auswählen.
-
 Die Oberfläche von Interpretab folgt der Sprache Ihres Browsers, in den zehn Sprachen dieser Seite.
 
-## Auswählen, was übersetzt wird
+## 🎛️ Auswählen, was übersetzt wird
 
 Interpretab hat zwei Schalter, **Tab-Audio** und **Mikrofon**. Jeder für sich oder beide gleichzeitig.
 
@@ -117,7 +112,7 @@ eigenen Seite an, nie im Seitenbereich.
 Beide zusammen einzuschalten sind zwei Übersetzungen gleichzeitig, Google berechnet also beide und
 die Kosten sind die Summe der beiden.
 
-### Untertitel und die gesprochene Übersetzung
+### 💬 Untertitel und die gesprochene Übersetzung
 
 Untertitel erscheinen unten mittig auf der Seite, drei Zeilen auf einmal, und folgen dem Video in
 den Vollbildmodus. Wenn Tab-Audio und Mikrofon beide laufen, wird die Zeile des Mikrofons mit einer
@@ -127,21 +122,21 @@ Zuschauen.
 Die übersetzte Stimme kommt aus dem Audioausgang Ihres Rechners, und eine Stummschalttaste bringt
 sie jederzeit zum Schweigen.
 
-#### Die Stimme der Tab-Audio-Übersetzung
+#### 🔊 Die Stimme der Tab-Audio-Übersetzung
 
 Die aus dem Tab-Audio übersetzte Stimme kommt über Ihr Standard-Audiogerät — die Lautsprecher oder
 Kopfhörer, die der Rechner ohnehin benutzt. Der eigene Ton des Tabs **läuft leiser darunter
 weiter**, während die Übersetzung spricht, sodass Musik und Effekte eines Films weiter zu hören
 sind.
 
-#### Die Stimme der Mikrofonübersetzung
+#### 🎤 Die Stimme der Mikrofonübersetzung
 
 **Optionen → Audioeingang/-ausgang** wählt, über welches Gerät **Mikrofon** hört und über welches
 seine Übersetzung gesprochen wird. Wenn Sie kurz nicht übersetzen wollen oder es so laut im
 Raum ist, dass ungewollte Stimmen mit übersetzt werden, schaltet die Mikrofon-Aus-Taste den Eingang
 jederzeit ab.
 
-### Einsatz in Online-Meetings
+### 👥 Einsatz in Online-Meetings
 
 **Die Gegenseite zu hören ist das, was dieses Werkzeug von Haus aus tut.** Öffnen Sie das Meeting in
 einem Tab, schalten Sie Tab-Audio ein, wählen Sie Ihre Sprache und drücken Sie Start. Was gesagt
@@ -175,7 +170,7 @@ die anderen Interpretab ebenfalls installieren; geht das nicht:
 Weil dies eine Chrome-Erweiterung ist, funktioniert all das nur mit den Browser-Versionen dieser
 Dienste — Desktop-Apps und native Clients sind außer Reichweite.
 
-### Die Modelle hinter der Übersetzung, und ihre Qualität
+### 🤖 Die Modelle hinter der Übersetzung, und ihre Qualität
 
 Tab-Audio und der Modus Simultaneous des Mikrofons laufen auf dem Modell
 [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview) der
@@ -187,7 +182,7 @@ einziges das Glossar weiter unten annimmt.
 In beiden Fällen kann das Modell danebenliegen, und Untertitel können mit falschem Inhalt oder in
 der falschen Sprache herauskommen.
 
-### Glossar
+### 📖 Glossar
 {: #glossary }
 
 Produktnamen, Personennamen und Fachjargon sind das, was ein allgemeines Modell am häufigsten falsch
@@ -208,7 +203,7 @@ vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
 
 [![Die Optionsseite mit einer ausgefüllten Glossartabelle](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
-### Wissenswertes
+### ⚠️ Wissenswertes
 
 - **Für den Modus Simultaneous des Mikrofons Ohr- oder Kopfhörer benutzen.** Dieser Modus spricht
   über Sie hinweg, das Mikrofon fängt also seine eigene übersetzte Stimme wieder ein — eine
@@ -229,7 +224,7 @@ vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
   das hier gemessen wurde, in stundenlangen Läufen; ein entfernteres oder selteneres Paar kann
   rauer ausfallen, und das lässt sich vorher nicht wissen, nur ausprobieren.
 
-## Mehr zur Nutzung der Gemini Live API
+## 📊 Mehr zur Nutzung der Gemini Live API
 
 Der Seitenbereich führt einen Zähler dessen, was der Lauf bisher verbraucht hat, und beginnt bei
 jedem Start wieder bei null. Was er zeigt, hängt von **Optionen → Gemini-API-Tarif** ab, wo Sie
@@ -247,7 +242,7 @@ sobald das Google-Konto, zu dem er gehört, eine Zahlungsmethode hat, und Google
 nicht, welches von beiden es ist — daher die Frage. **Ihr Google-Konto ist der einzige Ort,
 an dem Ihre tatsächliche Rechnung existiert.**
 
-### Die Wahl zwischen dem kostenlosen und einem kostenpflichtigen Tarif
+### 💳 Die Wahl zwischen dem kostenlosen und einem kostenpflichtigen Tarif
 
 Was ein Gemini-API-Schlüssel kostet, wie hart er begrenzt wird und was Google mit dem macht, was Sie
 darüber senden, hängt alles davon ab, in welchem Tarif er ist. Googles eigene Dokumentation nennt
@@ -265,7 +260,7 @@ Google-Produkten verwendet, und die Obergrenzen sind für ein Werkzeug wie diese
 Interpretab-Läufe gleichzeitig und rund 110 Stunden im Monat. Google dokumentiert, [wie man die
 Abrechnung einrichtet](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-### Einen Gemini-API-Schlüssel zwischen Rechnern und Personen teilen
+### 🔑 Einen Gemini-API-Schlüssel zwischen Rechnern und Personen teilen
 
 Interpretab hält den Schlüssel auf dem Rechner, in `chrome.storage.local`. Chromes Profilsynchronisierung
 nimmt ihn nicht mit, Interpretab auf mehreren Rechnern zu nutzen heißt also, den Schlüssel in jeden
@@ -274,7 +269,7 @@ einzufügen. **Einen Schlüssel auf Ihren eigenen mehreren Rechnern zu verwenden
 **Den Schlüssel jemand anderem zu geben ist es nicht**, nach Googles
 [API-Nutzungsbedingungen](https://developers.google.com/terms).
 
-### Wissenswertes zu Ihrem Gemini-API-Schlüssel
+### 🛡️ Wissenswertes zu Ihrem Gemini-API-Schlüssel
 
 - **Ratenbegrenzungen gelten pro Projekt, nicht pro Schlüssel.** Googles
   [Dokumentation](https://ai.google.dev/gemini-api/docs/rate-limits) sagt das wörtlich. Die 10 $ je
@@ -302,7 +297,7 @@ einzufügen. **Einen Schlüssel auf Ihren eigenen mehreren Rechnern zu verwenden
   beendet ihn dann und sagt dasselbe, statt neu zu verbinden: Eine aufgebrauchte Grenze lässt die
   Verbindung noch zustande kommen und schließt sie eine Sekunde später.
 
-## Open Source
+## 🛠️ Open Source
 
 Apache 2.0. Quellcode, die technischen Notizen hinter alldem und der Issue-Tracker:
 

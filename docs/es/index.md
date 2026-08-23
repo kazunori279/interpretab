@@ -12,7 +12,7 @@ description: Una extensión de Chrome que traduce lo que reproduce tu navegador,
 **Una extensión de Chrome que traduce lo que reproduce tu navegador, y lo que tú dices, a más de 70
 idiomas en tiempo real — hablado en voz alta y subtitulado en la página.**
 
-## Para qué sirve
+## 💡 Para qué sirve
 
 <div style="margin:1rem 0 1.5rem">
   <p style="margin:0 0 .6rem"><b>Traducir el audio del navegador</b></p>
@@ -47,7 +47,7 @@ idiomas en tiempo real — hablado en voz alta y subtitulado en la página.**
 
 <p><a href="https://www.youtube.com/watch?v=3TJnSBS3bkE">▶ Verlo funcionar (2:02)</a></p>
 
-## Cómo funciona Interpretab, y la privacidad
+## 🔒 Cómo funciona Interpretab, y la privacidad
 
 Interpretab traduce a través de la
 [Gemini Live API](https://ai.google.dev/gemini-api/docs/live) de Google. Tu audio, tus subtítulos y
@@ -58,7 +58,7 @@ absoluto.
 
 - [Política de privacidad](../PRIVACY.html) (en inglés)
 
-## Gratis para probarlo, unos 2 $ la hora para seguir usándolo
+## 💰 Gratis para probarlo, unos 2 $ la hora para seguir usándolo
 
 Interpretab es una herramienta de código abierto. Lo que cuesta dinero es la Gemini Live API que
 hay detrás de la traducción, y su plan gratuito basta para probarla — a partir de ahí, **el uso de
@@ -76,7 +76,7 @@ Son horas de audio *continuo*, así que hablar menos cuesta menos. Encender a la
 pestaña y el micrófono son dos traducciones a la vez, así que el precio es la suma de las dos
 filas.
 
-## Empieza en 5 minutos
+## 🚀 Empieza en 5 minutos
 
 Interpretab se instala así:
 
@@ -85,14 +85,9 @@ Interpretab se instala así:
 Chrome 116 o posterior. Cerrar el panel lateral no detiene la traducción: el botón **Stop** está
 siempre a un clic del icono de la barra de herramientas, desde cualquier pestaña.
 
-Interpretab es de código abierto, así que también puedes ejecutarlo desde el código: descarga un
-ZIP desde [el repositorio](https://github.com/kazunori279/interpretab), descomprímelo, abre
-`chrome://extensions`, activa el **modo de desarrollador**, pulsa **Cargar descomprimida** y elige
-la carpeta descomprimida.
-
 La interfaz de Interpretab sigue el idioma de tu navegador, en los diez idiomas de esta página.
 
-## Elegir qué traducir
+## 🎛️ Elegir qué traducir
 
 Interpretab tiene dos interruptores, **Audio de la pestaña** y **Micrófono**. Cualquiera por su
 cuenta, o los dos a la vez.
@@ -119,7 +114,7 @@ el panel lateral.
 Encender los dos a la vez son dos traducciones a la vez, así que Google cobra por ambas y el coste
 es la suma de las dos.
 
-### Los subtítulos y la traducción hablada
+### 💬 Los subtítulos y la traducción hablada
 
 Los subtítulos aparecen abajo en el centro de la página, tres líneas cada vez, y siguen al vídeo a
 pantalla completa. Cuando están encendidos el audio de la pestaña y el micrófono, la línea del
@@ -129,21 +124,21 @@ a 64 px, en vivo mientras miras.
 La voz traducida sale por la salida de audio de tu ordenador, y un botón de silencio la calla en
 cualquier momento.
 
-#### La voz de la traducción del audio de la pestaña
+#### 🔊 La voz de la traducción del audio de la pestaña
 
 La voz traducida del audio de la pestaña suena por tu dispositivo de audio predeterminado, los
 altavoces o auriculares que el ordenador ya esté usando. El sonido propio de la pestaña **sigue
 sonando por debajo a menor volumen** mientras habla la traducción, así que la música y los efectos
 de una película siguen ahí.
 
-#### La voz de la traducción del micrófono
+#### 🎤 La voz de la traducción del micrófono
 
 **Opciones → Entrada / Salida de audio** elige por qué dispositivo escucha **Micrófono** y por
 cuál se habla su traducción. Para dejar de traducir un momento, o cuando el sitio
 es tan ruidoso que se cuelan voces que no querías traducir, el botón de apagar el micrófono corta
 la entrada en cualquier momento.
 
-### Usarlo en reuniones en línea
+### 👥 Usarlo en reuniones en línea
 
 **Oír a la otra parte es lo que esta herramienta hace de fábrica.** Abre la reunión en una pestaña,
 enciende el audio de la pestaña, elige tu idioma y pulsa Start. Lo que digan llega en tu idioma,
@@ -179,7 +174,7 @@ instalen Interpretab también y traduzcan tu voz en su lado; si no pueden:
 Como esto es una extensión de Chrome, todo lo anterior solo funciona con las versiones web de estos
 servicios; las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.
 
-### Los modelos detrás de la traducción, y su calidad
+### 🤖 Los modelos detrás de la traducción, y su calidad
 
 El audio de la pestaña y el modo Simultaneous del micrófono funcionan sobre el modelo
 [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview) de
@@ -191,7 +186,7 @@ simultánea — espera a que quien habla termine — pero traduce mejor que Live
 En cualquier caso, el modelo puede fallar, y los subtítulos pueden salir con el contenido
 equivocado, o en el idioma equivocado.
 
-### Glosario
+### 📖 Glosario
 {: #glossary }
 
 Los nombres de producto, los nombres de personas y la jerga son lo que un modelo general falla más a
@@ -212,7 +207,7 @@ indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos*
 
 [![La página de Opciones con una tabla de glosario rellena](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
 
-### Cosas que conviene saber
+### ⚠️ Cosas que conviene saber
 
 - **Usa auriculares para el modo Simultaneous del micrófono.** Ese modo habla por encima de ti, así
   que el micrófono vuelve a captar su propia voz traducida — un bucle de eco — y la calidad de la
@@ -232,7 +227,7 @@ indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos*
   se ha medido esto, en tandas de una hora; un par más distante o menos común puede salir más
   áspero, y no hay forma de saberlo por adelantado salvo probándolo.
 
-## Más sobre el uso de la Gemini Live API
+## 📊 Más sobre el uso de la Gemini Live API
 
 El panel lateral lleva un medidor de lo que ha consumido la ejecución hasta ahora, y vuelve a
 empezar en cero cada vez que pulsas Start. Lo que muestra depende de **Opciones → Plan de la API de
@@ -249,7 +244,7 @@ Configura el plan cuando pegues la clave. Una clave es de pago en cuanto la cuen
 que pertenece tiene un método de pago, y Google no le dice a Interpretab cuál de las dos es: de ahí
 la pregunta. **Tu cuenta de Google es el único sitio donde existe tu factura real.**
 
-### Elegir entre el plan gratuito y uno de pago
+### 💳 Elegir entre el plan gratuito y uno de pago
 
 Lo que cuesta una clave de la API de Gemini, con qué dureza está limitada y qué hace Google con lo
 que envías por ella dependen de en qué plan esté. La documentación de Google llama al de pago **Tier
@@ -267,7 +262,7 @@ para una herramienta como esta: unas 25 ejecuciones de Interpretab a la vez, y u
 mes. Google documenta [cómo configurar la
 facturación](https://ai.google.dev/gemini-api/docs/billing#setup-billing).
 
-### Compartir una clave de la API de Gemini entre máquinas y personas
+### 🔑 Compartir una clave de la API de Gemini entre máquinas y personas
 
 Interpretab guarda la clave en la máquina, en `chrome.storage.local`. La sincronización de perfiles
 de Chrome no la lleva, así que usar Interpretab en varios ordenadores significa pegar la clave en
@@ -276,7 +271,7 @@ cada uno. **Usar una clave en tus propias varias máquinas está bien.**
 **Dar la clave a otra persona no lo está**, según los
 [Términos del Servicio de las API](https://developers.google.com/terms) de Google.
 
-### Cosas que conviene saber sobre tu clave de la API de Gemini
+### 🛡️ Cosas que conviene saber sobre tu clave de la API de Gemini
 
 - **Los límites de frecuencia son por proyecto, no por clave.** La
   [documentación de Google](https://ai.google.dev/gemini-api/docs/rate-limits) lo dice con esas
@@ -303,7 +298,7 @@ cada uno. **Usar una clave en tus propias varias máquinas está bien.**
   motivo. Interpretab la termina y dice lo mismo en lugar de reconectar: un límite agotado deja que
   la conexión se abra igualmente, y la cierra un segundo después.
 
-## Código abierto
+## 🛠️ Código abierto
 
 Apache 2.0. El código, las notas de ingeniería detrás de todo lo anterior y el seguimiento de
 incidencias:
