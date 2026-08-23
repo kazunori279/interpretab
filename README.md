@@ -1641,3 +1641,17 @@ split.
 ## License
 
 Apache 2.0. See [LICENSE](LICENSE).
+
+## Disclaimer
+
+- **Not a Google product.** Interpretab is a personal project. It is not made, supported, endorsed
+  or reviewed by Google. Google, Gemini, Chrome and YouTube are trademarks of Google LLC.
+- **It is machine translation.** It mishears, guesses at names, and sometimes says something the
+  speaker did not — confidently, and in a pleasant voice. Do not use it where being wrong costs
+  something: medicine, law, money, safety, or anything you would otherwise hire an interpreter
+  for.
+- **Whose voice you translate is your call.** In some places recording or translating a
+  conversation needs everyone's consent, and a site's terms may have their own say about its
+  audio. That part is between you and them.
+- **No warranty.** Apache 2.0, as-is. Gemini usage runs on your own key and is billed to your
+  account.

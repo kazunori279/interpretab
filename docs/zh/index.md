@@ -205,3 +205,10 @@ Apache 2.0。源码、上述内容背后的工程笔记，以及问题追踪：
 
 - [github.com/kazunori279/interpretab](https://github.com/kazunori279/interpretab)
 - [报告问题或提出功能建议](https://github.com/kazunori279/interpretab/issues)
+
+## ⚖️ 免责声明
+
+- **不是 Google 的产品。** Interpretab 是个人项目，并非由 Google 制作，也未经 Google 支持、认可或审核。Google、Gemini、Chrome、YouTube 是 Google LLC 的商标。
+- **这是机器翻译。** 它会听错，会猜名字，有时还会用一把自信而好听的声音说出讲话人没说过的话。凡是错了要付出代价的场合——医疗、法律、金钱、安全，或者本该请口译员的场合——都不要用它。
+- **要翻译谁的声音，由你自己判断。** 有些地方录制或翻译一段对话需要在场所有人同意，网站的条款也可能对其音频另有规定。那是你和他们之间的事。
+- **不提供任何担保。** Apache 2.0，按现状提供。Gemini 的用量走你自己的密钥，费用记在你自己的账户上。

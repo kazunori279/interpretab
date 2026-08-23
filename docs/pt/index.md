@@ -299,3 +299,16 @@ Apache 2.0. O código, as notas de engenharia por trás de tudo isso, e o rastre
 
 - [github.com/kazunori279/interpretab](https://github.com/kazunori279/interpretab)
 - [Relatar um problema ou pedir um recurso](https://github.com/kazunori279/interpretab/issues)
+
+## ⚖️ Aviso
+
+- **Não é um produto do Google.** O Interpretab é um projeto pessoal. Não é feito, mantido,
+  endossado nem revisado pelo Google. Google, Gemini, Chrome e YouTube são marcas do Google LLC.
+- **É tradução automática.** Ela ouve errado, chuta nomes e às vezes diz o que a pessoa não disse
+  — com segurança, e numa voz agradável. Não use onde errar custa alguma coisa: medicina,
+  direito, dinheiro, segurança, ou qualquer situação em que você contrataria um intérprete.
+- **Traduzir a voz de quem é decisão sua.** Em alguns lugares, gravar ou traduzir uma conversa
+  exige o consentimento de todos, e os termos de um site podem ter algo a dizer sobre o áudio
+  dele. Isso é entre você e eles.
+- **Sem garantia.** Apache 2.0, no estado em que se encontra. O uso do Gemini corre pela sua
+  própria chave e é cobrado na sua conta.

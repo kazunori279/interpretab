@@ -310,3 +310,18 @@ tickets :
 
 - [github.com/kazunori279/interpretab](https://github.com/kazunori279/interpretab)
 - [Signaler un problème ou demander une fonctionnalité](https://github.com/kazunori279/interpretab/issues)
+
+## ⚖️ Avertissement
+
+- **Ce n'est pas un produit Google.** Interpretab est un projet personnel. Il n'est ni réalisé, ni
+  pris en charge, ni approuvé, ni relu par Google. Google, Gemini, Chrome et YouTube sont des
+  marques de Google LLC.
+- **C'est de la traduction automatique.** Elle entend mal, devine les noms et dit parfois ce que
+  la personne n'a pas dit — avec assurance, et d'une voix agréable. Ne vous en servez pas là où se
+  tromper coûte quelque chose : médecine, droit, argent, sécurité, ou tout ce pour quoi vous
+  paieriez un interprète.
+- **Traduire la voix de quelqu'un, c'est votre décision.** Par endroits, enregistrer ou traduire
+  une conversation demande l'accord de tous, et les conditions d'un site peuvent avoir leur mot à
+  dire sur son audio. Cela se règle entre eux et vous.
+- **Aucune garantie.** Apache 2.0, en l'état. L'usage de Gemini passe par votre propre clé et est
+  facturé sur votre compte.
