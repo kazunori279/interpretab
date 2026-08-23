@@ -138,9 +138,10 @@ fragment, so which section to land on goes through `chrome.storage.session`, rea
 cleared: without it the reader arrives at the top of a page with eight sections and has to find
 the allow button among them.
 
-**The Options page is two groups, and the microphone is in the first.** "Before you start" holds
-the key, the plan and Microphone access; "Everything else" holds the remaining five, each of
-which already has a default that works. The split is the same list `lib/next-step.js` walks,
+**The Options page is three groups, and the microphone is in the first.** "Before you start"
+holds the key, the plan and Microphone access; "Everything else" holds the three that already
+have a default that works; "Microphone translation" holds the last two. The first split is the
+same list `lib/next-step.js` walks,
 minus the direction switch the panel owns — so what a first run is told to do and what the page
 asks it to read through are one thing rather than two. The plan is in the first group despite
 having a default because it is the only setting on the page whose right value is a fact about
@@ -151,6 +152,13 @@ microphone step sends readers straight to it — a section that gets linked to s
 somewhere a reader would only reach by scrolling past everything optional. It was called
 "Microphone" until the page grew an "Audio input" section a few lines below asking *which*
 microphone; "Microphone access" is what Chrome and macOS call the permission.
+
+The third group is the two settings that are baked into a session's `setup` frame rather than
+applied to a running one — the voice and the glossary — so both carry the same "next time you
+press Start" caveat and neither belongs among the settings that take effect immediately. It is
+last on the page because the glossary is a scrolling table, and anything under it would be below
+the fold. The voice is the loose fit: it is sent for both directions, not only the microphone,
+but it is the microphone's translation that anyone picks a voice for.
 
 The permission is watched rather than sampled. The grant happens in a tab this panel cannot see,
 so `navigator.permissions.query({ name: "microphone" })` is subscribed to and its `onchange`

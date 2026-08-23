@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "Jeden Tab in Ihrer Sprache hören — gesprochen und untertitelt in Echtzeit. Mit Ihrem eigenen Gemini-API-Schlüssel, ohne Server dazwischen."
+    "message": "Jeden Tab in Ihrer Sprache hören — gesprochen und untertitelt in Echtzeit."
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "Fehler" },
 
   "panelStepKey": {
-    "message": "Interpretab braucht zum Übersetzen <b>Ihren eigenen Gemini-Schlüssel</b>. Holen Sie sich unter <a1>aistudio.google.com/apikey</a1> einen kostenlos und fügen Sie ihn in den <a2>Optionen</a2> ein."
+    "message": "Interpretab braucht zum Übersetzen <b>Ihren eigenen Gemini-Schlüssel</b>. Holen Sie sich unter <a1>Google AI Studio</a1> einen kostenlos und fügen Sie ihn in den <a2>Optionen</a2> ein."
   },
   "panelStepDirection": {
     "message": "Noch ist nichts eingeschaltet. Schalten Sie <b>Tab-Audio</b>, <b>Mikrofon</b> oder beides ein."
@@ -47,7 +47,7 @@
     "message": "Für diesen Modus bitte Kopfhörer aufsetzen. Er beginnt zu übersetzen, während Sie noch sprechen, und kann Ihr Mikrofon deshalb nicht abschalten, während er redet: über einen Lautsprecher hört er seine eigene Stimme, fängt an, auch die zu übersetzen, und die Übersetzung wird schlechter."
   },
   "panelMicNoteConversation": {
-    "message": "Für zwei Personen, die sich ein Mikrofon teilen: Er hört eine Ihrer beiden Sprachen und spricht die andere, laut über <b>Ihre Lautsprecher</b> — genau darum geht es in diesem Modus. Halten Sie das Mikrofon von den Lautsprechern fern, sonst hört er sich selbst. Er wartet, bis jemand ausgeredet hat, ist also etwas langsamer als Simultaneous — und er ist der einzige Modus, der das <b>Glossar</b> verwendet."
+    "message": "Für zwei Personen, die sich ein Mikrofon teilen: Er hört eine Ihrer beiden Sprachen und spricht die andere, laut über <b>Ihre Lautsprecher</b> — genau darum geht es in diesem Modus. Halten Sie das Mikrofon von den Lautsprechern fern, sonst hört er sich selbst."
   },
   "panelMicToCall": { "message": "Die Übersetzung in dieses Meet-Gespräch senden" },
   "panelMicToCallNote": { "message": "Öffnen Sie in Meet <b>Einstellungen → Audio → Mikrofon</b> und wählen Sie <b>Interpretab (translated)</b>. Schalten Sie bei der Gelegenheit <b>Studio Sound</b> aus. Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme." },
@@ -69,7 +69,7 @@
     "message": "Vor {1} gestartet. Seitdem wurden {2} Audio an Google geschickt und {3} zurückempfangen, und beides wird berechnet."
   },
   "panelUsageTipPaid": {
-    "message": "Die Zahl beruht auf den von Google veröffentlichten Preisen mit Stand August 2026, nicht auf etwas, das aus Ihrem Konto gelesen wurde — und Preise ändern sich. Ihre echte Rechnung gibt es nur in Ihrem Google-Konto."
+    "message": "Die Zahl beruht auf den von Google veröffentlichten Preisen mit Stand August 2026, nicht auf etwas, das aus Ihrem Konto gelesen wurde — und Preise ändern sich."
   },
   "panelUsageTipFree": {
     "message": "Ihr Schlüssel steht auf der Optionsseite auf Free, und im kostenlosen Tarif berechnet Google nichts — es gibt also keine Kosten anzuzeigen. Wenn im Google-Konto des Schlüssels eine Zahlungsmethode hinterlegt ist, stellen Sie den Tarif dort auf Paid, und diese Zeile schätzt, was der Lauf kostet."
@@ -101,16 +101,22 @@
 
   "optSetupHeading": { "message": "Bevor Sie anfangen" },
   "optSetupNote": {
-    "message": "Ohne den Schlüssel funktioniert nichts. Die beiden anderen beantworten Sie einmal, im selben Moment: welcher Tarif zu Ihrem Schlüssel gehört und — nur wenn Ihre eigene Stimme übersetzt werden soll — die Erlaubnis, das Mikrofon zu benutzen."
+    "message": "Ohne den Schlüssel funktioniert nichts. Die beiden anderen beantworten Sie einmal, im selben Moment: welcher Tarif zu Ihrem Schlüssel gehört und — nur wenn Ihre eigene Stimme übersetzt werden soll — die Erlaubnis, das Mikrofon zu benutzen. Die <a1>Anleitung</a1> geht alle drei der Reihe nach durch."
   },
   "optRestHeading": { "message": "Alles Übrige" },
   "optRestNote": {
     "message": "All das steht schon auf etwas, das funktioniert. Kommen Sie wieder, wenn eines davon doch nicht passt."
   },
+  "optMicTranslationHeading": {
+    "message": "Mikrofon-Übersetzung"
+  },
+  "optMicTranslationNote": {
+    "message": "Einstellungen für die Richtung <b>Mikrofon</b>. Eine Änderung greift, wenn Sie das nächste Mal auf Start drücken."
+  },
 
   "optKeyHeading": { "message": "Gemini-API-Schlüssel" },
   "optKeyNote": {
-    "message": "Interpretab hat keinen eigenen Server: Ihr Ton geht direkt aus diesem Browser zu Google, mit Ihrem eigenen Schlüssel — einen kostenlosen gibt es unter <a1>aistudio.google.com/apikey</a1>. Der Schlüssel bleibt in diesem Browser und wird an niemanden außer Google geschickt. Was Sie verbrauchen, wird dem Google-Konto berechnet, aus dem der Schlüssel stammt: behandeln Sie ihn wie ein Passwort, geben Sie ihn nicht weiter und fügen Sie ihn nirgends sonst ein. Sollte er doch einmal nach außen gelangen, löschen Sie ihn auf <a2>derselben Seite, auf der Sie ihn erstellt haben</a2>, und fügen hier einen neuen ein."
+    "message": "Interpretab hat keinen eigenen Server: Ihr Ton geht direkt aus diesem Browser zu Google, mit Ihrem eigenen Schlüssel — einen kostenlosen gibt es unter <a1>Google AI Studio</a1>. Die <a2>Anleitung</a2> erklärt den Umgang mit dem Schlüssel und den Unterschied zwischen kostenlosem und kostenpflichtigem Tarif."
   },
   "optKeyPlaceholder": { "message": "Schlüssel hier einfügen" },
   "optShow": { "message": "Anzeigen" },
@@ -126,7 +132,7 @@
 
   "optPlanHeading": { "message": "Gemini-API-Tarif" },
   "optPlanNote": {
-    "message": "Google sagt Interpretab nicht, ob Ihr Schlüssel kostenlos oder kostenpflichtig ist — sagen Sie es hier. Bei <b>Free</b> zeigt das Seitenpanel nur, wie lange Sie schon übersetzen; bei <b>Paid</b> schätzt es zusätzlich, was das gekostet hat. Ein Schlüssel ist kostenpflichtig, sobald im zugehörigen Google-Konto eine Zahlungsmethode hinterlegt ist — nachsehen können Sie unter <a1>aistudio.google.com/apikey</a1>."
+    "message": "Google sagt Interpretab nicht, ob Ihr Schlüssel kostenlos oder kostenpflichtig ist — sagen Sie es hier. Bei <b>Free</b> zeigt das Seitenpanel nur, wie lange Sie schon übersetzen; bei <b>Paid</b> schätzt es zusätzlich, was das gekostet hat."
   },
   "optPlanFree": { "message": "Free — Google berechnet für diesen Schlüssel nichts" },
   "optPlanPaid": { "message": "Paid — nutzungsabhängig, Ihrem Konto berechnet" },
@@ -161,7 +167,7 @@
 
   "optSizeHeading": { "message": "Untertitelgröße" },
   "optSizeNote": {
-    "message": "Wie groß die Untertitel auf der Seite sind. Das gilt sofort, auch während eine Übersetzung läuft — ziehen Sie beim Zuschauen und hören Sie dort auf, wo es sich gut liest."
+    "message": "Wie groß die Untertitel auf der Seite sind."
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "Falsches Üben von Xylophonmusik — 素早い茶色の狐" },
@@ -220,7 +226,7 @@
 
   "optGlossaryHeading": { "message": "Glossar" },
   "optGlossaryNote": {
-    "message": "Namen und Begriffe, die auf eine bestimmte Weise gesprochen und geschrieben werden sollen — Produkte, Personen, Fachjargon. Einer pro Zeile, als <code>source,pronunciation,transcript</code>: die zweite Spalte sagt, wie es gesprochen wird, die dritte, optionale, wie es in den Untertiteln steht. Es wirkt nur beim Mikrofon im Modus <b>Two-way conversation</b> — die schnellere Übersetzung, die überall sonst läuft, hat keinen Platz für ein Glossar."
+    "message": "Namen und Begriffe, die auf eine bestimmte Weise gesprochen und geschrieben werden sollen — Produkte, Personen, Fachjargon. Einer pro Zeile, als <code>source,pronunciation,transcript</code>: die zweite Spalte sagt, wie es gesprochen wird, die dritte, optionale, wie es in den Untertiteln steht. In welchem Modus es wirkt und wie man eines schreibt, steht in der <a1>Anleitung</a1>."
   },
   "optGlossaryReplace": { "message": "Ersetzen" },
   "optGlossaryReset": { "message": "Auf Standard zurücksetzen" },

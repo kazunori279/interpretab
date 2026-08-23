@@ -13,10 +13,10 @@ Interpretab
 ## Short description (132 chars max)
 
 ```
-Hear any tab in your language, spoken and subtitled in real time. Your own Gemini API key — no server in between.
+Hear any tab in your language, spoken and subtitled in real time.
 ```
 
-*(113 characters.)*
+*(65 characters.)*
 
 Not a field you type into: the dashboard shows it as **パッケージの概要** and takes it from
 `manifest.json`'s `description`, so the two have to be kept identical. Changing it means

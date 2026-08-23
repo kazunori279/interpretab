@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "Écoutez n'importe quel onglet dans votre langue, énoncé et sous-titré en temps réel. Avec votre propre clé d'API Gemini — aucun serveur entre les deux."
+    "message": "Écoutez n'importe quel onglet dans votre langue, énoncé et sous-titré en temps réel."
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "Erreur" },
 
   "panelStepKey": {
-    "message": "Interpretab a besoin de <b>votre propre clé Gemini</b> pour traduire. Obtenez-en une gratuitement sur <a1>aistudio.google.com/apikey</a1>, puis collez-la dans les <a2>Options</a2>."
+    "message": "Interpretab a besoin de <b>votre propre clé Gemini</b> pour traduire. Obtenez-en une gratuitement sur <a1>Google AI Studio</a1>, puis collez-la dans les <a2>Options</a2>."
   },
   "panelStepDirection": {
     "message": "Rien n'est encore activé. Activez <b>Audio de l'onglet</b>, <b>Microphone</b>, ou les deux."
@@ -47,7 +47,7 @@
     "message": "Pour ce mode, mettez un casque. Il commence à traduire pendant que vous parlez encore, il ne peut donc pas couper votre microphone pendant qu'il parle : sur un haut-parleur, il entend sa propre voix, se met à la traduire aussi, et la traduction se dégrade."
   },
   "panelMicNoteConversation": {
-    "message": "Pour deux personnes qui partagent un microphone : il entend l'une de vos deux langues et parle l'autre, à voix haute dans <b>vos haut-parleurs</b>, et c'est tout l'intérêt de ce mode. Éloignez le microphone des haut-parleurs, sinon il s'entend lui-même. Il attend que chacun ait fini de parler, il est donc un peu plus lent que Simultaneous — et c'est le seul mode qui utilise le <b>glossaire</b>."
+    "message": "Pour deux personnes qui partagent un microphone : il entend l'une de vos deux langues et parle l'autre, à voix haute dans <b>vos haut-parleurs</b>, et c'est tout l'intérêt de ce mode. Éloignez le microphone des haut-parleurs, sinon il s'entend lui-même."
   },
   "panelMicToCall": { "message": "Envoyer la traduction dans cet appel Meet" },
   "panelMicToCallNote": { "message": "Dans Meet, ouvrez <b>Paramètres → Audio → Micro</b> et choisissez <b>Interpretab (translated)</b>. Profitez-en pour désactiver <b>Studio Sound</b>. Votre propre voix est mixée en dessous, en sourdine, donc l'appel vous entend en plus de l'interprète." },
@@ -69,7 +69,7 @@
     "message": "Démarré il y a {1}. Depuis, {2} d'audio envoyés à Google et {3} reçus, et les deux sont facturés."
   },
   "panelUsageTipPaid": {
-    "message": "Le chiffre s'appuie sur les tarifs publiés par Google en août 2026, et non sur quoi que ce soit lu dans votre compte ; ces tarifs changent. Votre vraie facture n'existe que dans votre compte Google."
+    "message": "Le chiffre s'appuie sur les tarifs publiés par Google en août 2026, et non sur quoi que ce soit lu dans votre compte ; ces tarifs changent."
   },
   "panelUsageTipFree": {
     "message": "Votre clé est réglée sur Free dans les Options, et Google ne facture rien sur le forfait gratuit : il n'y a donc pas de coût à afficher. Si le compte Google de la clé a un moyen de paiement, passez le forfait sur Paid et cette ligne estimera ce que l'exécution coûte."
@@ -101,16 +101,22 @@
 
   "optSetupHeading": { "message": "Avant de commencer" },
   "optSetupNote": {
-    "message": "Rien ne fonctionne sans la clé. Les deux autres se règlent une seule fois, au même moment : le forfait de votre clé et — seulement si vous voulez faire traduire votre propre voix — l'autorisation d'utiliser le microphone."
+    "message": "Rien ne fonctionne sans la clé. Les deux autres se règlent une seule fois, au même moment : le forfait de votre clé et — seulement si vous voulez faire traduire votre propre voix — l'autorisation d'utiliser le microphone. Le <a1>guide d'utilisation</a1> détaille les trois."
   },
   "optRestHeading": { "message": "Tout le reste" },
   "optRestNote": {
     "message": "Tout cela est déjà réglé sur quelque chose qui marche. Revenez en changer un le jour où il ne vous convient pas."
   },
+  "optMicTranslationHeading": {
+    "message": "Traduction du microphone"
+  },
+  "optMicTranslationNote": {
+    "message": "Réglages de la direction <b>Microphone</b>. Un changement prend effet au prochain appui sur Start."
+  },
 
   "optKeyHeading": { "message": "Clé d'API Gemini" },
   "optKeyNote": {
-    "message": "Interpretab n'a pas de serveur à lui : votre audio va directement de ce navigateur à Google, avec votre propre clé — obtenez-en une gratuitement sur <a1>aistudio.google.com/apikey</a1>. La clé est conservée dans ce navigateur et n'est envoyée à personne d'autre qu'à Google. Ce que vous consommez est facturé au compte Google d'où vient la clé : traitez-la comme un mot de passe, ne la partagez pas et ne la collez nulle part ailleurs. Si elle vous échappe un jour, supprimez-la sur la <a2>page où vous l'avez créée</a2> et collez-en une nouvelle ici."
+    "message": "Interpretab n'a pas de serveur à lui : votre audio va directement de ce navigateur à Google, avec votre propre clé — obtenez-en une gratuitement sur <a1>Google AI Studio</a1>. Le <a2>guide d'utilisation</a2> explique comment gérer la clé et ce qui distingue le forfait gratuit du payant."
   },
   "optKeyPlaceholder": { "message": "Collez votre clé ici" },
   "optShow": { "message": "Afficher" },
@@ -126,7 +132,7 @@
 
   "optPlanHeading": { "message": "Forfait de l'API Gemini" },
   "optPlanNote": {
-    "message": "Google ne dit pas à Interpretab si votre clé est gratuite ou payante : indiquez-le ici. Sur <b>Free</b>, le panneau latéral affiche depuis combien de temps vous traduisez ; sur <b>Paid</b>, il estime aussi ce que cela a coûté. Une clé est payante dès que le compte Google auquel elle appartient a un moyen de paiement — vous pouvez vérifier le vôtre sur <a1>aistudio.google.com/apikey</a1>."
+    "message": "Google ne dit pas à Interpretab si votre clé est gratuite ou payante : indiquez-le ici. Sur <b>Free</b>, le panneau latéral affiche depuis combien de temps vous traduisez ; sur <b>Paid</b>, il estime aussi ce que cela a coûté."
   },
   "optPlanFree": { "message": "Free — Google ne facture rien pour cette clé" },
   "optPlanPaid": { "message": "Paid — paiement à l'usage, facturé à votre compte" },
@@ -161,7 +167,7 @@
 
   "optSizeHeading": { "message": "Taille des sous-titres" },
   "optSizeNote": {
-    "message": "La taille des sous-titres sur la page. Cela s'applique tout de suite, même pendant une traduction : faites glisser en regardant et arrêtez-vous là où cela se lit bien."
+    "message": "La taille des sous-titres sur la page."
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "Portez ce vieux whisky blond — 素早い茶色の狐" },
@@ -220,7 +226,7 @@
 
   "optGlossaryHeading": { "message": "Glossaire" },
   "optGlossaryNote": {
-    "message": "Les noms et les termes que vous voulez voir prononcés et écrits d'une certaine façon : produits, personnes, jargon. Un par ligne, sous la forme <code>source,pronunciation,transcript</code> : la deuxième colonne dit comment le prononcer, la troisième, facultative, comment l'écrire dans les sous-titres. Cela ne marche qu'avec le microphone en mode <b>Two-way conversation</b> : la traduction plus rapide utilisée partout ailleurs n'a nulle part où mettre un glossaire."
+    "message": "Les noms et les termes que vous voulez voir prononcés et écrits d'une certaine façon : produits, personnes, jargon. Un par ligne, sous la forme <code>source,pronunciation,transcript</code> : la deuxième colonne dit comment le prononcer, la troisième, facultative, comment l'écrire dans les sous-titres. Le <a1>guide d'utilisation</a1> indique dans quel mode il s'applique et comment en écrire un."
   },
   "optGlossaryReplace": { "message": "Remplacer" },
   "optGlossaryReset": { "message": "Rétablir les valeurs par défaut" },

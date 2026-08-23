@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "用你的语言听懂任何标签页，实时朗读并显示字幕。使用你自己的 Gemini API 密钥，中间没有服务器。"
+    "message": "用你的语言听懂任何标签页，实时朗读并显示字幕。"
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "出错" },
 
   "panelStepKey": {
-    "message": "Interpretab 需要<b>你自己的 Gemini 密钥</b>才能翻译。到 <a1>aistudio.google.com/apikey</a1> 免费领一个，然后粘贴到<a2>选项</a2>里。"
+    "message": "Interpretab 需要<b>你自己的 Gemini 密钥</b>才能翻译。到 <a1>Google AI Studio</a1> 免费领一个，然后粘贴到<a2>选项</a2>里。"
   },
   "panelStepDirection": {
     "message": "还没有开启任何一项。请开启<b>标签页音频</b>或<b>麦克风</b>，或者两者都开。"
@@ -47,7 +47,7 @@
     "message": "这个模式请戴耳机。它在你还在说话时就开始翻译，因此念的时候没法把麦克风关掉。用扬声器的话，麦克风会听见它自己的声音，连那也一起翻译，翻译质量就变差了。"
   },
   "panelMicNoteConversation": {
-    "message": "两个人共用一支麦克风时用这个模式。它听到你设定的两种语言中的一种，就用另一种从<b>扬声器</b>念出来，这正是这个模式的用意。请把麦克风放得离扬声器远一些，免得它听见自己的声音。它会等每个人说完再翻译，所以比 Simultaneous 稍慢一点，而且只有这个模式用得上<b>术语表</b>。"
+    "message": "两个人共用一支麦克风时用这个模式。它听到你设定的两种语言中的一种，就用另一种从<b>扬声器</b>念出来，这正是这个模式的用意。请把麦克风放得离扬声器远一些，免得它听见自己的声音。"
   },
   "panelMicToCall": { "message": "把译文语音送进这个 Meet 通话" },
   "panelMicToCallNote": { "message": "在 Meet 里打开<b>设置 → 音频 → 麦克风</b>，选 <b>Interpretab (translated)</b>。顺手把 <b>Studio Sound</b> 关掉。你自己的声音也低低地混在下面，所以通话里既听得到译文，也听得到你。" },
@@ -69,7 +69,7 @@
     "message": "已经开始 {1}。这段时间里向 Google 发出了 {2} 的音频，收回了 {3}，两边都要计费。"
   },
   "panelUsageTipPaid": {
-    "message": "这个数字用的是 Google 在 2026 年 8 月公布的价格，不是从你的账号里读来的，而价格是会变的。真正的账单只在你的 Google 账号里。"
+    "message": "这个数字用的是 Google 在 2026 年 8 月公布的价格，不是从你的账号里读来的，而价格是会变的。"
   },
   "panelUsageTipFree": {
     "message": "这个密钥在选项页里设成了 Free，免费方案下 Google 不收费，所以没有金额可显示。如果密钥所属的 Google 账号已经绑定了付款方式，就在选项里改成 Paid，这一行会估算本次的费用。"
@@ -99,16 +99,22 @@
 
   "optSetupHeading": { "message": "开始之前" },
   "optSetupNote": {
-    "message": "没有密钥就什么都不能用。另外两项也只需在粘贴密钥时一并回答一次：这个密钥属于哪种方案，以及——只有要翻译自己说的话时——使用麦克风的权限。"
+    "message": "没有密钥就什么都不能用。另外两项也只需在粘贴密钥时一并回答一次：这个密钥属于哪种方案，以及——只有要翻译自己说的话时——使用麦克风的权限。<a1>使用指南</a1>里对这三项都有说明。"
   },
   "optRestHeading": { "message": "其余设置" },
   "optRestNote": {
     "message": "这些都已经设成了能用的值。哪一项不合适，再回来改。"
   },
+  "optMicTranslationHeading": {
+    "message": "麦克风翻译"
+  },
+  "optMicTranslationNote": {
+    "message": "<b>麦克风</b>翻译的设置。改动要等下次按 Start 才生效。"
+  },
 
   "optKeyHeading": { "message": "Gemini API 密钥" },
   "optKeyNote": {
-    "message": "Interpretab 没有自己的服务器：你的音频从这个浏览器直接送到 Google，用的是你自己的密钥。免费密钥可以到 <a1>aistudio.google.com/apikey</a1> 领。密钥存在这个浏览器里，除了 Google 不会送去任何地方。用掉的额度记在密钥所属的 Google 账号上，所以请把它当密码看待：不要给别人，也不要粘贴到别处。万一泄露了，就到<a2>当初领它的页面</a2>删掉，再把新的粘贴到这里。"
+    "message": "Interpretab 没有自己的服务器：你的音频从这个浏览器直接送到 Google，用的是你自己的密钥。免费密钥可以到 <a1>Google AI Studio</a1> 领。密钥怎么保管、免费和付费方案有什么不同，都写在<a2>使用指南</a2>里。"
   },
   "optKeyPlaceholder": { "message": "在此粘贴你的密钥" },
   "optShow": { "message": "显示" },
@@ -120,7 +126,7 @@
 
   "optPlanHeading": { "message": "Gemini API 方案" },
   "optPlanNote": {
-    "message": "你的密钥是免费还是付费，Google 不会告诉 Interpretab，所以请在这里说明。选 <b>Free</b> 时，侧边栏只显示你翻译了多久；选 <b>Paid</b> 时还会估算这段时间的花费。密钥所属的 Google 账号绑定了付款方式，就算付费。可以到 <a1>aistudio.google.com/apikey</a1> 查看。"
+    "message": "你的密钥是免费还是付费，Google 不会告诉 Interpretab，所以请在这里说明。选 <b>Free</b> 时，侧边栏只显示你翻译了多久；选 <b>Paid</b> 时还会估算这段时间的花费。"
   },
   "optPlanFree": { "message": "Free — Google 不会为这个密钥收费" },
   "optPlanPaid": { "message": "Paid — 按量付费，计入你的账户" },
@@ -155,7 +161,7 @@
 
   "optSizeHeading": { "message": "字幕大小" },
   "optSizeNote": {
-    "message": "页面上字幕的大小。改了马上生效，翻译进行中也一样——边看边拖，停在读着舒服的地方。"
+    "message": "页面上字幕的大小。"
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "敏捷的棕色狐狸 — The quick brown fox" },
@@ -200,7 +206,7 @@
 
   "optGlossaryHeading": { "message": "术语表" },
   "optGlossaryNote": {
-    "message": "你希望按固定读法和写法处理的名称和术语——产品名、人名、行话。一行一个，格式为 <code>source,pronunciation,transcript</code>：第二列是该怎么念，可省略的第三列是字幕里该怎么写。只有麦克风的 <b>Two-way conversation</b> 模式用得上；其他地方用的是更快的那套翻译，没有地方放术语表。"
+    "message": "你希望按固定读法和写法处理的名称和术语——产品名、人名、行话。一行一个，格式为 <code>source,pronunciation,transcript</code>：第二列是该怎么念，可省略的第三列是字幕里该怎么写。它在哪个模式下有效、该怎么写，都在<a1>使用指南</a1>里。"
   },
   "optGlossaryReplace": { "message": "替换" },
   "optGlossaryReset": { "message": "恢复默认" },

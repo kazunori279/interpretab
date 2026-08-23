@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "Ouça qualquer aba no seu idioma, falada e legendada em tempo real. Com a sua própria chave de API do Gemini — sem servidor no meio."
+    "message": "Ouça qualquer aba no seu idioma, falada e legendada em tempo real."
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "Erro" },
 
   "panelStepKey": {
-    "message": "O Interpretab precisa da <b>sua própria chave do Gemini</b> para traduzir. Pegue uma de graça em <a1>aistudio.google.com/apikey</a1> e cole nas <a2>Opções</a2>."
+    "message": "O Interpretab precisa da <b>sua própria chave do Gemini</b> para traduzir. Pegue uma de graça em <a1>Google AI Studio</a1> e cole nas <a2>Opções</a2>."
   },
   "panelStepDirection": {
     "message": "Ainda não há nada ligado. Ligue o <b>Áudio da aba</b>, o <b>Microfone</b>, ou os dois."
@@ -47,7 +47,7 @@
     "message": "Para este modo, use fones. Ele começa a traduzir enquanto você ainda está falando, então não consegue desligar seu microfone enquanto fala: numa caixa de som ele ouve a própria voz, começa a traduzir aquilo também, e a tradução piora."
   },
   "panelMicNoteConversation": {
-    "message": "Para duas pessoas dividindo um microfone: ele ouve um dos seus dois idiomas e fala o outro, em voz alta pelas <b>suas caixas de som</b>, que é justamente a ideia deste modo. Deixe o microfone longe das caixas, senão ele ouve a si mesmo. Ele espera cada um terminar de falar, então é um pouco mais lento que o Simultaneous — e é o único modo que usa o <b>glossário</b>."
+    "message": "Para duas pessoas dividindo um microfone: ele ouve um dos seus dois idiomas e fala o outro, em voz alta pelas <b>suas caixas de som</b>, que é justamente a ideia deste modo. Deixe o microfone longe das caixas, senão ele ouve a si mesmo."
   },
   "panelMicToCall": { "message": "Enviar a tradução para esta chamada do Meet" },
   "panelMicToCallNote": { "message": "No Meet, abra <b>Configurações → Áudio → Microfone</b> e escolha <b>Interpretab (translated)</b>. Já que está lá, desligue o <b>Studio Sound</b>. A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete." },
@@ -69,7 +69,7 @@
     "message": "Começou há {1}. Desde então enviou {2} de áudio ao Google e recebeu {3} de volta, e os dois são cobrados."
   },
   "panelUsageTipPaid": {
-    "message": "O valor usa os preços publicados pelo Google como estavam em agosto de 2026, e não algo lido da sua conta — e preços mudam. Sua conta real só existe na sua conta do Google."
+    "message": "O valor usa os preços publicados pelo Google como estavam em agosto de 2026, e não algo lido da sua conta — e preços mudam."
   },
   "panelUsageTipFree": {
     "message": "Sua chave está em Free na página de Opções, e no plano gratuito o Google não cobra nada, então não há custo a mostrar. Se a conta do Google da chave tiver uma forma de pagamento, mude o plano para Paid lá e esta linha vai estimar o custo da execução."
@@ -101,16 +101,22 @@
 
   "optSetupHeading": { "message": "Antes de começar" },
   "optSetupNote": {
-    "message": "Sem a chave nada funciona. As outras duas se respondem uma vez só, no mesmo momento: em qual plano sua chave está e — só se você quiser a própria voz traduzida — a permissão para usar o microfone."
+    "message": "Sem a chave nada funciona. As outras duas se respondem uma vez só, no mesmo momento: em qual plano sua chave está e — só se você quiser a própria voz traduzida — a permissão para usar o microfone. O <a1>guia do usuário</a1> explica as três."
   },
   "optRestHeading": { "message": "Todo o resto" },
   "optRestNote": {
     "message": "Tudo isto já está num valor que funciona. Volte para mudar algum se ele não servir para você."
   },
+  "optMicTranslationHeading": {
+    "message": "Tradução do microfone"
+  },
+  "optMicTranslationNote": {
+    "message": "Ajustes da direção <b>Microfone</b>. Uma mudança vale a partir da próxima vez que você apertar Start."
+  },
 
   "optKeyHeading": { "message": "Chave de API do Gemini" },
   "optKeyNote": {
-    "message": "O Interpretab não tem servidor próprio: seu áudio vai direto deste navegador para o Google, com a sua própria chave — pegue uma de graça em <a1>aistudio.google.com/apikey</a1>. A chave fica guardada neste navegador e não é enviada a ninguém além do Google. O que você usar é cobrado da conta do Google de onde a chave veio, então trate-a como uma senha: não compartilhe e não cole em nenhum outro lugar. Se ela escapar algum dia, apague-a na <a2>mesma página em que você a criou</a2> e cole uma nova aqui."
+    "message": "O Interpretab não tem servidor próprio: seu áudio vai direto deste navegador para o Google, com a sua própria chave — pegue uma de graça em <a1>Google AI Studio</a1>. O <a2>guia do usuário</a2> explica como cuidar da chave e a diferença entre o plano gratuito e o pago."
   },
   "optKeyPlaceholder": { "message": "Cole a sua chave aqui" },
   "optShow": { "message": "Mostrar" },
@@ -124,7 +130,7 @@
 
   "optPlanHeading": { "message": "Plano da API do Gemini" },
   "optPlanNote": {
-    "message": "O Google não conta ao Interpretab se a sua chave é gratuita ou paga, então diga aqui. Em <b>Free</b>, o painel lateral mostra há quanto tempo você está traduzindo; em <b>Paid</b>, ele também estima quanto isso custou. Uma chave é paga assim que a conta do Google a que ela pertence tem uma forma de pagamento — dá para conferir em <a1>aistudio.google.com/apikey</a1>."
+    "message": "O Google não conta ao Interpretab se a sua chave é gratuita ou paga, então diga aqui. Em <b>Free</b>, o painel lateral mostra há quanto tempo você está traduzindo; em <b>Paid</b>, ele também estima quanto isso custou."
   },
   "optPlanFree": { "message": "Free — o Google não cobra nada por esta chave" },
   "optPlanPaid": { "message": "Paid — pagamento por uso, cobrado da sua conta" },
@@ -159,7 +165,7 @@
 
   "optSizeHeading": { "message": "Tamanho das legendas" },
   "optSizeNote": {
-    "message": "O tamanho das legendas na página. Vale na hora, mesmo com uma tradução rodando — arraste enquanto assiste e pare onde ficar bom de ler."
+    "message": "O tamanho das legendas na página."
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "A rápida raposa marrom — 素早い茶色の狐" },
@@ -218,7 +224,7 @@
 
   "optGlossaryHeading": { "message": "Glossário" },
   "optGlossaryNote": {
-    "message": "Nomes e termos que você quer ver ditos e escritos de um jeito específico — produtos, pessoas, jargão. Um por linha, no formato <code>source,pronunciation,transcript</code>: a segunda coluna é como deve ser dito, e a terceira, opcional, é como deve aparecer nas legendas. Só funciona com o microfone no modo <b>Two-way conversation</b> — a tradução mais rápida usada em todo o resto não tem onde pôr um glossário."
+    "message": "Nomes e termos que você quer ver ditos e escritos de um jeito específico — produtos, pessoas, jargão. Um por linha, no formato <code>source,pronunciation,transcript</code>: a segunda coluna é como deve ser dito, e a terceira, opcional, é como deve aparecer nas legendas. Em qual modo ele vale e como escrever um está no <a1>guia do usuário</a1>."
   },
   "optGlossaryReplace": { "message": "Substituir" },
   "optGlossaryReset": { "message": "Voltar ao padrão" },

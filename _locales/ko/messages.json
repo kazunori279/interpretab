@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "어떤 탭이든 내 언어로 듣습니다. 실시간 음성과 자막으로. 내 Gemini API 키로 동작하며, 중간에 서버는 없습니다."
+    "message": "어떤 탭이든 내 언어로 듣습니다. 실시간 음성과 자막으로."
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "오류" },
 
   "panelStepKey": {
-    "message": "Interpretab이 번역하려면 <b>본인의 Gemini 키</b>가 필요합니다. <a1>aistudio.google.com/apikey</a1>에서 무료로 받아 <a2>옵션</a2>에 붙여 넣으세요."
+    "message": "Interpretab이 번역하려면 <b>본인의 Gemini 키</b>가 필요합니다. <a1>Google AI Studio</a1>에서 무료로 받아 <a2>옵션</a2>에 붙여 넣으세요."
   },
   "panelStepDirection": {
     "message": "아직 아무것도 켜지 않았습니다. <b>탭 오디오</b>나 <b>마이크</b>, 또는 둘 다 켜세요."
@@ -47,7 +47,7 @@
     "message": "이 모드에서는 헤드폰을 쓰세요. 말하는 도중에 번역을 시작하기 때문에 읽어 주는 동안 마이크를 끌 수 없습니다. 스피커로 들으면 마이크가 그 소리를 다시 듣고 그것까지 번역하기 시작해, 번역이 나빠집니다."
   },
   "panelMicNoteConversation": {
-    "message": "마이크 하나를 두 사람이 함께 쓰는 모드입니다. 정해 둔 두 언어 중 들린 쪽을 다른 언어로 <b>스피커</b>에서 소리 내어 말합니다. 그것이 이 모드의 목적이지만, 마이크가 그 소리를 듣지 않도록 스피커에서 떨어뜨려 두세요. 말이 끝날 때까지 기다렸다가 번역하므로 Simultaneous보다 조금 느리고, <b>용어집</b>이 쓰이는 것은 이 모드뿐입니다."
+    "message": "마이크 하나를 두 사람이 함께 쓰는 모드입니다. 정해 둔 두 언어 중 들린 쪽을 다른 언어로 <b>스피커</b>에서 소리 내어 말합니다. 그것이 이 모드의 목적이지만, 마이크가 그 소리를 듣지 않도록 스피커에서 떨어뜨려 두세요."
   },
   "panelMicToCall": { "message": "이 Meet 통화로 통역 음성 보내기" },
   "panelMicToCallNote": { "message": "Meet에서 <b>설정 → 오디오 → 마이크</b>를 열고 <b>Interpretab (translated)</b>를 고르세요. 온 김에 <b>Studio Sound</b>는 꺼 두세요. 당신 목소리도 아래에 작게 섞여 있어서, 통화에서는 통역과 함께 당신 목소리도 들립니다." },
@@ -69,7 +69,7 @@
     "message": "시작한 지 {1} 지났습니다. 그동안 {2}의 음성을 Google에 보내고 {3}을 받았으며, 둘 다 요금이 붙습니다."
   },
   "panelUsageTipPaid": {
-    "message": "이 금액은 2026년 8월 기준으로 Google이 공개한 가격을 바탕으로 한 추정치입니다. 계정에서 가져온 값이 아니며 가격은 바뀔 수 있습니다. 실제 청구액은 Google 계정에서만 확인할 수 있습니다."
+    "message": "이 금액은 2026년 8월 기준으로 Google이 공개한 가격을 바탕으로 한 추정치입니다. 계정에서 가져온 값이 아니며 가격은 바뀔 수 있습니다."
   },
   "panelUsageTipFree": {
     "message": "이 키는 옵션 페이지에서 Free로 설정되어 있고, 무료 요금제에서는 Google이 요금을 청구하지 않으므로 보여 줄 금액이 없습니다. 키가 속한 Google 계정에 결제 수단이 등록되어 있다면 옵션에서 Paid로 바꾸세요. 이 줄에 예상 비용이 나옵니다."
@@ -99,16 +99,22 @@
 
   "optSetupHeading": { "message": "시작하기 전에" },
   "optSetupNote": {
-    "message": "키가 없으면 아무것도 동작하지 않습니다. 나머지 둘도 키를 붙여 넣을 때 한 번만 답하면 됩니다. 그 키가 어느 요금제인지, 그리고 — 내 목소리를 번역할 때만 — 마이크를 쓸 권한입니다."
+    "message": "키가 없으면 아무것도 동작하지 않습니다. 나머지 둘도 키를 붙여 넣을 때 한 번만 답하면 됩니다. 그 키가 어느 요금제인지, 그리고 — 내 목소리를 번역할 때만 — 마이크를 쓸 권한입니다. <a1>사용 안내서</a1>에 셋 모두 설명해 두었습니다."
   },
   "optRestHeading": { "message": "그 밖의 설정" },
   "optRestNote": {
     "message": "모두 그대로 동작하는 값입니다. 맞지 않는 것이 있을 때 바꾸러 오세요."
   },
+  "optMicTranslationHeading": {
+    "message": "마이크 번역"
+  },
+  "optMicTranslationNote": {
+    "message": "<b>마이크</b> 번역에 관한 설정입니다. 다음에 Start를 누를 때부터 반영됩니다."
+  },
 
   "optKeyHeading": { "message": "Gemini API 키" },
   "optKeyNote": {
-    "message": "Interpretab에는 자체 서버가 없습니다. 음성은 이 브라우저에서 Google로 곧장 가고, 그때 본인의 키를 씁니다. 무료 키는 <a1>aistudio.google.com/apikey</a1>에서 받을 수 있습니다. 키는 이 브라우저 안에 저장되며 Google 말고는 어디로도 보내지 않습니다. 쓴 만큼은 키를 만든 Google 계정으로 청구되니 비밀번호처럼 다루세요. 남에게 주지 말고 다른 곳에 붙여 넣지 마세요. 혹시 새어 나갔다면 <a2>만든 페이지</a2>에서 지우고 새 키를 여기에 붙여 넣으세요."
+    "message": "Interpretab에는 자체 서버가 없습니다. 음성은 이 브라우저에서 Google로 곧장 가고, 그때 본인의 키를 씁니다. 무료 키는 <a1>Google AI Studio</a1>에서 받을 수 있습니다. 키를 다루는 방법과 무료·유료 요금제의 차이는 <a2>사용 안내서</a2>에 있습니다."
   },
   "optKeyPlaceholder": { "message": "여기에 키를 붙여 넣으세요" },
   "optShow": { "message": "표시" },
@@ -120,7 +126,7 @@
 
   "optPlanHeading": { "message": "Gemini API 요금제" },
   "optPlanNote": {
-    "message": "이 키가 무료인지 유료인지는 Google이 알려 주지 않으니 여기서 알려 주세요. <b>Free</b>에서는 사이드 패널에 번역한 시간만 나오고, <b>Paid</b>에서는 그 비용의 추정치도 나옵니다. 키가 속한 Google 계정에 결제 수단이 등록되어 있으면 유료입니다. <a1>aistudio.google.com/apikey</a1>에서 확인할 수 있습니다."
+    "message": "이 키가 무료인지 유료인지는 Google이 알려 주지 않으니 여기서 알려 주세요. <b>Free</b>에서는 사이드 패널에 번역한 시간만 나오고, <b>Paid</b>에서는 그 비용의 추정치도 나옵니다."
   },
   "optPlanFree": { "message": "Free — 이 키에는 Google이 요금을 청구하지 않습니다" },
   "optPlanPaid": { "message": "Paid — 종량제, 내 계정에 청구됩니다" },
@@ -155,7 +161,7 @@
 
   "optSizeHeading": { "message": "자막 크기" },
   "optSizeNote": {
-    "message": "페이지에 나오는 자막의 크기입니다. 번역이 도는 중에도 바로 반영되니, 보면서 끌어 읽기 좋은 곳에서 멈추세요."
+    "message": "페이지에 나오는 자막의 크기입니다."
   },
   "optSizePx": { "message": "{1} px" },
   "optSizePreview": { "message": "다람쥐 헌 쳇바퀴에 타고파 — The quick brown fox" },
@@ -200,7 +206,7 @@
 
   "optGlossaryHeading": { "message": "용어집" },
   "optGlossaryNote": {
-    "message": "이렇게 읽고 이렇게 쓰라고 정해 두고 싶은 이름과 용어 — 제품명, 사람 이름, 전문 용어 — 의 목록입니다. 한 줄에 하나씩 <code>source,pronunciation,transcript</code> 형식으로 적습니다. 둘째 칸은 어떻게 읽을지, 생략할 수 있는 셋째 칸은 자막에 어떻게 쓸지입니다. <b>마이크의 Two-way conversation 모드</b>에서만 쓰이며, 나머지 곳에서 쓰는 더 빠른 번역에는 용어집을 넣을 자리가 없습니다."
+    "message": "이렇게 읽고 이렇게 쓰라고 정해 두고 싶은 이름과 용어 — 제품명, 사람 이름, 전문 용어 — 의 목록입니다. 한 줄에 하나씩 <code>source,pronunciation,transcript</code> 형식으로 적습니다. 둘째 칸은 어떻게 읽을지, 생략할 수 있는 셋째 칸은 자막에 어떻게 쓸지입니다. 어느 모드에서 쓰이는지와 작성 방법은 <a1>사용 안내서</a1>에 있습니다."
   },
   "optGlossaryReplace": { "message": "교체" },
   "optGlossaryReset": { "message": "기본값으로 되돌리기" },

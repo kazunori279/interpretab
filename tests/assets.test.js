@@ -180,7 +180,14 @@ test("no code names a server other than the Gemini API", () => {
     for (const [, url] of text.matchAll(/["'](?:https?|wss?):\/\/([\w.-]+)[^"']*["']/g)) {
       // Documentation links the user clicks are fine; a socket or fetch target
       // is not. Anything not obviously a doc link has to be the API itself.
-      if (url.endsWith("googleapis.com") || url.endsWith("google.com") || url.endsWith("google.dev")) {
+      // `kazunori279.github.io` is this project's own guide, and it is only ever
+      // a `data-linkN` destination — nothing here ever fetches it.
+      if (
+        url.endsWith("googleapis.com") ||
+        url.endsWith("google.com") ||
+        url.endsWith("google.dev") ||
+        url === "kazunori279.github.io"
+      ) {
         continue;
       }
       offenders.push(`${path.relative(ROOT, file)} -> ${url}`);

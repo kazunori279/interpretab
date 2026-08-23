@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Interpretab" },
   "extDescription": {
-    "message": "Hear any tab in your language, spoken and subtitled in real time. Your own Gemini API key — no server in between."
+    "message": "Hear any tab in your language, spoken and subtitled in real time."
   },
 
   "panelTitle": { "message": "Interpretab" },
@@ -13,7 +13,7 @@
   "statusError": { "message": "Error" },
 
   "panelStepKey": {
-    "message": "Interpretab needs <b>your own Gemini key</b> to translate. Get a free one at <a1>aistudio.google.com/apikey</a1>, then paste it into <a2>Options</a2>.",
+    "message": "Interpretab needs <b>your own Gemini key</b> to translate. Get a free one at <a1>Google AI Studio</a1>, then paste it into <a2>Options</a2>.",
     "description": "First of the ordered next-step banners: shown until a key is saved. <a1> is AI Studio, <a2> opens this extension's Options page."
   },
   "panelStepDirection": {
@@ -62,7 +62,7 @@
     "message": "Wear headphones for this one. It starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice, starts translating that too, and the translation gets worse."
   },
   "panelMicNoteConversation": {
-    "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself. It waits until each person has finished talking, so it is a little slower than Simultaneous — and it is the only mode that uses the <b>glossary</b>."
+    "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself."
   },
   "panelMicToCall": {
     "message": "Send the translation into this Meet call",
@@ -92,7 +92,7 @@
     "description": "Tooltip on the usage line. {1} elapsed, {2} audio sent, {3} audio received."
   },
   "panelUsageTipPaid": {
-    "message": "The figure uses Google's published prices as they stood in August 2026, not anything read from your account, and prices change. Your real bill only ever exists in your Google account."
+    "message": "The figure uses Google's published prices as they stood in August 2026, not anything read from your account, and prices change."
   },
   "panelUsageTipFree": {
     "message": "Your key is set to Free on the Options page, and Google charges nothing on the free plan, so there is no cost to show. If the key's Google account has a payment method on it, set the plan to Paid there and this line will estimate what the run costs."
@@ -146,7 +146,7 @@
     "description": "Group label over the three settings a first run needs: the key, the plan, and Chrome's microphone permission. It labels the section headings under it rather than a control of its own."
   },
   "optSetupNote": {
-    "message": "Nothing works without the key. The other two you answer once, at the same time: which plan your key is on, and — only if you want your own voice translated — permission to use the microphone."
+    "message": "Nothing works without the key. The other two you answer once, at the same time: which plan your key is on, and — only if you want your own voice translated — permission to use the microphone. The <a1>user guide</a1> walks through all three."
   },
   "optRestHeading": {
     "message": "Everything else",
@@ -155,11 +155,18 @@
   "optRestNote": {
     "message": "These are all set to something that works. Come back and change one if it turns out not to suit you."
   },
+  "optMicTranslationHeading": {
+    "message": "Microphone translation",
+    "description": "Group label over the settings that shape what the Microphone direction says and how it says it: the voice and the glossary. It labels the section headings under it rather than a control of its own."
+  },
+  "optMicTranslationNote": {
+    "message": "Settings for the <b>Microphone</b> direction. A change applies the next time you press Start."
+  },
 
   "optKeyHeading": { "message": "Gemini API key" },
   "optKeyNote": {
-    "message": "Interpretab has no server of its own: your audio goes straight from this browser to Google, using your own key — get a free one at <a1>aistudio.google.com/apikey</a1>. The key is kept in this browser and is sent to nobody but Google. Whatever you use is billed to the Google account the key came from, so treat it like a password: don't share it, and don't paste it anywhere else. If it ever gets out, delete it on the <a2>page you made it on</a2> and paste a new one in here.",
-    "description": "Both links go to AI Studio's key page."
+    "message": "Interpretab has no server of its own: your audio goes straight from this browser to Google, using your own key — get a free one at <a1>Google AI Studio</a1>. The <a2>user guide</a2> covers looking after the key, and how the free and paid plans differ.",
+    "description": "The first link goes to AI Studio's key page, the second to the user guide."
   },
   "optKeyPlaceholder": {
     "message": "Paste your key here",
@@ -174,7 +181,7 @@
 
   "optPlanHeading": { "message": "Gemini API plan" },
   "optPlanNote": {
-    "message": "Google does not tell Interpretab whether your key is free or paid, so please say which it is. On <b>Free</b> the side panel shows how long you have been translating; on <b>Paid</b> it also estimates what that has cost. A key is paid once the Google account it belongs to has a payment method on it — you can check yours at <a1>aistudio.google.com/apikey</a1>."
+    "message": "Google does not tell Interpretab whether your key is free or paid, so please say which it is. On <b>Free</b> the side panel shows how long you have been translating; on <b>Paid</b> it also estimates what that has cost."
   },
   "optPlanFree": { "message": "Free — Google charges nothing for this key" },
   "optPlanPaid": { "message": "Paid — pay as you go, billed to your account" },
@@ -212,7 +219,7 @@
 
   "optSizeHeading": { "message": "Subtitle size" },
   "optSizeNote": {
-    "message": "How big the subtitles on the page are. This applies straight away, even while a translation is running — drag it as you watch and stop where it reads well."
+    "message": "How big the subtitles on the page are."
   },
   "optSizePx": { "message": "{1} px", "description": "{1} is a number of pixels." },
   "optSizePreview": {
@@ -279,7 +286,7 @@
 
   "optGlossaryHeading": { "message": "Glossary" },
   "optGlossaryNote": {
-    "message": "Names and terms you want said and spelled a particular way — products, people, jargon. One per line, as <code>source,pronunciation,transcript</code>: the second column is how it should be said, and the optional third is how it should be written in the subtitles. It works with the microphone in <b>Two-way conversation</b> mode only — the faster translation used everywhere else has nowhere to put a glossary.",
+    "message": "Names and terms you want said and spelled a particular way — products, people, jargon. One per line, as <code>source,pronunciation,transcript</code>: the second column is how it should be said, and the optional third is how it should be written in the subtitles. The <a1>user guide</a1> has which mode it applies to, and how to write one.",
     "description": "The <code> content is a CSV header and must not be translated."
   },
   "optGlossaryReplace": { "message": "Replace" },

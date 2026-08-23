@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="sidepanel.css" />
     <style>
       body { max-width: 44rem; margin: 0 auto; height: auto; padding: 1.5rem; font-size: 14px; }
-      /* Two groups, and the sections inside them. The group label is smaller
+      /* Three groups, and the sections inside them. The group label is smaller
          than the sections it covers on purpose: it is a divider, not a heading
          anyone came here to read, and a label that outsized "Gemini API key"
          would push the thing being labelled down the page. No uppercasing or
@@ -49,14 +49,20 @@
          works, which is the whole of the difference: a reader who has pasted a
          key can stop at the rule and lose nothing. -->
     <h2 data-i18n="optSetupHeading"></h2>
-    <p class="note" data-i18n="optSetupNote"></p>
+    <!-- One URL for every language: the guide's root page redirects a reader to
+         their own translation, so this does not need nine variants. -->
+    <p
+      class="note"
+      data-i18n="optSetupNote"
+      data-link1="https://kazunori279.github.io/interpretab/"
+    ></p>
 
     <h3 data-i18n="optKeyHeading"></h3>
     <p
       class="note"
       data-i18n="optKeyNote"
       data-link1="https://aistudio.google.com/apikey"
-      data-link2="https://aistudio.google.com/apikey"
+      data-link2="https://kazunori279.github.io/interpretab/"
     ></p>
     <div class="row">
       <!-- No format in the placeholder. It said "AIza…" while Google was
@@ -75,7 +81,7 @@
     <p class="note" id="apiKeyStatus"></p>
 
     <h3 data-i18n="optPlanHeading"></h3>
-    <p class="note" data-i18n="optPlanNote" data-link1="https://aistudio.google.com/apikey"></p>
+    <p class="note" data-i18n="optPlanNote"></p>
     <div class="row">
       <select id="apiTier" class="mode">
         <option value="free" data-i18n="optPlanFree"></option>
@@ -96,10 +102,6 @@
 
     <h2 data-i18n="optRestHeading"></h2>
     <p class="note" data-i18n="optRestNote"></p>
-
-    <h3 data-i18n="optVoiceHeading"></h3>
-    <p class="note" data-i18n="optVoiceNote"></p>
-    <div class="row"><select id="voice" class="lang"></select></div>
 
     <h3 data-i18n="optSizeHeading"></h3>
     <p class="note" data-i18n="optSizeNote"></p>
@@ -123,8 +125,25 @@
       <span class="note" id="micOutputStatus"></span>
     </div>
 
+    <!-- The two settings that are baked into the microphone direction's `setup`
+         frame rather than applied to a running one, kept together because that
+         is what they have in common: neither can change without a reconnect,
+         and both are about what that direction says rather than where it goes.
+         Last on the page because the glossary is a scrolling table and putting
+         it in the middle would push everything under it below the fold. -->
+    <h2 data-i18n="optMicTranslationHeading"></h2>
+    <p class="note" data-i18n="optMicTranslationNote"></p>
+
+    <h3 data-i18n="optVoiceHeading"></h3>
+    <p class="note" data-i18n="optVoiceNote"></p>
+    <div class="row"><select id="voice" class="lang"></select></div>
+
     <h3 data-i18n="optGlossaryHeading"></h3>
-    <p class="note" data-i18n="optGlossaryNote"></p>
+    <p
+      class="note"
+      data-i18n="optGlossaryNote"
+      data-link1="https://kazunori279.github.io/interpretab/"
+    ></p>
     <div class="row">
       <input type="file" id="glossaryFile" accept=".csv" />
       <button id="uploadGlossary" class="ghost" data-i18n="optGlossaryReplace"></button>
