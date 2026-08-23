@@ -1164,14 +1164,15 @@ npm test    # node --test, no dependencies and no build step
 
 The suite covers the parts that are painful to test by hand: the exact `setup` wire shape, the
 GoAway cutover against a fake session and a settable clock, socket lifecycle against a stub
-WebSocket, glossary CSV parsing, the ten message catalogues against each other, and a walk over
-every asset path the manifest and the HTML name.
+WebSocket, the duplex gate's arithmetic on the same settable clock, glossary CSV parsing, the ten
+message catalogues against each other, and a walk over every asset path the manifest and the HTML
+name.
 
 Anything that asserts about a sentence rather than a key imports `tests/messages.mjs`, which wires
 `lib/i18n.js` to `_locales/en/messages.json` off disk — `chrome.i18n` does not exist in Node, and
 without it every message is its own key.
 
-None of that talks to Google. Three scripts do, and all of them sit outside `npm test` because they
+None of that talks to Google. Four scripts do, and all of them sit outside `npm test` because they
 need a key and spend quota.
 
 **`tests/live-smoke.mjs` — does the wire format work?**
@@ -1229,6 +1230,66 @@ Japanese often enough to be the less reliable witness. Everything else remains c
 
 What the original could not report, this does: the session count and the handovers, because
 `SessionLoop` runs in-process. Iterations that straddled a handover are marked in the log.
+
+**`tests/conversation.mjs` — does it hear both people?**
+
+```bash
+node tests/conversation.mjs /tmp/key.txt --turns 12
+node tests/conversation.mjs /tmp/key.txt --turns 12 --gate off       # us, or the model?
+node tests/conversation.mjs /tmp/key.txt --reply-gap -1500           # talking over the interpreter
+```
+
+The soak speaks one language for an hour, so it can say translation still works; it cannot say
+anything about conversation mode's actual job, which is deciding *which way* to interpret an
+utterance nobody declared the language of. This is the two-speaker case, written for a report that
+English utterances are sometimes ignored while the Japanese half of the same conversation comes
+back interpreted every time.
+
+Two things could be doing that, and they are in different places, so the run measures both instead
+of picking one. The duplex gate is ours: in conversation mode — and nowhere else, see
+`usesDuplexGate` — the microphone's frames are dropped for as long as the interpreter's own voice
+is still playing, and because the model sends a sentence far faster than it takes to say, that gate
+stays shut for seconds after the socket has gone quiet. Anyone who starts talking before the
+interpretation has finished is not being ignored by the model; they are being cut off here, before
+a byte leaves the machine. The echo guard is the model's: the instruction tells it to ignore "your
+own output coming back", and in a two-language session its own voice is, half the time, speaking
+the same language as one of the humans.
+
+So the gate is reproduced frame for frame — `duplexGate` in `tests/live-harness.mjs`, deadline
+arithmetic pinned by `tests/duplex-gate.test.js` — and the report splits every lost utterance by
+whether the gate ate the front of it. What went out whole is then split again by whether the
+interpreter had just spoken that speaker's own language, which is the condition the echo guard can
+misfire on. Getting turns that are *not* in that condition is why the generated dialogue is asked
+for a couple of places where the same person speaks twice in a row: in a strictly alternating
+conversation every single turn follows the interpreter speaking that speaker's language, and a
+column that is true for every row explains nothing.
+
+The dialogue is written by a model rather than kept in the file, because a behaviour that shows up
+"sometimes" is one that a fixed dozen sentences can miss and read as fixed. Both voices are
+synthesised before the session opens and every utterance is scored after it closes: a `say`
+invocation or a judge call in between is a pause the interpreter's voice finishes in, and the gate
+would then never bite. An utterance restated in the language it was already spoken in is counted
+apart from a low score — that is the routing failing, the same failure as being ignored wearing a
+different face — and either one fails the run.
+
+What the first three runs found is nothing, and the reports are here: `conv_default.report`,
+`conv_ungated.report`, `conv_bargein.report`. Thirty-six utterances, none ignored, none restated,
+scores between 9.0 and 9.7. The gate does bite — talking 1.5 s over the interpreter took the front
+off eight of twelve utterances, a median of 0.28 s and at most 0.86 s — and every one of them was
+still interpreted. The ceiling is the clip's own second of leading silence: 1.5 s of overlap plus
+the 0.4 s release comes to 1.9 s, and the first second of that is padding, so cutting deeper needs
+a larger negative gap. So the report stands unexplained, and what these runs cannot produce is the
+likeliest reason: the model heard clean synthesised speech, never its own voice off a speaker. The
+gate is reproduced here, but the playback that feeds a room's echo back into the microphone is not,
+and neither is two people talking at once.
+
+Two measurement bugs were found by the first run and are worth knowing about, because one of them
+had been in `soak.mjs` since the port. `usage` frames arrive on the same path as transcripts, and
+one landing in the accumulator appends the string `undefined` to the sentence about to be scored.
+And a model asked for a conversation in two languages does not write one: it writes a sentence and
+then writes that same sentence in the other language, so twelve turns carry six sentences said
+twice. Told not to, it does it anyway. The dialogue is therefore written monolingual first and half
+of it translated afterwards — B answers A because at that point there is nothing to translate.
 
 **`tests/quota-close.mjs` — what does running out actually look like?**
 

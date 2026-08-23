@@ -1,0 +1,31 @@
+
+[0:02:11] === SUMMARY ===
+English ↔ Japanese, conversation mode | duplex gate off | reply gap 300ms | 12 utterances
+Sessions: 1 opened, 1 ready, 0 failed | goAway: 0 | server closes: 0
+
+  Per speaker
+  A — English     6 spoken | ignored  0 (  0.0%) | restated  0 | avg score 9.5/10
+  B — Japanese    6 spoken | ignored  0 (  0.0%) | restated  0 | avg score 9.7/10
+
+  Cause
+  duplex gate  — 0 utterance(s) lost speech off the front (0 of those ignored); 12 went out whole (0 ignored)
+  echo guard   — of the 12 that went out whole: 0/11 ignored after the interpreter had just spoken that speaker's own language, 0/1 otherwise
+
+  Interpretation Score (n=12)
+  min=9.00  avg=9.58  p50=10.00  p90=10.00  p99=10.00  max=10.00
+         0-2:    0 (  0.0%) 
+         3-4:    0 (  0.0%) 
+         5-6:    0 (  0.0%) 
+         7-8:    0 (  0.0%) 
+        9-10:   12 (100.0%) ##############################
+
+  First Response (speech-end to first audio/transcript) (n=12)
+  min=0.07  avg=0.23  p50=0.27  p90=0.37  p99=0.42  max=0.42
+         =0s:    0 (  0.0%) 
+      0-0.5s:   12 (100.0%) ##############################
+      0.5-1s:    0 (  0.0%) 
+        1-2s:    0 (  0.0%) 
+        2-5s:    0 (  0.0%) 
+         >5s:    0 (  0.0%) 
+
+Not reproduced this run: every utterance came back interpreted.

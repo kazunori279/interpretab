@@ -241,8 +241,15 @@ const loop = new SessionLoop({
       }
       return;
     }
-    // "input" or "output". A finished fragment carries the whole sentence and
-    // replaces what came before it, exactly as `offscreen.js` treats it.
+    // Not everything that gets this far is a transcript: `usage` frames arrive
+    // on the same path, and one landing in the accumulator appends the string
+    // "undefined" to the sentence that is about to be scored. Rare enough here
+    // to have gone unnoticed for an hour at a time — it only shows when no
+    // finished fragment arrives to replace the partial — and caught by
+    // `tests/conversation.mjs`, which has shorter turns and saw it at once.
+    if (ev.type !== "input" && ev.type !== "output") return;
+    // A finished fragment carries the whole sentence and replaces what came
+    // before it, exactly as `offscreen.js` treats it.
     const finals = ev.type === "input" ? turn.inputFinals : turn.outputFinals;
     if (ev.finished) finals.push(ev.text);
     else if (ev.type === "input") turn.inputPartial += ev.text;

@@ -27,7 +27,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { LiveSession } from "../lib/live-session.js";
+import { LiveSession, UPLINK_RATE } from "../lib/live-session.js";
 // The library's messages come from `chrome.i18n`, which Node does not have, so
 // without this every close reason a script prints is a bare key. Imported here
 // rather than in each script: everything that talks to the live API goes
@@ -155,6 +155,72 @@ export async function streamSilence(sink, ms, { until = () => false } = {}) {
     await sleep(32);
   }
   return true;
+}
+
+/**
+ * The two numbers behind the duplex gate, copied from `offscreen.js` rather than
+ * imported: that file is a document script and touches `chrome` at load, so Node
+ * cannot import it. If either moves there it has to move here, and
+ * `tests/duplex-gate.test.js` is what says so out loud.
+ */
+export const DOWNLINK_RATE = 24000; // the rate Gemini returns audio at
+export const VOICE_RELEASE_SEC = 0.4;
+
+/**
+ * The microphone half of the duplex gate, reproduced outside the browser.
+ *
+ * In conversation mode — and only there, see `usesDuplexGate` — `offscreen.js`
+ * drops microphone frames for as long as this direction's own translated voice
+ * is still playing. That is not a delay: the frame is discarded, the session is
+ * never told, and what the model receives is a shorter utterance or none at all.
+ * A harness that streams straight into `SessionLoop` skips the gate entirely and
+ * therefore cannot see the failures the gate causes, which is most of the reason
+ * a two-speaker run needs this.
+ *
+ * The deadline arithmetic is `noteVoiceAudio` and `speaking` from that file, with
+ * one direction instead of two: audio arrives far faster than it can be spoken,
+ * so "is it talking right now" is a play-out deadline and not a question about
+ * the last frame.
+ *
+ * @param {{send: (buf: ArrayBuffer) => void}} sink  where an ungated frame goes
+ * @param {{enabled?: boolean, now?: () => number}} opts  `now` in ms, for tests
+ */
+export function duplexGate(sink, { enabled = true, now = () => Date.now() } = {}) {
+  let endsAt = 0; // wall-clock ms at which the interpreter's voice stops
+  return {
+    droppedMs: 0,
+    leadingDroppedMs: 0,
+    sentMs: 0,
+    /** Translated audio arrived: push the deadline out by how long it takes to say. */
+    note(byteLength) {
+      endsAt = Math.max(endsAt, now()) + (byteLength / 2 / DOWNLINK_RATE) * 1000;
+    },
+    speaking() {
+      return now() < endsAt + VOICE_RELEASE_SEC * 1000;
+    },
+    /** When the voice stops — what the other person in the room is waiting for. */
+    endsAt() {
+      return endsAt;
+    },
+    reset() {
+      this.droppedMs = 0;
+      this.leadingDroppedMs = 0;
+      this.sentMs = 0;
+    },
+    send(buffer) {
+      const ms = (buffer.byteLength / 2 / UPLINK_RATE) * 1000;
+      if (enabled && this.speaking()) {
+        this.droppedMs += ms;
+        // Front of the utterance, which is the part whose loss changes what the
+        // model hears from "a sentence" to "the end of a sentence".
+        if (this.sentMs === 0) this.leadingDroppedMs += ms;
+        return false;
+      }
+      this.sentMs += ms;
+      sink.send(buffer);
+      return true;
+    },
+  };
 }
 
 /**
