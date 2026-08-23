@@ -8,6 +8,6 @@
     "test": "node --test 'tests/**/*.test.js'",
     "test:onboarding": "node tests/onboarding.mjs",
     "preview": "node tests/guide-preview.mjs",
-    "package": "zip -r interpretab.zip . -x '.git/*' 'store/*' 'tests/*' 'docs/*' 'node_modules/*' 'package.json' 'README.md' '*.zip' '.*'"
+    "package": "rm -f interpretab.zip && zip -r interpretab.zip manifest.json LICENSE PRIVACY.md service-worker.js offscreen.html offscreen.js options.html options.js sidepanel.html sidepanel.css sidepanel.js _locales audio content data icons lib -x '.*'"
   }
 }
