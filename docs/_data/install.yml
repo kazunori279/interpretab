@@ -33,11 +33,11 @@ en:
       body: >-
         Open <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         on the Chrome Web Store</a> and press <b>Add to Chrome</b>.
-    - tab: Open AI Studio
+    - tab: Open Google AI Studio
       body: >-
-        Interpretab runs on your own Gemini API key, and a key is free. Open
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> and sign in with
-        a Google account.
+        Interpretab translates with Google's Gemini, and Gemini needs an API key of your own.
+        Getting one is free: open <a href="https://aistudio.google.com/apikey">Google AI Studio</a> and sign in
+        with a Google account.
     - tab: Create a key
       body: >-
         The page lists the keys you have, which on a new account is none. Press
@@ -74,8 +74,8 @@ ja:
   steps:
     - tab: Chrome に追加
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome ウェブストアの Interpretab</a> を開き、<b>Chrome に追加</b>を押す。
-    - tab: AI Studio を開く
-      body: Interpretab は自分の Gemini API キーで動きます。キーは無料です。<a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> を開き、Google アカウントでログインします。
+    - tab: Google AI Studio を開く
+      body: 翻訳するのは Google の Gemini で、Gemini には自分専用の API キーが必要です。取得は無料です。<a href="https://aistudio.google.com/apikey">Google AI Studio</a> を開き、Google アカウントでログインします。
     - tab: キーを作成
       body: このページには持っているキーが並びます。新しいアカウントならまだ一つもありません。<b>Create API key</b> を押します。
     - tab: プロジェクトを選ぶ
@@ -93,8 +93,8 @@ zh:
   steps:
     - tab: 添加至 Chrome
       body: 打开 <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 应用商店中的 Interpretab</a>，点击<b>添加至 Chrome</b>。
-    - tab: 打开 AI Studio
-      body: Interpretab 用的是你自己的 Gemini API 密钥，密钥是免费的。打开 <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>，用 Google 账号登录。
+    - tab: 打开 Google AI Studio
+      body: 翻译由 Google 的 Gemini 完成，而 Gemini 需要一个属于你自己的 API 密钥。申请是免费的：打开 <a href="https://aistudio.google.com/apikey">Google AI Studio</a>，用 Google 账号登录。
     - tab: 创建密钥
       body: 这个页面会列出你已有的密钥，新账号还是空的。点击 <b>Create API key</b>。
     - tab: 选择项目
@@ -114,11 +114,11 @@ es:
       body: >-
         Abre <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         en Chrome Web Store</a> y pulsa <b>Añadir a Chrome</b>.
-    - tab: Abre AI Studio
+    - tab: Abre Google AI Studio
       body: >-
-        Interpretab funciona con tu propia clave de la API de Gemini, y una clave es gratis. Abre
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> e inicia sesión
-        con una cuenta de Google.
+        Quien traduce es Gemini, de Google, y Gemini necesita una clave de API tuya. Conseguirla es
+        gratis: abre <a href="https://aistudio.google.com/apikey">Google AI Studio</a> e inicia sesión con una
+        cuenta de Google.
     - tab: Crea la clave
       body: >-
         La página lista las claves que tienes, que en una cuenta nueva son ninguna. Pulsa
@@ -154,10 +154,10 @@ fr:
       body: >-
         Ouvrez <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         sur le Chrome Web Store</a> et cliquez sur <b>Ajouter à Google Chrome</b>.
-    - tab: Ouvrez AI Studio
+    - tab: Ouvrez Google AI Studio
       body: >-
-        Interpretab fonctionne avec votre propre clé d'API Gemini, et une clé est gratuite. Ouvrez
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> et connectez-vous
+        C'est Gemini, de Google, qui traduit, et Gemini a besoin d'une clé d'API à vous. L'obtenir est
+        gratuit : ouvrez <a href="https://aistudio.google.com/apikey">Google AI Studio</a> et connectez-vous
         avec un compte Google.
     - tab: Créez la clé
       body: >-
@@ -195,11 +195,11 @@ de:
       body: >-
         <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         im Chrome Web Store</a> öffnen und auf <b>Hinzufügen</b> klicken.
-    - tab: AI Studio öffnen
+    - tab: Google AI Studio öffnen
       body: >-
-        Interpretab läuft mit Ihrem eigenen Gemini-API-Schlüssel, und ein Schlüssel ist kostenlos.
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> öffnen und mit
-        einem Google-Konto anmelden.
+        Übersetzt wird von Gemini, dem Modell von Google, und Gemini braucht einen eigenen
+        API-Schlüssel. Der ist kostenlos: <a href="https://aistudio.google.com/apikey">Google AI Studio</a>
+        öffnen und mit einem Google-Konto anmelden.
     - tab: Schlüssel erstellen
       body: >-
         Die Seite listet Ihre Schlüssel auf — bei einem neuen Konto also keinen. Auf <b>Create API
@@ -235,10 +235,10 @@ pt:
       body: >-
         Abra o <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         na Chrome Web Store</a> e clique em <b>Usar no Chrome</b>.
-    - tab: Abra o AI Studio
+    - tab: Abra o Google AI Studio
       body: >-
-        O Interpretab funciona com a sua própria chave de API do Gemini, e a chave é gratuita. Abra
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> e entre com uma
+        Quem traduz é o Gemini, do Google, e o Gemini precisa de uma chave de API sua. Consegui-la é
+        gratuito: abra o <a href="https://aistudio.google.com/apikey">Google AI Studio</a> e entre com uma
         conta Google.
     - tab: Crie a chave
       body: >-
@@ -273,8 +273,8 @@ ko:
   steps:
     - tab: Chrome에 추가
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 웹 스토어의 Interpretab</a>을 열고 <b>Chrome에 추가</b>를 누릅니다.
-    - tab: AI Studio 열기
-      body: Interpretab은 사용자 본인의 Gemini API 키로 동작하며, 키는 무료입니다. <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>를 열고 Google 계정으로 로그인합니다.
+    - tab: Google AI Studio 열기
+      body: 번역은 Google의 Gemini가 하고, Gemini에는 본인 명의의 API 키가 필요합니다. 발급은 무료입니다. <a href="https://aistudio.google.com/apikey">Google AI Studio</a>를 열고 Google 계정으로 로그인합니다.
     - tab: 키 만들기
       body: 이 페이지에는 가지고 있는 키가 나열됩니다. 새 계정이라면 아직 하나도 없습니다. <b>Create API key</b>를 누릅니다.
     - tab: 프로젝트 선택
@@ -294,11 +294,11 @@ hi:
       body: >-
         <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome
         Web Store पर Interpretab</a> खोलें और <b>Chrome में जोड़ें</b> दबाएँ।
-    - tab: AI Studio खोलें
+    - tab: Google AI Studio खोलें
       body: >-
-        Interpretab आपकी अपनी Gemini API कुंजी से चलता है, और कुंजी मुफ़्त है।
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> खोलें और किसी
-        Google खाते से साइन इन करें।
+        अनुवाद Google का Gemini करता है, और Gemini को आपकी अपनी API कुंजी चाहिए। कुंजी लेना मुफ़्त है:
+        <a href="https://aistudio.google.com/apikey">Google AI Studio</a> खोलें और किसी Google खाते से
+        साइन इन करें।
     - tab: कुंजी बनाएँ
       body: >-
         यह पेज आपकी मौजूदा कुंजियाँ दिखाता है — नए खाते में एक भी नहीं। <b>Create API key</b> दबाएँ।
@@ -331,11 +331,10 @@ ar:
       body: >-
         افتح <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Interpretab
         في Chrome Web Store</a> واضغط <b>الإضافة إلى Chrome</b>.
-    - tab: افتح AI Studio
+    - tab: افتح Google AI Studio
       body: >-
-        يعمل Interpretab بمفتاح Gemini API الخاص بك، والمفتاح مجاني. افتح
-        <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> وسجّل الدخول
-        بحساب Google.
+        من يترجم هو Gemini من Google، وهو يحتاج مفتاح API خاصًا بك. الحصول عليه مجاني: افتح
+        <a href="https://aistudio.google.com/apikey">Google AI Studio</a> وسجّل الدخول بحساب Google.
     - tab: أنشئ المفتاح
       body: >-
         تعرض الصفحة المفاتيح التي لديك، ولا يوجد أي مفتاح في حساب جديد. اضغط <b>Create API key</b>.

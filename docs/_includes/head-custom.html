@@ -22,14 +22,20 @@
       [dir="rtl"] code { direction: ltr; text-align: left; }
 
       /* The Install slideshow — `_includes/install-steps.html`.
-         `--stage` is the height of the frame a picture sits in and `--pad` its
-         breathing room; both are here rather than in the rules below because
-         the figure has to know them to work out how wide it is allowed to be.
+         `--stage` is the height of the frame a step sits in, `--pad` its
+         breathing room, and `--say` the room kept at the top of it for the
+         sentence; they are here rather than in the rules below because the
+         figure has to know all three to work out how wide it is allowed to be.
+         `--say` is a floor and not a ceiling — a translation that runs longer
+         pushes the frame taller rather than being cut off.
          The drawings are written with logical properties, because one of the
          ten pages runs the other way and a hard-coded `left` would put the
          cursor on the wrong side of the icon it points at. The photographs are
          not: a photograph of an English browser does not flip. */
-      .install { --stage: 30rem; --pad: 1rem; margin: 1.25rem 0 1.5rem; }
+      .install {
+        --stage: 30rem; --pad: 1rem; --say: 4.5rem; --gap: 0.85rem;
+        margin: 1.25rem 0 1.5rem;
+      }
       /* Hidden, not removed: `display:none` would take the radios out of the
          focus order, and the arrow keys walking the steps is the whole of the
          keyboard support this thing needs. */
@@ -52,11 +58,17 @@
         background: #eaeef2; color: #57606a; font-size: 0.78rem; font-weight: 600;
       }
       .install-pane { display: none; }
+      /* The sentence is inside the frame, above the picture, rather than under
+         the frame: the two are one instruction, and a caption below a picture
+         this tall is far enough from it to be read as belonging to whatever
+         comes next. */
       .install-shot {
-        display: flex; align-items: center; justify-content: center; overflow: hidden;
-        height: var(--stage); padding: var(--pad); background: #f6f8fa;
+        display: flex; flex-direction: column; align-items: center; overflow: hidden;
+        min-height: var(--stage); padding: var(--pad); background: #f6f8fa;
         border: 1px solid #d0d7de; border-radius: 6px;
       }
+      /* Whatever height the sentence leaves, the picture takes the middle of. */
+      .install-figure, .install-browser { margin-block: auto; }
       /* `object-fit` would fit the picture and leave the box it is in the size
          of the frame, and the ring is positioned in percentages of that box. So
          the box is given the picture's own ratio and made exactly as wide as it
@@ -65,7 +77,10 @@
       .install-figure {
         position: relative;
         aspect-ratio: var(--wpx) / var(--hpx);
-        width: min(100%, calc((var(--stage) - var(--pad) * 2) * var(--wpx) / var(--hpx)));
+        width: min(
+          100%,
+          calc((var(--stage) - var(--pad) * 2 - var(--say) - var(--gap)) * var(--wpx) / var(--hpx))
+        );
       }
       .install-figure img {
         display: block; width: 100%; height: 100%;
@@ -73,9 +88,13 @@
       }
       /* Two class names deep, and not one: the theme's `.markdown-body p` is
          the more specific of the two otherwise, and this paragraph would sit
-         flush against the picture above it. */
-      .install .install-say { margin: 0.85rem 0 0; }
-      @media (max-width: 40rem) { .install { --stage: 19rem; --pad: 0.6rem; } }
+         flush against the picture below it. */
+      .install .install-say {
+        flex: none; align-self: stretch; min-height: var(--say); margin: 0 0 var(--gap);
+      }
+      @media (max-width: 40rem) {
+        .install { --stage: 19rem; --pad: 0.6rem; --say: 6rem; }
+      }
 
       /* The marker: a ring around the button the step is about, and an arrow
          beside it. `--x`, `--y`, `--w` and `--h` are percentages of the picture

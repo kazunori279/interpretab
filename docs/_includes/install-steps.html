@@ -51,6 +51,7 @@
     {%- assign shot = site.data.shots[figure] -%}
     <div class="install-pane">
       <div class="install-shot">
+        <p class="install-say">{{ step.body | replace: '<a href=', '<a target="_blank" rel="noopener" href=' }}</p>
         {%- if shot -%}
         {%- comment -%}
           A photograph, with the ring where `shots.yml` says the button is and
@@ -175,7 +176,6 @@
         </div>
         {%- endif %}
       </div>
-      <p class="install-say">{{ step.body | replace: '<a href=', '<a target="_blank" rel="noopener" href=' }}</p>
     </div>
     {%- endfor %}
   </div>

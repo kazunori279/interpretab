@@ -268,7 +268,7 @@ async function capture(page, name, file, clip, mark) {
  */
 function arrowSide(box, ratio) {
   const COLUMN = 980; // `.container-lg` less its padding.
-  const FRAME = 448; // `--stage` less `--pad` twice, at 16px to the rem.
+  const FRAME = 362; // `--stage`, less `--pad` twice, `--say` and `--gap`, at 16px to the rem.
   const ARROW = 34; // The arrow, and enough of a gap to read as pointing.
 
   const rendered = Math.min(COLUMN, FRAME * ratio);
