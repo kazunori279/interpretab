@@ -445,7 +445,16 @@ function wantsCaptions(settings) {
 async function ensureCaptionTab(settings) {
   if (!wantsCaptions(settings)) return reportCaptions("off");
   const existing = (await chrome.storage.session.get("captionTabId")).captionTabId;
-  if (existing != null) return;
+  if (existing != null) {
+    // The overlay is already on that page, so there is nothing to inject — but
+    // a switch turned off and on again left "off" written down as the state of
+    // the subtitles, and `adoptCaptionTab` reads that to decide whether they
+    // are working. Only "off" is taken back: an "unavailable" from a page that
+    // refused injection is still true, and this would erase the note saying so.
+    const { captionStatus } = await chrome.storage.session.get("captionStatus");
+    if (captionStatus === "off") await reportCaptions("ok");
+    return;
+  }
   const { runTabId } = await chrome.storage.session.get("runTabId");
   const tabId = runTabId ?? null;
   if (tabId == null) {
@@ -479,15 +488,47 @@ async function reportCaptions(status, detail = "") {
   chrome.runtime.sendMessage({ target: "ui", type: "captions", status, detail }).catch(() => {});
 }
 
-// Both subtitle switches apply mid-session — the offscreen document just stops
-// forwarding — but turning one on when neither was on at Start means there is
-// no overlay to forward to yet. A storage change wakes this worker, so the
-// injection can happen then rather than costing a reconnect.
+// Both subtitle switches apply mid-session, and each direction needs something
+// done for it in this worker.
+//
+// Off: the offscreen document stops forwarding, which stops the *next* line and
+// nothing else. Whatever is on the page stays there — and a line caught
+// mid-sentence stays for good, because the end that would start its fade is
+// exactly what has just stopped being forwarded. Unticking the box left the
+// subtitles on screen. So the overlay is told to drop that direction's lines.
+//
+// On: if neither was on at Start there is no overlay to forward to yet. A
+// storage change wakes this worker, so the injection can happen here rather
+// than costing a reconnect.
 chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area !== "local" || (!changes.tabCaptions && !changes.micCaptions)) return;
   const { running } = await chrome.storage.session.get("running");
-  if (running) await ensureCaptionTab(await loadSettings());
+  if (!running) return;
+  for (const [key, direction] of [
+    ["tabCaptions", "tab"],
+    ["micCaptions", "mic"],
+  ]) {
+    if (changes[key] && !changes[key].newValue) await clearCaptions(direction);
+  }
+  await ensureCaptionTab(await loadSettings());
 });
+
+/**
+ * Wipe one direction's subtitles off the page — without putting an overlay
+ * there to wipe.
+ *
+ * `sendToCaptions` re-injects when nobody is listening, which is right for a
+ * transcript and wrong here: the page may never have had an overlay at all, and
+ * installing one in order to clear it would have a switch that was just turned
+ * off put something on screen.
+ */
+async function clearCaptions(direction) {
+  const { captionTabId } = await chrome.storage.session.get("captionTabId");
+  if (captionTabId == null) return;
+  await chrome.tabs
+    .sendMessage(captionTabId, { target: "captions", type: "clear", direction })
+    .catch(() => {});
+}
 
 /**
  * Message the offscreen document, tolerating a document that exists but whose

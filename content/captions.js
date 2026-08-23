@@ -186,6 +186,26 @@
     return d;
   }
 
+  /**
+   * Take one direction's subtitles off the page, now, without waiting for a
+   * fade that may never be scheduled.
+   *
+   * A line only starts its eight seconds when its sentence ends. Turning the
+   * switch off mid-sentence leaves a line that has no end coming — the offscreen
+   * document has stopped forwarding, so the `turnComplete` that would have
+   * finalised it never arrives — and it sits on the page with its dot blinking
+   * for the rest of the run.
+   */
+  function clear(direction) {
+    // The direction is also the line's class name and it arrives in a message,
+    // so it is checked against the two that exist rather than interpolated.
+    if (direction !== "tab" && direction !== "mic") return;
+    for (const line of [...linesEl.children]) {
+      if (line.classList.contains(direction)) line.remove();
+    }
+    openLines.delete(direction);
+  }
+
   function finalize(direction) {
     const line = openLines.get(direction);
     if (line) {
@@ -224,6 +244,8 @@
     if (msg?.target !== "captions") return;
     if (msg.type === "teardown" || (msg.type === "state" && msg.running === false)) {
       teardown();
+    } else if (msg.type === "clear") {
+      clear(msg.direction);
     } else if (msg.type === "turnComplete") {
       finalize(msg.direction);
     } else if (msg.type === "transcript") {

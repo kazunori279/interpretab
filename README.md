@@ -186,7 +186,9 @@ into fullscreen. Each direction has its own *Subtitles on the page* checkbox —
 off for the microphone — so you can subtitle the video without also subtitling yourself. With
 both on, the two share the page but not a line: each keeps its own rolling sentence, and the
 microphone's is marked with a blue edge. Toggling either applies immediately, without dropping
-the session; the side panel keeps the full transcript either way.
+the session: turning one off wipes that direction's lines off the page rather than leaving the
+last one there, and turning it on puts the overlay up even if neither was on at Start. The side
+panel keeps the full transcript either way.
 
 **Options → Subtitle size** sets how tall they are, 16–64 px, with a preview against a dark
 background. It applies while a session is running — the overlay follows the stored value rather

@@ -431,6 +431,44 @@ test("the run belongs to the tab whose panel started it, not the last one clicke
   }
 });
 
+test("unticking a subtitle switch takes the subtitles off the page", () => {
+  // Turning the switch off only ever stopped the *next* line: the offscreen
+  // document checks `captionsOn` before forwarding, and everything already
+  // drawn stayed where it was. A finished line fades after eight seconds, but a
+  // line caught mid-sentence never does — the `turnComplete` that would start
+  // its fade is the very thing that has stopped being forwarded — so the last
+  // subtitle sat on the page with its dot blinking for the rest of the run.
+  //
+  // Three files have to agree for the box to mean what it says, and no two of
+  // them are open at the same time.
+  const sw = read("service-worker.js");
+  const overlay = read("content/captions.js");
+
+  // The worker notices which direction went off, and says so per direction:
+  // the other one may still be running, and clearing both would wipe subtitles
+  // the user is still watching.
+  const listener = sw.match(/onChanged\.addListener\([\s\S]*?\n\}\);/)?.[0];
+  assert.ok(listener, "nothing watches the subtitle switches any more");
+  assert.match(listener, /!changes\[key\]\.newValue.*clearCaptions\(direction\)/s);
+  for (const direction of ['"tab"', '"mic"']) assert.match(listener, new RegExp(direction));
+
+  // And it goes direct rather than through `sendToCaptions`, which re-injects
+  // when nobody is listening — installing an overlay in order to clear it is
+  // how a switch that was just turned off puts something on screen.
+  const clear = body(sw, "clearCaptions");
+  assert.match(clear, /type: "clear", direction/);
+  assert.doesNotMatch(clear, /injectCaptions|sendToCaptions/);
+
+  // The overlay drops that direction's lines, and forgets the one it was still
+  // extending — a stale open line would have the next sentence written into a
+  // div that is no longer in the document.
+  assert.match(overlay, /msg\.type === "clear"/);
+  const handler = overlay.match(/function clear\(direction\) \{[\s\S]*?\n  \}/)?.[0];
+  assert.ok(handler, "the overlay has no clear()");
+  assert.match(handler, /classList\.contains\(direction\)/);
+  assert.match(handler, /openLines\.delete\(direction\)/);
+});
+
 test("the cost meter's clock is stamped where the run is", () => {
   // Not in the panel: it can be closed and reopened in the middle of a run, and
   // a timer that started with it would report the run as having begun when the
