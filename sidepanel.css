@@ -383,11 +383,22 @@ button.icon .slash { display: none; }
 button.icon.off { background: #fce8e6; border-color: #f3b4b0; color: #c5221f; }
 button.icon.off .slash { display: inline; }
 
-#transcript {
+/* The line under the buttons, and everything below it: the two step cards and
+   the transcript, scrolling as one region. The cards used to sit between the
+   microphone card and the buttons, where opening one pushed Start off the
+   screen it was the point of. One scroller and not two, because on a short
+   window either card is taller than the room down here. */
+#below {
   flex: 1;
   overflow-y: auto;
   border-top: 1px solid var(--border);
   padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#transcript {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;

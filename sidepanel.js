@@ -193,7 +193,9 @@ function restore(state) {
     const node = appendLine(line);
     if (line.open) openLines.set(`${line.direction}:${line.side}`, node);
   }
-  el("transcript").scrollTop = el("transcript").scrollHeight;
+  // `below` and not `transcript`: the step cards share the transcript's
+  // scroller, so the transcript is not the element that scrolls.
+  el("below").scrollTop = el("below").scrollHeight;
   if (state?.usage) {
     usage = state.usage;
     renderUsage();
@@ -854,7 +856,7 @@ function onTranscript({ direction, side, text, finished }) {
   }
   line.lastChild.textContent = text;
   if (finished) openLines.delete(key);
-  el("transcript").scrollTop = el("transcript").scrollHeight;
+  el("below").scrollTop = el("below").scrollHeight;
 }
 
 /** One bubble, appended. Shared by the live feed and by `restore`. */
