@@ -1929,7 +1929,7 @@ There is no build. The extension directory is what ships.
 npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
-Verified 2026-08-20 at 1.0.2: 44 files, 503 KB unpacked and 184 KB zipped — most of the growth is
+Verified 2026-08-24 at 1.0.3: 43 files, 653 KB unpacked and 220 KB zipped — most of the growth is
 the ten `_locales` catalogues, which do not compress the way code does. `manifest.json` at the root,
 nothing from `.git`, `tests/`, `store/`, `docs/` or `package.json`. This file is excluded too —
 37 KB of developer documentation that no user or reviewer opens, and it was a quarter of the
