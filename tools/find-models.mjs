@@ -18,11 +18,14 @@
  * `checkModel` has opened a real Live session with it and got `setupComplete`
  * back. An invented name never verifies, so an invented name never ships.
  *
- * **It may only widen.** `mergeConfig` below can add a verified name, reorder
- * nothing that still works, and correct a price. It cannot touch
- * `blockBelowVersion` — the one field that can stop every installation — and it
- * cannot empty a list, because a config with no names in it is a config that has
- * given up on the one job it has.
+ * **It may only widen, and only forwards.** `mergeConfig` below can add a
+ * verified name, reorder nothing that still works, and correct a price. It
+ * cannot touch `blockBelowVersion` — the one field that can stop every
+ * installation — and it cannot empty a list, because a config with no names in
+ * it is a config that has given up on the one job it has. Nor can it reach for
+ * an older generation: the point of the list is somewhere to go when a preview
+ * is switched off, and a model nobody here has ever measured on a translation is
+ * only worth falling back to if it is the *successor*.
  *
  * Two calls to the model rather than one. Grounding and a response schema fight
  * each other: the tools want to write prose with citations, the schema wants
@@ -57,6 +60,22 @@ const SOURCES = [
 /** Same cap as `parseConfig`, applied here so a long answer is cut before it is written. */
 const MAX_MODELS = 8;
 
+/**
+ * Tool sets for the research call, tried in order.
+ *
+ * Both together answer best: measured on the same prompt, `url_context` alone
+ * found two of the three current ids and `google_search` alone came back with
+ * no text at all, while the pair found all three. But the pair is also what
+ * returns `MALFORMED_FUNCTION_CALL` after thirty-five thousand tokens of
+ * thinking, often enough to matter for something that runs unattended. So when
+ * two goes with both have produced nothing, the run drops to the one tool that
+ * has never malformed and takes the smaller answer.
+ */
+const TOOL_SETS = [
+  [{ url_context: {} }, { google_search: {} }],
+  [{ url_context: {} }],
+];
+
 const dry = process.argv.includes("--dry");
 
 /**
@@ -73,19 +92,70 @@ function accessToken() {
   return execFileSync("gcloud", ["auth", "print-access-token"], { encoding: "utf8" }).trim();
 }
 
+/**
+ * The grounded call reads five pages before it answers and has taken four
+ * minutes to do it, which is long enough to sit on the wrong side of every
+ * default in the stack, and it fails in two ways that both look like success.
+ *
+ * One is `fetch failed`, whose message says nothing without its cause. The
+ * other is stranger: HTTP 200, no `finishReason`, and `content.parts` empty,
+ * with the usage record showing ten thousand tokens of thinking against a
+ * hundred of answer. Returning "" from that is how a run that learned nothing
+ * came to print "no change", which reads exactly like a clean bill of health.
+ *
+ * So both are retried, and if the last attempt still has nothing to show, this
+ * throws. A red workflow is the honest result; a quiet one is not. The pause
+ * between attempts is for the third failure seen in one run of this: a 429,
+ * which retrying immediately only makes worse.
+ */
+const CALL_TIMEOUT_MS = 300_000;
+const CALL_ATTEMPTS = 2;
+const CALL_BACKOFF_MS = 20_000;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function generate(token, body) {
   const url =
     `https://aiplatform.googleapis.com/v1beta1/projects/${PROJECT}/locations/${LOCATION}` +
     `/publishers/google/models/${AGENT_MODEL}:generateContent`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`Vertex ${AGENT_MODEL}: HTTP ${res.status} ${(await res.text()).slice(0, 400)}`);
-  const reply = await res.json();
-  const parts = reply.candidates?.[0]?.content?.parts || [];
-  return parts.map((p) => p.text || "").join("").trim();
+  const post = () =>
+    fetch(url, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(CALL_TIMEOUT_MS),
+    });
+
+  let last = "no attempt was made";
+  for (let attempt = 1; attempt <= CALL_ATTEMPTS; attempt++) {
+    if (attempt > 1) await sleep(CALL_BACKOFF_MS);
+    let res;
+    try {
+      res = await post();
+    } catch (err) {
+      last = err.cause ? `${err.message}: ${err.cause.message || err.cause}` : err.message;
+      console.warn(`Vertex ${AGENT_MODEL}: attempt ${attempt} — ${last}`);
+      continue;
+    }
+    if (!res.ok) {
+      const detail = `HTTP ${res.status} ${(await res.text()).slice(0, 400)}`;
+      // A bad request will be bad every time; a 429 or a 503 will not.
+      if (res.status < 500 && res.status !== 429) throw new Error(`Vertex ${AGENT_MODEL}: ${detail}`);
+      last = detail;
+      console.warn(`Vertex ${AGENT_MODEL}: attempt ${attempt} — ${last}`);
+      continue;
+    }
+    const reply = await res.json();
+    const candidate = reply.candidates?.[0];
+    const text = (candidate?.content?.parts || []).map((p) => p.text || "").join("").trim();
+    if (text) return text;
+    const usage = reply.usageMetadata || {};
+    last =
+      `empty answer (finishReason ${candidate?.finishReason || "none"}, ` +
+      `${usage.thoughtsTokenCount || 0} thinking tokens, ${usage.candidatesTokenCount || 0} answer tokens)`;
+    console.warn(`Vertex ${AGENT_MODEL}: attempt ${attempt} — ${last}`);
+  }
+  throw new Error(`Vertex ${AGENT_MODEL}: ${last} — gave up after ${CALL_ATTEMPTS} attempts`);
 }
 
 /** Step one: read the pages and say, in prose, what is current and what is gone. */
@@ -109,6 +179,9 @@ Report, with the page you got each fact from:
 1. Every model id currently offered for each of those two kinds, newest first.
    Use exact ids as they appear in the API — for example gemini-3.1-flash-live-preview,
    not "Gemini 3.1 Flash Live". Only models that support bidiGenerateContent.
+   Only ids at or above the generation the extension already asks for: a
+   successor, the GA id of the same model, or a newer dated preview of it. An
+   earlier generation is not a fallback, so do not list one.
 2. For each id, the audio input and audio output price in US dollars per one
    million tokens, from the pricing page.
 3. Whether any of the ids the extension currently asks for is marked deprecated,
@@ -160,6 +233,27 @@ async function extract(token, prose) {
 }
 
 /**
+ * The generation in a model id: `gemini-3.1-flash-live-preview` is 3.1. Null
+ * when there is no number to read, which is the answer to "is this newer?" that
+ * this file is honest enough to give.
+ */
+function familyVersion(name) {
+  const match = /^gemini-(\d+)\.(\d+)-/.exec(String(name || ""));
+  return match ? Number(match[1]) * 1000 + Number(match[2]) : null;
+}
+
+/**
+ * The id without its preview marker or date stamp, so that
+ * `gemini-3.1-flash-live-preview`, `gemini-3.1-flash-live-preview-02-2026` and
+ * the eventual `gemini-3.1-flash-live` all come out the same. A preview is
+ * usually withdrawn the day one of those three publishes, and none of them
+ * raises the generation number.
+ */
+function stem(name) {
+  return String(name || "").replace(/-(preview|latest|exp)(-\d{2}-\d{4})?$/, "");
+}
+
+/**
  * What the file should say, given what it says now and what verified.
  *
  * Pure, and the only thing in this file that decides what gets committed —
@@ -191,7 +285,28 @@ export function mergeConfig(current, verdict, found) {
   const keep = (mode, existing, candidates) => {
     const ruling = (name) => verdict.get(`${mode}:${name}`);
     const alive = (existing || []).filter((name) => ruling(name) !== false);
-    const added = (candidates || []).filter((name) => ruling(name) === true && !alive.includes(name));
+
+    // A newcomer has to be a step forward. Nobody here has measured any of these
+    // on a translation, so the only reason to fall back to one is that it is
+    // what replaced the name that went away — and an older generation never is.
+    // Level with the newest name in hand counts only for the same model under
+    // another label: the GA id, or a dated respin of the same preview.
+    const known = [...alive, mode === "simul" ? SIMUL_MODEL : MODEL];
+    const floor = Math.max(0, ...known.map(familyVersion).filter((v) => v !== null));
+    const stems = new Set(known.map(stem));
+    const forward = (name) => {
+      const version = familyVersion(name);
+      // Unreadable version, no opinion, no promotion. If that leaves the list
+      // with nothing to fall back to, the outage issue is the right outcome:
+      // a human reads the notes and decides, which is what naming this file
+      // could not rank should cost.
+      if (version === null) return false;
+      return version > floor || (version === floor && stems.has(stem(name)));
+    };
+
+    const added = (candidates || []).filter(
+      (name) => ruling(name) === true && !alive.includes(name) && forward(name),
+    );
     const merged = [...alive, ...added].slice(0, MAX_MODELS);
     // Everything failed. Say nothing rather than nothing at all: the old list is
     // still the best guess, and `blockBelowVersion` is how a human says stop.
@@ -268,11 +383,22 @@ if (import.meta.filename === process.argv[1]) {
 
   const token = accessToken();
   console.log(`\nasking ${AGENT_MODEL} on ${PROJECT}/${LOCATION}...`);
-  const prose = await generate(token, {
-    contents: [{ role: "user", parts: [{ text: researchPrompt(broken) }] }],
-    tools: [{ url_context: {} }, { google_search: {} }],
-    generationConfig: { temperature: 0 },
-  });
+  let prose = "";
+  for (const tools of TOOL_SETS) {
+    const named = tools.map((tool) => Object.keys(tool)[0]).join(" + ");
+    try {
+      prose = await generate(token, {
+        contents: [{ role: "user", parts: [{ text: researchPrompt(broken) }] }],
+        tools,
+        generationConfig: { temperature: 0 },
+      });
+      console.log(`answered with ${named}`);
+      break;
+    } catch (err) {
+      console.warn(`${named} got nowhere: ${err.message}`);
+    }
+  }
+  if (!prose) throw new Error("no tool set produced an answer; nothing written");
   console.log(`\n--- what it read ---\n${prose}\n`);
 
   const found = await extract(token, prose);

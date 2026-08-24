@@ -1087,8 +1087,16 @@ model ids and audio prices are, then asks a second time — no tools, a response
 that prose into JSON. Grounding and a schema fight each other; two calls is cheaper than the
 prompt engineering to make one work.
 
+The grounded half of that is the flakiest thing in this repository. One sitting produced a
+five-minute timeout, a 429, and an HTTP 200 carrying `MALFORMED_FUNCTION_CALL` and no content at
+all after thirty-five thousand tokens of thinking. Each is retried once behind a pause, and a run
+that keeps coming back empty drops to `url_context` on its own, which answers with less but has
+never malformed. What it will not do is return an empty answer as a result: the first version of
+this printed "no change" after learning nothing, which is the same thing it prints when everything
+is fine. Now it throws, and the workflow goes red.
+
 It commits to `main`, which means it edits the file every installation reads within hours with no
-human in between. Three things stand between a guess and that file:
+human in between. Four things stand between a guess and that file:
 
 - **A name is verified before it is written.** Every candidate goes through the same `checkModel` —
   a real session, `setupComplete` or nothing. An invented name never verifies, so an invented name
@@ -1097,6 +1105,13 @@ human in between. Three things stand between a guess and that file:
   the first name is the one every session starts on and a discovery should be a fallback before it
   is a default. A name that verified gone is dropped, except the last one: an empty list means "the
   file has no opinion", which is the opposite of what an outage should say.
+- **And only forwards.** A candidate has to be at least the generation already in the list —
+  `gemini-3.5-…` next to `gemini-3.1-…`, or the same model at the same generation under the GA id
+  or a newer dated preview, both of which are how a preview usually ends. Nothing here has measured
+  any of these on a translation, so the only reason to fall back to one is that it is the
+  successor; an earlier generation never is. An id with no readable generation is left out, and if
+  that leaves nothing to fall back to, the outage issue is the right outcome — a human reading the
+  notes beats a promotion this script cannot rank.
 - **The emergency brake is not the agent's to pull.** `blockBelowVersion` is copied through
   untouched, and the script aborts rather than writes if it ever differs. The output is re-read
   through `parseConfig` before it is committed, and `npm test` runs against the committed file.

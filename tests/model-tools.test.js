@@ -29,20 +29,22 @@ const base = () => ({
 
 const empty = { simul: [], conversation: [], rates: [] };
 
+const NEXT_SIMUL = "gemini-4.0-live-translate-preview";
+
 test("a verified newcomer goes behind the name that is already working", () => {
   const verdict = new Map([
     ["simul:simul-one", true],
-    ["simul:simul-two", true],
+    [`simul:${NEXT_SIMUL}`, true],
   ]);
-  const merged = mergeConfig(base(), verdict, { ...empty, simul: ["simul-two"] });
+  const merged = mergeConfig(base(), verdict, { ...empty, simul: [NEXT_SIMUL] });
   // Not in front. A discovery is a fallback until a human promotes it — the
   // first name is the one every session starts on.
-  assert.deepEqual(merged.models.simul, ["simul-one", "simul-two"]);
+  assert.deepEqual(merged.models.simul, ["simul-one", NEXT_SIMUL]);
 });
 
 test("a name the agent invented is not written, because it never verified", () => {
-  const verdict = new Map([["simul:simul-one", true]]); // gemini-9-imaginary never checked out
-  const merged = mergeConfig(base(), verdict, { ...empty, simul: ["gemini-9-imaginary"] });
+  const verdict = new Map([["simul:simul-one", true]]); // the 4.0 name never checked out
+  const merged = mergeConfig(base(), verdict, { ...empty, simul: [NEXT_SIMUL] });
   assert.deepEqual(merged.models.simul, ["simul-one"]);
 });
 
@@ -73,19 +75,71 @@ test("one name, two modes, two answers", () => {
   // `translationConfig` and conversation a system instruction, and a model that
   // takes one may refuse the other. A verdict keyed on the name alone would let
   // the first answer stand for both.
+  const bothWays = "gemini-4.0-flash-live-preview";
   const verdict = new Map([
-    ["simul:both-ways", true],
-    ["conversation:both-ways", false],
+    [`simul:${bothWays}`, true],
+    [`conversation:${bothWays}`, false],
     ["simul:simul-one", true],
     ["conversation:chat-one", true],
   ]);
   const merged = mergeConfig(base(), verdict, {
     ...empty,
-    simul: ["both-ways"],
-    conversation: ["both-ways"],
+    simul: [bothWays],
+    conversation: [bothWays],
   });
-  assert.deepEqual(merged.models.simul, ["simul-one", "both-ways"]);
+  assert.deepEqual(merged.models.simul, ["simul-one", bothWays]);
   assert.deepEqual(merged.models.conversation, ["chat-one"]);
+});
+
+// Which way the list may grow. The bundled names set the floor when the config
+// carries nothing rankable, so `conversation` here is measured against
+// gemini-3.1-flash-live-preview.
+//
+// The rule exists because of what happened the first time this ran unattended:
+// the agent found two 2.5 native-audio previews, both opened a session
+// perfectly well, and both went into the file. Neither had ever been measured on
+// a translation, and the client walks the list in order — so the day 3.1 was
+// withdrawn, every session would have landed on a 2.5 before reaching whatever
+// actually replaced it.
+const forward = (candidate, verified = true) => {
+  const config = { ...base(), models: { simul: [], conversation: ["chat-one"] } };
+  const verdict = new Map([
+    ["conversation:chat-one", true],
+    [`conversation:${candidate}`, verified],
+  ]);
+  return mergeConfig(config, verdict, { ...empty, conversation: [candidate] }).models.conversation;
+};
+
+test("an earlier generation is not a fallback", () => {
+  assert.deepEqual(forward("gemini-2.5-flash-native-audio-preview-12-2025"), ["chat-one"]);
+});
+
+test("a later generation is", () => {
+  assert.deepEqual(forward("gemini-3.5-flash-live-preview"), ["chat-one", "gemini-3.5-flash-live-preview"]);
+});
+
+test("the GA id of the model already in use is taken, though it raises no number", () => {
+  // The usual way a preview ends: the same model, same generation, without the
+  // word preview, and the preview gone the same day.
+  assert.deepEqual(forward("gemini-3.1-flash-live"), ["chat-one", "gemini-3.1-flash-live"]);
+});
+
+test("so is a redated preview of it", () => {
+  const respin = "gemini-3.1-flash-live-preview-02-2026";
+  assert.deepEqual(forward(respin), ["chat-one", respin]);
+});
+
+test("a different model of the same generation is not", () => {
+  // Level with what is running, but a different family: no reason to think it
+  // behaves like the one being replaced, and nobody has checked.
+  assert.deepEqual(forward("gemini-3.1-flash-native-audio-preview"), ["chat-one"]);
+});
+
+test("an id with no generation to read is left alone", () => {
+  // Better an outage issue a human reads than a silent promotion this file
+  // cannot rank. Same for a name that does not look like a Gemini id at all.
+  assert.deepEqual(forward("gemini-flash-live-ga"), ["chat-one"]);
+  assert.deepEqual(forward("some-other-vendor-live-1.0"), ["chat-one"]);
 });
 
 test("the emergency brake is not the agent's to touch", () => {
