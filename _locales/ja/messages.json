@@ -50,7 +50,11 @@
     "message": "マイクを複数人で使うモードです。設定した 2 つの言語のうち聞こえたほうを、もう一方の言語で<b>スピーカー</b>から声に出して読み上げます。"
   },
   "panelMicToCall": { "message": "この Meet 通話に翻訳音声を流す" },
-  "panelMicToCallNote": { "message": "Meet の<b>設定 → 音声 → マイク</b>を開いて <b>Interpretab (translated)</b> を選び、また <b>Studio Sound</b> をオフにします。オンの間、その声はこのパソコンからは出ず、通話にだけ送られます。字幕もオフになります。" },
+  "panelMicToCallNote": { "message": "オンの間、その声はこのパソコンからは出ず、通話にだけ送られます。字幕もオフになります。<a1>Meet でやること</a1>" },
+  "panelMeetJoin": { "message": "このタブで会議に参加します。" },
+  "panelMeetStart": { "message": "下の <b>Start</b> を押します。翻訳マイクは実行を開始したときに Meet へ渡されるので、それまでは一覧に出てきません。" },
+  "panelMeetPick": { "message": "Meet の<b>設定 → 音声</b>を開き、マイクに <b>Interpretab (translated)</b> を選びます。ついでに <b>Studio Sound</b> はオフにしてください。Bluetooth のヘッドホンなら、Meet の再生先もそれになっているか確かめます。" },
+  "panelMeetTalk": { "message": "話しかけます。3 秒ほど遅れて相手に訳が届きます。下にはあなたの声も小さく混ざっているので、通話では通訳とあなたの声の両方が聞こえます。" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

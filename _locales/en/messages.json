@@ -69,7 +69,21 @@
     "description": "Checkbox, shown only on a meet.google.com tab."
   },
   "panelMicToCallNote": {
-    "message": "In Meet, open <b>Settings → Audio → Microphone</b> and pick <b>Interpretab (translated)</b>. Turn <b>Studio Sound</b> off while you are in there. Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter. While this is on, that voice goes into the call instead of out of this computer, and its subtitles here are off."
+    "message": "While this is on, that voice goes into the call instead of out of this computer, and its subtitles here are off. <a1>What to do in Meet</a1>",
+    "description": "The link unfolds panelMeetJoin to panelMeetTalk underneath."
+  },
+  "panelMeetJoin": {
+    "message": "Join the meeting in this tab.",
+    "description": "First of four numbered steps, shown once the link in panelMicToCallNote is clicked."
+  },
+  "panelMeetStart": {
+    "message": "Press <b>Start</b> below. Meet is given the translated microphone by the run starting, so its list has nothing new in it before that."
+  },
+  "panelMeetPick": {
+    "message": "In Meet, open <b>Settings → Audio</b> and pick <b>Interpretab (translated)</b> as the microphone. Turn <b>Studio Sound</b> off while you are in there. On Bluetooth headphones, check that Meet is playing through them too."
+  },
+  "panelMeetTalk": {
+    "message": "Talk. The far end hears the translation about three seconds later, with your own voice mixed in quietly underneath, so the call hears you as well as the interpreter."
   },
 
   "panelStart": { "message": "Start" },

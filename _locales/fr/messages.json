@@ -50,7 +50,11 @@
     "message": "Pour deux personnes qui partagent un microphone : il entend l'une de vos deux langues et parle l'autre, à voix haute dans <b>vos haut-parleurs</b>, et c'est tout l'intérêt de ce mode. Éloignez le microphone des haut-parleurs, sinon il s'entend lui-même."
   },
   "panelMicToCall": { "message": "Envoyer la traduction dans cet appel Meet" },
-  "panelMicToCallNote": { "message": "Dans Meet, ouvrez <b>Paramètres → Audio → Micro</b> et choisissez <b>Interpretab (translated)</b>. Profitez-en pour désactiver <b>Studio Sound</b>. Votre propre voix est mixée en dessous, en sourdine, donc l'appel vous entend en plus de l'interprète. Tant que ceci est activé, cette voix part dans l’appel au lieu de sortir de cet ordinateur, et ses sous-titres restent éteints." },
+  "panelMicToCallNote": { "message": "Tant que ceci est activé, cette voix part dans l’appel au lieu de sortir de cet ordinateur, et ses sous-titres restent éteints. <a1>Ce qu’il faut faire dans Meet</a1>" },
+  "panelMeetJoin": { "message": "Rejoignez la réunion dans cet onglet." },
+  "panelMeetStart": { "message": "Appuyez sur <b>Start</b> ci-dessous. Le micro traduit n’est remis à Meet qu’au démarrage : avant cela, sa liste n’a rien de nouveau." },
+  "panelMeetPick": { "message": "Dans Meet, ouvrez <b>Paramètres → Audio</b> et choisissez <b>Interpretab (translated)</b> comme micro. Profitez-en pour désactiver <b>Studio Sound</b>. Avec un casque Bluetooth, vérifiez que Meet sort bien dessus." },
+  "panelMeetTalk": { "message": "Parlez. En face, la traduction arrive environ trois secondes plus tard, avec votre propre voix mixée en dessous, en sourdine, donc l’appel vous entend en plus de l’interprète." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

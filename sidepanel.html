@@ -100,7 +100,19 @@
           <span data-i18n="panelMicToCall"></span>
         </label>
       </div>
-      <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"></p>
+      <!-- What to do in Meet is four steps done in order, and as one paragraph
+           of grey it was a wall the eye slid off. Folded away behind the link
+           the note ends on, so it is there for the call where it is needed and
+           out of the way of the panel the rest of the time. Same four steps as
+           the guide's "In the call" phase — `docs/_data/meet.yml`. -->
+      <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"
+         data-link1="meetSteps"></p>
+      <ol class="note indent steps" id="micToCallSteps" hidden>
+        <li data-i18n="panelMeetJoin"></li>
+        <li data-i18n="panelMeetStart"></li>
+        <li data-i18n="panelMeetPick"></li>
+        <li data-i18n="panelMeetTalk"></li>
+      </ol>
       <!-- Two spans and not one sentence: the first is shown only while the
            sound button is off, and a message that had to be spliced into
            another one would decide the word order of both. -->

@@ -50,7 +50,11 @@
     "message": "Für zwei Personen, die sich ein Mikrofon teilen: Er hört eine Ihrer beiden Sprachen und spricht die andere, laut über <b>Ihre Lautsprecher</b> — genau darum geht es in diesem Modus. Halten Sie das Mikrofon von den Lautsprechern fern, sonst hört er sich selbst."
   },
   "panelMicToCall": { "message": "Die Übersetzung in dieses Meet-Gespräch senden" },
-  "panelMicToCallNote": { "message": "Öffnen Sie in Meet <b>Einstellungen → Audio → Mikrofon</b> und wählen Sie <b>Interpretab (translated)</b>. Schalten Sie bei der Gelegenheit <b>Studio Sound</b> aus. Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme. Solange das an ist, geht diese Stimme in das Gespräch statt aus diesem Rechner, und ihre Untertitel bleiben aus." },
+  "panelMicToCallNote": { "message": "Solange das an ist, geht diese Stimme in das Gespräch statt aus diesem Rechner, und ihre Untertitel bleiben aus. <a1>Was in Meet zu tun ist</a1>" },
+  "panelMeetJoin": { "message": "Treten Sie dem Meeting in diesem Tab bei." },
+  "panelMeetStart": { "message": "Drücken Sie unten <b>Start</b>. Das übersetzte Mikrofon bekommt Meet erst mit dem Start des Laufs, vorher steht in der Liste nichts Neues." },
+  "panelMeetPick": { "message": "Öffnen Sie in Meet <b>Einstellungen → Audio</b> und wählen Sie <b>Interpretab (translated)</b> als Mikrofon. Schalten Sie bei der Gelegenheit <b>Studio Sound</b> aus. Bei Bluetooth-Kopfhörern prüfen Sie, ob Meet auch darüber ausgibt." },
+  "panelMeetTalk": { "message": "Sprechen Sie. Die Gegenseite hört die Übersetzung etwa drei Sekunden später, Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

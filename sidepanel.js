@@ -94,6 +94,16 @@ let myTabUrl = "";
  */
 let micPermission = null;
 /**
+ * Whether the four Meet steps under the note are unfolded.
+ *
+ * Not a setting. It is what the reader is doing this minute rather than
+ * something they chose, and it lives no longer than the document does, which
+ * for a side panel is until the next tab switch. Kept across `render()` all the
+ * same: a card that folded itself away because a language dropdown moved would
+ * lose the reader their place mid-step.
+ */
+let meetStepsOpen = false;
+/**
  * True once the config file says this build has been withdrawn.
  *
  * It only ever goes true. The check runs once, when the panel opens, and a
@@ -326,6 +336,11 @@ function bind() {
     const action = event.target.closest?.("[data-action]")?.dataset.action;
     if (action === "options") openOptions(event);
     else if (action === "optionsMic") openOptions(event, "mic");
+    else if (action === "meetSteps") {
+      event.preventDefault();
+      meetStepsOpen = !meetStepsOpen;
+      render();
+    }
   });
 }
 
@@ -423,16 +438,20 @@ function render() {
   el("duckLevel").value = Math.round(settings.duckLevel * 100);
   el("duckLevelOut").textContent = `${Math.round(settings.duckLevel * 100)}%`;
 
-  // Simultaneous detects the source, so naming one would be a control with
-  // nothing behind it; conversation needs both halves of the pair.
   // A call is the one place the translated voice has somewhere else to go, and
-  // this is the only page where it can get there without a virtual cable. The
-  // instructions below it are two things the user has to do in Meet, so they
-  // are worth their line only once the switch is actually on.
+  // this is the only page where it can get there without a virtual cable. What
+  // it says about Meet is worth its line only once the switch is actually on,
+  // and the steps behind that line only once somebody asks for them.
   const onCall = myTabUrl.startsWith(CALL_ORIGIN);
   const intoCall = callMicOn(settings, myTabUrl);
   el("micToCallRow").hidden = !onCall;
   el("micToCallNote").hidden = !onCall || !settings.micToCall;
+  el("micToCallSteps").hidden = el("micToCallNote").hidden || !meetStepsOpen;
+  // The link is written by the catalogue, wherever in the sentence the
+  // translation put it, so it is found by what it does rather than by an id.
+  document
+    .querySelector('#micToCallNote [data-action="meetSteps"]')
+    ?.setAttribute("aria-expanded", String(meetStepsOpen));
 
   // Two controls stop meaning anything once the voice is going into the call
   // rather than out of this machine, and both of them confused people who got

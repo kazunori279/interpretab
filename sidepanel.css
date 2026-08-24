@@ -106,6 +106,19 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 .grow { flex: 1; }
 .small, .note { color: var(--muted); }
 .note { margin: 0; line-height: 1.45; font-size: 12px; }
+/* The Meet steps, opened by the link at the end of the note above them. They
+   are numbered because they are done in order and the third is the one people
+   miss, and the indent is only as wide as the digits: a list marker sitting out
+   in the margin of a 360px panel costs a word off every line.
+   The card sits closer to the note that opened it than to the note after it,
+   which is the section's own `gap` plus this: without the difference, step four
+   and the headphones note below read as one list. */
+.note.steps {
+  margin: 0 0 0.25rem;
+  padding-inline-start: 1.4rem;
+}
+.note.steps li + li { margin-top: 0.3rem; }
+
 /* Subtitles failing is not an error — the translation is still running and the
    transcript is still here — so it is not given the red banner. */
 .note.warn { color: #b06000; }

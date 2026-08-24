@@ -148,6 +148,29 @@ test("every message in the catalogue is shown by something", () => {
   assert.deepEqual(orphans, [], "the catalogue carries messages nothing shows");
 });
 
+test("a link that is not a URL names something the page handles", () => {
+  // Where an `<aN>` points is `data-linkN`, and a destination that is not a URL
+  // is the name of something this extension does, bound by hand in a click
+  // handler. A name with nothing behind it is worse than the dangling anchor
+  // below: that one renders as text, this one renders as a link, takes the
+  // click and does nothing. Matched as any quoted token in the page's own
+  // script, because the handler compares the name against a variable and there
+  // is nothing tighter to match on.
+  for (const file of sources()) {
+    if (!file.endsWith(".html")) continue;
+    const script = file.replace(/\.html$/, ".js");
+    const handlers = fs.existsSync(script) ? fs.readFileSync(script, "utf8") : "";
+    for (const [, target] of fs.readFileSync(file, "utf8").matchAll(/data-link\d="([^"]+)"/g)) {
+      if (target.startsWith("https://")) continue;
+      assert.match(
+        handlers,
+        new RegExp(`"${target}"`),
+        `${path.relative(ROOT, file)}: nothing handles the ${target} link`
+      );
+    }
+  }
+});
+
 test("t strips the markup and fills the placeholders", () => {
   // `t` is for the places that hold text and not elements — a `title`, an
   // `Error`, a message posted to another document — so the tags come off rather
