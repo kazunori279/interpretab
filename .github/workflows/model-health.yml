@@ -23,10 +23,10 @@ concurrency:
   group: model-health
   cancel-in-progress: false
 
-# A called workflow cannot ask for more than its caller was given, so the two
-# `model-discovery.yml` needs are declared here as well: `contents: write` for
-# the commit and `id-token: write` for the federation. Each job below narrows
-# that down to what it actually uses.
+# A called workflow cannot ask for more than its caller was given, so what
+# `model-discovery.yml` needs is declared here as well: `contents: write` for the
+# commit, `id-token: write` for the federation, and `issues: write` for the
+# pricing issues it files. Each job below narrows that down to what it uses.
 permissions:
   contents: write
   id-token: write
@@ -111,4 +111,5 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      issues: write
     secrets: inherit

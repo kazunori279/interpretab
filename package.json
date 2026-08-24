@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node --test 'tests/**/*.test.js'",
     "test:onboarding": "node tests/onboarding.mjs",
+    "check:rates": "node tools/check-rates.mjs",
     "preview": "node tests/guide-preview.mjs",
     "package": "rm -f interpretab.zip && zip -r interpretab.zip manifest.json LICENSE PRIVACY.md service-worker.js offscreen.html offscreen.js options.html options.js sidepanel.html sidepanel.css sidepanel.js _locales audio content data icons lib -x '.*'"
   }

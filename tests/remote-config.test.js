@@ -100,6 +100,17 @@ test("a file from a format this build does not know is ignored whole", () => {
   assert.equal(parsed({ schemaVersion: undefined }), null);
 });
 
+test("a field this build has no use for is skipped, not choked on", () => {
+  // The other half of the version rule. Raising `schemaVersion` retires every
+  // older reader, so a field that shipped builds can ignore must not need one —
+  // `ratesReadAt` is written by the discovery workflow for humans reading the
+  // file, and this is the assertion that adding it broke nothing in the wild.
+  const config = parsed({ ratesReadAt: "2026-08-17", somethingNewer: { deeply: ["nested"] } });
+  assert.ok(config);
+  assert.deepEqual(config.rates, GOOD.rates);
+  assert.equal(config.ratesReadAt, undefined);
+});
+
 test("nothing that is not a JSON object gets through", () => {
   for (const text of ["", "null", "[]", '"a string"', "42", "{", "{}", undefined, null, {}]) {
     assert.equal(parseConfig(text), null, `${JSON.stringify(text)} was accepted`);

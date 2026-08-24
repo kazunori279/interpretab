@@ -942,7 +942,9 @@ the sentence carries *an estimate, not your actual bill* — as part of the same
 as the figure, so no code path can print the one without the other — and the tooltip has the
 arithmetic:
 how much audio went each way, and that the Live API charges both at 25 tokens a second against a
-hardcoded price table that goes stale silently.
+price table that is Google's and can change under it — corrected without a release by
+`docs/config.json`, and watched by the two issues in
+[Who watches the config file](#who-watches-the-config-file).
 
 **And the dollars are only shown to a key that is being charged.** A free-tier key is charged
 nothing at all, so a price there is a bill that does not exist, and the natural reading of one is
@@ -1005,10 +1007,21 @@ before anything else sees it.
     "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21.0 },
     "gemini-3.1-flash-live-preview": { "audioIn": 3.0, "audioOut": 12.0 }
   },
+  "ratesReadAt": "2026-08-17",
   "blockBelowVersion": "",
   "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
 }
 ```
+
+`ratesReadAt` is the one field nothing in the extension reads. `parseConfig` takes the fields it
+knows and skips the rest, which is what lets a field be added without raising `schemaVersion` and
+retiring every reader in the wild. It is there for the workflow below and for anyone opening the
+file: the date the prices in it were last confirmed against Google's pricing page. It moves only
+when the agent came back with a price for every name a session actually starts on — the head of
+each list, and the two compiled into the build — so it is a floor rather than a note of when the
+script last ran. Not every name in the file: Google's pricing page stops listing a preview about
+when it stops serving it, and a date pinned to the oldest fallback in the list is a date that
+never moves again.
 
 **A missing answer changes nothing.** Every field has a bundled counterpart that was correct the
 day the build shipped, and the file only ever replaces one. An offline user, a 404, a truncated
@@ -1132,6 +1145,32 @@ The discovery run is locked behind one open issue labelled `model-outage`. While
 agent does not run again, so a model that stays gone costs one agent run and not one every five
 minutes; the issue closes itself when the check next passes. `tests/model-tools.test.js` is about
 `mergeConfig`, which is the only function in any of this that decides what gets committed.
+
+**A price goes wrong more quietly than a model does.** A retired model announces itself: sessions
+stop opening and the hourly check says so. A changed price announces nothing. The meter keeps
+printing, the number is simply wrong, and the two ways that happens both look like an ordinary
+morning ([#21](https://github.com/kazunori279/interpretab/issues/21)):
+
+- **The agent came back with no price.** `mergeConfig` keeps the old number when no usable one
+  arrives, which is the right thing to do and leaves the file byte-identical to a day when Google
+  changed nothing. So the run reports which models it got a price for, stamps `ratesReadAt` only
+  when it got all of them, and after three days without a full answer opens one issue labelled
+  `price-stale` — the same one-open-issue-is-the-lock shape as `model-outage`, and deliberately a
+  different label, so a pricing question never stops the discovery agent from running.
+- **The build fell behind the file.** `docs/config.json` is corrected within a day and reaches an
+  installed copy within six hours; the `RATES` table in `lib/usage.js` is corrected by a release.
+  That table is what a fresh install prices with before its first fetch, what a user who turned
+  **Model updates** off prices with for good, and what an offline run falls back to.
+  `tools/check-rates.mjs` (`npm run check:rates`) compares the two, and the workflow opens a
+  `price-drift` issue when they disagree.
+
+The comparison is not in `npm test`, and that is on purpose: the workflow runs `npm test` against
+the file the agent just wrote, *before* committing it, so an assertion that the two tables agree
+would turn every price correction the agent found into a red run that commits nothing. It runs as
+its own step after the commit, and the answer is an issue rather than a failure. Fixing it is a
+human's job — copy the numbers into `lib/usage.js`, update the date in the comment above them, and
+ship. Nothing automated may edit that file: the argument for letting a workflow commit unattended
+is that it writes data and never code.
 
 Setting it up needs three repository variables and one secret — see
 [Development](#development).
@@ -1526,7 +1565,19 @@ Locally it borrows whatever `gcloud` is signed in as; in CI it gets an access to
 Workload Identity Federation. `--dry` is the one to reach for first — the merge rules are stricter
 than they look, and seeing what it would have written is usually the answer.
 
-Running it in CI needs, on the repository:
+**`tools/check-rates.mjs` — is the build still charging what the file says?**
+
+```bash
+npm run check:rates                              # exits non-zero on a difference
+```
+
+Compares the `RATES` table in `lib/usage.js` with the `rates` in `docs/config.json` and prints
+what differs. Worth running before a release: the file is corrected by the workflow within a day
+of a price changing, and the build only picks that correction up when someone ships it. It is not
+part of `npm test`, for the reason in
+[Who watches the config file](#who-watches-the-config-file).
+
+Running the discovery agent in CI needs, on the repository:
 
 | | |
 | --- | --- |
@@ -1926,7 +1977,8 @@ Translation Score                Turn Complete (speech-end to full translation)
 There is no build. The extension directory is what ships.
 
 ```bash
-npm run package    # interpretab.zip, ready for the Web Store dashboard
+npm run check:rates   # do the build's prices still match docs/config.json?
+npm run package       # interpretab.zip, ready for the Web Store dashboard
 ```
 
 Verified 2026-08-24 at 1.0.4: 43 files, 653 KB unpacked and 220 KB zipped — most of the growth is

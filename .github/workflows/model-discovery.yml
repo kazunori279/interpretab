@@ -15,6 +15,12 @@
 #      copied through untouched, and the script aborts if it ever isn't.
 #
 # See `tests/model-tools.test.js`, which is about exactly those rules.
+#
+# It also watches the other half of what the config file carries: prices. A price
+# the agent could not read leaves the file identical to a price that did not
+# change, and the table compiled into the build drifts from the published one
+# with nothing shipping the correction. Neither shows up as a failed run, so each
+# gets an issue -- see the two steps at the end.
 name: Model discovery
 
 on:
@@ -33,6 +39,10 @@ permissions:
   # repository: the runner proves who it is with a short-lived OIDC token and
   # Google hands back an access token good for the hour.
   id-token: write
+  # The two pricing issues at the end. `model-health.yml` calls this workflow and
+  # a called workflow gets no more than its caller grants, so this is declared
+  # there as well.
+  issues: write
 
 jobs:
   discover:
@@ -72,3 +82,81 @@ jobs:
           git add docs/config.json
           git commit -F "${{ runner.temp }}/commit-message.txt"
           git push
+
+      # After the commit, so it compares the file that was just published, and
+      # `continue-on-error` because a difference is the thing this step is for.
+      - id: rates
+        continue-on-error: true
+        run: node tools/check-rates.mjs
+
+      # Two ways the prices go wrong quietly, each behind one open issue that is
+      # also its own lock: while it is open nothing new is filed, and it closes
+      # itself when the condition clears. Same shape as the `model-outage` issue
+      # in `model-health.yml`, and deliberately a different label, so a pricing
+      # question never stops the discovery agent from running.
+      #
+      # Everything the bodies say goes through the environment. Two of these
+      # strings are model names an agent chose, and a shell that interpolates
+      # those onto a command line is one backtick away from a substitution.
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          UNPRICED: ${{ steps.find.outputs.unpriced }}
+          READ_AT: ${{ steps.find.outputs.ratesReadAt }}
+          STALE: ${{ steps.find.outputs.pricesStale }}
+          DRIFT: ${{ steps.rates.outputs.drift }}
+          SUMMARY: ${{ steps.rates.outputs.summary }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          raise() {
+            gh label create "$1" --color fbca04 --description "$2" 2>/dev/null || true
+            if [ "$(gh issue list --label "$1" --state open --json number --jq 'length')" -gt 0 ]; then
+              echo "$1: already open"
+              return
+            fi
+            gh issue create --label "$1" --title "$3" --body "$4"
+          }
+          settle() {
+            for number in $(gh issue list --label "$1" --state open --json number --jq '.[].number'); do
+              gh issue comment "$number" --body "$2"
+              gh issue close "$number"
+            done
+          }
+
+          if [ "$STALE" = "true" ]; then
+            raise price-stale "The prices in docs/config.json have not been confirmed" \
+              "Pricing not confirmed since ${READ_AT:-never}" \
+              "The discovery run came back with no price for: ${UNPRICED}
+
+          docs/config.json still carries the old numbers, which is the safe thing to do and
+          also means the file looks exactly as it would if Google had changed nothing. The
+          panel is printing those numbers at every user who has fetched the file.
+
+          Check https://ai.google.dev/pricing by hand. If the prices are right, the prompt in
+          tools/find-models.mjs stopped reading the page and needs looking at; if they are
+          wrong, correct docs/config.json and lib/usage.js together.
+
+          Run: ${RUN_URL}
+
+          This issue closes itself on the next run that prices every model a session starts on."
+          else
+            settle price-stale "Prices confirmed again as of ${READ_AT}, by run ${RUN_URL}"
+          fi
+
+          if [ "$DRIFT" = "true" ]; then
+            raise price-drift "The prices compiled into the build are behind docs/config.json" \
+              "lib/usage.js is behind docs/config.json" \
+              "${SUMMARY}
+
+          docs/config.json is corrected within a day and reaches an installed copy within six
+          hours. lib/usage.js is corrected by a release, and it is what prices a fresh install
+          before its first fetch, a user who turned Model updates off in Options, and anyone
+          offline.
+
+          Copy the numbers into RATES in lib/usage.js, update the date in the comment above
+          them, and ship it. Nothing automated may edit that file: the argument for letting
+          this workflow commit unattended is that it writes data and never code.
+
+          Run: ${RUN_URL}"
+          else
+            settle price-drift "The build and the config agree on prices again, as of run ${RUN_URL}"
+          fi

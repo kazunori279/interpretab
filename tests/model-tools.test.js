@@ -11,7 +11,16 @@ import { strict as assert } from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { formatConfig, mergeConfig } from "../tools/find-models.mjs";
+import {
+  STALE_AFTER_DAYS,
+  commitMessage,
+  daysBetween,
+  formatConfig,
+  mergeConfig,
+  pricesAreStale,
+  unpricedModels,
+} from "../tools/find-models.mjs";
+import { describeDiff, rateDiff } from "../tools/check-rates.mjs";
 import { parseConfig } from "../lib/remote-config.js";
 import { modelsUnderTest, setupFor } from "./model-check.mjs";
 import { MODEL, SIMUL_MODEL } from "../lib/languages.js";
@@ -23,9 +32,18 @@ const base = () => ({
   schemaVersion: 1,
   models: { simul: ["simul-one"], conversation: ["chat-one"] },
   rates: { "simul-one": { audioIn: 3.5, audioOut: 21 } },
+  ratesReadAt: "2026-08-01",
   blockBelowVersion: "",
   learnMoreUrl: "https://kazunori279.github.io/interpretab/",
 });
+
+/** A price for every name a session starts on: the head of each list, and the build's two. */
+const allPriced = (config = base()) =>
+  [config.models.simul[0], config.models.conversation[0], SIMUL_MODEL, MODEL].map((model) => ({
+    model,
+    audioIn: 1,
+    audioOut: 2,
+  }));
 
 const empty = { simul: [], conversation: [], rates: [] };
 
@@ -191,6 +209,96 @@ test("rates for models nobody asks for any more are dropped, except the bundled 
   // the meter still has to be able to price them.
   assert.ok(merged.rates[SIMUL_MODEL]);
   assert.ok(merged.rates[MODEL]);
+});
+
+// Prices. The rules above are about a model that went away, which announces
+// itself; a price that changed announces nothing at all, and `mergeConfig`
+// keeping the old number is indistinguishable from Google keeping its own. So
+// the run has to be able to say which models it actually got a price for.
+
+test("the models this run got no price for are named", () => {
+  const found = { ...empty, rates: [{ model: "simul-one", audioIn: 4, audioOut: 24 }] };
+  const unpriced = unpricedModels(base(), found);
+  assert.ok(!unpriced.includes("simul-one"));
+  assert.ok(unpriced.includes("chat-one"));
+  // The two compiled into the build are priced by the file as well, since
+  // `modelCandidates` keeps them as the last resort a session can land on.
+  assert.ok(unpriced.includes(SIMUL_MODEL));
+  assert.ok(unpriced.includes(MODEL));
+});
+
+test("a fallback nobody is on does not hold the date back", () => {
+  // Google's pricing page stops listing a preview about when it stops serving
+  // it, so a file that keeps one as a fallback would otherwise pin `ratesReadAt`
+  // to the oldest name in it and raise an issue nobody could close.
+  const config = base();
+  config.models.simul = ["simul-one", "simul-old"];
+  const found = { ...empty, rates: allPriced(config) };
+  assert.deepEqual(unpricedModels(config, found), []);
+  const verdict = new Map([["simul:simul-one", true], ["simul:simul-old", true], ["conversation:chat-one", true]]);
+  assert.equal(mergeConfig(config, verdict, found, "2026-09-01").ratesReadAt, "2026-09-01");
+});
+
+test("a price the answer garbled counts as no price at all", () => {
+  // Same rejection `mergeConfig` applies before writing. If the two disagreed,
+  // a nonsense number would be dropped from the file and reported as read.
+  const found = { ...empty, rates: [{ model: "simul-one", audioIn: 0, audioOut: 24 }] };
+  assert.ok(unpricedModels(base(), found).includes("simul-one"));
+});
+
+test("the date moves only when every price arrived", () => {
+  const verdict = new Map([["simul:simul-one", true], ["conversation:chat-one", true]]);
+  const partial = mergeConfig(base(), verdict, { ...empty, rates: allPriced().slice(0, 1) }, "2026-09-01");
+  // A floor, not a timestamp of the last run: no price in the file is older
+  // than this date, which is only true if the date waits for the slowest one.
+  assert.equal(partial.ratesReadAt, "2026-08-01");
+
+  const full = mergeConfig(base(), verdict, { ...empty, rates: allPriced() }, "2026-09-01");
+  assert.equal(full.ratesReadAt, "2026-09-01");
+});
+
+test("a run with no date of its own leaves the date alone", () => {
+  // `--dry` and every test above call `mergeConfig` without one.
+  const merged = mergeConfig(base(), new Map(), { ...empty, rates: allPriced() });
+  assert.equal(merged.ratesReadAt, "2026-08-01");
+});
+
+test("three quiet mornings is when somebody is told", () => {
+  const unpriced = ["chat-one"];
+  assert.equal(pricesAreStale(unpriced, "2026-08-30", "2026-09-01"), false);
+  assert.equal(pricesAreStale(unpriced, "2026-08-29", "2026-09-01"), true);
+  assert.equal(STALE_AFTER_DAYS, 3);
+  // Nothing missing, nothing to say, however old the date is.
+  assert.equal(pricesAreStale([], "2020-01-01", "2026-09-01"), false);
+  // Never confirmed is not fresher than confirmed a week ago.
+  assert.equal(pricesAreStale(unpriced, "", "2026-09-01"), true);
+  assert.equal(daysBetween("2026-08-29", "2026-09-01"), 3);
+  assert.equal(daysBetween("not a date", "2026-09-01"), null);
+});
+
+test("the commit message says what the run learned about money", () => {
+  const verdict = new Map([["simul:simul-one", true]]);
+  const found = { ...empty, rates: [{ model: "simul-one", audioIn: 4, audioOut: 24 }], notes: "" };
+  const merged = mergeConfig(base(), verdict, found, "2026-09-01");
+  const message = commitMessage(verdict, found, merged);
+  assert.match(message, /No price reported: .*chat-one/);
+  assert.match(message, /Prices last confirmed: 2026-08-01/);
+});
+
+test("the build's prices and the published ones are compared, and the difference is readable", () => {
+  const bundled = { "simul-one": { audioIn: 3.5, audioOut: 21 } };
+  assert.deepEqual(rateDiff(bundled, { "simul-one": { audioIn: 3.5, audioOut: 21 } }), []);
+  // A model the file carries and the build does not is not a difference: the
+  // file lists fallbacks this build has never heard of, which is its job.
+  assert.deepEqual(rateDiff(bundled, { "simul-one": { audioIn: 3.5, audioOut: 21 }, other: { audioIn: 1, audioOut: 2 } }), []);
+
+  const differs = rateDiff(bundled, { "simul-one": { audioIn: 4, audioOut: 21 } });
+  assert.equal(differs[0].kind, "differs");
+  assert.match(describeDiff(differs)[0], /simul-one: build says in 3.5 \/ out 21, config says in 4 \/ out 21/);
+
+  const missing = rateDiff(bundled, {});
+  assert.equal(missing[0].kind, "missing");
+  assert.match(describeDiff(missing)[0], /config says no price/);
 });
 
 test("what it writes is what the extension can read back", () => {

@@ -27,6 +27,13 @@
  * is switched off, and a model nobody here has ever measured on a translation is
  * only worth falling back to if it is the *successor*.
  *
+ * **A price it could not read is said out loud.** Keeping the old number when no
+ * new one arrives is the safe thing to do and leaves the file byte-identical to
+ * a morning when nothing changed, so the run reports which models it got a price
+ * for, stamps `ratesReadAt` only when that covers every name a session starts on,
+ * and the workflow opens an issue once the date is three days behind. A quiet run
+ * is not a clean bill of health here either.
+ *
  * Two calls to the model rather than one. Grounding and a response schema fight
  * each other: the tools want to write prose with citations, the schema wants
  * nothing but JSON. So the first call reads the pages and answers in prose, and
@@ -273,12 +280,17 @@ function stem(name) {
  *   outage should say.
  * - A price is corrected only when a finite, positive number arrived for a model
  *   that is in the merged lists. Rates for names nobody asks for are dropped.
+ * - `ratesReadAt` moves to *today* only when a price arrived for every model a
+ *   session actually starts on — the head of each list and the two in the build.
+ *   A partial answer leaves the date where it was, so the field is a floor
+ *   rather than a note of when the script last ran.
  *
  * @param {object} current   the parsed contents of docs/config.json
  * @param {Map<string, boolean>} verdict  `mode:model` → did a real session open
  * @param {{simul: string[], conversation: string[], rates: object[]}} found
+ * @param {string} [today]   ISO date this run happened on; "" leaves the date alone
  */
-export function mergeConfig(current, verdict, found) {
+export function mergeConfig(current, verdict, found, today = "") {
   // Keyed by mode as well as name, because the answer differs by mode: the
   // simultaneous frame carries `translationConfig` and the conversation frame a
   // system instruction, and a model that takes one may refuse the other.
@@ -318,26 +330,108 @@ export function mergeConfig(current, verdict, found) {
     conversation: keep("conversation", current.models?.conversation, found.conversation),
   };
 
-  const named = new Set([...(models.simul || []), ...(models.conversation || []), SIMUL_MODEL, MODEL]);
+  const named = namedModels(models);
   const rates = {};
   for (const [model, rate] of Object.entries(current.rates || {})) {
     if (named.has(model)) rates[model] = rate;
   }
-  for (const rate of found.rates || []) {
-    if (!named.has(rate?.model)) continue;
-    const audioIn = Number(rate.audioIn);
-    const audioOut = Number(rate.audioOut);
-    if (!Number.isFinite(audioIn) || !Number.isFinite(audioOut) || audioIn <= 0 || audioOut <= 0) continue;
-    rates[rate.model] = { audioIn, audioOut };
+  const reported = reportedRates(found);
+  for (const [model, rate] of Object.entries(reported)) {
+    if (named.has(model)) rates[model] = rate;
   }
 
+  const everyPrice = [...frontlineModels(models)].every((name) => reported[name]);
   return {
     schemaVersion: current.schemaVersion,
     models,
     rates: Object.keys(rates).length ? rates : current.rates,
+    ratesReadAt: everyPrice && today ? today : current.ratesReadAt || "",
     blockBelowVersion: current.blockBelowVersion,
     learnMoreUrl: current.learnMoreUrl,
   };
+}
+
+/**
+ * Every name the file may carry a price for: what it lists, plus the two
+ * compiled into the build, which `modelCandidates` keeps as the last resort.
+ */
+function namedModels(models) {
+  return new Set([...(models?.simul || []), ...(models?.conversation || []), SIMUL_MODEL, MODEL]);
+}
+
+/**
+ * The names a price has to be found for: the head of each list, plus the two in
+ * the build.
+ *
+ * Not the whole file. The rest are fallbacks nobody is on until a model is
+ * withdrawn, and Google's pricing page stops listing a preview about when it
+ * stops serving it — so requiring a price for every name would leave the date
+ * pinned to the oldest entry and an issue nobody can close. A fallback with no
+ * price anywhere is priced as simultaneous translation, the dearer of the two,
+ * which is the direction to be wrong in.
+ */
+function frontlineModels(models) {
+  return new Set([(models?.simul || [])[0], (models?.conversation || [])[0], SIMUL_MODEL, MODEL].filter(Boolean));
+}
+
+/**
+ * The prices in an answer that are usable at all, keyed by model.
+ *
+ * A rate is taken only as a pair of finite positive numbers. Zero is rejected
+ * along with the rest: the free tier is a property of the key, not of the model,
+ * and a model that costs nothing per token is a page that was misread.
+ */
+export function reportedRates(found) {
+  const table = {};
+  for (const rate of found?.rates || []) {
+    const audioIn = Number(rate?.audioIn);
+    const audioOut = Number(rate?.audioOut);
+    if (!Number.isFinite(audioIn) || !Number.isFinite(audioOut) || audioIn <= 0 || audioOut <= 0) continue;
+    table[rate.model] = { audioIn, audioOut };
+  }
+  return table;
+}
+
+/**
+ * The models in *config* this run came back with no price for.
+ *
+ * `mergeConfig` keeps the old number when no new one arrives, which is the right
+ * thing to do and, from outside, identical to a price that has not changed.
+ * Google raising a price and the agent failing to read the page leave the same
+ * bytes behind; this list is the only thing that tells the two apart.
+ */
+export function unpricedModels(config, found) {
+  const reported = reportedRates(found);
+  return [...frontlineModels(config?.models)].filter((name) => !reported[name]);
+}
+
+/**
+ * Whole days from one ISO date to another, or null if either is not one.
+ *
+ * Null means "never confirmed", which counts as stale: a file that has never
+ * had its prices read is not fresher than one that had them read a week ago.
+ */
+export function daysBetween(from, to) {
+  const start = Date.parse(`${from}T00:00:00Z`);
+  const end = Date.parse(`${to}T00:00:00Z`);
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+  return Math.round((end - start) / 86_400_000);
+}
+
+/**
+ * How long a run may fail to confirm a price before somebody is told.
+ *
+ * One quiet morning is the grounded call having a bad day, and this repository
+ * has seen plenty of those. Three in a row is the pricing page having moved,
+ * the prompt having rotted, or a price that is now wrong in the panel.
+ */
+export const STALE_AFTER_DAYS = 3;
+
+/** Is the price table old enough to be worth an issue? */
+export function pricesAreStale(unpriced, ratesReadAt, today) {
+  if (!unpriced.length) return false;
+  const age = daysBetween(ratesReadAt, today);
+  return age === null || age >= STALE_AFTER_DAYS;
 }
 
 /** The file, formatted the way the committed one is: two spaces, lists on one line. */
@@ -355,6 +449,7 @@ export function formatConfig(config) {
   "rates": {
 ${rates}
   },
+  "ratesReadAt": ${JSON.stringify(config.ratesReadAt || "")},
   "blockBelowVersion": ${JSON.stringify(config.blockBelowVersion)},
   "learnMoreUrl": ${JSON.stringify(config.learnMoreUrl)}
 }
@@ -418,7 +513,10 @@ if (import.meta.filename === process.argv[1]) {
     }
   }
 
-  const merged = mergeConfig(current, verdict, found);
+  // UTC, because the workflow runs at 03:17 UTC and a date that depends on the
+  // runner's zone is a date that jumps a day for nobody's benefit.
+  const today = new Date().toISOString().slice(0, 10);
+  const merged = mergeConfig(current, verdict, found, today);
   const after = formatConfig(merged);
 
   // The file has to survive the extension's own parser, or a run of this script
@@ -436,21 +534,36 @@ if (import.meta.filename === process.argv[1]) {
   console.log(changed ? `\nchanged:\n${after}` : "\nno change");
   if (changed && !dry) fs.writeFileSync(CONFIG, after);
 
+  // What the run did and did not learn about money. A price the agent failed to
+  // read leaves the file byte-identical to a price that did not change, so the
+  // difference between the two is only ever visible here.
+  const unpriced = unpricedModels(merged, found);
+  const stale = pricesAreStale(unpriced, merged.ratesReadAt, today);
+  console.log(
+    unpriced.length
+      ? `\nno price reported for: ${unpriced.join(", ")} (last confirmed ${merged.ratesReadAt || "never"})`
+      : `\nprices confirmed for every model a session starts on, as of ${today}`,
+  );
+
   if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);
+    fs.appendFileSync(
+      process.env.GITHUB_OUTPUT,
+      `changed=${changed}\nunpriced=${unpriced.join(" ")}\nratesReadAt=${merged.ratesReadAt}\npricesStale=${stale}\n`,
+    );
   }
   // The commit message is written here rather than assembled in the workflow:
   // the notes are several paragraphs of someone else's prose, and interpolating
   // that into a shell heredoc is a quoting bug waiting for the day it matters.
   if (changed && process.env.COMMIT_MESSAGE_FILE) {
-    fs.writeFileSync(process.env.COMMIT_MESSAGE_FILE, commitMessage(verdict, found));
+    fs.writeFileSync(process.env.COMMIT_MESSAGE_FILE, commitMessage(verdict, found, merged));
   }
 }
 
 /** What the workflow commits, from what actually verified. */
-export function commitMessage(verdict, found) {
+export function commitMessage(verdict, found, merged) {
   const verified = [...verdict].filter(([, ok]) => ok).map(([key]) => key);
   const rejected = [...verdict].filter(([, ok]) => !ok).map(([key]) => key);
+  const unpriced = unpricedModels(merged, found);
   return [
     "Point the config at the models that answered today",
     "",
@@ -461,6 +574,8 @@ export function commitMessage(verdict, found) {
     "",
     `Answered: ${verified.join(", ") || "none"}`,
     `Did not: ${rejected.join(", ") || "none"}`,
+    `No price reported: ${unpriced.join(", ") || "none"}`,
+    `Prices last confirmed: ${merged?.ratesReadAt || "never"}`,
     "",
     (found.notes || "").trim(),
     "",
