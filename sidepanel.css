@@ -208,6 +208,17 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 }
 .stepcard-next svg { flex: none; width: 0.95rem; height: 0.72rem; }
 [dir="rtl"] .stepcard-next svg { transform: scaleX(-1); }
+/* The corner Next has been in for every step before this one, so the hand is
+   already there. Outlined rather than filled: the last step is the one that
+   says what happens when you talk, and the thing to do after reading it is
+   talk, not press this. */
+.stepcard-close {
+  flex: none; align-self: flex-end; margin-top: 0.5rem;
+  padding: 0.25rem 0.9rem; border-radius: 2rem;
+  border: 1px solid var(--border); background: #fff; color: var(--muted);
+  font-size: 12px; line-height: 1.5;
+}
+.stepcard-close:hover { background: var(--agent-bubble); }
 
 /* The top of a browser window with everything but the point of the step
    reduced to a grey shape — the same drawing the guide uses, at about a third

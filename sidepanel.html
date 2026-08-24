@@ -101,26 +101,38 @@
         </label>
       </div>
       <!-- What to do in Meet was one paragraph carrying four instructions, and
-           as a block of grey it was a wall the eye slid off. Two lines now,
-           ending in a link that opens the card below. -->
-      <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"
-         data-link1="meetSteps"></p>
-      <!-- Two spans and not one sentence: the first is shown only while the
-           sound button is off, and a message that had to be spliced into
-           another one would decide the word order of both. The second used to
-           carry the headphones warning in full, four lines of grey that people
-           read past on their way to Start; it is the first step of the card
-           below now, where somebody who opens it is looking for it. -->
-      <p class="note indent" id="micNoteSimul">
-        <span id="micNoteSimulMuted" data-i18n="panelMicNoteMuted"></span>
-        <span data-i18n="panelMicNoteSimul" data-link1="prepSteps"></span>
-      </p>
+           as a block of grey it was a wall the eye slid off. What is left is
+           what the switch itself does; the four instructions are the card, and
+           the way to it is the line at the foot of this section. -->
+      <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"></p>
+      <!-- The muted warning has this line to itself now. It used to be the
+           first of two spans, the second carrying the headphones warning in
+           full — four lines of grey that people read past on their way to
+           Start, and the first step of the "before the call" card now. -->
+      <p class="note indent" id="micNoteSimul" data-i18n="panelMicNoteMuted"></p>
       <p class="note indent" id="micNoteConversation" hidden data-i18n="panelMicNoteConversation"></p>
+      <!-- One line for both cards rather than a link tacked onto the end of
+           two different notes, which read as two afterthoughts stacked on each
+           other. Four spans and not one message: which links are worth
+           offering depends on the mode and on the tab, and a message per
+           combination is three messages that have to say the same thing.
+           Safe to splice, unlike a note prefix — the order is lead-in, phase,
+           joiner, phase in all ten catalogues, because that is the order the
+           two phases happen in.
+
+           The tags are closed on the next line so that no whitespace falls
+           between the spans: the space around the joiner belongs to the
+           catalogue, and Japanese does not put one on either side of と. -->
+      <p class="note indent" id="stepLinks" hidden><span
+        data-i18n="panelStepLinksLead"></span><span
+        id="stepLinkPrep" data-i18n="panelStepLinksPrep" data-link1="prepSteps"></span><span
+        id="stepLinksAnd" data-i18n="panelStepLinksAnd"></span><span
+        id="stepLinkMeet" data-i18n="panelStepLinksMeet" data-link1="meetSteps"></span></p>
     </section>
 
     <!-- The three things to do before the call: the guide's "Before the call"
-         phase, drawn the same way as the card under it and opened by the link
-         in the microphone note. Headphones first, then the two directions,
+         phase, drawn the same way as the card under it and opened by the first
+         of the two links above. Headphones first, then the two directions,
          which is the order the guide puts them in and the order they matter
          in — a call set up on speakers is a call the two halves spend
          interpreting each other.
@@ -252,18 +264,25 @@
               <span class="stepcard-select"><span class="stepcard-line"></span></span>
             </span>
           </div>
+          <!-- The same action the link uses, on a card that is only on screen
+               while the flag is true: a toggle nothing can reach unless it is
+               open can only close it. -->
+          <button class="stepcard-close" type="button" data-action="prepSteps"
+                  data-i18n="panelClose"></button>
         </div>
       </div>
     </section>
 
     <!-- The four things to do once the meeting is on screen: the guide's "In
          the call" phase, redrawn at the width of this column. Opened by the
-         link in the note above and closed by default, because it is the size of
-         the microphone card and the panel is not a page.
+         second of the two links, and closed by default, because it is the size
+         of the microphone card and the panel is not a page.
 
          One step at a time, picked by a hidden radio and shown by `:checked ~`.
          No script: the card works before `init` has run, and there is no second
-         copy of "which step is showing" for `render()` to disagree with.
+         copy of "which step is showing" for `render()` to disagree with. The
+         Close button on the last step is the exception, and it borrows the
+         link's own action rather than bringing one of its own.
 
          Nothing here is a photograph. Three of the guide's seven steps are
          pictures of this very panel, which is what the reader already has in
@@ -413,6 +432,8 @@
               </svg>
             </span>
           </div>
+          <button class="stepcard-close" type="button" data-action="meetSteps"
+                  data-i18n="panelClose"></button>
         </div>
       </div>
     </section>

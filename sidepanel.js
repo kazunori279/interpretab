@@ -456,12 +456,6 @@ function render() {
   const intoCall = callMicOn(settings, myTabUrl);
   el("micToCallRow").hidden = !onCall;
   el("micToCallNote").hidden = !onCall || !settings.micToCall;
-  el("meetCard").hidden = el("micToCallNote").hidden || !meetStepsOpen;
-  // The link is written by the catalogue, wherever in the sentence the
-  // translation put it, so it is found by what it does rather than by an id.
-  document
-    .querySelector('#micToCallNote [data-action="meetSteps"]')
-    ?.setAttribute("aria-expanded", String(meetStepsOpen));
 
   // Two controls stop meaning anything once the voice is going into the call
   // rather than out of this machine, and both of them confused people who got
@@ -470,24 +464,40 @@ function render() {
   // playing. The stored switch is left where the user put it — this is the
   // call's doing, and the box goes back to what they chose when they leave.
   el("micCaptions").checked = settings.micCaptions && !intoCall;
-  el("micNoteSimulMuted").hidden = !settings.soundMuted || intoCall;
 
   // Simultaneous detects the source, so naming one would be a control with
   // nothing behind it; conversation needs both halves of the pair.
   const micSimul = settings.micMode !== "conversation";
   el("micInto").hidden = !micSimul;
   el("micDetected").hidden = !micSimul;
-  el("micNoteSimul").hidden = !micSimul;
+  el("micNoteSimul").hidden = !micSimul || !settings.soundMuted || intoCall;
   el("micSource").hidden = micSimul;
   el("micArrow").hidden = micSimul;
   el("micNoteConversation").hidden = micSimul;
-  // The card goes with the note that opens it. Conversation mode has a note of
-  // its own and no link, so switching modes with the card open takes it away —
-  // and leaves it open for whoever switches back.
-  el("prepCard").hidden = !micSimul || !prepStepsOpen;
+
+  // Each card is offered where it applies and nowhere else: the one that starts
+  // with headphones only in the mode that wants them, the Meet one only on a
+  // Meet tab with the switch on. The joiner goes with the second link, and the
+  // whole line goes when there is nothing left to link to.
+  const showPrep = micSimul;
+  const showMeet = !el("micToCallNote").hidden;
+  el("stepLinkPrep").hidden = !showPrep;
+  el("stepLinksAnd").hidden = !showPrep || !showMeet;
+  el("stepLinkMeet").hidden = !showMeet;
+  el("stepLinks").hidden = !showPrep && !showMeet;
+  // A card goes with the link that opens it. Switching to conversation mode
+  // with the first one open takes it away, and leaves it open for whoever
+  // switches back.
+  el("prepCard").hidden = !showPrep || !prepStepsOpen;
+  el("meetCard").hidden = !showMeet || !meetStepsOpen;
+  // The links are written by the catalogue, wherever in the sentence the
+  // translation put them, so they are found by what they do rather than by id.
   document
-    .querySelector('#micNoteSimul [data-action="prepSteps"]')
+    .querySelector('#stepLinkPrep [data-action="prepSteps"]')
     ?.setAttribute("aria-expanded", String(prepStepsOpen));
+  document
+    .querySelector('#stepLinkMeet [data-action="meetSteps"]')
+    ?.setAttribute("aria-expanded", String(meetStepsOpen));
 
   renderDirection("tabEnabled", settings.tabEnabled);
   renderDirection("micEnabled", settings.micEnabled);

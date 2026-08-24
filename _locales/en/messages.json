@@ -56,26 +56,22 @@
   "panelMicSourceTitle": { "message": "The language you speak" },
   "panelMicNoteMuted": {
     "message": "The translated voice is <b>muted</b>. Press the unmute button to hear it through your speakers.",
-    "description": "Prefixes panelMicNoteSimul while the sound button is off."
-  },
-  "panelMicNoteSimul": {
-    "message": "<a1>What to do before the call</a1>",
-    "description": "The link opens panelPrepPhones to panelPrepYours underneath. It used to be the headphones warning in full, which is panelPrepPhones now."
+    "description": "The whole of the note while the sound button is off, and nothing when it is on."
   },
   "panelMicNoteConversation": {
     "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself."
   },
   "panelPrepPhones": {
     "message": "Plug headphones in first. This half starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice and starts translating that too.",
-    "description": "First of the three steps on the card the link in panelMicNoteSimul opens."
+    "description": "First of the three steps on the card panelStepLinksPrep opens."
   },
   "panelPrepTheirs": {
     "message": "Turn <b>Tab audio</b> on and set it to <b>your own</b> language. That is the half which translates what the other side says.",
     "description": "Second step: the Tab audio half."
   },
   "panelPrepYours": {
-    "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the one this note is under.",
-    "description": "Third step: the Microphone half, the one the card is under."
+    "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the one right above this card.",
+    "description": "Third step: the Microphone half, the one the card hangs off."
   },
 
   "panelMicToCall": {
@@ -83,9 +79,26 @@
     "description": "Checkbox, shown only on a meet.google.com tab."
   },
   "panelMicToCallNote": {
-    "message": "While this is on, that voice goes into the call instead of out of this computer, and its subtitles here are off. <a1>What to do in Meet</a1>",
-    "description": "The link unfolds panelMeetJoin to panelMeetTalk underneath."
+    "message": "While this is on, that voice goes into the call instead of out of this computer, and its subtitles here are off.",
+    "description": "What the switch does. The steps behind it are panelStepLinksMeet."
   },
+  "panelStepLinksLead": {
+    "message": "To use, see: ",
+    "description": "Opens the line that offers the two step cards, at the foot of the microphone card."
+  },
+  "panelStepLinksPrep": {
+    "message": "<a1>What to do before the call</a1>",
+    "description": "The first of the two, shown in simultaneous mode. Opens panelPrepPhones to panelPrepYours."
+  },
+  "panelStepLinksAnd": {
+    "message": " and ",
+    "description": "Between the two links, and only when both are there. Carries its own spaces: Japanese puts none around と, and Arabic none after و."
+  },
+  "panelStepLinksMeet": {
+    "message": "<a1>What to do in Meet</a1>",
+    "description": "The second, shown on a Meet tab with the switch on. Opens panelMeetJoin to panelMeetTalk."
+  },
+
   "panelMeetJoin": {
     "message": "Join the meeting in this tab.",
     "description": "First of the four steps on the Meet card, which the link in panelMicToCallNote opens."
@@ -102,6 +115,10 @@
   "panelMeetNext": {
     "message": "Next",
     "description": "Walks the Meet card on to its next step. Same word as the guide slideshow's."
+  },
+  "panelClose": {
+    "message": "Close",
+    "description": "Folds either step card away again, on its last step."
   },
 
   "panelStart": { "message": "Start" },

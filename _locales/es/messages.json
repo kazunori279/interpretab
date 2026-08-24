@@ -43,21 +43,26 @@
   "panelMicNoteMuted": {
     "message": "La voz traducida está <b>silenciada</b>. Pulsa el botón de quitar silencio para oírla por los altavoces."
   },
-  "panelMicNoteSimul": { "message": "<a1>Qué hacer antes de la llamada</a1>" },
   "panelMicNoteConversation": {
     "message": "Para dos personas que comparten un micrófono: oye uno de vuestros dos idiomas y habla el otro, en voz alta por <b>los altavoces</b>, que es de lo que se trata. Aleja el micrófono de los altavoces o se oirá a sí mismo."
   },
   "panelPrepPhones": { "message": "Conecta unos auriculares antes que nada. Esta mitad empieza a traducir mientras aún estás hablando, así que no puede apagarte el micrófono mientras habla: por altavoz se oye a sí misma y se pone a traducir eso también." },
   "panelPrepTheirs": { "message": "Activa <b>Audio de la pestaña</b> y ponlo en <b>tu</b> idioma. Esa es la mitad que traduce lo que dice la otra parte." },
-  "panelPrepYours": { "message": "Activa <b>Micrófono</b> y ponlo en el idioma <b>de ellos</b>. Esa es esta mitad, la de esta nota." },
+  "panelPrepYours": { "message": "Activa <b>Micrófono</b> y ponlo en el idioma <b>de ellos</b>. Esa es esta mitad, la que está justo encima de esta tarjeta." },
 
   "panelMicToCall": { "message": "Enviar la traducción a esta llamada de Meet" },
-  "panelMicToCallNote": { "message": "Mientras esto está activado, esa voz va a la llamada en vez de salir por este ordenador, y sus subtítulos quedan apagados. <a1>Qué hacer en Meet</a1>" },
+  "panelMicToCallNote": { "message": "Mientras esto está activado, esa voz va a la llamada en vez de salir por este ordenador, y sus subtítulos quedan apagados." },
+  "panelStepLinksLead": { "message": "Para usarlo, consulta: " },
+  "panelStepLinksPrep": { "message": "<a1>Qué hacer antes de la llamada</a1>" },
+  "panelStepLinksAnd": { "message": " y " },
+  "panelStepLinksMeet": { "message": "<a1>Qué hacer en Meet</a1>" },
+
   "panelMeetJoin": { "message": "Únete a la reunión en esta pestaña." },
   "panelMeetStart": { "message": "Pulsa <b>Start</b> aquí abajo. El micrófono traducido se le entrega a Meet al arrancar, así que antes de eso no está en su lista." },
   "panelMeetPick": { "message": "En Meet, abre <b>Configuración → Audio</b> y elige <b>Interpretab (translated)</b> como micrófono. Aprovecha para desactivar <b>Studio Sound</b>. Con auriculares Bluetooth, comprueba que Meet también suena por ellos." },
   "panelMeetTalk": { "message": "Habla. El otro lado oye la traducción unos tres segundos después, con tu propia voz mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete." },
   "panelMeetNext": { "message": "Siguiente" },
+  "panelClose": { "message": "Cerrar" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

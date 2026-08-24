@@ -1985,10 +1985,10 @@ Meet's Studio Sound.
 out mid-sentence now stops and says so, rather than reconnecting ten times and blaming the network
 — [Session expiry](#session-expiry) has what the server actually does, which took an override on
 the project's per-minute limit to find out — and the microphone card's two paragraphs of grey are
-now two links, one per phase of the guide's Meet section, each opening that phase's card redrawn at
-the width of the panel. The headphones warning is the first step of the one behind the mode note,
-where somebody who has asked what to do before a call will read it, rather than four lines to skim
-past on the way to Start. The third is audible from the first call: with the translation going into
+down to one line, `To use, see:` and a link per phase of the guide's Meet section, each opening
+that phase's card redrawn at the width of the panel. The headphones warning is the first step of
+the first card, where somebody who has asked what to do before a call will read it, rather than
+four lines to skim past on the way to Start. The third is audible from the first call: with the translation going into
 a Meet call, the microphone's voice no longer also comes out of this computer and its subtitles
 here are off, which is [`callMicOn`](#meetings) above. Held while 1.0.2 was in review, because a
 package uploaded over one under review replaces it rather than queueing behind it, and that hold
