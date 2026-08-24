@@ -48,7 +48,7 @@
   },
   "panelPrepPhones": { "message": "Ligue fones de ouvido antes de qualquer coisa. Esta metade começa a traduzir enquanto você ainda está falando, então não tem como desligar seu microfone enquanto ela fala — na caixa de som ela escuta a própria voz e começa a traduzir isso também." },
   "panelPrepTheirs": { "message": "Ligue <b>Áudio da aba</b> e deixe no <b>seu</b> idioma. Essa é a metade que traduz o que o outro lado fala." },
-  "panelPrepYours": { "message": "Ligue <b>Microfone</b> e deixe no idioma <b>deles</b>. Essa é esta metade, a que está logo acima deste cartão." },
+  "panelPrepYours": { "message": "Ligue <b>Microfone</b> e deixe no idioma <b>deles</b>. Essa é esta metade, o segundo dos dois cartões acima." },
 
   "panelMicToCall": { "message": "Enviar a tradução para esta chamada do Meet" },
   "panelMicToCallNote": { "message": "Enquanto isto está ligado, essa voz vai para a chamada em vez de sair deste computador, e as legendas dela ficam desligadas." },
@@ -58,7 +58,7 @@
   "panelStepLinksMeet": { "message": "<a1>O que fazer no Meet</a1>" },
 
   "panelMeetJoin": { "message": "Entre na reunião nesta aba." },
-  "panelMeetStart": { "message": "Aperte <b>Start</b> aqui embaixo. O microfone traduzido só é entregue ao Meet quando a execução começa, então antes disso não tem nada de novo na lista dele." },
+  "panelMeetStart": { "message": "Aperte <b>Start</b>. O microfone traduzido só é entregue ao Meet quando a execução começa, então antes disso não tem nada de novo na lista dele." },
   "panelMeetPick": { "message": "No Meet, abra <b>Configurações → Áudio</b> e escolha <b>Interpretab (translated)</b> como microfone. Já que está lá, desligue o <b>Studio Sound</b>. Com fones Bluetooth, confira que o Meet também está tocando por eles." },
   "panelMeetTalk": { "message": "Fale. Do outro lado a tradução chega uns três segundos depois, com a sua própria voz misturada baixinho por baixo, então a chamada ouve você além do intérprete." },
   "panelMeetNext": { "message": "Próximo" },

@@ -48,7 +48,7 @@
   },
   "panelPrepPhones": { "message": "Schließen Sie zuerst Kopfhörer an. Diese Hälfte fängt schon zu übersetzen an, während Sie noch sprechen, und kann Ihr Mikrofon deshalb nicht abschalten, während sie redet — über Lautsprecher hört sie sich selbst und übersetzt das gleich mit." },
   "panelPrepTheirs": { "message": "Schalten Sie <b>Tab-Audio</b> ein und stellen Sie es auf <b>Ihre</b> Sprache. Das ist die Hälfte, die übersetzt, was die andere Seite sagt." },
-  "panelPrepYours": { "message": "Schalten Sie <b>Mikrofon</b> ein und stellen Sie es auf <b>deren</b> Sprache. Das ist diese Hälfte hier, die direkt über dieser Karte." },
+  "panelPrepYours": { "message": "Schalten Sie <b>Mikrofon</b> ein und stellen Sie es auf <b>deren</b> Sprache. Das ist diese Hälfte hier, die zweite der beiden Karten oben." },
 
   "panelMicToCall": { "message": "Die Übersetzung in dieses Meet-Gespräch senden" },
   "panelMicToCallNote": { "message": "Solange das an ist, geht diese Stimme in das Gespräch statt aus diesem Rechner, und ihre Untertitel bleiben aus." },
@@ -58,7 +58,7 @@
   "panelStepLinksMeet": { "message": "<a1>Was in Meet zu tun ist</a1>" },
 
   "panelMeetJoin": { "message": "Treten Sie dem Meeting in diesem Tab bei." },
-  "panelMeetStart": { "message": "Drücken Sie unten <b>Start</b>. Das übersetzte Mikrofon bekommt Meet erst mit dem Start des Laufs, vorher steht in der Liste nichts Neues." },
+  "panelMeetStart": { "message": "Drücken Sie <b>Start</b>. Das übersetzte Mikrofon bekommt Meet erst mit dem Start des Laufs, vorher steht in der Liste nichts Neues." },
   "panelMeetPick": { "message": "Öffnen Sie in Meet <b>Einstellungen → Audio</b> und wählen Sie <b>Interpretab (translated)</b> als Mikrofon. Schalten Sie bei der Gelegenheit <b>Studio Sound</b> aus. Bei Bluetooth-Kopfhörern prüfen Sie, ob Meet auch darüber ausgibt." },
   "panelMeetTalk": { "message": "Sprechen Sie. Die Gegenseite hört die Übersetzung etwa drei Sekunden später, Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme." },
   "panelMeetNext": { "message": "Weiter" },

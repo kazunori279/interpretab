@@ -48,7 +48,7 @@
   },
   "panelPrepPhones": { "message": "先插上耳机。这一半在你还在说的时候就开始翻译，所以它说话时没法把你的麦克风关掉——用扬声器的话，它会听见自己的声音，连那个也一起翻译。" },
   "panelPrepTheirs": { "message": "把<b>标签页音频</b>打开，译为<b>你自己的语言</b>。这一半负责翻译对方说的话。" },
-  "panelPrepYours": { "message": "把<b>麦克风</b>打开，译为<b>对方的语言</b>。就是这张卡片上面的那一半。" },
+  "panelPrepYours": { "message": "把<b>麦克风</b>打开，译为<b>对方的语言</b>。就是上面两张卡片里的第二张。" },
 
   "panelMicToCall": { "message": "把译文语音送进这个 Meet 通话" },
   "panelMicToCallNote": { "message": "开启期间，这个声音只送进通话，不从本机放出来，它的字幕也会关掉。" },
@@ -58,7 +58,7 @@
   "panelStepLinksMeet": { "message": "<a1>在 Meet 里要做的事</a1>" },
 
   "panelMeetJoin": { "message": "在这个标签页里加入会议。" },
-  "panelMeetStart": { "message": "按下面的 <b>Start</b>。翻译麦克风是在运行开始时才交给 Meet 的，在那之前列表里不会有它。" },
+  "panelMeetStart": { "message": "按 <b>Start</b>。翻译麦克风是在运行开始时才交给 Meet 的，在那之前列表里不会有它。" },
   "panelMeetPick": { "message": "在 Meet 里打开<b>设置 → 音频</b>，把麦克风选成 <b>Interpretab (translated)</b>。顺手把 <b>Studio Sound</b> 关掉。用蓝牙耳机的话，确认 Meet 也是从它出声的。" },
   "panelMeetTalk": { "message": "说话。大约三秒后对面听到译文，你自己的声音也低低地混在下面，所以通话里既听得到译文，也听得到你。" },
   "panelMeetNext": { "message": "下一步" },

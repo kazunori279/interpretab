@@ -48,7 +48,7 @@
   },
   "panelPrepPhones": { "message": "まずヘッドホンをつないでください。こちらは話している最中から訳し始めるので、しゃべっている間にマイクを切ることができません。スピーカーのままだと自分の声を拾い、それも訳し始めてしまいます。" },
   "panelPrepTheirs": { "message": "<b>タブ音声翻訳</b>をオンにして、翻訳先を<b>自分の言語</b>にします。相手の話を訳すのがこちら側です。" },
-  "panelPrepYours": { "message": "<b>マイク音声翻訳</b>をオンにして、翻訳先を<b>相手の言語</b>にします。このカードのすぐ上にあるほうです。" },
+  "panelPrepYours": { "message": "<b>マイク音声翻訳</b>をオンにして、翻訳先を<b>相手の言語</b>にします。上にある 2 枚のカードのうち、下のほうです。" },
 
   "panelMicToCall": { "message": "この Meet 通話に翻訳音声を流す" },
   "panelMicToCallNote": { "message": "オンの間、その声はこのパソコンからは出ず、通話にだけ送られます。字幕もオフになります。" },
@@ -58,7 +58,7 @@
   "panelStepLinksMeet": { "message": "<a1>Meet でやること</a1>" },
 
   "panelMeetJoin": { "message": "このタブで会議に参加します。" },
-  "panelMeetStart": { "message": "下の <b>Start</b> を押します。翻訳マイクは実行を開始したときに Meet へ渡されるので、それまでは一覧に出てきません。" },
+  "panelMeetStart": { "message": "<b>Start</b> を押します。翻訳マイクは実行を開始したときに Meet へ渡されるので、それまでは一覧に出てきません。" },
   "panelMeetPick": { "message": "Meet の<b>設定 → 音声</b>を開き、マイクに <b>Interpretab (translated)</b> を選びます。ついでに <b>Studio Sound</b> はオフにしてください。Bluetooth のヘッドホンなら、Meet の再生先もそれになっているか確かめます。" },
   "panelMeetTalk": { "message": "話しかけます。3 秒ほど遅れて相手に訳が届きます。下にはあなたの声も小さく混ざっているので、通話では通訳とあなたの声の両方が聞こえます。" },
   "panelMeetNext": { "message": "次へ" },

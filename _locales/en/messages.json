@@ -70,7 +70,7 @@
     "description": "Second step: the Tab audio half."
   },
   "panelPrepYours": {
-    "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the one right above this card.",
+    "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the second of the two cards above.",
     "description": "Third step: the Microphone half, the one the card hangs off."
   },
 
@@ -104,7 +104,7 @@
     "description": "First of the four steps on the Meet card, which the link in panelMicToCallNote opens."
   },
   "panelMeetStart": {
-    "message": "Press <b>Start</b> below. Meet is given the translated microphone by the run starting, so its list has nothing new in it before that."
+    "message": "Press <b>Start</b>. Meet is given the translated microphone by the run starting, so its list has nothing new in it before that."
   },
   "panelMeetPick": {
     "message": "In Meet, open <b>Settings → Audio</b> and pick <b>Interpretab (translated)</b> as the microphone. Turn <b>Studio Sound</b> off while you are in there. On Bluetooth headphones, check that Meet is playing through them too."
