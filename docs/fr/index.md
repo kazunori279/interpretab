@@ -92,7 +92,7 @@ L'interface d'Interpretab suit la langue de votre navigateur, dans les dix langu
 Interpretab a deux interrupteurs, **Audio de l'onglet** et **Microphone**. L'un ou l'autre, ou les
 deux à la fois.
 
-[![Le panneau latéral d'Interpretab : les cartes Audio de l'onglet et Microphone, les sélecteurs de langue, le curseur du volume d'origine, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="Le panneau latéral d'Interpretab : les cartes Audio de l'onglet et Microphone, les sélecteurs de langue, le curseur du volume d'origine, Start" %}
 
 **L'audio de l'onglet** traduit ce que joue l'onglet courant dans la langue que vous choisissez,
 parmi 78.
@@ -200,7 +200,7 @@ Cloud Run,クラウドラン,Cloud Run
 La première colonne est le terme à reconnaître, la deuxième est la *prononciation* indiquée au
 modèle, et la troisième est ce que vous voulez voir **affiché dans les sous-titres**.
 
-[![La page Options avec un tableau de glossaire rempli](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="La page Options avec un tableau de glossaire rempli" %}
 
 ### ⚠️ Bon à savoir
 

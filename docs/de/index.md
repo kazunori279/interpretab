@@ -90,7 +90,7 @@ Die Oberfläche von Interpretab folgt der Sprache Ihres Browsers, in den zehn Sp
 
 Interpretab hat zwei Schalter, **Tab-Audio** und **Mikrofon**. Jeder für sich oder beide gleichzeitig.
 
-[![Der Seitenbereich von Interpretab: die Karten Tab-Audio und Mikrofon, Sprachauswahl, der Regler für die Originallautstärke, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="Der Seitenbereich von Interpretab: die Karten Tab-Audio und Mikrofon, Sprachauswahl, der Regler für die Originallautstärke, Start" %}
 
 **Tab-Audio** übersetzt alles, was der aktuelle Tab abspielt, in die Sprache Ihrer Wahl, aus 78
 Möglichkeiten.
@@ -195,7 +195,7 @@ Cloud Run,クラウドラン,Cloud Run
 Die erste Spalte ist der zu erkennende Begriff, die zweite die *Aussprache*, die dem Modell
 vorgegeben wird, und die dritte das, was die **Untertitel zeigen sollen**.
 
-[![Die Optionsseite mit einer ausgefüllten Glossartabelle](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="Die Optionsseite mit einer ausgefüllten Glossartabelle" %}
 
 ### ⚠️ Wissenswertes
 

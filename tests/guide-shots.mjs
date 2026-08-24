@@ -1,8 +1,7 @@
 /**
- * The photographed panels of the guide's two slideshows, in each of the ten
- * languages the guide is written in.
+ * Every photograph in the guide, in each of the ten languages it is written in.
  *
- *     node tests/guide-shots.mjs [--headed] [--keep]
+ *     node tests/guide-shots.mjs [--headed] [--keep] [--only <figure,…>]
  *
  * `docs/assets/install-1-store-<lang>.png`, `-2-key-<lang>.png` and
  * `-4-start-<lang>.png` are the three photographs in the install section — the
@@ -14,6 +13,15 @@
  * Chrome's own toolbar, which no page can photograph, and Meet itself, whose
  * labels are not ours to translate; all of them are drawn in CSS inside the two
  * includes and there is nothing here to take.
+ *
+ * `panel-<lang>.png` and `glossary-<lang>.png` are the other two, and they are
+ * not in a slideshow: they are the pictures the prose sits beside under
+ * "Choosing what to translate" and "Teaching it your words". Both used to be the
+ * store's own uploads, copied into `docs/assets/` and shown to all ten
+ * languages — an English panel over a Japanese sentence about タブ音声, which is
+ * the one thing the other sixty pictures exist to avoid. They are taken on the
+ * store's stage rather than cropped, so they still look like the pictures the
+ * guide has always had; only their words change.
  *
  * Sixty pictures rather than six because all six are localized and none of them
  * is ours to translate. The store listing is Google's page and says
@@ -48,6 +56,12 @@
  * button across languages, which is what a hand-typed percentage could not do
  * for a button that is `Add to Chrome` in one and `Hinzufügen` in another.
  *
+ * `--only` takes the names below and skips the rest, for the re-take that does
+ * not need all eight: `--only pages` is twenty pictures and no network, where a
+ * full run visits Google's listing ten times. A run that skipped a slideshow
+ * figure leaves `docs/_data/shots.yml` alone rather than writing a file with the
+ * skipped figures missing from it.
+ *
  * It costs nothing and needs no key. The key it shows is the same obvious fake
  * `store-shots.mjs` uses, in a profile that is deleted on the way out, and
  * nothing here opens a socket to the Live API.
@@ -55,7 +69,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { Chrome, sleep } from "./chrome-harness.mjs";
+import { Chrome, catalogueFor, plainMessage, sleep } from "./chrome-harness.mjs";
+import { FAKE_KEY, framedShot, inFrame, openStage, pngSize } from "./framed-shot.mjs";
 import { simulLanguageCode } from "../lib/languages.js";
 
 const ROOT = path.join(import.meta.dirname, "..");
@@ -64,6 +79,17 @@ const OUT = path.join(ROOT, "docs", "assets");
 const headed = process.argv.includes("--headed");
 const keepOpen = process.argv.includes("--keep");
 
+/** The five steps below, in the order the loop runs them. */
+const STEPS = ["store", "key", "start", "meet", "pages"];
+
+/** `--only key,pages` — everything, unless the run asked for less. */
+const asked = process.argv.indexOf("--only");
+const only = asked === -1 ? [] : (process.argv[asked + 1] || "").split(",").filter(Boolean);
+for (const name of only) {
+  if (!STEPS.includes(name)) throw new Error(`--only ${name}: there is no such figure. ${STEPS.join(", ")}`);
+}
+const wanted = (name) => !only.length || only.includes(name);
+
 /**
  * How wide a picture ends up in the guide: `.container-lg` less its padding.
  * Both the crops and the arrows are sized against it — one to be rasterized at
@@ -71,9 +97,6 @@ const keepOpen = process.argv.includes("--keep");
  * room for an arrow or eleven pixels.
  */
 const COLUMN = 980;
-
-/** Same fake as `store-shots.mjs`, for the same reason: no real key in frame. */
-const FAKE_KEY = "NOT-A-REAL-KEY-only-a-placeholder-00000";
 
 /** The listing the first step sends people to. */
 const LISTING =
@@ -137,6 +160,26 @@ const callState = (lang) => ({
   micToCall: true,
 });
 
+/**
+ * The state the two page pictures are of: both directions on and the microphone
+ * in conversation mode, which is the only arrangement where one frame holds the
+ * two-way pair, the second mode, the ducking slider and the cost note at once.
+ *
+ * The pair is the reader's own language and English, the other way round from
+ * the tab card above it — a reader looking at their language on both sides of
+ * one panel cannot see which half is which. English readers get Japanese, as
+ * the store shot has always shown them. Conversation mode stores its languages
+ * in the agent model's code space, and all ten of the guide's codes are already
+ * in it, so they go in unconverted.
+ */
+const pageState = (lang) => ({
+  ...panelState(lang),
+  micEnabled: true,
+  micMode: "conversation",
+  micSource: lang,
+  micTarget: lang === "en" ? "ja" : "en",
+});
+
 /** Which numbered file each figure's pictures are, one per language. */
 const FILES = {
   store: "install-1-store",
@@ -161,7 +204,7 @@ for (const [lang, ui] of Object.entries(LANGUAGES)) {
     // already has it, the store greys Add to Chrome out and drops the `jsname`
     // the button is found by. Neither is the button the reader is about to
     // press, and the picture is of that button.
-    await store(chrome, lang);
+    if (wanted("store")) await store(chrome, lang);
 
     const extensionId = await chrome.loadExtension(ROOT);
     const origin = `chrome-extension://${extensionId}`;
@@ -170,14 +213,19 @@ for (const [lang, ui] of Object.entries(LANGUAGES)) {
     // the step being illustrated.
     await chrome.grantMic(origin);
 
-    await key(chrome, origin, lang);
-    await start(chrome, origin, lang);
-    await meet(chrome, origin, lang);
+    if (wanted("key")) await key(chrome, origin, lang);
+    if (wanted("start")) await start(chrome, origin, lang);
+    if (wanted("meet")) await meet(chrome, origin, lang);
+    if (wanted("pages")) await pages(chrome, origin, lang);
   } finally {
     await chrome.close({ keepOpen });
   }
 }
-writeShots();
+// `shots.yml` is written whole or not at all: a partial run knows about the
+// figures it took and nothing about the ones it skipped, and writing what it
+// knows would delete the rest.
+if (["store", "key", "start", "meet"].every(wanted)) writeShots();
+else console.log(`\n   --   docs/_data/shots.yml left alone: ${only.join(", ")} is not every figure`);
 
 /**
  * The store listing, cropped to the row a reader is looking for.
@@ -416,6 +464,98 @@ async function meet(chrome, origin, lang) {
 }
 
 /**
+ * The two pictures the guide's prose sits beside, on the store's own stage.
+ *
+ * Not crops, and not in `shots.yml`: no ring points at anything in them, and
+ * the subject is the whole page rather than one control on it. The composition
+ * is what `store-shots.mjs` uses for the same two pages, so these are the
+ * pictures the guide has always had — in the language of the page showing them.
+ *
+ * Each is checked before it counts, against two different kinds of wrong. The
+ * languages in the panel come out of storage, so a wrong one there is ours; the
+ * words on both pages come out of `_locales`, so a wrong one there means Chrome
+ * ignored the language it was launched in. That second one is what would
+ * quietly produce ten English pictures, which is the whole reason this step
+ * exists, and it is not a thing a diff of two PNGs shows anybody.
+ */
+async function pages(chrome, origin, lang) {
+  const catalogue = catalogueFor(LANGUAGES[lang] || "en", ROOT);
+  const says = (key) => JSON.stringify(plainMessage(catalogue, key));
+  const figures = [
+    {
+      name: "panel",
+      page: "sidepanel.html",
+      // Wider than the 400px the side panel opens at: the panel is a column of
+      // sentences, and at 400 the two direction labels and the conversation
+      // gloss wrap enough to push Start off the bottom of the card.
+      width: 460,
+      height: 540,
+      zoom: 1.43,
+      card: true,
+      state: pageState(lang),
+      // Nothing renders until the settings load, and these two are what the
+      // arrangement in `pageState` is for: the conversation gloss and the cost
+      // note.
+      until: `!d.getElementById("micNoteConversation").hidden && !d.getElementById("costNote").hidden`,
+      // The cost note is the last thing in the panel until a run starts. Below
+      // it is the transcript, which is empty here, and 540 of frame is what the
+      // longest of the ten languages needs — leaving the other nine with an inch
+      // of blank card under the sentence they end on.
+      fit: `d.getElementById("costNote").getBoundingClientRect().bottom + 14`,
+      checks: [
+        [
+          `d.getElementById("tabTarget").value === ${JSON.stringify(simulLanguageCode(lang))}`,
+          `the tab card is not translating into ${lang}`,
+        ],
+        [`d.getElementById("micSource").value === ${JSON.stringify(lang)}`, `the microphone is not hearing ${lang}`],
+        [
+          `d.querySelector('[data-i18n="panelTabDirection"]').textContent.trim() === ${says("panelTabDirection")}`,
+          `the panel is not rendering ${catalogue.locale}`,
+        ],
+      ],
+    },
+    {
+      name: "glossary",
+      page: "options.html",
+      // 1280/1.4 and 800/1.4, rounded up so the iframe covers the frame rather
+      // than leaving a hairline of host page down two edges.
+      width: 916,
+      height: 574,
+      zoom: 1.4,
+      state: pageState(lang),
+      // The list is built from storage after `init` awaits, so a row in the
+      // table is the sign that the section is finished rather than present. The
+      // rows are the bundled example glossary, which seeds itself on first run.
+      until: `d.querySelector("#glossaryList table tr")`,
+      // The glossary heading at the top of the frame: the section above it ends
+      // in a device dropdown whose contents are the test machine's, and a
+      // picture in the guide should not be showing anybody's hardware.
+      scrollTo: `[data-i18n="optGlossaryHeading"]`,
+      margin: 24,
+      checks: [
+        [
+          `d.querySelector('[data-i18n="optGlossaryHeading"]').textContent.trim() === ${says("optGlossaryHeading")}`,
+          `the Options page is not rendering ${catalogue.locale}`,
+        ],
+      ],
+    },
+  ];
+
+  const stage = await openStage(chrome, origin);
+  for (const figure of figures) {
+    const file = path.join(OUT, `${figure.name}-${lang}.png`);
+    const size = await framedShot(stage, origin, figure, file);
+    for (const [expression, complaint] of figure.checks) {
+      if ((await stage.eval(inFrame(figure.page, expression))) !== true) {
+        throw new Error(`${figure.name}-${lang}.png: ${complaint}`);
+      }
+    }
+    console.log(`   ok   docs/assets/${figure.name}-${lang}.png — ${size.join("×")}`);
+  }
+  await stage.close();
+}
+
+/**
  * Injected into the panel before its own scripts: every tab `chrome.tabs`
  * hands back is on *url*. The panel asks once, at startup, for the active tab
  * — and what it does with the answer is the whole subject of the section being
@@ -558,10 +698,4 @@ function writeShots() {
   fs.writeFileSync(target, lines.join("\n"));
   const count = Object.values(shots).reduce((n, languages) => n + Object.keys(languages).length, 0);
   console.log(`\n   ok   docs/_data/shots.yml — ${count} pictures`);
-}
-
-/** Width and height out of a PNG's IHDR, as `tests/assets.test.js` reads them. */
-function pngSize(file) {
-  const head = fs.readFileSync(file).subarray(16, 24);
-  return [head.readUInt32BE(0), head.readUInt32BE(4)];
 }

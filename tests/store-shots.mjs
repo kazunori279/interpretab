@@ -21,39 +21,22 @@
  * `NOT-A-REAL-KEY-only-a-placeholder-00000`, written into a profile that is
  * deleted on the way out, and nothing here opens a socket to the Live API.
  *
- * Composition is `tests/store-frame.html`: a 1280×800 extension page with one
- * iframe on it. The page being shot is laid out at `width`×`height` CSS pixels
- * and scaled up by `zoom`, so the product of the two is the frame — which is how
- * the Options page ends up legible at store scale instead of being a wall of
- * 14px text with 250px of margin either side.
+ * Composition is `tests/store-frame.html`, driven by `tests/framed-shot.mjs` —
+ * which `guide-shots.mjs` photographs its two page pictures on as well. These
+ * three are English, because the store localizes a listing's words and not its
+ * screenshots; the guide's are taken once per language.
  */
 
 import fs from "node:fs";
 import path from "node:path";
-import { Chrome, sleep } from "./chrome-harness.mjs";
+import { Chrome } from "./chrome-harness.mjs";
+import { FAKE_KEY, framedShot, openStage } from "./framed-shot.mjs";
 
 const ROOT = path.join(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "store");
 
 const headed = process.argv.includes("--headed");
 const keepOpen = process.argv.includes("--keep");
-
-/** What the store takes, and what `tests/assets.test.js` insists on. */
-const FRAME = { width: 1280, height: 800 };
-
-/**
- * An obvious fake, long enough to clear the "too short to be a secret" check so
- * that the page shows the saved state rather than a warning. The store's own
- * rules forbid a real one in frame.
- *
- * It says what it is rather than wearing the `AIza…` prefix. A string in that
- * shape is what a secret scanner looks for, and GitHub duly reported this file
- * as a leaked Google API key — an alert that costs someone a look at the source
- * to dismiss, every time. Shot 5 reveals the field to show the saved state, so
- * this is also the sentence a reviewer reads in the frame, which is a better
- * answer to the store's "no real key" rule than a plausible-looking fake.
- */
-const FAKE_KEY = "NOT-A-REAL-KEY-only-a-placeholder-00000";
 
 /**
  * Both directions on, the microphone in conversation mode: the only
@@ -134,90 +117,13 @@ try {
   // state and not the one the store is being sold.
   await chrome.grantMic(origin);
 
-  const stage = await chrome.newPage(`${origin}/tests/store-frame.html`, FRAME);
+  const stage = await openStage(chrome, origin);
 
   for (const shot of SHOTS) {
-    await stage.eval(`chrome.storage.local.set(${JSON.stringify(shot.state)})`);
-    // Cleared first, and waited for. Two of the three shots are the same page,
-    // and assigning `src` does not replace the document at once: without this
-    // the next shot's checks all pass against the last one's, still scrolled to
-    // where it was left, and get photographed.
-    await stage.eval(`(() => { document.getElementById("stage").src = "about:blank"; return true; })()`);
-    await stage.waitFor(
-      `document.getElementById("stage").contentWindow.location.href === "about:blank"`
-    );
-
-    // An IIFE, and every expression below is one too: `Runtime.evaluate` runs
-    // in the page's global scope, where a bare `const` from the first shot is
-    // still declared when the second one tries to declare it again.
-    await stage.eval(`(() => {
-      document.body.className = ${JSON.stringify(shot.card ? "card" : "")};
-      const frame = document.getElementById("stage");
-      frame.style.width = "${shot.width}px";
-      frame.style.height = "${shot.height}px";
-      frame.style.zoom = "${shot.zoom}";
-      frame.src = ${JSON.stringify(`${origin}/${shot.page}`)};
-      return true;
-    })()`);
-
-    // Every per-shot expression is written against the framed page rather than
-    // the stage, so each one runs with `f` bound to its window and `d` to its
-    // document. The guard is the previous shot's page: assigning `src` does not
-    // replace the document at once, and the one still in the frame is complete,
-    // titled, and missing every element the next expression asks for.
-    const inFrame = (expression) => `(() => {
-      const f = document.getElementById("stage").contentWindow;
-      const d = f && f.document;
-      if (!d || !f.location.href.endsWith("/${shot.page}")) return false;
-      if (d.readyState !== "complete" || !d.title) return false;
-      return (${expression});
-    })()`;
-
-    const ready = await stage.waitFor(inFrame(`!!(${shot.until})`));
-    if (!ready) throw new Error(`${shot.file}: the page never finished rendering`);
-
-    // A page taller than the frame draws a scrollbar down the right edge, and a
-    // half-length scrollbar in a store screenshot reads as a crop of something
-    // bigger. The page still scrolls; only the bar is gone.
-    await stage.eval(inFrame(`d.documentElement.style.scrollbarWidth = "none", true`));
-
-    if (shot.prepare) await stage.eval(inFrame(`${shot.prepare}, true`));
-    if (shot.scrollTo) {
-      await stage.eval(
-        inFrame(`f.scrollTo(0, d.querySelector(${JSON.stringify(shot.scrollTo)})
-                     .getBoundingClientRect().top + f.scrollY - ${shot.margin}), true`)
-      );
-    }
-    // Fonts and the scroll both settle a frame late, and a screenshot taken
-    // between the two catches the page mid-jump.
-    await sleep(400);
-
-    const file = path.join(OUT, shot.file);
-    await stage.screenshot(file);
-    const size = pngSize(file);
-    const ok = size[0] === FRAME.width && size[1] === FRAME.height;
-    console.log(`   ${ok ? "ok  " : "FAIL"} ${shot.file} — ${size.join("×")}${copied(shot.file)}`);
-    if (!ok) throw new Error(`${shot.file} came out ${size.join("×")}`);
+    const size = await framedShot(stage, origin, shot, path.join(OUT, shot.file));
+    console.log(`   ok   ${shot.file} — ${size.join("×")}`);
   }
   console.log(`\n${SHOTS.length} screenshots written to store/`);
 } finally {
   await chrome.close({ keepOpen });
-}
-
-/**
- * The guide reuses two of these, and Jekyll cannot reach outside `docs/`, so
- * the site keeps its own copy of each. `tests/assets.test.js` fails when the
- * two drift — this keeps them from drifting in the first place.
- */
-function copied(name) {
-  const copy = path.join(ROOT, "docs", "assets", name);
-  if (!fs.existsSync(copy)) return "";
-  fs.copyFileSync(path.join(OUT, name), copy);
-  return ", and into docs/assets/";
-}
-
-/** Width and height out of a PNG's IHDR, as `tests/assets.test.js` reads them. */
-function pngSize(file) {
-  const buf = fs.readFileSync(file);
-  return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
 }

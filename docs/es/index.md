@@ -92,7 +92,7 @@ La interfaz de Interpretab sigue el idioma de tu navegador, en los diez idiomas 
 Interpretab tiene dos interruptores, **Audio de la pestaña** y **Micrófono**. Cualquiera por su
 cuenta, o los dos a la vez.
 
-[![El panel lateral de Interpretab: las tarjetas Audio de la pestaña y Micrófono, selectores de idioma, el control de volumen original y Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="El panel lateral de Interpretab: las tarjetas Audio de la pestaña y Micrófono, selectores de idioma, el control de volumen original y Start" %}
 
 **Audio de la pestaña** traduce lo que esté reproduciendo la pestaña actual al idioma que elijas,
 entre 78.
@@ -198,7 +198,7 @@ Cloud Run,クラウドラン,Cloud Run
 La primera columna es el término que hay que reconocer, la segunda es la *pronunciación* que se le
 indica al modelo, y la tercera es lo que quieres que **muestren los subtítulos**.
 
-[![La página de Opciones con una tabla de glosario rellena](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="La página de Opciones con una tabla de glosario rellena" %}
 
 ### ⚠️ Cosas que conviene saber
 

@@ -1724,36 +1724,57 @@ throwaway profile the onboarding walk uses. It needs no key either — the one i
 obvious fake `NOT-A-REAL-KEY-only-a-placeholder-00000`, written into a profile that is deleted on
 the way out.
 
-The composition is `tests/store-frame.html`, a 1280×800 extension page with one iframe on it. A
-browser window is never 1280×800, and the pages being shot are `chrome-extension://` URLs that
-only a page at the same origin can size, scroll, or ask whether they have finished localizing
-themselves. Each shot lays its page out at some width and height in CSS pixels and scales it up
-with `zoom`, the product being the frame: the Options page at 916×574 zoomed 1.4, which is what
-makes 14px body text legible once the store scales the image down, and the panel at 460×540 zoomed
-1.43 on a gradient, wider than the 400px a side panel actually opens at because at 400 the
-rewritten sentences wrap enough to push Start off the bottom of the card.
+The composition is `tests/store-frame.html`, a 1280×800 extension page with one iframe on it,
+driven by `tests/framed-shot.mjs`. A browser window is never 1280×800, and the pages being shot are
+`chrome-extension://` URLs that only a page at the same origin can size, scroll, or ask whether
+they have finished localizing themselves. Each shot lays its page out at some width and height in
+CSS pixels and scales it up with `zoom`, the product being the frame: the Options page at 916×574
+zoomed 1.4, which is what makes 14px body text legible once the store scales the image down, and
+the panel at 460×540 zoomed 1.43 on a gradient, wider than the 400px a side panel actually opens at
+because at 400 the rewritten sentences wrap enough to push Start off the bottom of the card. The
+driver is a file of its own because `guide-shots.mjs` photographs two of its pictures on the same
+stage. These three stay English: the store localizes a listing's words, not its screenshots.
 
 The other two are a live session with a real video playing and a real side panel open. Nothing
 inside a page can photograph browser UI and no harness can supply the video, so those stay manual —
 as do the two `spare-*.png`, which are from the same sitting and were not re-taken.
 
-**`tests/guide-shots.mjs` — the three photographs in the guide's install slideshow.**
+**`tests/guide-shots.mjs` — every photograph in the guide, in each of its ten languages.**
 
 ```bash
-node tests/guide-shots.mjs            # headless, ~15 seconds
+node tests/guide-shots.mjs                # headless, one Chrome per language
+node tests/guide-shots.mjs --only pages   # the two page pictures, and no network
 ```
 
-`docs/assets/install-1-store.png`, `-2-key.png` and `-4-start.png`: the store listing with its Add
-to Chrome button, the Options page with a key in it, and the side panel with tab audio on and Start
-underneath. Same reasoning as the store shots and deliberately a different script. Those three are
-1280×800 because the store demands it and are composed to be looked at full size; these are crops,
-sized to be legible in the guide's 980px column, and one of them is not an extension page at all.
+`docs/assets/install-1-store-<lang>.png`, `-2-key-<lang>.png` and `-4-start-<lang>.png` are the
+three photographs in the install slideshow: the store listing with its Add to Chrome button, the
+Options page with a key in it, and the side panel with tab audio on and Start underneath.
+`meet-1-tab`, `-2-mic` and `-3-start` are the three in the Google Meet section — the two direction
+cards set up for a call, and the button row. `panel-<lang>.png` and `glossary-<lang>.png` are the
+two the prose sits beside, under "Choosing what to translate" and "Teaching it your words". Eighty
+files, because every one of the eight is localized and none of it is ours to translate: the listing
+is Google's page and says `Chrome に追加` to a reader whose Chrome is Japanese, and the rest is the
+extension's own UI coming out of `_locales`. Chrome is launched once per language, which is what
+decides both.
 
-Cropping happens in Chrome, through `Page.captureScreenshot`'s `clip`, and the rectangle is
+The last two used to be the store's uploads, copied into `docs/assets/` and shown to all ten
+languages — an English panel above a Japanese sentence about タブ音声, which is the failure the
+other seventy-eight exist to avoid. They are taken on the store's stage rather than cropped, so
+they still look like the pictures the guide has always had and only their words change, and a page
+asks for one by name rather than by path — `{% include page-shot.html name="panel" %}` — so a
+translation cannot end up pointing at the English copy. How far short of its 540px frame the panel
+falls depends on the language, the English conversation gloss being six lines and the Japanese two,
+so the shot says where its page ends and the card comes up to meet it. Both are checked against
+`_locales` before they are kept: the heading in the frame has to be the string the catalogue has
+for it, so a run where Chrome ignored its `--lang` fails instead of writing ten English pictures.
+
+The other six are crops rather than 1280×800 stages, sized to be legible in the guide's 980px
+column. Cropping happens in Chrome, through `Page.captureScreenshot`'s `clip`, and the rectangle is
 measured off the DOM rather than typed in — the key shot runs from the top of the "Gemini API key"
-heading to the bottom of the line under the field, so a section that grows a line is still framed.
-`scale` is the other half: the pages are laid out narrow, so their own text is large relative to
-the frame, and then rasterized at 1.6× so the frame is still wide enough to fill the column.
+heading to the bottom of the line under the field, so a section that grows a line is still framed,
+and so is a language whose sentences run longer. `scale` is the other half: the pages are laid out
+narrow, so their own text is large relative to the frame, and then rasterized above 1× so the frame
+is still wide enough to fill the column.
 
 The listing is the one page here that belongs to somebody else, so the thing the picture is *for*
 is checked rather than assumed: the Add to Chrome button's rectangle is read off the page and has
@@ -1771,7 +1792,15 @@ and cannot drift away from it. The width the guide gives it is not always the co
 picture runs out of frame height first, so the constants that decide the side include the space the
 sentence above the picture reserves, and changing that in the CSS is a reason to re-run this. The
 file says not to edit it by hand, and `npm test` checks that each picture it names is on disk and
-each side it asks for is one the CSS can draw.
+each side it asks for is one the CSS can draw. A percentage typed by hand could not follow a button
+that is `Add to Chrome` in one language and `Hinzufügen` in another; one measured as the picture is
+taken does.
+
+`--only` takes the five step names — `store`, `key`, `start`, `meet`, `pages` — and skips the rest,
+for a re-take that does not need all eighty pictures. `--only pages` is twenty of them and reaches
+no network at all, where a full run visits Google's listing ten times. A run that skipped a
+slideshow figure leaves `docs/_data/shots.yml` alone rather than writing a copy with the skipped
+figures missing from it.
 
 **`tests/guide-preview.mjs` — the install slideshow, in a browser, before it is pushed.**
 

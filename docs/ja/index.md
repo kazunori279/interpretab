@@ -76,7 +76,7 @@ Interpretab の画面表示はブラウザの言語に追従します。対応�
 
 Interpretab には **タブ音声**（タブ音声翻訳）と **マイク**（マイク音声翻訳）の 2 つのスイッチがあります。片方だけでも両方同時でも動きます。
 
-[![Interpretab のサイドパネル。タブ音声とマイクのカード、言語セレクタ、元音声の音量、Start ボタン](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="Interpretab のサイドパネル。タブ音声とマイクのカード、言語セレクタ、元音声の音量、Start ボタン" %}
 
 **タブ音声翻訳**は、現在のタブが再生している音声を指定した言語（78 言語から選択）に翻訳します。
 
@@ -144,7 +144,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 1 列目は対象の文字列、2 列目はモデルに**読み**を伝える内容、3 列目は**字幕に表記**したい内容です。
 
-[![用語集の表が入力されたオプションページ](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="用語集の表が入力されたオプションページ" %}
 
 ### ⚠️ 翻訳機能の注意点
 

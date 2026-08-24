@@ -716,9 +716,23 @@ test("every image the guide pages ask for is somewhere Pages will serve it", () 
   let checked = 0;
   for (const page of pages) {
     const text = fs.readFileSync(path.join(SITE, page), "utf8");
+    const lang = page.includes("/") ? page.split("/")[0] : "en";
     const refs = [
       ...[...text.matchAll(/<img[^>]+src="([^"]+)"/g)].map(([, src]) => src),
       ...[...text.matchAll(/\]\(([^)]+\.(?:png|svg|jpg|gif))\)/g)].map(([, src]) => src),
+      // The two page photographs name a picture and let `page-shot.html` work
+      // out the file, so what is resolved here is what Jekyll will resolve —
+      // including the language, which is the half of the name a page cannot
+      // get wrong because it never writes it.
+      ...[...text.matchAll(/{%\s*include page-shot\.html([^%]*)%}/g)].map(([, args]) => {
+        const name = args.match(/name="([^"]+)"/);
+        const alt = args.match(/alt="([^"]*)"/);
+        assert.ok(name, `${page} includes page-shot.html without naming a picture`);
+        // Alt text is prose, so it is the translation's and not the include's —
+        // which also means a page can leave it out and nothing else would say so.
+        assert.ok(alt && alt[1].trim(), `${page} includes ${name[1]} with no alt text`);
+        return `${lang === "en" ? "" : "../"}assets/${name[1]}-${lang}.png`;
+      }),
     ];
     assert.ok(refs.length > 0, `${page} references no images at all`);
     for (const ref of refs) {
@@ -737,22 +751,44 @@ test("every image the guide pages ask for is somewhere Pages will serve it", () 
   assert.ok(checked >= 80, `only ${checked} image references found across ten pages`);
 });
 
-test("the images the site shares with the extension and the store are the same images", () => {
+test("the images the site shares with the extension are the same images", () => {
   // Jekyll cannot reach outside its source directory and GitHub Pages refuses to
-  // follow symlinks, so the site keeps its own copy of the three images it does
-  // not own: the icon belongs to the extension, and two of the screenshots are
-  // store uploads that the guide happens to reuse. Copies drift, and a guide
-  // showing last month's panel is the kind of wrong nobody reports.
-  const shared = [
-    ["icons/icon-128.png", "assets/icon-128.png"],
-    ["store/screenshot-3-glossary.png", "assets/screenshot-3-glossary.png"],
-    ["store/screenshot-4-panel.png", "assets/screenshot-4-panel.png"],
-  ];
+  // follow symlinks, so the site keeps its own copy of the icon. Copies drift.
+  const shared = [["icons/icon-128.png", "assets/icon-128.png"]];
   for (const [original, copy] of shared) {
     assert.ok(
       fs.readFileSync(path.join(ROOT, original)).equals(fs.readFileSync(path.join(SITE, copy))),
       `docs/${copy} has drifted from ${original} — copy it across`
     );
+  }
+  // The guide used to keep a copy of two store uploads as well, and showed them
+  // to all ten languages: an English panel over a Japanese sentence about it.
+  // They are the guide's own pictures now, one per language, so a copy of either
+  // sitting here again is the old arrangement coming back.
+  for (const stale of ["screenshot-3-glossary.png", "screenshot-4-panel.png"]) {
+    assert.ok(
+      !fs.existsSync(path.join(SITE, "assets", stale)),
+      `docs/assets/${stale} is a store upload — the guide takes its own, per language`
+    );
+  }
+});
+
+test("both page photographs exist in every language the guide is written in", () => {
+  // `page-shot.html` builds a filename out of the page's own `lang`, so a
+  // language that was added to the guide and never photographed renders a 404
+  // on one page in ten — which is exactly how the English-everywhere version of
+  // these two pictures survived as long as it did. Sized as well as counted:
+  // the include reserves 1280×800 of column before the picture arrives, and it
+  // is `tests/framed-shot.mjs` that decides that is true.
+  const languages = fs.readFileSync(path.join(SITE, "_data", "languages.yml"), "utf8");
+  const codes = [...languages.matchAll(/^- code: ([a-z]{2})$/gm)].map(([, code]) => code);
+  assert.ok(codes.length === 10, `expected ten guide languages, found ${codes.length}`);
+  for (const name of ["panel", "glossary"]) {
+    for (const code of codes) {
+      const file = path.join(SITE, "assets", `${name}-${code}.png`);
+      assert.ok(fs.existsSync(file), `docs/assets/${name}-${code}.png is missing — run tests/guide-shots.mjs`);
+      assert.deepEqual(pngSize(file), [1280, 800], `${name}-${code}.png is the wrong size`);
+    }
   }
 });
 

@@ -75,7 +75,7 @@ Interpretab 的界面跟随浏览器的语言，共支持本页列出的十种�
 
 Interpretab 有两个开关：**标签页音频**和**麦克风**。可以只用其一，也可以两个同时用。
 
-[![Interpretab 侧边栏：标签页音频和麦克风两张卡片、语言选择器、原声音量滑块、Start 按钮](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="Interpretab 侧边栏：标签页音频和麦克风两张卡片、语言选择器、原声音量滑块、Start 按钮" %}
 
 **标签页音频**把当前标签页正在播放的内容翻译成你选定的语言，共 78 种可选。
 
@@ -148,7 +148,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 第一列是要匹配的词，第二列是告诉模型采用的*读音*，第三列是你希望**字幕上显示**的写法。
 
-[![填好术语表的选项页面](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="填好术语表的选项页面" %}
 
 ### ⚠️ 需要注意的事
 

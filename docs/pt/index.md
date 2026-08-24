@@ -91,7 +91,7 @@ A interface do Interpretab acompanha o idioma do seu navegador, nos dez idiomas 
 O Interpretab tem dois interruptores, **Áudio da aba** e **Microfone**. Cada um sozinho, ou os dois
 ao mesmo tempo.
 
-[![O painel lateral do Interpretab: os cartões Áudio da aba e Microfone, seletores de idioma, o controle do volume original, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="O painel lateral do Interpretab: os cartões Áudio da aba e Microfone, seletores de idioma, o controle do volume original, Start" %}
 
 **Áudio da aba** traduz o que a aba atual estiver reproduzindo para o idioma que você escolher,
 entre 78.
@@ -195,7 +195,7 @@ Cloud Run,クラウドラン,Cloud Run
 A primeira coluna é o termo a reconhecer, a segunda é a *pronúncia* que se manda o modelo usar, e a
 terceira é o que você quer que as **legendas mostrem**.
 
-[![A página de Opções com uma tabela de glossário preenchida](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="A página de Opções com uma tabela de glossário preenchida" %}
 
 ### ⚠️ O que é bom saber
 

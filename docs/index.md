@@ -90,7 +90,7 @@ page.
 
 Interpretab has two switches, **Tab audio** and **Microphone**. Either on its own, or both at once.
 
-[![The Interpretab side panel: the Tab audio and Microphone cards, language pickers, the original-volume slider, Start](assets/screenshot-4-panel.png)](assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="The Interpretab side panel: the Tab audio and Microphone cards, language pickers, the original-volume slider, Start" %}
 
 **Tab audio** translates whatever the current tab is playing into the language you pick, from a
 choice of 78.
@@ -195,7 +195,7 @@ Cloud Run,クラウドラン,Cloud Run
 The first column is the term to match, the second is the *pronunciation* the model is told to use,
 and the third is what you want the **subtitles to show**.
 
-[![The Options page with a glossary table filled in](assets/screenshot-3-glossary.png)](assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="The Options page with a glossary table filled in" %}
 
 ### ⚠️ Things to know
 

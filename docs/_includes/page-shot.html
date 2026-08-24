@@ -1,0 +1,20 @@
+{%- comment -%}
+  One of the two photographs that stand in the prose rather than in a
+  slideshow: the side panel under "Choosing what to translate", and the Options
+  page under the glossary section. Both exist once per language, because both
+  are the extension's own UI — see the note in `tests/guide-shots.mjs`.
+
+  The picture is picked by the page's own `lang`, so the ten pages carry the
+  same line and differ only in `alt`, which is prose and belongs to the
+  translation. Named rather than pathed: a page that spells its own filename is
+  a page that can point at a picture in the wrong language, which is the thing
+  this include exists to make impossible.
+
+  1280×800 is what `FRAME` in `tests/framed-shot.mjs` takes and what
+  `tests/assets.test.js` holds these files to. The attributes are here so the
+  column reserves the room before the picture arrives; `height: auto` because
+  the guide's column is narrower than the picture on every screen it is read
+  on, and the attributes alone would squash it.
+{%- endcomment -%}
+{%- assign src = "/assets/" | append: include.name | append: "-" | append: page.lang | append: ".png" | relative_url -%}
+<p><a href="{{ src }}"><img src="{{ src }}" alt="{{ include.alt }}" width="1280" height="800" style="max-width:100%;height:auto"></a></p>

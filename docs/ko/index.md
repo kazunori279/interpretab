@@ -75,7 +75,7 @@ Interpretab의 인터페이스는 브라우저 언어를 따라가며, 이 페�
 
 Interpretab에는 **탭 오디오**와 **마이크**라는 두 개의 스위치가 있습니다. 하나만 써도 되고 둘 다 동시에 써도 됩니다.
 
-[![Interpretab 사이드 패널: 탭 오디오와 마이크 카드, 언어 선택기, 원음 볼륨 슬라이더, Start](../assets/screenshot-4-panel.png)](../assets/screenshot-4-panel.png)
+{% include page-shot.html name="panel" alt="Interpretab 사이드 패널: 탭 오디오와 마이크 카드, 언어 선택기, 원음 볼륨 슬라이더, Start" %}
 
 **탭 오디오**는 현재 탭이 재생 중인 소리를 78개 언어 중 고른 언어로 번역합니다.
 
@@ -148,7 +148,7 @@ Cloud Run,クラウドラン,Cloud Run
 
 첫 번째 열은 인식할 대상 문자열, 두 번째 열은 모델에 알려 줄 *발음*, 세 번째 열은 **자막에 표시**하고 싶은 표기입니다.
 
-[![용어집 표가 채워진 옵션 페이지](../assets/screenshot-3-glossary.png)](../assets/screenshot-3-glossary.png)
+{% include page-shot.html name="glossary" alt="용어집 표가 채워진 옵션 페이지" %}
 
 ### ⚠️ 알아 둘 점
 
