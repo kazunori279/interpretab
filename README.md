@@ -1061,7 +1061,7 @@ A file that corrects the build is only as good as whoever notices it needs corre
 that is the users: a preview is switched off, and the first anyone here hears about it is a bug
 report. Two workflows stand in for that.
 
-**`.github/workflows/model-health.yml`, every five minutes.** `tests/model-check.mjs` asks the API
+**`.github/workflows/model-health.yml`, hourly.** `tests/model-check.mjs` asks the API
 two questions about every name in `docs/config.json` *and* the two compiled into the build, since
 `modelCandidates` keeps the bundled name as the last resort and a bundled model going away is an
 outage the config file says nothing about. First `ListModels`, which is where a withdrawn name
@@ -1075,8 +1075,10 @@ Failures are split into *gone* and *something else went wrong*, by the same
 `isModelUnavailableClose` the extension's own fallback keys on. Only *gone* is allowed to start a
 rewrite. A network blip at 03:00 must not read as Google retiring a preview.
 
-GitHub queues scheduled workflows on a best-effort basis, so `*/5` means about five minutes when
-the fleet is quiet and sometimes fifteen. Against a two-week notice period, that is fine.
+It ran at `*/5` for its first hour, which GitHub's best-effort queue turned into one run in the
+first forty minutes. A schedule the queue ignores is not a schedule, so it is `0 * * * *` now.
+Against two weeks' notice an hour is not the constraint, and the runs that were being dropped were
+the ones that would have found nothing.
 
 **`.github/workflows/model-discovery.yml`, daily and on an outage.** The other half of the
 question: what replaced it. The names appear on Google's own documentation pages hours before
@@ -1495,7 +1497,7 @@ node tests/model-check.mjs /tmp/key.txt          # a line per model
 node tests/model-check.mjs /tmp/key.txt --json   # what the workflow reads
 ```
 
-What `.github/workflows/model-health.yml` runs every five minutes, and the same thing to run by
+What `.github/workflows/model-health.yml` runs every hour, and the same thing to run by
 hand before a release. `ListModels` for whether a name is still in the catalogue and still does
 `bidiGenerateContent`, then a real `BidiGenerateContent` socket for whether a session actually
 opens. No audio is sent, so a run costs two sessions and no tokens. Exits non-zero if anything is

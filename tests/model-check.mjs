@@ -9,7 +9,7 @@
  * weeks to live. Nothing in the repository notices when one of them is switched
  * off — the extension notices, one user at a time, in the middle of a sentence.
  * So this asks the API directly, and `.github/workflows/model-health.yml` asks
- * it every five minutes.
+ * it every hour.
  *
  * Two questions per model, because they fail separately:
  *

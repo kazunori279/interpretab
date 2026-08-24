@@ -5,14 +5,15 @@
 # Nothing else in this repository notices when one is switched off -- the users
 # notice, all at once, in the middle of a sentence. So this asks the API.
 #
-# GitHub runs scheduled workflows on a best-effort queue, so */5 means "about
-# every five minutes when the fleet is quiet" and sometimes fifteen. That is
-# still two orders of magnitude better than waiting for a bug report.
+# Hourly. It started at */5, which GitHub's best-effort queue turned into one
+# run in the first forty minutes anyway -- a schedule the queue ignores is not a
+# schedule. Against a two-week notice period an hour is not the constraint, and
+# the checks it skips were the ones that would have found nothing.
 name: Model health
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 # Never two at once. A backed-up queue firing three of these together would
@@ -58,7 +59,7 @@ jobs:
 
       # One open issue is the lock as well as the alert: while it is open the
       # discovery agent below does not run again, so a model that stays gone
-      # costs one agent run rather than one every five minutes.
+      # costs one agent run rather than one an hour.
       - id: lock
         env:
           GH_TOKEN: ${{ github.token }}
@@ -80,7 +81,7 @@ jobs:
           gone="${GONE:-none classified as gone — this may be a network or quota failure}"
           gh issue create --label model-outage \
             --title "Model unreachable: ${gone}" \
-            --body "The five-minute check could not use a model named in docs/config.json.
+            --body "The hourly check could not use a model named in docs/config.json.
 
           Gone: ${gone}
 
