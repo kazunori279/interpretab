@@ -83,6 +83,27 @@ jobs:
           git commit -F "${{ runner.temp }}/commit-message.txt"
           git push
 
+      # "No change" is the healthy answer on an ordinary morning. During an
+      # outage it is the opposite: the agent went looking for the successor to a
+      # model that is gone and came back with nothing, and the next thing that
+      # tries is this same agent, once a human closes the issue. Nothing else
+      # reports that, so it is reported where the outage is already being read.
+      # The loop is empty when no outage is open, which is most days.
+      - if: steps.find.outputs.changed != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          for number in $(gh issue list --label model-outage --state open --json number --jq '.[].number'); do
+            gh issue comment "$number" --body "The discovery agent ran and found nothing to commit — docs/config.json is unchanged.
+
+          Either the successor is not documented yet, or every candidate failed to open a session.
+          The run log says which. Closing this issue arms the agent for one more attempt; a name
+          found by hand goes into docs/config.json the same way.
+
+          Run: ${RUN_URL}"
+          done
+
       # After the commit, so it compares the file that was just published, and
       # `continue-on-error` because a difference is the thing this step is for.
       - id: rates

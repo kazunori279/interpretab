@@ -76,10 +76,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GONE: ${{ steps.check.outputs.gone }}
+          OWNER: ${{ github.repository_owner }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           gone="${GONE:-none classified as gone — this may be a network or quota failure}"
-          gh issue create --label model-outage \
+          url=$(gh issue create --label model-outage \
             --title "Model unreachable: ${gone}" \
             --body "The hourly check could not use a model named in docs/config.json.
 
@@ -88,7 +89,49 @@ jobs:
           Run: ${RUN_URL}
 
           The discovery agent runs once while this issue is open; closing the issue arms it again.
-          This issue closes itself when the check next passes."
+          This issue closes itself when the check next passes.")
+          echo "$url"
+          # Assigned, not merely opened. An assignment is the one GitHub event
+          # that mails a maintainer whatever their watch setting is, and an
+          # outage that waits for someone to look at the repository is an outage
+          # that waits. Separately from the create, and forgiving, because a
+          # failed assignment must not cost the alert itself.
+          gh issue edit "$url" --add-assignee "$OWNER" || echo "could not assign to ${OWNER}"
+
+      # An outage nobody has fixed is still an outage, and the issue above is a
+      # single notification: after it, the hourly runs are silent for as long as
+      # the model stays gone, which reads exactly like the problem having gone
+      # away. So while the check keeps failing, the issue gets a comment — which
+      # reaches its assignee the same way the issue did.
+      #
+      # Six hours, not every run. That is the config file's TTL: the interval
+      # after which a correction would already have reached every installation,
+      # so it is the interval after which silence means something. Measured from
+      # the last thing said on the issue rather than from the hour, so a person
+      # who comments does not get the next one on top of it.
+      - if: steps.check.outputs.healthy != 'true' && steps.lock.outputs.alreadyOpen == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GONE: ${{ steps.check.outputs.gone }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gone="${GONE:-none classified as gone — this may be a network or quota failure}"
+          now=$(date -u +%s)
+          for number in $(gh issue list --label model-outage --state open --json number --jq '.[].number'); do
+            issue=$(gh issue view "$number" --json createdAt,comments)
+            latest=$(echo "$issue" | jq -r '[.createdAt] + [.comments[].createdAt] | max')
+            quiet=$(( (now - $(date -u -d "$latest" +%s)) / 3600 ))
+            if [ "$quiet" -lt 6 ]; then
+              echo "#${number}: last spoken to ${quiet}h ago, nothing to add"
+              continue
+            fi
+            down=$(( (now - $(date -u -d "$(echo "$issue" | jq -r .createdAt)" +%s)) / 3600 ))
+            gh issue comment "$number" --body "Still unreachable ${down} hours after this issue was opened.
+
+          Gone: ${gone}
+
+          Run: ${RUN_URL}"
+          done
 
       # Back to normal. Closed rather than left for someone to tidy, because an
       # issue nobody closes is a lock nobody releases.

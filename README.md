@@ -1146,6 +1146,22 @@ agent does not run again, so a model that stays gone costs one agent run and not
 minutes; the issue closes itself when the check next passes. `tests/model-tools.test.js` is about
 `mergeConfig`, which is the only function in any of this that decides what gets committed.
 
+**An issue is one notification, and an outage is not one moment.** The issue is assigned to the
+repository owner as it is opened, because an assignment is the one thing GitHub mails a maintainer
+regardless of how they watch the repository — and separately from the create, so a failed
+assignment cannot cost the alert. After that the hourly runs would be silent for as long as the
+model stayed gone, which reads exactly like the problem having gone away, so a check that keeps
+failing comments on the issue: six hours since the last thing said on it, six being the config
+file's TTL and therefore the interval after which a correction would already have reached every
+installation. A discovery run that came back with nothing to commit comments too. That run prints
+"no change" on an ordinary morning as well, and during an outage the same line means the successor
+was not found — the two are indistinguishable from outside, and only one of them is an emergency.
+
+What none of it can see is itself. A schedule that stops running looks exactly like an hour with
+nothing wrong. GitHub mails the owner when it disables a schedule for repository inactivity, which
+is the usual way that happens; the rest — Actions turned off, a queue that never fires — would need
+a monitor outside GitHub, and there is not one.
+
 **A price goes wrong more quietly than a model does.** A retired model announces itself: sessions
 stop opening and the hourly check says so. A changed price announces nothing. The meter keeps
 printing, the number is simply wrong, and the two ways that happens both look like an ordinary
