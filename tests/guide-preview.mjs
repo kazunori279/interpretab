@@ -45,8 +45,11 @@ const THEME = "https://kazunori279.github.io/interpretab/assets/css/style.css";
 
 /** Every Liquid tag and filter the two templates are allowed to use. */
 const SUPPORTED = {
-  tags: ["comment", "assign", "if", "elsif", "else", "for", "endcomment", "endif", "endfor"],
-  filters: ["default", "size", "split", "minus", "append", "replace", "relative_url"],
+  tags: [
+    "comment", "assign", "if", "elsif", "else", "unless", "for",
+    "endcomment", "endif", "endunless", "endfor",
+  ],
+  filters: ["default", "size", "split", "minus", "plus", "append", "replace", "relative_url"],
 };
 
 const args = process.argv.slice(2);
@@ -200,6 +203,10 @@ function parse(tokens) {
         }
         at++;
         nodes.push({ type: "if", branches });
+      } else if (name === "unless") {
+        // No `else` arm: Liquid has one, and the slideshow has never wanted it.
+        nodes.push({ type: "unless", when: token.body.slice(6).trim(), nodes: block(["endunless"]) });
+        at++;
       } else if (name === "for") {
         const [, variable, expression] = token.body.match(/^for\s+(\w+)\s+in\s+([\s\S]+)$/);
         nodes.push({ type: "for", variable, expression, nodes: block(["endfor"]) });
@@ -226,6 +233,8 @@ function emit(nodes, scope) {
           break;
         }
       }
+    } else if (node.type === "unless") {
+      if (!truthy(condition(node.when, scope))) out += emit(node.nodes, scope);
     } else if (node.type === "for") {
       const items = loopItems(node.expression, scope);
       for (const [i, item] of items.entries()) {
@@ -294,6 +303,7 @@ function apply(name, value, [first, second]) {
     case "size": return value?.length ?? 0;
     case "split": return String(value).split(first);
     case "minus": return Number(value) - Number(first);
+    case "plus": return Number(value) + Number(first);
     case "append": return `${value}${first}`;
     case "replace": return String(value).split(first).join(second);
     // The site is served from a subdirectory, so Jekyll would put the project

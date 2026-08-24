@@ -92,6 +92,21 @@
       .install .install-say {
         flex: none; align-self: stretch; min-height: var(--say); margin: 0 0 var(--gap);
       }
+      /* Next, in the corner the eye is in when the sentence runs out. It points
+         at the same radio the tab does, so the strip above keeps up with it.
+         `flex-end` on the cross axis of a column, rather than `right`, is what
+         puts it in the other corner on the page that runs the other way. */
+      .install-next {
+        flex: none; align-self: flex-end; margin-top: var(--gap);
+        display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;
+        padding: 0.35rem 0.9rem; border: 1px solid #0969da; border-radius: 2rem;
+        font-size: 0.9rem; line-height: 1.5; font-weight: 600;
+        color: #fff; background: #0969da;
+        -webkit-user-select: none; user-select: none;
+      }
+      .install-next:hover { background: #0a58ca; border-color: #0a58ca; }
+      .install-next svg { flex: none; width: 1.1rem; height: 0.85rem; }
+      [dir="rtl"] .install-next svg { transform: scaleX(-1); }
       @media (max-width: 40rem) {
         .install { --stage: 19rem; --pad: 0.6rem; --say: 6rem; }
       }

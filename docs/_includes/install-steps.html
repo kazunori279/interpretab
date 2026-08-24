@@ -6,7 +6,8 @@
 
   No script. The state is a radio button per step — visually hidden, still
   focusable, so the arrow keys walk the steps the way they walk any radio group
-  — and the tabs are `<label>`s pointing at them. Everything else is `:checked ~`
+  — and the tabs, and the Next button in each step's corner, are `<label>`s
+  pointing at them. Everything else is `:checked ~`
   in `_includes/head-custom.html`. A slideshow that needs JavaScript to show its
   first slide is a slideshow that shows nothing while the page is still loading,
   and this one is the first thing a new reader is looking for.
@@ -228,6 +229,20 @@
           </div>
         </div>
         {%- endif %}
+        {%- unless forloop.last %}
+        {%- comment -%}
+          The way forward, in the corner a reader is already looking at when
+          they finish the sentence. The tab strip was the only way through, and
+          a strip of ten numbered pills reads as a table of contents rather than
+          as a control: readers were arriving at step one and stopping there.
+          It is the same radio the tab points at, so the strip keeps up with it.
+        {%- endcomment -%}
+        <label class="install-next" for="install-step-{{ forloop.index | plus: 1 }}">{{ copy.next | default: site.data.install.en.next }}
+          <svg viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+            <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </label>
+        {%- endunless %}
       </div>
     </div>
     {%- endfor %}

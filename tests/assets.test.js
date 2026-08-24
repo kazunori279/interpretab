@@ -869,7 +869,15 @@ test("the install slideshow has its pictures, its steps and its ten translations
     const bodies = [...block.matchAll(/^ {6}body: \S/gm)].length;
     assert.equal(steps, count, `install.yml: ${translated[i]} has ${steps} steps, not ${count}`);
     assert.equal(bodies, count, `install.yml: ${translated[i]} has ${bodies} of its ${count} sentences`);
+    // The Next button falls back to English rather than rendering blank, which
+    // is the failure that would never be noticed on the one page anybody reads.
+    assert.match(block, /^ {2}next: \S/m, `install.yml: ${translated[i]} has no word for Next`);
   }
+  assert.match(
+    include,
+    /<label class="install-next" for="install-step-\{\{ forloop\.index \| plus: 1 \}\}"/,
+    "install-steps.html no longer offers a way forward other than the tab strip"
+  );
   assert.equal(
     figures.length,
     count,

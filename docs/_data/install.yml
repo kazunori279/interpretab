@@ -32,12 +32,16 @@
 # link it renders, so a translation cannot be the one that sends a reader out of
 # the slideshow and loses their place in it.
 # `tab` is the label on the step's button and has to stay short — ten of them
-# wrap to a second row in every language.
+# wrap to a second row in every language. `next` is the button in the corner of
+# every step but the last, which is there because the tab strip was not enough:
+# ten numbered pills read as a table of contents, and readers were arriving at
+# step one and stopping.
 #
 # The keys are the `code` values in `languages.yml`, and a page whose language
 # is missing here falls back to English rather than rendering an empty slide.
 
 en:
+  next: Next
   steps:
     - tab: Add to Chrome
       body: >-
@@ -92,6 +96,7 @@ en:
 # folded scalar joins its lines with a space, and a space between two kanji is a
 # space a reader sees.
 ja:
+  next: 次へ
   steps:
     - tab: Chrome に追加
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome ウェブストアの Interpretab</a> を開き、<b>Chrome に追加</b>を押す。
@@ -115,6 +120,7 @@ ja:
       body: サイドパネルで言語を選び、<b>Start</b> を押します。動画を再生すると、その言語で声が返ってきます。訳された声が聞こえないときは、動画そのものの言語とは別の言語を選んでみてください。
 
 zh:
+  next: 下一步
   steps:
     - tab: 添加至 Chrome
       body: 打开 <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 应用商店中的 Interpretab</a>，点击<b>添加至 Chrome</b>。
@@ -138,6 +144,7 @@ zh:
       body: 在侧边栏选择语言，按 <b>Start</b>。播放视频，声音就会用那个语言回来。要是听不到翻译，就换一个和视频本身不同的语言试试。
 
 es:
+  next: Siguiente
   steps:
     - tab: Añadir a Chrome
       body: >-
@@ -190,6 +197,7 @@ es:
         vídeo.
 
 fr:
+  next: Suivant
   steps:
     - tab: Ajouter à Chrome
       body: >-
@@ -243,6 +251,7 @@ fr:
         une langue autre que celle que parle déjà la vidéo.
 
 de:
+  next: Weiter
   steps:
     - tab: Hinzufügen
       body: >-
@@ -296,6 +305,7 @@ de:
         Sprache wählen als die, die im Video ohnehin gesprochen wird.
 
 pt:
+  next: Próximo
   steps:
     - tab: Usar no Chrome
       body: >-
@@ -348,6 +358,7 @@ pt:
         já fala.
 
 ko:
+  next: 다음
   steps:
     - tab: Chrome에 추가
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 웹 스토어의 Interpretab</a>을 열고 <b>Chrome에 추가</b>를 누릅니다.
@@ -371,6 +382,7 @@ ko:
       body: 사이드 패널에서 언어를 고르고 <b>Start</b>를 누릅니다. 영상을 재생하면 그 언어로 목소리가 돌아옵니다. 번역된 목소리가 들리지 않으면, 영상에서 원래 쓰는 언어가 아닌 다른 언어를 골라 보세요.
 
 hi:
+  next: आगे
   steps:
     - tab: Chrome में जोड़ें
       body: >-
@@ -416,6 +428,7 @@ hi:
         न दे तो वीडियो जिस भाषा में है, उससे अलग कोई भाषा चुनें।
 
 ar:
+  next: التالي
   steps:
     - tab: الإضافة إلى Chrome
       body: >-
