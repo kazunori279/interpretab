@@ -309,7 +309,11 @@ async function start(chrome, origin, lang) {
     const r = row.getBoundingClientRect();
     return { x: 0, y: 0, width: 420, height: Math.round(r.bottom) + 14 };
   })()`);
-  await capture(page, "start", lang, { ...clip, scale: 1.6 }, await rect(page, "toggle"));
+  // Above, not beside. This is the whole panel in a picture that renders three
+  // hundred pixels wide, so the only room left of Start is nine pixels and the
+  // room to its right is the microphone button — an arrow there covers the
+  // control it is not pointing at.
+  await capture(page, "start", lang, { ...clip, scale: 1.6 }, await rect(page, "toggle"), "above");
   await page.close();
 }
 
@@ -498,6 +502,7 @@ function arrowSide(box, ratio, prefer) {
   const room = {
     left: (box.x / 100) * rendered,
     right: ((100 - box.x - box.width) / 100) * rendered,
+    above: (box.y / 100) * (rendered / ratio),
   };
   for (const side of prefer ? [prefer, "left", "right"] : ["left", "right"]) {
     if (room[side] >= ARROW) return side;

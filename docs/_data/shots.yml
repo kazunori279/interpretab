@@ -227,7 +227,7 @@ start:
     file: install-4-start-en.png
     width: 672
     height: 798
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.7
@@ -237,7 +237,7 @@ start:
     file: install-4-start-ja.png
     width: 672
     height: 845
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.8
@@ -247,7 +247,7 @@ start:
     file: install-4-start-zh.png
     width: 672
     height: 746
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 89.8
@@ -257,7 +257,7 @@ start:
     file: install-4-start-es.png
     width: 672
     height: 798
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.7
@@ -267,7 +267,7 @@ start:
     file: install-4-start-fr.png
     width: 672
     height: 798
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.7
@@ -277,7 +277,7 @@ start:
     file: install-4-start-de.png
     width: 672
     height: 790
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.6
@@ -287,7 +287,7 @@ start:
     file: install-4-start-pt.png
     width: 672
     height: 762
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90.3
@@ -297,7 +297,7 @@ start:
     file: install-4-start-ko.png
     width: 672
     height: 739
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 90
@@ -307,7 +307,7 @@ start:
     file: install-4-start-hi.png
     width: 672
     height: 763
-    side: right
+    side: above
     mark:
       x: 2.9
       y: 89.9
@@ -317,7 +317,7 @@ start:
     file: install-4-start-ar.png
     width: 672
     height: 635
-    side: left
+    side: above
     mark:
       x: 81.2
       y: 88.3
