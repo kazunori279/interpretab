@@ -227,7 +227,7 @@ export function mergeConfig(current, verdict, found) {
 
 /** The file, formatted the way the committed one is: two spaces, lists on one line. */
 export function formatConfig(config) {
-  const list = (names) => JSON.stringify(names);
+  const list = (names) => `[${names.map((name) => JSON.stringify(name)).join(", ")}]`;
   const rates = Object.entries(config.rates || {})
     .map(([model, r]) => `    ${JSON.stringify(model)}: { "audioIn": ${r.audioIn}, "audioOut": ${r.audioOut} }`)
     .join(",\n");
