@@ -150,6 +150,15 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   position: absolute; width: 1px; height: 1px;
   margin: -1px; padding: 0; border: 0; clip-path: inset(50%); overflow: hidden;
 }
+/* Which of the two cards this is, in the words of the link that opened it. The
+   panel's own headings are the two direction cards, and this sits at the same
+   size and weight as those rather than shouting over them. */
+.stepcard-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
 .stepcard-tabs { display: flex; justify-content: center; gap: 0.35rem; }
 .stepcard-tab {
   display: grid; place-items: center; cursor: pointer;

@@ -219,6 +219,12 @@
            between the rows rather than the drawing changing, because which of
            the two a step is about is the whole of what separates them. -->
       <section class="stepcard" id="prepCard" hidden>
+        <!-- The heading is the link's own message, not a second one saying the
+             same thing in ten languages: a card that opens well below the line
+             that opened it has to say which of the two it is, and the two
+             cannot drift apart if they are one string. The `<a1>` in it comes
+             out as text — there is no `data-link1` on a heading. -->
+        <h2 class="stepcard-title" data-i18n="panelStepLinksPrep"></h2>
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-1" checked />
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-2" />
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-3" />
@@ -369,6 +375,7 @@
            that is not there. The two words that are drawn — `meet.google.com` and
            `Interpretab (translated)` — are translated nowhere. -->
       <section class="stepcard" id="meetCard" hidden>
+        <h2 class="stepcard-title" data-i18n="panelStepLinksMeet"></h2>
         <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-1" checked />
         <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-2" />
         <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-3" />
