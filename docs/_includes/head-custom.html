@@ -214,6 +214,16 @@
       .install-page { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.2rem 1.3rem; }
       .install-line { height: 0.55rem; width: 72%; border-radius: 0.3rem; background: #eceff3; }
       .install-line--head { width: 40%; height: 0.85rem; background: #dfe3e8; }
+      /* Create API key sits in the top right corner of the API keys page,
+         across from the heading rather than down the middle of it. The drawing
+         had it centred, which sent readers looking through the middle of a page
+         whose one blue button is in a corner. `space-between` rather than a
+         side, so the mirrored page puts it in the corner it is mirrored into. */
+      .install-pagehead {
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      }
+      .install-pagehead .install-line--head { flex: none; }
+      .install-pagehead .install-cta { margin-top: 0; }
       .install-cta {
         position: relative; align-self: center; margin-top: 0.4rem;
         padding: 0.4rem 0.95rem; border-radius: 2rem; background: #0b57d0;
