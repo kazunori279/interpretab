@@ -155,6 +155,40 @@ test("rates keep the entries that are wholly valid and drop the rest", () => {
   assert.deepEqual(Object.keys(config.rates).sort(), ["free-model", "good-model"]);
 });
 
+test("dates are kept per model, and only when they are dates", () => {
+  const config = parsed({
+    modelInfo: {
+      "gemini-3.5-live-translate-preview": { since: "2026-05-01", retiring: "2026-11-30" },
+      "gemini-4-live-preview": { since: "2026-08-20" },
+      "gemini-old-live": { retiring: "soon" },
+      "not a model name": { since: "2026-01-01" },
+      "gemini-3.1-flash-live-preview": { since: "2026-02-30" },
+    },
+  });
+  assert.deepEqual(config.modelInfo["gemini-3.5-live-translate-preview"], {
+    since: "2026-05-01",
+    retiring: "2026-11-30",
+  });
+  assert.deepEqual(config.modelInfo["gemini-4-live-preview"], { since: "2026-08-20" });
+  // A retirement date nobody can read is worse than none: it is the one field
+  // the menu turns into a deadline, and "soon" would be shown as one.
+  assert.equal("gemini-old-live" in config.modelInfo, false);
+  assert.equal("not a model name" in config.modelInfo, false);
+  // February has 28 days in 2026, and `Date` would roll this to March 2nd.
+  assert.equal("gemini-3.1-flash-live-preview" in config.modelInfo, false);
+});
+
+test("a file with no dates in it says nothing about dates", () => {
+  // `null` rather than `{}`, because the menu asks this object about a name and
+  // an empty table would be a table that has been read and is silent — which is
+  // the same answer, and one fewer shape for the caller to handle.
+  assert.equal(parsed({}).modelInfo, null);
+  assert.equal(parsed({ modelInfo: {} }).modelInfo, null);
+  assert.equal(parsed({ modelInfo: [] }).modelInfo, null);
+  assert.equal(parsed({ modelInfo: "2026-08-20" }).modelInfo, null);
+  assert.equal(parsed({ modelInfo: { "gemini-x-live": {} } }).modelInfo, null);
+});
+
 test("a rate table with nothing valid in it is no opinion, not an empty one", () => {
   // `costOf` falls back to the built-in table on a null, and to nothing at all
   // on an empty object, which would price every model as the expensive one.
@@ -224,6 +258,32 @@ test("the shipped model is always a candidate, whatever the file says", () => {
 test("a file that already names the shipped model does not name it twice", () => {
   assert.deepEqual(modelCandidates("shipped", ["shipped", "newer"]), ["shipped", "newer"]);
   assert.deepEqual(modelCandidates("shipped", ["newer", "shipped"]), ["newer", "shipped"]);
+});
+
+test("a preferred model is moved to the front, and never made the only one", () => {
+  // The whole safety of the setting is that it reorders. Every other candidate
+  // is still behind it, so a model that has been chosen and then withdrawn
+  // costs a reconnection, not a session.
+  assert.deepEqual(modelCandidates("shipped", ["newer", "shipped"], "shipped"), [
+    "shipped",
+    "newer",
+  ]);
+  assert.deepEqual(modelCandidates("shipped", ["newer", "shipped"], "newer"), [
+    "newer",
+    "shipped",
+  ]);
+});
+
+test("a preference for a name that is gone is ignored, not obeyed", () => {
+  // How the setting expires: Google withdraws the name, the file stops listing
+  // it, and the choice stops applying without anybody being told to go and
+  // change it.
+  assert.deepEqual(modelCandidates("shipped", ["newer", "shipped"], "retired"), [
+    "newer",
+    "shipped",
+  ]);
+  assert.deepEqual(modelCandidates("shipped", ["newer", "shipped"], ""), ["newer", "shipped"]);
+  assert.deepEqual(modelCandidates("shipped", null, "newer"), ["shipped"]);
 });
 
 // --------------------------------------------------------------------- fetch

@@ -13,7 +13,8 @@ import {
   loadSettings,
   saveSettings,
 } from "./lib/settings.js";
-import { DEFAULT_VOICE, VOICES, voiceToneKey } from "./lib/languages.js";
+import { DEFAULT_VOICE, MODEL, SIMUL_MODEL, VOICES, voiceToneKey } from "./lib/languages.js";
+import { modelCandidates, readCached } from "./lib/remote-config.js";
 import {
   MAX_GLOSSARY_BYTES,
   ensureGlossary,
@@ -59,6 +60,7 @@ async function init() {
   el("setupCard").hidden = Boolean(settings.apiKey);
   await refreshMicStatus();
   await loadDevices();
+  await loadModels();
   renderGlossary(await ensureGlossary());
   await focusRequestedSection();
 }
@@ -109,9 +111,14 @@ function bind() {
   // Unticking this is also what deletes the cached copy — the service worker
   // does it on the next read, so the switch means "and forget what you were
   // told" rather than only "stop asking".
-  el("configUpdates").addEventListener("change", () =>
-    saveSettings({ configUpdates: el("configUpdates").checked })
-  );
+  // Reloading the model pickers is part of the same click: the list under them
+  // is the file's, so switching it off has to collapse them to the bundled name
+  // in front of the person who switched it off.
+  el("configUpdates").addEventListener("change", async () => {
+    settings.configUpdates = el("configUpdates").checked;
+    await saveSettings({ configUpdates: settings.configUpdates });
+    await loadModels();
+  });
   el("voice").addEventListener("change", () => saveSettings({ voice: el("voice").value }));
   // `input`, not `change`: the overlay follows the store, so writing on every
   // drag step is what makes the size adjustable against the live video.
@@ -122,6 +129,8 @@ function bind() {
   });
   el("micInput").addEventListener("change", () => saveDevice(INPUT));
   el("micOutput").addEventListener("change", () => saveDevice(OUTPUT));
+  el("simulModel").addEventListener("change", () => saveModel(SIMUL));
+  el("conversationModel").addEventListener("change", () => saveModel(CONVERSATION));
   // Plugging in the headset or the virtual cable is often the step before
   // opening this page, and a device list that needed a reload to notice would be
   // the first thing to go wrong in a workflow whose whole point is a device that
@@ -322,6 +331,84 @@ async function saveDevice(spec) {
   settings[spec.key] = el(spec.select).value;
   await saveSettings({ [spec.key]: settings[spec.key] });
   setStatus(el(spec.status), t(settings[spec.key] ? spec.saved : spec.cleared), true);
+}
+
+/**
+ * Which model each mode starts on — the same table twice, like the devices.
+ *
+ * `bundled` is the name this build shipped with and the one thing the list can
+ * never be without; `listed` is where the config file keeps the rest.
+ */
+const SIMUL = {
+  select: "simulModel",
+  key: "simulModel",
+  bundled: SIMUL_MODEL,
+  listed: "simul",
+};
+
+const CONVERSATION = {
+  select: "conversationModel",
+  key: "conversationModel",
+  bundled: MODEL,
+  listed: "conversation",
+};
+
+/**
+ * Fill both pickers from the candidate list the next session would run.
+ *
+ * The cached copy is read rather than the worker asked, because asking is what
+ * makes it fetch: `ensureConfig` refreshes a stale copy, and opening a settings
+ * page is not a reason to reach GitHub. The worker owns when that happens, on
+ * its own timer and mid-run when a model goes; this menu shows what is already
+ * known. `configUpdates` is honoured here rather than there for the same
+ * reason — with updates off the answer is the bundled name and no read at all.
+ *
+ * A saved name the list no longer has is left in storage and reported instead
+ * of being deleted. `modelCandidates` already ignores it, so nothing is running
+ * on it either way, and keeping it means a choice survives the file being
+ * unreadable for an afternoon, or updates being switched off and on again.
+ */
+async function loadModels() {
+  const config = settings.configUpdates === false ? null : (await readCached()).data;
+  const dropped = [];
+  for (const spec of [SIMUL, CONVERSATION]) {
+    const candidates = modelCandidates(spec.bundled, config?.models?.[spec.listed]);
+    const saved = settings[spec.key] || "";
+    if (saved && !candidates.includes(saved)) dropped.push(saved);
+    fillModels(spec, candidates, config?.modelInfo);
+  }
+  setStatus(el("modelStatus"), dropped.length ? t("optModelReverted", [dropped.join(", ")]) : "");
+}
+
+/**
+ * The first entry is the recommendation and carries no name of its own, so that
+ * someone who never touches this menu keeps following the file as it moves.
+ *
+ * "New" is measured against the recommended model rather than against today:
+ * the config file dates a name from when this project first reached it, and a
+ * candidate dated after the one the recommendation is on is the one that turned
+ * up since. No clock, and nothing that goes stale in a tab left open.
+ */
+function fillModels(spec, candidates, info) {
+  const select = el(spec.select);
+  const current = info?.[candidates[0]]?.since || "";
+  select.innerHTML = "";
+  select.appendChild(new Option(t("optModelAuto", [candidates[0]]), ""));
+  for (const name of candidates) {
+    const dates = info?.[name];
+    let label = name;
+    if (dates?.retiring) label = t("optModelRetiring", [name, dates.retiring]);
+    else if (dates?.since && dates.since > current) label = t("optModelNew", [name]);
+    select.appendChild(new Option(label, name));
+  }
+  const saved = settings[spec.key] || "";
+  select.value = candidates.includes(saved) ? saved : "";
+}
+
+async function saveModel(spec) {
+  settings[spec.key] = el(spec.select).value;
+  await saveSettings({ [spec.key]: settings[spec.key] });
+  setStatus(el("modelStatus"), t("optModelSaved"), true);
 }
 
 /** The voice list is bundled — it is a whitelist the API enforces, not a menu. */

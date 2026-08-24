@@ -22,7 +22,8 @@
  *
  * Usage:
  *   node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic]
- *                             [--mic-mode simul|conversation] [--minutes N] [--raw]
+ *                             [--mic-mode simul|conversation] [--minutes N]
+ *                             [--model <id>] [--raw]
  *
  * The key comes from a file rather than an argument so it stays out of the shell
  * history and the process list. There are three distinct `setup` frames to
@@ -32,6 +33,12 @@
  * past the ~10 minute expiry, which is the only way to see a real `goAway`;
  * `--raw` prints every frame the server sends, minus the audio payloads that
  * would drown the log.
+ *
+ * `--model` runs the same frame against a name the build does not ship. That is
+ * what `tests/model-check.mjs` cannot answer: it opens a session and closes it,
+ * so it proves a model accepts the frame and nothing about what comes back out.
+ * A candidate that reaches `docs/config.json`, or the Options menu, has been
+ * verified only that far — this is where somebody listens to it.
  *
  * Every run also reports the token tally the side panel is built on, both
  * summed and read as a running total. Which of the two is right is not
@@ -61,6 +68,7 @@ const [keyFile, wavFile] = process.argv.slice(2);
 const minutes = Number(argOf("--minutes", 0));
 const direction = argOf("--direction", "tab");
 const micMode = argOf("--mic-mode", DEFAULTS.micMode);
+const modelOverride = argOf("--model", "");
 const raw = hasFlag("--raw");
 
 if (
@@ -71,7 +79,7 @@ if (
 ) {
   console.error(
     "usage: node tests/live-smoke.mjs <key-file> <wav> [--direction tab|mic] " +
-      "[--mic-mode simul|conversation] [--minutes N] [--raw]"
+      "[--mic-mode simul|conversation] [--minutes N] [--model <id>] [--raw]"
   );
   process.exit(2);
 }
@@ -113,6 +121,10 @@ const GLOSSARY = [{ source: "リアルタイム翻訳", target: "Interpretab liv
 
 const settings = { ...DEFAULTS, micMode, tabTarget: "en", micSource: "ja", micTarget: "en" };
 const useGlossary = !isSimul(direction, settings);
+// One name, and no fallback list behind it. A run that is here to find out
+// whether a candidate works should fail on that candidate, not quietly succeed
+// on the one it fell back to.
+const model = modelOverride || modelFor(direction, settings);
 
 // The same call the extension makes at Start, run here for the same two
 // reasons: it is the only place `x-goog-api-client` can be sent, and it is the
@@ -139,6 +151,7 @@ const loop = new SessionLoop({
   // mode — detects the source and can carry no glossary. Conversation mode
   // declares both languages and applies the system instruction and glossary.
   setup: buildSetup(direction, settings, useGlossary ? GLOSSARY : []),
+  models: [model],
   SessionClass,
   // The loop defaults to performance.now(); Date.now() keeps its clock and this
   // script's log stamps on the same origin.
@@ -184,7 +197,7 @@ await ready;
 const speechSec = pcm.length / 2 / 16000;
 const passes = minutes ? Math.ceil((minutes * 60_000) / (speechSec * 1000)) : 1;
 log(
-  `${direction}${direction === "mic" ? ` (${micMode})` : ""}: ` +
+  `${direction}${direction === "mic" ? ` (${micMode})` : ""} on ${model}: ` +
     `streaming ${speechSec.toFixed(1)}s of speech` +
     (passes > 1 ? ` × ${passes} passes ≈ ${minutes} min` : "")
 );
@@ -214,7 +227,6 @@ console.log("sessions:", `${counts.opened} opened, ${counts.ready} ready, ${coun
 console.log("goAways :", counts.goAways, `| server closes: ${counts.closed}`);
 console.log("max gap :", `${(maxAudioGapMs / 1000).toFixed(1)}s between output audio frames`);
 
-const model = modelFor(direction, settings);
 // What the side panel shows: the audio this run put on the wire and got back,
 // at the 25 tokens a second the Live API bills it at.
 const clock = { inSeconds: speechSec * passes + 15, outSeconds: audioBytes / 2 / 24000 };

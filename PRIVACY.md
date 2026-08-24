@@ -39,8 +39,8 @@ The request is a plain `GET` of a static file. It carries no query string, no AP
 version number and no identifier: nothing in it distinguishes one installation from another.
 GitHub, who host the file, see what any web server sees when a file is fetched — an IP address
 and the headers Chrome sends. Nothing is uploaded, and nothing in the reply is executed: every
-field is a model name, a number or a link back to this project, and each one is checked against
-a fixed shape before it is used.
+field is a model name, a date, a number or a link back to this project, and each one is checked
+against a fixed shape before it is used.
 
 Turning it off is one checkbox, **Model updates** on the Options page. The extension then uses
 the names and prices it shipped with and deletes the copy it had cached. The cost is that on the

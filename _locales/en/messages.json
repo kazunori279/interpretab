@@ -399,6 +399,30 @@
     "description": "<a1> links to the configuration file itself, on GitHub."
   },
 
+  "optModelHeading": { "message": "Which model to run" },
+  "optModelNote": {
+    "message": "Every session starts on the model Interpretab has been tested against. Google publishes the next one months before it switches the old one off, and this is where to take it early — nothing here has translated anything through it yet, so it may be worse, or refuse to connect. Per mode, because the two modes run different models. Applies the next time you press Start."
+  },
+  "optModelSimul": { "message": "Tab audio, and simultaneous mode" },
+  "optModelConversation": { "message": "Two-way conversation" },
+  "optModelAuto": {
+    "message": "Recommended — {1}",
+    "description": "The first entry in the model dropdown. {1} is a Gemini model name and is never translated."
+  },
+  "optModelNew": {
+    "message": "{1} — new",
+    "description": "A model that appeared after the recommended one. {1} is a Gemini model name."
+  },
+  "optModelRetiring": {
+    "message": "{1} — until {2}",
+    "description": "{1} is a Gemini model name; {2} is the date Google switches it off, as 2026-08-25."
+  },
+  "optModelSaved": { "message": "Saved. Applies the next time you press Start." },
+  "optModelReverted": {
+    "message": "{1} is not on the list any more, so that mode runs the recommended model.",
+    "description": "{1} is one or two Gemini model names, comma-separated."
+  },
+
   "optGlossaryHeading": { "message": "Glossary" },
   "optGlossaryNote": {
     "message": "Names and terms you want said and spelled a particular way — products, people, jargon. One per line, as <code>source,pronunciation,transcript</code>: the second column is how it should be said, and the optional third is how it should be written in the subtitles. The <a1>user guide</a1> has which mode it applies to, and how to write one.",

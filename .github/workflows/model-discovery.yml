@@ -9,18 +9,20 @@
 #
 #   1. A name only reaches the config after a real Live session has been opened
 #      with it and answered `setupComplete`. An invented name never verifies.
-#   2. `mergeConfig` may add, but it reorders nothing: a newcomer goes behind
-#      the name already serving users, and it cannot empty a list.
+#   2. `mergeConfig` may add, and it reorders in one case only: a newcomer goes
+#      behind the name already serving users unless that name has a published
+#      shutdown date within a week, and it cannot empty a list.
 #   3. `blockBelowVersion` -- the field that can stop every installation -- is
 #      copied through untouched, and the script aborts if it ever isn't.
 #
 # See `tests/model-tools.test.js`, which is about exactly those rules.
 #
-# It also watches the other half of what the config file carries: prices. A price
-# the agent could not read leaves the file identical to a price that did not
-# change, and the table compiled into the build drifts from the published one
-# with nothing shipping the correction. Neither shows up as a failed run, so each
-# gets an issue -- see the two steps at the end.
+# It also watches what goes wrong without anything failing. A price the agent
+# could not read leaves the file identical to a price that did not change; the
+# table compiled into the build drifts from the published one with nothing
+# shipping the correction; and the model names compiled into the build fall
+# behind the ones the config starts sessions on. None of the three shows up as a
+# failed run, so each gets an issue -- see the step at the end.
 name: Model discovery
 
 on:
@@ -110,11 +112,11 @@ jobs:
         continue-on-error: true
         run: node tools/check-rates.mjs
 
-      # Two ways the prices go wrong quietly, each behind one open issue that is
-      # also its own lock: while it is open nothing new is filed, and it closes
-      # itself when the condition clears. Same shape as the `model-outage` issue
-      # in `model-health.yml`, and deliberately a different label, so a pricing
-      # question never stops the discovery agent from running.
+      # Three ways the file goes wrong quietly, each behind one open issue that
+      # is also its own lock: while it is open nothing new is filed, and it
+      # closes itself when the condition clears. Same shape as the
+      # `model-outage` issue in `model-health.yml`, and deliberately different
+      # labels, so none of these ever stops the discovery agent from running.
       #
       # Everything the bodies say goes through the environment. Two of these
       # strings are model names an agent chose, and a shell that interpolates
@@ -126,6 +128,7 @@ jobs:
           STALE: ${{ steps.find.outputs.pricesStale }}
           DRIFT: ${{ steps.rates.outputs.drift }}
           SUMMARY: ${{ steps.rates.outputs.summary }}
+          MODEL_DRIFT: ${{ steps.find.outputs.modelDrift }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           raise() {
@@ -180,4 +183,24 @@ jobs:
           Run: ${RUN_URL}"
           else
             settle price-drift "The build and the config agree on prices again, as of run ${RUN_URL}"
+          fi
+
+          if [ -n "$MODEL_DRIFT" ]; then
+            raise model-drift "The model names compiled into the build are behind docs/config.json" \
+              "lib/languages.js is behind docs/config.json" \
+              "The config now starts on a different model than the build does — ${MODEL_DRIFT}
+
+          Sessions are fine: every install reads the file within six hours and starts on the
+          first name in it. Two groups are not. A fresh install has no config yet and runs the
+          bundled name until its first fetch, and so does anyone who turned Model updates off
+          in Options.
+
+          Move MODEL and SIMUL_MODEL in lib/languages.js to the names above, check
+          docs/config.json still lists the old ones as fallbacks, and ship it. Nothing
+          automated may edit that file: the argument for letting this workflow commit
+          unattended is that it writes data and never code.
+
+          Run: ${RUN_URL}"
+          else
+            settle model-drift "The build and the config start on the same models again, as of run ${RUN_URL}"
           fi

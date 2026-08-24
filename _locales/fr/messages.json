@@ -283,6 +283,16 @@
     "message": "Google retire les modèles Gemini Live avec quelques semaines de préavis, soit moins que la durée d'un examen sur le Chrome Web Store. Interpretab lit donc plusieurs fois par jour un petit <a1>fichier de configuration</a1> hébergé sur son propre site : les noms des modèles, leur tarif, et si cette version fonctionne encore. Rien n'accompagne la requête : ni la clé, ni l'usage, rien qui vous concerne. Désactivez-le et Interpretab ne parlera à personne d'autre que Google, en conservant la liste de modèles livrée avec lui, quitte à manquer l'avis de mise à jour."
   },
 
+  "optModelHeading": { "message": "Quel modèle utiliser" },
+  "optModelNote": { "message": "Chaque session démarre sur le modèle avec lequel Interpretab a été testé. Google publie le suivant des mois avant d'éteindre l'ancien, et c'est ici qu'on peut le prendre en avance : aucune traduction n'est encore passée par lui ici, il peut donc être moins bon, ou refuser de se connecter. Par mode, car les deux modes utilisent des modèles différents. S'applique au prochain Start." },
+  "optModelSimul": { "message": "Audio de l'onglet et mode simultané du micro" },
+  "optModelConversation": { "message": "Conversation à deux langues" },
+  "optModelAuto": { "message": "Recommandé — {1}" },
+  "optModelNew": { "message": "{1} — nouveau" },
+  "optModelRetiring": { "message": "{1} — jusqu'au {2}" },
+  "optModelSaved": { "message": "Enregistré. S'applique au prochain Start." },
+  "optModelReverted": { "message": "{1} ne figure plus dans la liste : ce mode utilise le modèle recommandé." },
+
   "optGlossaryHeading": { "message": "Glossaire" },
   "optGlossaryNote": {
     "message": "Les noms et les termes que vous voulez voir prononcés et écrits d'une certaine façon : produits, personnes, jargon. Un par ligne, sous la forme <code>source,pronunciation,transcript</code> : la deuxième colonne dit comment le prononcer, la troisième, facultative, comment l'écrire dans les sous-titres. Le <a1>guide d'utilisation</a1> indique dans quel mode il s'applique et comment en écrire un."

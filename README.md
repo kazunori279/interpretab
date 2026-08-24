@@ -1003,6 +1003,9 @@ before anything else sees it.
     "simul": ["gemini-3.5-live-translate-preview"],
     "conversation": ["gemini-3.1-flash-live-preview"]
   },
+  "modelInfo": {
+    "gemini-3.5-live-translate-preview": { "since": "2026-06-02", "retiring": "2026-11-01" }
+  },
   "rates": {
     "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21.0 },
     "gemini-3.1-flash-live-preview": { "audioIn": 3.0, "audioOut": 12.0 }
@@ -1023,6 +1026,16 @@ script last ran. Not every name in the file: Google's pricing page stops listing
 when it stops serving it, and a date pinned to the oldest fallback in the list is a date that
 never moves again.
 
+`modelInfo` is what a name's lifetime looks like from here. `since` is the day the name first
+reached this file — not the day Google published it, which nobody here can know — and `retiring` is
+a shutdown date a documentation page printed. Neither is needed to open a session, and a build that
+has never heard of the field skips it, which is why it arrived without a `schemaVersion` bump. Two
+things read the dates: the menu described next, which marks the newest candidate and prints the
+deadline beside a name that has one, and the discovery agent, which uses `retiring` to move the
+default *before* the old model is switched off rather than when it breaks. Dates are only ever
+added. An agent that failed to open the changelog this morning has not learned that a shutdown was
+called off.
+
 **A missing answer changes nothing.** Every field has a bundled counterpart that was correct the
 day the build shipped, and the file only ever replaces one. An offline user, a 404, a truncated
 body, a `schemaVersion` this build has never heard of — all four land where never having asked
@@ -1035,6 +1048,18 @@ The failure this design has to survive is its own. A text file that can name the
 file that can brick every installation at once, so `modelCandidates` always puts the bundled model
 in the list — appended when the file omits it, left in place when the file names it. The worst a
 wrong file can do to models is add names that do not work in front of the one that does.
+
+**Which name a session starts on is also the user's to overrule.** Under **Options → Which model to
+run** there is a menu per mode, listing what `modelCandidates` would walk in the order it would
+walk it, recommended name first, bundled name always present. A choice is a reordering rather than
+a pin: the chosen name goes to the front and everything else stays behind it, so a preference for a
+model that is later withdrawn costs one fallback instead of an outage, and a preference for a name
+that leaves the file is reported in the menu and otherwise ignored. Google publishes the next model
+months before switching the old one off, and with no telemetry anywhere in this extension, the
+people who take it early are the only signal this project gets that it works. The menu is so they
+can. It reads the cached config rather than asking the worker for one, because asking is what makes
+the worker fetch, and opening Options is not a reason to touch the network — with **Model updates**
+off it does not even read the cache, and both menus collapse to the bundled name.
 
 **When a model dies mid-run**, `SessionLoop` spends what it holds before it asks for more. A
 retired name usually announces itself during `setup`, so it arrives as an `open()` that never
@@ -1130,6 +1155,12 @@ human in between. Four things stand between a guess and that file:
   the first name is the one every session starts on and a discovery should be a fallback before it
   is a default. A name that verified gone is dropped, except the last one: an empty list means "the
   file has no opinion", which is the opposite of what an outage should say.
+- **With one exception, which is what the dates are for.** When the name in front has a `retiring`
+  date within a week, the newest name behind it that opened a real session that morning takes its
+  place, and the old name stays in the list behind it. Otherwise the default moves on the day the
+  model stops answering — a reconnection in the middle of somebody's sentence, for everyone at
+  once. A week because Google gives a preview two weeks' notice: the move is made with half of it
+  left, while the old name still works and is still there to fall back to.
 - **And only forwards.** A candidate has to be at least the generation already in the list —
   `gemini-3.5-…` next to `gemini-3.1-…`, or the same model at the same generation under the GA id
   or a newer dated preview, both of which are how a preview usually ends. Nothing here has measured
@@ -1187,6 +1218,13 @@ its own step after the commit, and the answer is an issue rather than a failure.
 human's job — copy the numbers into `lib/usage.js`, update the date in the comment above them, and
 ship. Nothing automated may edit that file: the argument for letting a workflow commit unattended
 is that it writes data and never code.
+
+**The model names fall behind the same way**, and the promotion above is what puts them there: the
+config starts sessions on a name `lib/languages.js` has never heard of. Nothing breaks, since every
+install reads the file within six hours. What runs the old name anyway is a fresh install before
+its first fetch and anyone who turned **Model updates** off — the same two cases the price table
+exists for. So the run compares the head of each list with the bundled constant and opens a
+`model-drift` issue when they differ, which closes itself once a release has moved them.
 
 Setting it up needs three repository variables and one secret — see
 [Development](#development).
@@ -1426,6 +1464,7 @@ node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction tab --raw
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction mic
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --direction mic --mic-mode conversation
 node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --minutes 12    # to see a real goAway
+node tests/live-smoke.mjs /tmp/key.txt /tmp/ja.wav --model gemini-4.0-live-translate-preview
 ```
 
 It prints what the model heard, what it said, and how much audio came back, so a wrong `setup`
@@ -1442,6 +1481,11 @@ and the longest gap between two pieces of translated audio — that last number 
 would actually hear at a handover, and it is the one that fails the run if the machinery is
 broken. A run past eleven minutes that sees no `goAway` fails too, on the grounds that the expiry
 assumption has moved and someone should know.
+
+`--model` points the same frame at a name the build does not ship, with no fallback list behind it,
+which is how a candidate gets heard before anyone is offered it. The hourly check and the discovery
+agent both stop at `setupComplete` — a model that accepts the frame and returns nothing useful
+passes both — so this is the step between a name verifying and a name being recommended.
 
 **`tests/soak.mjs` — does it still work an hour later?**
 
@@ -1708,16 +1752,20 @@ node tests/config-ui.mjs --lang=ja    # the same walk in another catalogue
 The same harness, pointed at [the file the extension reads](#the-two-facts-that-expire). The
 notice it draws is the one piece of this extension that is written years before it is needed and
 seen once, by everybody, on a day when nothing else works — so it is exactly the thing that rots
-unnoticed. Twenty-three assertions and five screenshots in `tests/config-ui/report.md`: that a
+unnoticed. Twenty-nine assertions and six screenshots in `tests/config-ui/report.md`: that a
 file blocking nothing is invisible, that a block reaches a panel which has already finished
-rendering, that the *What happened?* link appears only when the file offered a destination, and
+rendering, that the *What happened?* link appears only when the file offered a destination, that
+the model menus list what the file offers for each mode and save a choice for that mode alone, and
 that **Options → Model updates** both stops the request and deletes the cached copy — the second
-half being what stops an opt-out from stranding somebody behind a block that nothing can now lift.
+half being what stops an opt-out from stranding somebody behind a block that nothing can now lift,
+and also what collapses both menus back to the bundled name.
 
-It reaches no network. Every state is seeded into `chrome.storage.local` the way a successful
-fetch would have left it, with a timestamp inside the TTL, so the worker answers from the cache
-and never opens a socket: the subject is the wiring between the worker, the panel and the Options
-page, not GitHub's uptime.
+Nothing here is fetched. Every state is seeded into `chrome.storage.local` the way a successful
+fetch would have left it, with a timestamp inside the TTL, so the worker answers from the cache:
+the subject is the wiring between the worker, the panel and the Options page, not GitHub's uptime.
+The one exception is the panel's own first open on a fresh profile, which has nothing to answer
+from and fetches for real; the walk waits that out before it seeds anything, because a seed written
+while that request is in flight is a seed the response overwrites.
 
 `--lang=ja` runs the whole walk in a Chrome set to another of the ten languages, and every
 assertion then reads `_locales/ja` instead of `_locales/en`. `tests/i18n.test.js` can only say

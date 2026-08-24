@@ -12,11 +12,13 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import {
+  PROMOTE_WITHIN_DAYS,
   STALE_AFTER_DAYS,
   commitMessage,
   daysBetween,
   formatConfig,
   mergeConfig,
+  modelDrift,
   pricesAreStale,
   unpricedModels,
 } from "../tools/find-models.mjs";
@@ -174,6 +176,110 @@ test("the emergency brake is not the agent's to touch", () => {
   assert.equal(merged.schemaVersion, 1);
 });
 
+// Dates, and the one thing they are allowed to do. `modelInfo` is a note on the
+// side for the Options menu right up until the day a shutdown date comes within
+// a week, when it moves the name every session starts on.
+
+test("a name the file did not have yesterday is dated today", () => {
+  const verdict = new Map([["simul:simul-one", true], [`simul:${NEXT_SIMUL}`, true]]);
+  const merged = mergeConfig(base(), verdict, { ...empty, simul: [NEXT_SIMUL] }, "2026-09-01");
+  assert.deepEqual(merged.modelInfo[NEXT_SIMUL], { since: "2026-09-01" });
+  // Not the names that were already there. Nobody knows when those arrived, and
+  // "today" would be a lie that makes every old name look new in the menu.
+  assert.equal(merged.modelInfo["simul-one"], undefined);
+});
+
+test("a shutdown date is taken only where the answer prints one", () => {
+  const verdict = new Map([["simul:simul-one", true]]);
+  const found = {
+    ...empty,
+    retiring: [
+      { model: "simul-one", date: "2026-10-01" },
+      { model: "chat-one", date: "in about six weeks" },
+      { model: "chat-one", date: "2026-02-31" },
+      { model: "long-gone", date: "2026-10-01" },
+    ],
+  };
+  const merged = mergeConfig(base(), verdict, found, "2026-09-01");
+  assert.deepEqual(merged.modelInfo["simul-one"], { retiring: "2026-10-01" });
+  // Prose is not a date, nor is the 31st of February, and a date for a name the
+  // file does not carry is a fact about somebody else's model.
+  assert.equal(merged.modelInfo["chat-one"], undefined);
+  assert.equal(merged.modelInfo["long-gone"], undefined);
+});
+
+test("a date already in the file survives a run that read nothing", () => {
+  const config = base();
+  config.modelInfo = { "simul-one": { since: "2026-07-01", retiring: "2026-10-01" } };
+  // An agent that could not open the changelog this morning has not learned
+  // that the shutdown was called off.
+  const merged = mergeConfig(config, new Map([["simul:simul-one", true]]), empty, "2026-09-01");
+  assert.deepEqual(merged.modelInfo["simul-one"], { since: "2026-07-01", retiring: "2026-10-01" });
+});
+
+test("a date for a name that left the file leaves with it", () => {
+  const config = base();
+  config.models.simul = ["simul-one", "simul-two"];
+  config.modelInfo = { "simul-two": { since: "2026-07-01" } };
+  const verdict = new Map([["simul:simul-one", true], ["simul:simul-two", false]]);
+  const merged = mergeConfig(config, verdict, empty, "2026-09-01");
+  assert.deepEqual(merged.models.simul, ["simul-one"]);
+  assert.equal(merged.modelInfo["simul-two"], undefined);
+});
+
+// The promotion. Everything above this line keeps the working name in front;
+// this is the single exception, and the reason the dates are collected at all.
+const promoted = (retiring, { verified = true, today = "2026-09-01" } = {}) => {
+  const config = base();
+  config.models.simul = ["simul-one", NEXT_SIMUL];
+  config.modelInfo = { "simul-one": { retiring } };
+  const verdict = new Map([["simul:simul-one", true], [`simul:${NEXT_SIMUL}`, verified]]);
+  return mergeConfig(config, verdict, empty, today).models.simul;
+};
+
+test("the default moves before the old model is switched off, not when it breaks", () => {
+  // Six days left. The alternative is every session in the world reconnecting
+  // mid-sentence on the morning the name stops answering.
+  assert.deepEqual(promoted("2026-09-07"), [NEXT_SIMUL, "simul-one"]);
+  // The old name stays behind it, so the worst case is one reconnection to a
+  // model that still works.
+  assert.deepEqual(promoted("2026-08-20"), [NEXT_SIMUL, "simul-one"]);
+});
+
+test("a deadline that is still weeks away moves nothing", () => {
+  assert.deepEqual(promoted("2026-09-30"), ["simul-one", NEXT_SIMUL]);
+  assert.equal(PROMOTE_WITHIN_DAYS, 7);
+});
+
+test("nothing is promoted to a name that did not answer this morning", () => {
+  // The successor has to have opened a real session today. A dead name in front
+  // of a dying one is two outages instead of one.
+  assert.deepEqual(promoted("2026-09-07", { verified: false }), ["simul-one"]);
+});
+
+test("with no successor to move to, the file keeps the name it has", () => {
+  const config = base();
+  config.modelInfo = { "simul-one": { retiring: "2026-09-02" } };
+  const merged = mergeConfig(config, new Map([["simul:simul-one", true]]), empty, "2026-09-01");
+  assert.deepEqual(merged.models.simul, ["simul-one"]);
+});
+
+test("a run with no date of its own promotes nothing", () => {
+  // `--dry` and the tests above pass no date; without one there is no telling
+  // whether the deadline is next week or last year.
+  assert.deepEqual(promoted("2026-09-07", { today: "" }), ["simul-one", NEXT_SIMUL]);
+});
+
+test("the build being behind the config is worth saying out loud", () => {
+  // Nothing breaks: every install reads the file within six hours and starts on
+  // the first name. What breaks is a fresh install, and anyone with model
+  // updates switched off — both run the bundled name until a release ships.
+  assert.deepEqual(modelDrift({ simul: [SIMUL_MODEL], conversation: [MODEL] }), []);
+  const behind = modelDrift({ simul: [NEXT_SIMUL], conversation: [MODEL] });
+  assert.equal(behind.length, 1);
+  assert.match(behind[0], new RegExp(`simul: ${SIMUL_MODEL} → ${NEXT_SIMUL}`));
+});
+
 test("a price is corrected, and only for a model somebody asks for", () => {
   const verdict = new Map([["simul:simul-one", true]]);
   const merged = mergeConfig(base(), verdict, {
@@ -310,6 +416,16 @@ test("what it writes is what the extension can read back", () => {
   assert.ok(parsed, "the formatted file survives parseConfig");
   assert.deepEqual(parsed.models.simul, ["simul-one"]);
   assert.deepEqual(parsed.rates["simul-one"], { audioIn: 4, audioOut: 24 });
+  // Nothing to say about dates, so nothing written: the day the file first
+  // learns one, the diff is about that date and not about a block of braces.
+  assert.equal(parsed.modelInfo, null);
+
+  const dated = mergeConfig(base(), new Map([["simul:simul-one", true]]), {
+    ...empty,
+    retiring: [{ model: "simul-one", date: "2026-10-01" }],
+  }, "2026-09-01");
+  const back = parseConfig(formatConfig(dated));
+  assert.deepEqual(back.modelInfo["simul-one"], { retiring: "2026-10-01" });
 });
 
 test("re-formatting the committed file changes nothing", () => {

@@ -22,8 +22,20 @@
       th { color: var(--muted); font-weight: 500; }
       #glossaryList { max-height: 16rem; overflow-y: auto; border: 1px solid var(--border); border-radius: 0.3rem; }
       /* Device labels are sentences — "MacBook Pro Speakers (Built-in)" — and the
-         side panel's 11rem cap would cut every one of them off. */
+         side panel's 11rem cap would cut every one of them off. Model ids are
+         longer still: `gemini-3.5-live-translate-preview` is thirty-three
+         characters before anything is said about it. */
       #micInput, #micOutput { max-width: 26rem; }
+      /* One grid rather than two rows: the two labels are different lengths in
+         every one of the ten languages, and side by side in a flex row that
+         puts the two menus in different places on the page. */
+      .modelgrid {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 24rem);
+        align-items: center;
+        gap: 0.4rem 0.6rem;
+      }
+      #simulModel, #conversationModel { width: 100%; max-width: none; }
       .ok { color: #188038; }
       /* The install card, at options-page size. Its pieces come from
          sidepanel.css, drawn for a 24rem panel; here they are on a 44rem
@@ -470,6 +482,21 @@
     <div class="row">
       <label><input type="checkbox" id="configUpdates" /> <span data-i18n="optConfigLabel"></span></label>
     </div>
+
+    <!-- Which of the names that file carries a mode starts on. Under the switch
+         above because the list is that file's: with updates off there is one
+         candidate, the one this build shipped with, and the two pickers say so
+         rather than disappearing. Two of them because the two modes run two
+         different models. -->
+    <h3 data-i18n="optModelHeading"></h3>
+    <p class="note" data-i18n="optModelNote"></p>
+    <div class="modelgrid">
+      <label class="note" for="simulModel" data-i18n="optModelSimul"></label>
+      <select id="simulModel" class="lang"></select>
+      <label class="note" for="conversationModel" data-i18n="optModelConversation"></label>
+      <select id="conversationModel" class="lang"></select>
+    </div>
+    <p class="note" id="modelStatus"></p>
 
     <!-- The two settings that are baked into the microphone direction's `setup`
          frame rather than applied to a running one, kept together because that

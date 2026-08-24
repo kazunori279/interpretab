@@ -253,6 +253,16 @@
     "message": "Google 停用 Gemini Live 模型时只提前几周通知，比 Chrome 应用商店的审核还要快。所以 Interpretab 每天会读几次自己站点上的一个小<a1>配置文件</a1>：模型名称、价格，以及当前版本是否还能用。请求不携带任何东西，不发送密钥、用量，也不发送关于你的任何信息。关掉它，Interpretab 就只连接 Google，并一直使用发布时自带的模型列表，代价是收不到需要更新的通知。"
   },
 
+  "optModelHeading": { "message": "使用哪个模型" },
+  "optModelNote": { "message": "每次会话都从 Interpretab 验证过的模型开始。Google 会在停用旧模型的几个月前发布下一个模型，在这里可以提前用上：这个模型还没在这里翻译过任何东西，可能更差，也可能根本连不上。按模式分别设置，因为两种模式跑的是不同的模型。下次按 Start 时生效。" },
+  "optModelSimul": { "message": "标签页音频，以及麦克风的同传模式" },
+  "optModelConversation": { "message": "两种语言的对话" },
+  "optModelAuto": { "message": "推荐 — {1}" },
+  "optModelNew": { "message": "{1} — 新" },
+  "optModelRetiring": { "message": "{1} — 用到 {2}" },
+  "optModelSaved": { "message": "已保存。下次按 Start 时生效。" },
+  "optModelReverted": { "message": "{1} 已不在候选列表中，该模式使用推荐模型运行。" },
+
   "optGlossaryHeading": { "message": "术语表" },
   "optGlossaryNote": {
     "message": "你希望按固定读法和写法处理的名称和术语——产品名、人名、行话。一行一个，格式为 <code>source,pronunciation,transcript</code>：第二列是该怎么念，可省略的第三列是字幕里该怎么写。它在哪个模式下有效、该怎么写，都在<a1>使用指南</a1>里。"

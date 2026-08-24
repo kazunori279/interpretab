@@ -13,10 +13,12 @@
  * this rots without anyone noticing, because a working extension and a broken
  * one look identical until the day the notice is needed.
  *
- * It costs nothing and reaches no network. Every state is set by seeding the
- * cache the way a fetch would have, with a timestamp inside the TTL, so
- * `ensureConfig` answers from storage and never opens a socket. The key it types
- * is `not-a-real-key` and nothing here presses Start.
+ * It costs nothing. Every state is set by seeding the cache the way a fetch
+ * would have, with a timestamp inside the TTL, so `ensureConfig` answers from
+ * storage rather than opening a socket — bar the very first read, which a
+ * profile this new has nothing to answer from and which the walk waits out
+ * before it seeds anything. The key it types is `not-a-real-key` and nothing
+ * here presses Start.
  *
  * As in `onboarding.mjs`, the side panel is opened as an ordinary tab: it is the
  * same document and the same script, in a frame the protocol can photograph.
@@ -25,6 +27,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Chrome, catalogueFor, plainMessage } from "./chrome-harness.mjs";
+import { MODEL, SIMUL_MODEL } from "../lib/languages.js";
 
 const ROOT = path.join(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "tests", "config-ui");
@@ -50,6 +53,16 @@ const OPTIONS_VIEW = { width: 860, height: 780 };
 const IMPOSSIBLE = "99.0.0";
 
 const LEARN_MORE = "https://kazunori279.github.io/interpretab/";
+
+/**
+ * A file that has moved on since this build: the simultaneous model it ships
+ * with, dated and with an end, and a successor that is only a name so far.
+ *
+ * The conversation half deliberately does not list the bundled name, so that
+ * the picker has to show `modelCandidates` keeping it as the last resort.
+ */
+const SIMUL_NEXT = "gemini-4-live-translate-preview";
+const CHAT_NOW = "gemini-3.2-flash-live-preview";
 
 /** A parsed config, as `ensureConfig` would have returned it. */
 const config = (patch) =>
@@ -96,6 +109,9 @@ const VERDICT = `chrome.runtime
   .sendMessage({ target: "sw", type: "config" })
   .then((r) => ({ ok: r.ok, blocked: r.blocked, learnMoreUrl: r.config?.learnMoreUrl ?? null }))`;
 
+/** The labels on one dropdown, in order — what a reader of that menu sees. */
+const MENU = (id) => `[...document.getElementById(${JSON.stringify(id)}).options].map((o) => o.textContent)`;
+
 const CACHED = `chrome.storage.local.get("remoteConfig").then((v) => Object.keys(v).length)`;
 
 const steps = [];
@@ -139,6 +155,8 @@ try {
   const uiLanguage = await panel.eval(`chrome.i18n.getUILanguage()`);
   const catalogue = catalogueFor(uiLanguage, ROOT);
   const message = (key) => plainMessage(catalogue, key);
+  /** The same, with {1}… filled in, for the messages that name a model. */
+  const fill = (key, ...args) => message(key).replace(/\{(\d)\}/g, (_, n) => args[n - 1]);
   console.log(`   (Chrome's UI language is ${uiLanguage}; reading _locales/${catalogue.locale})`);
 
   // A configured extension, so that the only thing left able to disable Start
@@ -146,6 +164,16 @@ try {
   await panel.eval(
     `chrome.storage.local.set({ apiKey: "not-a-real-key", tabEnabled: true, micEnabled: false })`
   );
+
+  // The one read this walk cannot seed around: the panel asks the worker for
+  // the file as it opens, and on a profile this new that is a real fetch of the
+  // published config. Waiting for it to land is what makes everything below
+  // deterministic — a fetch still in flight overwrites the next seed from
+  // under the scenario that seeded it, which showed up as the published
+  // `learnMoreUrl` turning up in a step that had asked for none. Offline it
+  // writes nothing and this waits its fifteen seconds for a copy that will
+  // never arrive, which is slow and still correct.
+  await panel.waitFor(`${CACHED}.then((n) => n === 1)`);
 
   // ------------------------------------------------------------- not blocked
   const quiet = step(
@@ -209,6 +237,61 @@ try {
   check(link, "and the notice itself is unaffected", notice.title, message("updateRequiredTitle"));
   await shot(link, panel, "03-blocked-no-link.png");
 
+  // -------------------------------------------------------------- the picker
+  const picker = step(
+    "The successor is offered months before it is compulsory",
+    "A new Live model appears long before the one in use is switched off, and the recommended order deliberately does not move on the day it appears — nothing here has run a translation through it yet. So the file's other names are a menu in Options, per mode, and with no telemetry the people who take it early are the only compatibility signal this project gets."
+  );
+  await seed(panel, {
+    models: { simul: [SIMUL_MODEL, SIMUL_NEXT], conversation: [CHAT_NOW] },
+    modelInfo: {
+      [SIMUL_MODEL]: { since: "2026-05-01", retiring: "2026-12-01" },
+      [SIMUL_NEXT]: { since: "2026-08-20" },
+    },
+  });
+
+  const options = await chrome.newPage(`${origin}/options.html`, OPTIONS_VIEW);
+  await options.waitFor(`document.getElementById("simulModel").options.length > 0`);
+  check(picker, "the file's names are on the menu, the recommendation first", await options.eval(MENU("simulModel")), [
+    fill("optModelAuto", SIMUL_MODEL),
+    // The one in use carries the date it goes away, which is the whole notice a
+    // user gets that they will be moved.
+    fill("optModelRetiring", SIMUL_MODEL, "2026-12-01"),
+    fill("optModelNew", SIMUL_NEXT),
+  ]);
+  check(picker, "and nothing is chosen until somebody chooses it", await options.eval(`document.getElementById("simulModel").value`), "");
+  // The bundled name, which `modelCandidates` keeps whatever the file says, and
+  // which this file does not list.
+  check(picker, "the other mode has its own list, and its own build fallback", await options.eval(MENU("conversationModel")), [
+    fill("optModelAuto", CHAT_NOW),
+    CHAT_NOW,
+    MODEL,
+  ]);
+
+  await options.eval(`(() => {
+    const select = document.getElementById("simulModel");
+    select.value = ${JSON.stringify(SIMUL_NEXT)};
+    select.dispatchEvent(new Event("change"));
+  })(); true`);
+  await options.waitFor(
+    `chrome.storage.local.get("simulModel").then((v) => v.simulModel === ${JSON.stringify(SIMUL_NEXT)})`
+  );
+  check(
+    picker,
+    "a choice is saved, and only for the mode it was made in",
+    // Read as two strings rather than as the object: an untouched setting is
+    // not in storage at all, so comparing shapes would be a test of which
+    // defaults have been written rather than of what was chosen.
+    await options.eval(
+      `chrome.storage.local
+         .get(["simulModel", "conversationModel"])
+         .then((v) => [v.simulModel ?? "", v.conversationModel ?? ""].join(" / "))`
+    ),
+    `${SIMUL_NEXT} / `
+  );
+  await options.eval(`document.getElementById("simulModel").scrollIntoView({ block: "center" }); true`);
+  await shot(picker, options, "04-model-picked.png");
+
   // ------------------------------------------------------------- the opt-out
   const optOut = step(
     "Turning the switch off stops the request and forgets the answer",
@@ -217,7 +300,7 @@ try {
   await seed(panel, { blockBelowVersion: IMPOSSIBLE, learnMoreUrl: LEARN_MORE });
   check(optOut, "there is something cached to forget", await panel.eval(CACHED), 1);
 
-  const options = await chrome.newPage(`${origin}/options.html`, OPTIONS_VIEW);
+  await options.reload();
   await options.waitFor(`document.getElementById("configUpdates") !== null`);
   check(optOut, "the switch is on to begin with", await options.eval(`document.getElementById("configUpdates").checked`), true);
   await options.eval(`document.getElementById("configUpdates").click()`);
@@ -227,9 +310,17 @@ try {
     await options.waitFor(`chrome.storage.local.get("configUpdates").then((v) => v.configUpdates === false)`),
     true
   );
+  // The menu above is that file's, so switching it off has to collapse it in
+  // front of the person who switched it off — and say what became of the choice
+  // they had made, rather than showing a name that will not be run.
+  check(optOut, "the model menu collapses to the name this build shipped with", await options.eval(MENU("simulModel")), [
+    fill("optModelAuto", SIMUL_MODEL),
+    SIMUL_MODEL,
+  ]);
+  check(optOut, "and says what happened to the choice", await options.eval(`document.getElementById("modelStatus").textContent`), fill("optModelReverted", SIMUL_NEXT));
   // Eight sections down the page, so the picture has to be told where to look.
   await options.eval(`document.getElementById("configUpdates").scrollIntoView({ block: "center" }); true`);
-  await shot(optOut, options, "04-options-off.png");
+  await shot(optOut, options, "05-options-off.png");
 
   await panel.reload();
   await panel.waitFor(`document.getElementById("toggle") !== null`);
@@ -242,7 +333,7 @@ try {
   notice = await panel.eval(NOTICE);
   check(optOut, "so the notice is not shown", notice.hidden, true);
   check(optOut, "and Start works again", notice.startDisabled, false);
-  await shot(optOut, panel, "05-opted-out.png");
+  await shot(optOut, panel, "06-opted-out.png");
 
   writeReport({ chrome: chrome.version, uiLanguage, locale: catalogue.locale, extensionId });
 } finally {

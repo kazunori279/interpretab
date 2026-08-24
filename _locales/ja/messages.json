@@ -269,6 +269,16 @@
     "message": "Google が Gemini Live のモデルを終了するまでの予告期間は数週間で、Chrome ウェブストアの審査期間より短いことがあります。そのため Interpretab は 1 日に数回、自身のサイトにある小さな<a1>設定ファイル</a1>を読みます。中身はモデル名、料金、このバージョンがまだ動くかどうかの 3 つだけです。リクエストには何も含めません。API キーも、利用状況も、あなたに関する情報も送りません。オフにすると Interpretab の通信先は Google だけになり、モデル一覧はビルド時のまま固定されます。更新のお知らせも届かなくなります。"
   },
 
+  "optModelHeading": { "message": "使用するモデル" },
+  "optModelNote": { "message": "セッションは常に、Interpretab が動作を確認したモデルで始まります。Google は現行モデルを終了する数か月前に次のモデルを公開するので、ここで先取りできます。ただしこの拡張機能でまだ一度も翻訳を通していないモデルなので、品質が落ちることも、接続できないこともあります。モードごとに選ぶのは、2 つのモードが別々のモデルで動くからです。次に Start を押したときから反映されます。" },
+  "optModelSimul": { "message": "タブ音声と、マイクの同時通訳モード" },
+  "optModelConversation": { "message": "2 言語間の会話" },
+  "optModelAuto": { "message": "推奨 — {1}" },
+  "optModelNew": { "message": "{1} — 新着" },
+  "optModelRetiring": { "message": "{1} — {2} まで" },
+  "optModelSaved": { "message": "保存しました。次に Start を押したときから反映されます。" },
+  "optModelReverted": { "message": "{1} は候補から外れたため、そのモードは推奨モデルで動きます。" },
+
   "optGlossaryHeading": { "message": "用語集" },
   "optGlossaryNote": {
     "message": "読み方や表記を決めておきたい名前や用語 — 製品名、人名、専門用語など — の一覧です。用語ごとに <code>source,pronunciation,transcript</code> の CSV 形式で書きます。2 列目は用語の読み方、3 列目（省略可能）には字幕での表記を書きます。どのモードで使えるか、どう書くかは<a1>ユーザーガイド</a1>を参照してください。"

@@ -257,6 +257,16 @@
     "message": "Google이 Gemini Live 모델을 종료할 때 주는 예고 기간은 몇 주로, 크롬 웹 스토어 검토 기간보다 짧습니다. 그래서 Interpretab은 하루에 몇 번, 자체 사이트에 있는 작은 <a1>설정 파일</a1>을 읽습니다. 담긴 것은 모델 이름, 요금, 그리고 이 버전이 아직 동작하는지 세 가지뿐입니다. 요청에는 아무것도 실리지 않습니다. API 키도, 사용량도, 사용자에 관한 정보도 보내지 않습니다. 끄면 Interpretab은 Google 외에는 어디에도 연결하지 않고 빌드 당시의 모델 목록을 그대로 씁니다. 업데이트 안내도 받지 못합니다."
   },
 
+  "optModelHeading": { "message": "사용할 모델" },
+  "optModelNote": { "message": "모든 세션은 Interpretab이 검증한 모델로 시작합니다. Google은 기존 모델을 끄기 몇 달 전에 다음 모델을 공개하는데, 여기서 그것을 먼저 써 볼 수 있습니다. 아직 이 확장 프로그램에서 한 번도 번역을 통과시키지 않은 모델이라 품질이 떨어지거나 연결이 안 될 수도 있습니다. 두 모드가 서로 다른 모델로 동작하므로 모드별로 정합니다. 다음에 Start를 누를 때부터 적용됩니다." },
+  "optModelSimul": { "message": "탭 오디오와 마이크의 동시통역 모드" },
+  "optModelConversation": { "message": "두 언어의 대화" },
+  "optModelAuto": { "message": "권장 — {1}" },
+  "optModelNew": { "message": "{1} — 신규" },
+  "optModelRetiring": { "message": "{1} — {2}까지" },
+  "optModelSaved": { "message": "저장했습니다. 다음에 Start를 누를 때부터 적용됩니다." },
+  "optModelReverted": { "message": "{1}은(는) 더 이상 목록에 없어서 이 모드는 권장 모델로 동작합니다." },
+
   "optGlossaryHeading": { "message": "용어집" },
   "optGlossaryNote": {
     "message": "이렇게 읽고 이렇게 쓰라고 정해 두고 싶은 이름과 용어 — 제품명, 사람 이름, 전문 용어 — 의 목록입니다. 한 줄에 하나씩 <code>source,pronunciation,transcript</code> 형식으로 적습니다. 둘째 칸은 어떻게 읽을지, 생략할 수 있는 셋째 칸은 자막에 어떻게 쓸지입니다. 어느 모드에서 쓰이는지와 작성 방법은 <a1>사용 안내서</a1>에 있습니다."

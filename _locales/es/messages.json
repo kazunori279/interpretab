@@ -277,6 +277,16 @@
     "message": "Google retira los modelos de Gemini Live avisando con unas pocas semanas, menos de lo que tarda una revisión en Chrome Web Store. Por eso Interpretab lee unas cuantas veces al día un pequeño <a1>archivo de configuración</a1> en su propio sitio: nombres de modelos, lo que cuestan y si esta versión sigue funcionando. La petición no lleva nada: ni la clave, ni el uso, ni nada sobre ti. Desactívalo e Interpretab no hablará con nadie más que Google, y se quedará con la lista de modelos con la que se publicó, aunque eso signifique no enterarse de que hay que actualizar."
   },
 
+  "optModelHeading": { "message": "Qué modelo usar" },
+  "optModelNote": { "message": "Cada sesión empieza con el modelo con el que se ha probado Interpretab. Google publica el siguiente meses antes de apagar el anterior, y aquí puedes adelantarte: por este modelo todavía no ha pasado ninguna traducción, así que puede ser peor, o negarse a conectar. Por modo, porque los dos modos usan modelos distintos. Se aplica la próxima vez que pulses Start." },
+  "optModelSimul": { "message": "Audio de la pestaña y modo simultáneo del micrófono" },
+  "optModelConversation": { "message": "Conversación en dos idiomas" },
+  "optModelAuto": { "message": "Recomendado — {1}" },
+  "optModelNew": { "message": "{1} — nuevo" },
+  "optModelRetiring": { "message": "{1} — hasta {2}" },
+  "optModelSaved": { "message": "Guardado. Se aplica la próxima vez que pulses Start." },
+  "optModelReverted": { "message": "{1} ya no está en la lista, así que ese modo usa el modelo recomendado." },
+
   "optGlossaryHeading": { "message": "Glosario" },
   "optGlossaryNote": {
     "message": "Nombres y términos que quieres que se digan y se escriban de una manera concreta: productos, personas, jerga. Uno por línea, como <code>source,pronunciation,transcript</code>: la segunda columna es cómo debe decirse y la tercera, opcional, cómo debe escribirse en los subtítulos. En qué modo se aplica y cómo escribirlo está en la <a1>guía de uso</a1>."

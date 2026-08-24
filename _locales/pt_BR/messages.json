@@ -281,6 +281,16 @@
     "message": "O Google encerra modelos do Gemini Live avisando com poucas semanas de antecedência, menos do que leva uma revisão na Chrome Web Store. Por isso o Interpretab lê algumas vezes por dia um pequeno <a1>arquivo de configuração</a1> no próprio site: nomes de modelos, quanto custam e se esta versão ainda funciona. Nada vai junto na requisição: nem a chave, nem o uso, nada sobre você. Desligue e o Interpretab não fala com ninguém além do Google, mantendo a lista de modelos com que foi publicado, mesmo que isso signifique não receber o aviso de atualizar."
   },
 
+  "optModelHeading": { "message": "Qual modelo usar" },
+  "optModelNote": { "message": "Toda sessão começa no modelo com que o Interpretab foi testado. O Google publica o próximo meses antes de desligar o antigo, e aqui dá para pegá-lo antes: nenhuma tradução passou por ele aqui ainda, então pode ser pior, ou se recusar a conectar. Por modo, porque os dois modos rodam modelos diferentes. Vale a partir do próximo Start." },
+  "optModelSimul": { "message": "Áudio da aba e o modo simultâneo do microfone" },
+  "optModelConversation": { "message": "Conversa em dois idiomas" },
+  "optModelAuto": { "message": "Recomendado — {1}" },
+  "optModelNew": { "message": "{1} — novo" },
+  "optModelRetiring": { "message": "{1} — até {2}" },
+  "optModelSaved": { "message": "Salvo. Vale a partir do próximo Start." },
+  "optModelReverted": { "message": "{1} não está mais na lista, então esse modo usa o modelo recomendado." },
+
   "optGlossaryHeading": { "message": "Glossário" },
   "optGlossaryNote": {
     "message": "Nomes e termos que você quer ver ditos e escritos de um jeito específico — produtos, pessoas, jargão. Um por linha, no formato <code>source,pronunciation,transcript</code>: a segunda coluna é como deve ser dito, e a terceira, opcional, é como deve aparecer nas legendas. Em qual modo ele vale e como escrever um está no <a1>guia do usuário</a1>."

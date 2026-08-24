@@ -283,6 +283,16 @@
     "message": "Google stellt Gemini-Live-Modelle mit wenigen Wochen Vorlauf ein, und das ist kürzer als eine Prüfung im Chrome Web Store dauert. Deshalb liest Interpretab ein paar Mal am Tag eine kleine <a1>Konfigurationsdatei</a1> auf der eigenen Website: Modellnamen, deren Preise und ob diese Version noch funktioniert. Mit der Anfrage geht nichts mit — kein Schlüssel, keine Nutzungsdaten, nichts über Sie. Schalten Sie es aus, und Interpretab spricht mit niemandem außer Google und behält die ausgelieferte Modellliste, auch wenn damit der Hinweis auf ein nötiges Update ausbleibt."
   },
 
+  "optModelHeading": { "message": "Welches Modell laufen soll" },
+  "optModelNote": { "message": "Jede Sitzung startet mit dem Modell, gegen das Interpretab getestet wurde. Google veröffentlicht das nächste Monate bevor es das alte abschaltet, und hier lässt es sich vorab nehmen: durch dieses Modell ist hier noch keine Übersetzung gelaufen, es kann also schlechter sein oder die Verbindung verweigern. Pro Modus, weil die beiden Modi verschiedene Modelle nutzen. Gilt ab dem nächsten Start." },
+  "optModelSimul": { "message": "Tab-Audio und der Simultanmodus des Mikrofons" },
+  "optModelConversation": { "message": "Gespräch in zwei Sprachen" },
+  "optModelAuto": { "message": "Empfohlen — {1}" },
+  "optModelNew": { "message": "{1} — neu" },
+  "optModelRetiring": { "message": "{1} — bis {2}" },
+  "optModelSaved": { "message": "Gespeichert. Gilt ab dem nächsten Start." },
+  "optModelReverted": { "message": "{1} steht nicht mehr auf der Liste, deshalb läuft dieser Modus auf dem empfohlenen Modell." },
+
   "optGlossaryHeading": { "message": "Glossar" },
   "optGlossaryNote": {
     "message": "Namen und Begriffe, die auf eine bestimmte Weise gesprochen und geschrieben werden sollen — Produkte, Personen, Fachjargon. Einer pro Zeile, als <code>source,pronunciation,transcript</code>: die zweite Spalte sagt, wie es gesprochen wird, die dritte, optionale, wie es in den Untertiteln steht. In welchem Modus es wirkt und wie man eines schreibt, steht in der <a1>Anleitung</a1>."

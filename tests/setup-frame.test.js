@@ -21,6 +21,7 @@ import {
   endpointUrl,
   isSimul,
   LIVE_KEYS,
+  modelsFor,
   parseDuration,
   usesDuplexGate,
   arrayToBase64,
@@ -114,6 +115,32 @@ test("simul is the microphone's default, and anything but conversation means sim
   assert.equal(isSimul("mic", {}), true);
   // The tab direction has no say in it.
   assert.equal(isSimul("tab", { micMode: "conversation" }), true);
+});
+
+test("each mode's candidates come from its own half of the file and its own setting", () => {
+  // Two lists and two preferences, and crossing them is silent: the session
+  // connects, on the other mode's model, and either fails at `setup` or bills
+  // at the other rate card.
+  const config = {
+    models: { simul: ["simul-next", SIMUL_MODEL], conversation: ["chat-next", MODEL] },
+  };
+  const settings = { ...DEFAULTS, micMode: "conversation", simulModel: "simul-next" };
+  assert.deepEqual(modelsFor("tab", settings, config), ["simul-next", SIMUL_MODEL]);
+  // The tab direction's preference does not reach the conversation model.
+  assert.deepEqual(modelsFor("mic", settings, config), ["chat-next", MODEL]);
+  assert.deepEqual(
+    modelsFor("mic", { ...settings, conversationModel: MODEL }, config),
+    [MODEL, "chat-next"]
+  );
+});
+
+test("a mode nobody has an opinion about follows the file, and then the build", () => {
+  assert.deepEqual(modelsFor("tab", DEFAULTS, null), [SIMUL_MODEL]);
+  assert.deepEqual(modelsFor("mic", { ...DEFAULTS, micMode: "conversation" }, null), [MODEL]);
+  assert.deepEqual(modelsFor("tab", DEFAULTS, { models: { simul: ["simul-next"] } }), [
+    "simul-next",
+    SIMUL_MODEL,
+  ]);
 });
 
 test("only the conversation microphone gates itself while it speaks", () => {
