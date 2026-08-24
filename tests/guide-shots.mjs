@@ -1,15 +1,26 @@
 /**
- * The three photographed panels of the guide's install slideshow, taken again.
+ * The three photographed panels of the guide's install slideshow, in each of
+ * the ten languages the guide is written in.
  *
  *     node tests/guide-shots.mjs [--headed] [--keep]
  *
- * `docs/assets/install-1-store.png`, `-2-key.png` and `-4-start.png` are the
- * three photographs in the install section — the store listing with its Add to
- * Chrome button, the Options page with a key in it, and the side panel with its
- * language picker and Start. The section's other steps are AI Studio, which is
- * behind a Google sign-in, and a click on Chrome's own toolbar, which no page
- * can photograph; both are drawn in CSS inside
- * `docs/_includes/install-steps.html` and there is nothing here to take.
+ * `docs/assets/install-1-store-<lang>.png`, `-2-key-<lang>.png` and
+ * `-4-start-<lang>.png` are the three photographs in the install section — the
+ * store listing with its Add to Chrome button, the Options page with a key in
+ * it, and the side panel with its language picker and Start. The section's
+ * other steps are AI Studio, which is behind a Google sign-in, and a click on
+ * Chrome's own toolbar, which no page can photograph; both are drawn in CSS
+ * inside `docs/_includes/install-steps.html` and there is nothing here to take.
+ *
+ * Thirty pictures rather than three because all three are localized and none of
+ * them is ours to translate. The store listing is Google's page and says
+ * `Chrome に追加` to a reader whose Chrome is Japanese; the other two are the
+ * extension's own UI coming out of `_locales`. A guide that walks a reader
+ * through a screen and shows them a different screen is the failure this
+ * repository keeps finding, and the fix is the same each time: take the picture
+ * the reader is actually looking at. So Chrome is launched once per language —
+ * which is what decides both the store's language and the catalogue the
+ * extension loads — and the same three crops come out ten times.
  *
  * Sibling of `tests/store-shots.mjs`, and deliberately not part of it. Those
  * three are 1280×800 because the store demands it, and are composed to be
@@ -20,16 +31,19 @@
  *
  * Cropping happens in Chrome, through `Page.captureScreenshot`'s `clip`, and
  * the rectangle is measured off the DOM rather than typed in — so a section
- * that grows a line is still framed correctly. `scale` is what makes the crops
- * sharp: the pages are laid out narrow, so their text is large relative to the
- * frame, and then rasterized above 1× so the frame is still wide enough to fill
- * the column.
+ * that grows a line is still framed correctly, and a language whose sentences
+ * run longer is framed correctly too. `scale` is what makes the crops sharp:
+ * the pages are laid out narrow, so their text is large relative to the frame,
+ * and then rasterized above 1× so the frame is still wide enough to fill the
+ * column.
  *
  * It also writes `docs/_data/shots.yml`, which is where each picture's size and
  * the rectangle of the one thing it is about — the button, the field — end up,
  * as percentages of the picture. The slideshow draws its ring and its arrow off
  * those numbers, so the marker follows the button when the picture is taken
- * again instead of pointing at where the button used to be.
+ * again instead of pointing at where the button used to be — and it follows the
+ * button across languages, which is what a hand-typed percentage could not do
+ * for a button that is `Add to Chrome` in one and `Hinzufügen` in another.
  *
  * It costs nothing and needs no key. The key it shows is the same obvious fake
  * `store-shots.mjs` uses, in a profile that is deleted on the way out, and
@@ -39,6 +53,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Chrome, sleep } from "./chrome-harness.mjs";
+import { simulLanguageCode } from "../lib/languages.js";
 
 const ROOT = path.join(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "docs", "assets");
@@ -54,46 +69,81 @@ const LISTING =
   "https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm";
 
 /**
- * The one state the last step is about: tab audio into a language, and the
- * microphone left off, so that the picker and Start are close enough together
- * to sit in one crop. The store's panel shot is the loaded one; this is the
- * one a reader is being walked through.
+ * The guide's ten languages, and the UI language to run Chrome in for each.
+ *
+ * The keys are `docs/_data/languages.yml`'s codes, which is what a guide page
+ * calls itself and what the file names here end in. Two of the values are
+ * region-qualified because Chrome will not match a bare `zh` or `pt` to the
+ * `_locales/zh_CN` and `_locales/pt_BR` catalogues — the same split
+ * `tests/assets.test.js` ties together. English runs in whatever the machine is
+ * set to, which for the store listing is English.
  */
-const PANEL_STATE = {
+const LANGUAGES = {
+  en: "",
+  ja: "ja",
+  zh: "zh-CN",
+  es: "es",
+  fr: "fr",
+  de: "de",
+  pt: "pt-BR",
+  ko: "ko",
+  hi: "hi",
+  ar: "ar",
+};
+
+/**
+ * The one state the last step is about: tab audio into the reader's own
+ * language, and the microphone left off, so that the picker and Start are close
+ * enough together to sit in one crop. The store's panel shot is the loaded one;
+ * this is the one a reader is being walked through, and the step above the
+ * picture tells them to pick their language — so the picture shows it picked.
+ */
+const panelState = (lang) => ({
   apiKey: FAKE_KEY,
   tabEnabled: true,
-  tabTarget: "en",
+  tabTarget: lang,
   tabCaptions: true,
   micEnabled: false,
   micMode: "simul",
   micSource: "en",
-  micTarget: "ja",
+  micTarget: lang === "ja" ? "en" : "ja",
   micCaptions: false,
   duckLevel: 0.15,
-};
+});
+
+/** Which numbered file each figure's pictures are, one per language. */
+const FILES = { store: "install-1-store", key: "install-2-key", start: "install-4-start" };
 
 /** Filled in by `capture()`, written out as `docs/_data/shots.yml` at the end. */
 const shots = {};
 
-const chrome = await Chrome.launch({ headed });
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
-console.log(`${chrome.version} — Interpretab ${manifest.version}`);
 
-try {
-  const extensionId = await chrome.loadExtension(ROOT);
-  const origin = `chrome-extension://${extensionId}`;
-  await chrome.closeTargets("options.html");
-  // Otherwise the panel carries its first-run microphone banner, which is not
-  // the step being illustrated.
-  await chrome.grantMic(origin);
+for (const [lang, ui] of Object.entries(LANGUAGES)) {
+  const chrome = await Chrome.launch({ headed, lang: ui });
+  if (lang === "en") console.log(`${chrome.version} — Interpretab ${manifest.version}`);
+  console.log(`\n${lang}`);
+  try {
+    // The listing first, before the extension is loaded: to a browser that
+    // already has it, the store greys Add to Chrome out and drops the `jsname`
+    // the button is found by. Neither is the button the reader is about to
+    // press, and the picture is of that button.
+    await store(chrome, lang);
 
-  await store();
-  await key(origin);
-  await start(origin);
-  writeShots();
-} finally {
-  await chrome.close({ keepOpen });
+    const extensionId = await chrome.loadExtension(ROOT);
+    const origin = `chrome-extension://${extensionId}`;
+    await chrome.closeTargets("options.html");
+    // Otherwise the panel carries its first-run microphone banner, which is not
+    // the step being illustrated.
+    await chrome.grantMic(origin);
+
+    await key(chrome, origin, lang);
+    await start(chrome, origin, lang);
+  } finally {
+    await chrome.close({ keepOpen });
+  }
 }
+writeShots();
 
 /**
  * The store listing, cropped to the row a reader is looking for.
@@ -104,37 +154,52 @@ try {
  * on Google's side then fails the run instead of silently shipping a picture of
  * a button that is no longer in it.
  *
+ * The button is found by `jsname`, not by its words, because its words are the
+ * point: `Add to Chrome`, `Chrome に追加`, and in German just `Hinzufügen`.
+ * `jsname` is compiled output and could be renamed tomorrow, which is why the
+ * label it found is printed — a run whose ten lines suddenly all say the same
+ * thing is a run that stopped following the language.
+ *
  * 1360 wide because the listing needs it. Below about 1150 the button leaves
  * the viewport rather than reflowing, which is the whole point of the picture,
  * and the rest is margin for the sign-in button at the other end of the header.
  */
-async function store() {
-  const page = await chrome.newPage(LISTING, { width: 1360, height: 800 });
-  const ok = await page.waitFor(`document.body.innerText.includes("Add to Chrome")`);
+async function store(chrome, lang) {
+  const WIDTH = 1360;
+  const page = await chrome.newPage(LISTING, { width: WIDTH, height: 800 });
+  const ok = await page.waitFor(`!!document.querySelector('button[jsname="wQO0od"]')`);
   if (!ok) throw new Error("the listing never rendered its Add to Chrome button");
   // The extension's own icon is the last thing on the page to arrive, and it is
-  // the left edge of the crop.
+  // the leading edge of the crop.
   const drawn = await page.waitFor(
     `[...document.images].some((i) => i.getBoundingClientRect().width === 60 && i.naturalWidth > 0)`
   );
   if (!drawn) throw new Error("the listing never drew the extension's icon");
   await sleep(1500);
 
-  const button = await page.eval(`(() => {
-    const el = [...document.querySelectorAll("button, a")]
-      .find((e) => e.textContent.trim() === "Add to Chrome");
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom };
-  })()`);
-  if (!button) throw new Error("the listing's Add to Chrome button is no longer a button or a link");
+  const button = JSON.parse(await page.eval(`(() => {
+    const found = document.querySelectorAll('button[jsname="wQO0od"]');
+    if (found.length !== 1) return JSON.stringify({ found: found.length });
+    const r = found[0].getBoundingClientRect();
+    return JSON.stringify({
+      label: found[0].textContent.trim(),
+      left: r.left, right: r.right, top: r.top, bottom: r.bottom,
+    });
+  })()`));
+  if (!button.label) {
+    throw new Error(`the listing has ${button.found} buttons called wQO0od, not one — Google renamed it`);
+  }
 
   // Between the store's own header bar and its media strip. The strip below is
   // the promo video and the five store screenshots, which this page is already
   // showing further up; the bar above is dropped because headless Chrome will
   // not draw the store's logo, and a broken-image glyph in the corner of a
   // picture that is meant to build confidence undoes the picture.
-  const clip = { x: 32, y: 62, width: 1244, height: 248 };
+  //
+  // Symmetric about the viewport, because Arabic lays the whole listing out the
+  // other way round: the same inset that clears the tab strip on the left in
+  // English has to clear it on the right in Arabic.
+  const clip = { x: 32, y: 62, width: WIDTH - 64, height: 248 };
   const inside =
     button.left > clip.x &&
     button.right < clip.x + clip.width &&
@@ -142,11 +207,12 @@ async function store() {
     button.bottom < clip.y + clip.height;
   if (!inside) {
     throw new Error(
-      `the listing moved: Add to Chrome is at ${JSON.stringify(button)}, outside ${JSON.stringify(clip)}`
+      `the listing moved: ${button.label} is at ${JSON.stringify(button)}, outside ${JSON.stringify(clip)}`
     );
   }
 
-  await capture(page, "store", "install-1-store.png", { ...clip, scale: 1 }, button);
+  console.log(`        the button reads ${button.label}`);
+  await capture(page, "store", lang, { ...clip, scale: 1 }, button);
   await page.close();
 }
 
@@ -158,9 +224,9 @@ async function store() {
  * 14px text rather than 9px text. The key is revealed for the same reason the
  * store shot reveals it: a field of dots does not show that it is a fake.
  */
-async function key(origin) {
+async function key(chrome, origin, lang) {
   const page = await chrome.newPage(`${origin}/options.html`, { width: 760, height: 900 });
-  await page.eval(`chrome.storage.local.set(${JSON.stringify(PANEL_STATE)})`);
+  await page.eval(`chrome.storage.local.set(${JSON.stringify(panelState(lang))})`);
   await page.reload();
   const ok = await page.waitFor(`document.getElementById("apiKey").value.length > 0`);
   if (!ok) throw new Error("the Options page never came up with the key in it");
@@ -173,7 +239,7 @@ async function key(origin) {
     return { x: 16, y: Math.round(head.top) - 14, width: 728,
              height: Math.round(tail.bottom - head.top) + 28 };
   })()`);
-  await capture(page, "key", "install-2-key.png", { ...clip, scale: 1.6 }, await rect(page, "apiKey"));
+  await capture(page, "key", lang, { ...clip, scale: 1.6 }, await rect(page, "apiKey"));
   await page.close();
 }
 
@@ -185,14 +251,22 @@ async function key(origin) {
  * the crop is the button row: below it the panel is empty until a run starts,
  * and an inch of blank card is an inch the picture does not need.
  */
-async function start(origin) {
+async function start(chrome, origin, lang) {
   const page = await chrome.newPage(`${origin}/sidepanel.html`, { width: 420, height: 900 });
-  await page.eval(`chrome.storage.local.set(${JSON.stringify(PANEL_STATE)})`);
+  await page.eval(`chrome.storage.local.set(${JSON.stringify(panelState(lang))})`);
   await page.reload();
   const ok = await page.waitFor(
     `document.getElementById("tabEnabled").checked && document.getElementById("toggle").textContent.length > 0`
   );
   if (!ok) throw new Error("the side panel never came up with tab audio on");
+  // The picker is filled in from `lib/languages.js`, so a guide language that
+  // is not one of its codes would quietly leave the shot on whatever the panel
+  // defaults to — a picture of somebody else's language above the arrow. Tab
+  // audio runs the simultaneous model, whose codes are the BCP-47 ones, so the
+  // guide's `zh` and `pt` come back as `zh-Hans` and `pt-BR`.
+  const wanted = simulLanguageCode(lang);
+  const picked = await page.eval(`document.getElementById("tabTarget").value`);
+  if (picked !== wanted) throw new Error(`the panel will not translate into ${lang}: it picked ${picked}`);
   await sleep(400);
 
   const clip = await page.eval(`(() => {
@@ -201,7 +275,7 @@ async function start(origin) {
     const r = row.getBoundingClientRect();
     return { x: 0, y: 0, width: 420, height: Math.round(r.bottom) + 14 };
   })()`);
-  await capture(page, "start", "install-4-start.png", { ...clip, scale: 1.6 }, await rect(page, "toggle"));
+  await capture(page, "start", lang, { ...clip, scale: 1.6 }, await rect(page, "toggle"));
   await page.close();
 }
 
@@ -226,8 +300,9 @@ async function rect(page, id) {
  * column has left. It has to be inside the crop, or the arrow points off the
  * edge of a picture and the step has lost its subject.
  */
-async function capture(page, name, file, clip, mark) {
-  const { data } = await chrome.send(
+async function capture(page, name, lang, clip, mark) {
+  const file = `${FILES[name]}-${lang}.png`;
+  const { data } = await page.chrome.send(
     "Page.captureScreenshot",
     { format: "png", captureBeyondViewport: true, clip },
     page.sessionId
@@ -251,7 +326,8 @@ async function capture(page, name, file, clip, mark) {
     width: percent((mark.right - mark.left) / clip.width),
     height: percent((mark.bottom - mark.top) / clip.height),
   };
-  shots[name] = { file, width, height, side: arrowSide(box, width / height), mark: box };
+  shots[name] ??= {};
+  shots[name][lang] = { file, width, height, side: arrowSide(box, width / height), mark: box };
   console.log(`   ok   docs/assets/${file} — ${width}×${height}`);
 }
 
@@ -288,10 +364,15 @@ function arrowSide(box, ratio) {
 function writeShots() {
   const lines = [
     "# Where each photographed picture in the install slideshow is, and where the one",
-    "# thing it is about sits inside it.",
+    "# thing it is about sits inside it — for every language the guide is written in.",
     "#",
     "# Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not",
     "# this: the next run overwrites the file.",
+    "#",
+    "# A picture per language because all three are localized: the store listing is",
+    "# Google's, the other two are the extension's own UI. The numbers differ with",
+    "# the words — a button called `Hinzufügen` is not where a button called `Add to",
+    "# Chrome` is — which is why none of this is typed in by hand.",
     "#",
     "# `mark` is a rectangle in percentages of the picture, and it is what lets",
     "# `_includes/install-steps.html` put a ring and an arrow on the right button",
@@ -303,19 +384,23 @@ function writeShots() {
     "# text, and a reader who has started reading is the one it moves under.",
     "",
   ];
-  for (const [name, shot] of Object.entries(shots)) {
+  for (const [name, languages] of Object.entries(shots)) {
     lines.push(`${name}:`);
-    lines.push(`  file: ${shot.file}`);
-    lines.push(`  width: ${shot.width}`);
-    lines.push(`  height: ${shot.height}`);
-    lines.push(`  side: ${shot.side}`);
-    lines.push("  mark:");
-    for (const [side, value] of Object.entries(shot.mark)) lines.push(`    ${side}: ${value}`);
+    for (const [lang, shot] of Object.entries(languages)) {
+      lines.push(`  ${lang}:`);
+      lines.push(`    file: ${shot.file}`);
+      lines.push(`    width: ${shot.width}`);
+      lines.push(`    height: ${shot.height}`);
+      lines.push(`    side: ${shot.side}`);
+      lines.push("    mark:");
+      for (const [side, value] of Object.entries(shot.mark)) lines.push(`      ${side}: ${value}`);
+    }
     lines.push("");
   }
   const target = path.join(ROOT, "docs", "_data", "shots.yml");
   fs.writeFileSync(target, lines.join("\n"));
-  console.log(`   ok   docs/_data/shots.yml — ${Object.keys(shots).length} pictures`);
+  const count = Object.values(shots).reduce((n, languages) => n + Object.keys(languages).length, 0);
+  console.log(`\n   ok   docs/_data/shots.yml — ${count} pictures`);
 }
 
 /** Width and height out of a PNG's IHDR, as `tests/assets.test.js` reads them. */

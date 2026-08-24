@@ -1,8 +1,13 @@
 # Where each photographed picture in the install slideshow is, and where the one
-# thing it is about sits inside it.
+# thing it is about sits inside it — for every language the guide is written in.
 #
 # Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not
 # this: the next run overwrites the file.
+#
+# A picture per language because all three are localized: the store listing is
+# Google's, the other two are the extension's own UI. The numbers differ with
+# the words — a button called `Hinzufügen` is not where a button called `Add to
+# Chrome` is — which is why none of this is typed in by hand.
 #
 # `mark` is a rectangle in percentages of the picture, and it is what lets
 # `_includes/install-steps.html` put a ring and an arrow on the right button
@@ -14,34 +19,307 @@
 # text, and a reader who has started reading is the one it moves under.
 
 store:
-  file: install-1-store.png
-  width: 1244
-  height: 248
-  side: left
-  mark:
-    x: 83.4
-    y: 29
-    width: 11.8
-    height: 16.1
+  en:
+    file: install-1-store-en.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 80
+      y: 29
+      width: 11.3
+      height: 16.1
+  ja:
+    file: install-1-store-ja.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 80.1
+      y: 29
+      width: 11.2
+      height: 16.1
+  zh:
+    file: install-1-store-zh.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 80.1
+      y: 29
+      width: 11.2
+      height: 16.1
+  es:
+    file: install-1-store-es.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 79.1
+      y: 29
+      width: 12.2
+      height: 16.1
+  fr:
+    file: install-1-store-fr.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 74.8
+      y: 29
+      width: 16.5
+      height: 16.1
+  de:
+    file: install-1-store-de.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 81.8
+      y: 29
+      width: 9.5
+      height: 16.1
+  pt:
+    file: install-1-store-pt.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 79.5
+      y: 29
+      width: 11.9
+      height: 16.1
+  ko:
+    file: install-1-store-ko.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 80.6
+      y: 29
+      width: 10.8
+      height: 16.1
+  hi:
+    file: install-1-store-hi.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 80.5
+      y: 29
+      width: 10.8
+      height: 16.1
+  ar:
+    file: install-1-store-ar.png
+    width: 1296
+    height: 248
+    side: left
+    mark:
+      x: 8.6
+      y: 29
+      width: 12
+      height: 16.1
 
 key:
-  file: install-2-key.png
-  width: 1165
-  height: 376
-  side: left
-  mark:
-    x: 4.9
-    y: 52.8
-    width: 90.1
-    height: 12.8
+  en:
+    file: install-2-key-en.png
+    width: 1165
+    height: 347
+    side: left
+    mark:
+      x: 4.9
+      y: 48.9
+      width: 90.1
+      height: 13.9
+  ja:
+    file: install-2-key-ja.png
+    width: 1165
+    height: 336
+    side: left
+    mark:
+      x: 4.9
+      y: 45.2
+      width: 90.1
+      height: 14.4
+  zh:
+    file: install-2-key-zh.png
+    width: 1165
+    height: 331
+    side: left
+    mark:
+      x: 4.9
+      y: 45.1
+      width: 90.1
+      height: 14.6
+  es:
+    file: install-2-key-es.png
+    width: 1165
+    height: 347
+    side: left
+    mark:
+      x: 4.9
+      y: 48.9
+      width: 90.1
+      height: 13.9
+  fr:
+    file: install-2-key-fr.png
+    width: 1165
+    height: 347
+    side: left
+    mark:
+      x: 4.9
+      y: 48.9
+      width: 90.1
+      height: 13.9
+  de:
+    file: install-2-key-de.png
+    width: 1165
+    height: 347
+    side: left
+    mark:
+      x: 4.9
+      y: 48.9
+      width: 90.1
+      height: 13.9
+  pt:
+    file: install-2-key-pt.png
+    width: 1165
+    height: 347
+    side: left
+    mark:
+      x: 4.9
+      y: 48.9
+      width: 90.1
+      height: 13.9
+  ko:
+    file: install-2-key-ko.png
+    width: 1165
+    height: 325
+    side: left
+    mark:
+      x: 4.9
+      y: 45
+      width: 90.1
+      height: 14.9
+  hi:
+    file: install-2-key-hi.png
+    width: 1165
+    height: 336
+    side: left
+    mark:
+      x: 4.9
+      y: 45.4
+      width: 90.1
+      height: 14.4
+  ar:
+    file: install-2-key-ar.png
+    width: 1165
+    height: 322
+    side: left
+    mark:
+      x: 4.9
+      y: 44.9
+      width: 90.1
+      height: 15
 
 start:
-  file: install-4-start.png
-  width: 672
-  height: 798
-  side: right
-  mark:
-    x: 2.9
-    y: 90.7
-    width: 15.9
-    height: 6.5
+  en:
+    file: install-4-start-en.png
+    width: 672
+    height: 798
+    side: right
+    mark:
+      x: 2.9
+      y: 90.7
+      width: 15.9
+      height: 6.5
+  ja:
+    file: install-4-start-ja.png
+    width: 672
+    height: 845
+    side: right
+    mark:
+      x: 2.9
+      y: 90.8
+      width: 15.9
+      height: 6.1
+  zh:
+    file: install-4-start-zh.png
+    width: 672
+    height: 746
+    side: right
+    mark:
+      x: 2.9
+      y: 89.8
+      width: 15.9
+      height: 6.9
+  es:
+    file: install-4-start-es.png
+    width: 672
+    height: 798
+    side: right
+    mark:
+      x: 2.9
+      y: 90.7
+      width: 15.9
+      height: 6.5
+  fr:
+    file: install-4-start-fr.png
+    width: 672
+    height: 798
+    side: right
+    mark:
+      x: 2.9
+      y: 90.7
+      width: 15.9
+      height: 6.5
+  de:
+    file: install-4-start-de.png
+    width: 672
+    height: 790
+    side: right
+    mark:
+      x: 2.9
+      y: 90.6
+      width: 15.9
+      height: 6.6
+  pt:
+    file: install-4-start-pt.png
+    width: 672
+    height: 762
+    side: right
+    mark:
+      x: 2.9
+      y: 90.3
+      width: 15.9
+      height: 6.8
+  ko:
+    file: install-4-start-ko.png
+    width: 672
+    height: 739
+    side: right
+    mark:
+      x: 2.9
+      y: 90
+      width: 15.9
+      height: 7
+  hi:
+    file: install-4-start-hi.png
+    width: 672
+    height: 763
+    side: right
+    mark:
+      x: 2.9
+      y: 89.9
+      width: 15.9
+      height: 6.8
+  ar:
+    file: install-4-start-ar.png
+    width: 672
+    height: 635
+    side: left
+    mark:
+      x: 81.2
+      y: 88.3
+      width: 15.9
+      height: 8.2

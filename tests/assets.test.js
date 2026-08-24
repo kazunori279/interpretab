@@ -817,13 +817,25 @@ test("the install slideshow has its pictures, its steps and its ten translations
       figures.includes(name),
       `docs/_data/shots.yml has a picture called ${name} that no step in the slideshow uses`
     );
-    const file = shots.match(new RegExp(`^${name}:\\n  file: (\\S+)`, "m"))[1];
-    assert.ok(
-      fs.existsSync(path.join(SITE, "assets", file)),
-      `docs/_data/shots.yml points at ${file}, which does not exist — run tests/guide-shots.mjs`
+    // Each of the three is a picture of something localized — Google's store
+    // listing, or the extension's own UI out of `_locales` — so each is taken
+    // once per guide language. A language missing here falls back to English
+    // under the reader's own words, which is the thing the pictures are for.
+    const block = shots.split(new RegExp(`^${name}:$`, "m"))[1].split(/^\S/m)[0];
+    const taken = [...block.matchAll(/^ {2}([a-z]+):$/gm)].map(([, code]) => code);
+    assert.deepEqual(
+      taken.slice().sort(),
+      ["en", ...guideDirs()].sort(),
+      `docs/_data/shots.yml has no ${name} picture for every guide language`
     );
+    for (const [, file] of block.matchAll(/^ {4}file: (\S+)$/gm)) {
+      assert.ok(
+        fs.existsSync(path.join(SITE, "assets", file)),
+        `docs/_data/shots.yml points at ${file}, which does not exist — run tests/guide-shots.mjs`
+      );
+    }
   }
-  for (const side of [...shots.matchAll(/^  side: (\S+)$/gm)].map(([, s]) => s)) {
+  for (const side of [...shots.matchAll(/^ {4}side: (\S+)$/gm)].map(([, s]) => s)) {
     assert.ok(
       include.includes("install-mark--{{ shot.side }}"),
       "the slideshow no longer takes the arrow's side from the data that measures it"
