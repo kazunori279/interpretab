@@ -1989,11 +1989,16 @@ down to one line, `To use, see:` and a link per phase of the guide's Meet sectio
 that phase's card redrawn at the width of the panel. The cards open below the line under the
 buttons, in the space the transcript will use, rather than above them where opening one pushed
 Start down the panel. The options page gets the same treatment for the install itself: the
-paragraph pointing at the guide is now the guide's ten steps, drawn on the page, shown to whoever
-has not got a key yet — which, since Chrome opens that page on install, is everybody once. The
+paragraph pointing at the guide is now nine of the guide's ten steps drawn on the page — the first
+is installing the extension, and a reader on that page is already inside it — opened for whoever
+arrives without a key, which, since Chrome opens that page on install, is everybody once. Saving a
+key does not fold it away: pasting one is step six, and a card that closed itself there would take
+the last three steps with it, so the only thing that closes it is the button on the last one. The
 headphones warning is the first step of
 the first card, where somebody who has asked what to do before a call will read it, rather than
-four lines to skim past on the way to Start. The third is audible from the first call: with the translation going into
+four lines to skim past on the way to Start; the step after it is the microphone permission,
+which is the one thing on that card the panel cannot do for you — Chrome raises the prompt for a
+page, so the step draws the options page's button and links to it. The third is audible from the first call: with the translation going into
 a Meet call, the microphone's voice no longer also comes out of this computer and its subtitles
 here are off, which is [`callMicOn`](#meetings) above. Held while 1.0.2 was in review, because a
 package uploaded over one under review replaces it rather than queueing behind it, and that hold

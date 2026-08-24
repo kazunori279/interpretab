@@ -124,33 +124,30 @@
 
   "optStartHeading": { "message": "In 5 Minuten loslegen" },
   "optStartStep1": {
-    "message": "<a1>Interpretab im Chrome Web Store</a1> öffnen und auf <b>Hinzufügen</b> klicken."
-  },
-  "optStartStep2": {
     "message": "Übersetzt wird von Gemini, dem Modell von Google, und Gemini braucht einen eigenen API-Schlüssel. Der ist kostenlos: <a1>Google AI Studio</a1> öffnen und mit einem Google-Konto anmelden."
   },
-  "optStartStep3": {
+  "optStartStep2": {
     "message": "Die Seite listet Ihre Schlüssel auf — bei einem neuen Konto also keinen. Auf <b>API-Schlüssel erstellen</b> klicken."
   },
-  "optStartStep4": {
+  "optStartStep3": {
     "message": "Ein Schlüssel braucht einen Namen und ein Google-Cloud-Projekt, zu dem er gehört. Als Namen <b>Interpretab</b> eintragen. Darunter hat ein Konto, das die API noch nie benutzt hat, nichts zur Auswahl: <b>No Cloud Projects Available</b>."
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "Diese Liste öffnen und <b>Projekt erstellen</b> wählen. Der Name, der dort schon steht, ist in Ihrer Sprache, und das Feld nimmt nur lateinische Buchstaben — also löschen, <b>Interpretab</b> eintippen und auf <b>Projekt erstellen</b> klicken."
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "Der Dialog kommt mit dem neuen Projekt zurück. Auf <b>Schlüssel erstellen</b> klicken, und der Schlüssel erscheint — auf <b>Schlüssel kopieren</b> klicken. Er bleibt auf der Seite API keys, Sie können ihn also später wieder holen."
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "Die Seite <b>Optionen</b> der Erweiterung öffnet sich beim ersten Mal von selbst, und die Schaltfläche <b>Optionen</b> im Seitenbereich öffnet sie wieder. Den Schlüssel in <b>Gemini-API-Schlüssel</b> einfügen. Er bleibt in diesem Browser und geht an niemanden außer Google."
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "Die zu übersetzende Seite öffnen — ein Video mit Sprache auf <a1>youtube.com</a1> ist der einfachste erste Test. Eine frisch installierte Erweiterung hat noch kein Symbol in der Symbolleiste: auf Chromes <b>Puzzleteil-Schaltfläche</b> klicken, <b>Interpretab</b> in der Liste suchen und auf die Stecknadel daneben klicken."
   },
-  "optStartStep9": {
+  "optStartStep8": {
     "message": "Jetzt ist das Symbol in der Symbolleiste. <b>Auf dem Tab, den Sie übersetzen wollen, daraufklicken.</b> Mit diesem Klick geben Sie die Erlaubnis, den Tab mitzuhören — ohne ihn bekommen Sie eine Fehlermeldung."
   },
-  "optStartStep10": {
+  "optStartStep9": {
     "message": "Im Seitenbereich Ihre Sprache wählen und <b>Start</b> drücken. Das Video abspielen: die Stimme kommt in dieser Sprache zurück. Hören Sie keine Übersetzung, dann eine andere Sprache wählen als die, die im Video ohnehin gesprochen wird."
   },
   "optStartCreateApiKey": { "message": "API-Schlüssel erstellen" },

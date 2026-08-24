@@ -180,10 +180,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 #setupstep-7:checked ~ .stepcard-tabs .stepcard-tab--7,
 #setupstep-8:checked ~ .stepcard-tabs .stepcard-tab--8,
 #setupstep-9:checked ~ .stepcard-tabs .stepcard-tab--9,
-#setupstep-10:checked ~ .stepcard-tabs .stepcard-tab--10,
 #prepstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
 #prepstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
 #prepstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
+#prepstep-4:checked ~ .stepcard-tabs .stepcard-tab--4,
 #meetstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
 #meetstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
 #meetstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
@@ -199,10 +199,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 #setupstep-7:checked ~ .stepcard-panes .stepcard-pane--7,
 #setupstep-8:checked ~ .stepcard-panes .stepcard-pane--8,
 #setupstep-9:checked ~ .stepcard-panes .stepcard-pane--9,
-#setupstep-10:checked ~ .stepcard-panes .stepcard-pane--10,
 #prepstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
 #prepstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
 #prepstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
+#prepstep-4:checked ~ .stepcard-panes .stepcard-pane--4,
 #meetstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
 #meetstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
 #meetstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
@@ -359,6 +359,15 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   animation: none; background: #fff; border: 1px solid #dadce0; color: #b4b7bb;
 }
 .stepcard-dialog .stepcard-cta { align-self: flex-end; }
+/* The exception in this block, borrowed the other way: the panel's microphone
+   step draws a section of the options page, whose button is a plain bordered
+   one under its heading rather than a blue pill in a dialog's corner. Its
+   label is translated, so it keeps the reader's direction. */
+.stepcard-cta--plain {
+  background: #fff; border: 1px solid #dadce0; color: #3c4043; direction: inherit;
+}
+.stepcard-dialog .stepcard-cta--plain { align-self: flex-start; }
+.stepcard-sectionhead { color: #3c4043; font-size: 10px; font-weight: 600; line-height: 1.4; }
 /* A text field with something typed into it. The caret is the difference
    between a box the reader fills in and a box that is already filled. */
 .stepcard-field {

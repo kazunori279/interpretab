@@ -122,33 +122,30 @@
 
   "optStartHeading": { "message": "ابدأ في 5 دقائق" },
   "optStartStep1": {
-    "message": "افتح <a1>Interpretab في Chrome Web Store</a1> واضغط <b>الإضافة إلى Chrome</b>."
-  },
-  "optStartStep2": {
     "message": "من يترجم هو Gemini من Google، وهو يحتاج مفتاح API خاصًا بك. الحصول عليه مجاني: افتح <a1>Google AI Studio</a1> وسجّل الدخول بحساب Google."
   },
-  "optStartStep3": {
+  "optStartStep2": {
     "message": "تعرض الصفحة المفاتيح التي لديك، ولا يوجد أي مفتاح في حساب جديد. اضغط <b>Create API key</b>."
   },
-  "optStartStep4": {
+  "optStartStep3": {
     "message": "يحتاج المفتاح إلى اسم وإلى مشروع في Google Cloud ينتمي إليه. اكتب <b>Interpretab</b> اسمًا له. وتحته، الحساب الذي لم يستخدم الـ API من قبل لا يجد ما يختاره: <b>No Cloud Projects Available</b>."
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "افتح تلك القائمة واختر <b>Create project</b>. الاسم المكتوب سلفًا يكون بلغتك، والحقل لا يقبل غير الحروف اللاتينية — امسحه واكتب <b>Interpretab</b> ثم اضغط <b>Create project</b>."
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "يعود مربّع المفتاح ومعه المشروع الجديد. اضغط <b>Create key</b> فيظهر المفتاح — اضغط <b>Copy key</b>. يبقى المفتاح في صفحة API keys، فيمكنك العودة إليه لاحقًا."
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "تُفتح صفحة <b>الخيارات</b> في الإضافة من تلقاء نفسها في المرة الأولى، ويعيد فتحها زر <b>الخيارات</b> في اللوحة الجانبية. الصق المفتاح في <b>مفتاح Gemini API</b>. يبقى في هذا المتصفح ولا يُرسَل إلى أحد غير Google."
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "افتح الصفحة التي تريد ترجمتها — وأسهل تجربة أولى مقطع فيه كلام على <a1>youtube.com</a1>. الإضافة المثبَّتة حديثًا ليس لها أيقونة في شريط الأدوات بعد: اضغط <b>زر قطعة الأحجية</b> في Chrome، وابحث عن <b>Interpretab</b> في القائمة، ثم اضغط الدبوس بجانبها."
   },
-  "optStartStep9": {
+  "optStartStep8": {
     "message": "صارت الأيقونة في شريط الأدوات. <b>اضغطها وأنت على العلامة التي تريد ترجمتها.</b> تلك النقرة هي إذنك بالاستماع إلى علامة التبويب — وتجاوُزها يعني رسالة خطأ."
   },
-  "optStartStep10": {
+  "optStartStep9": {
     "message": "اختر لغتك في اللوحة الجانبية واضغط <b>Start</b>. شغّل الفيديو: يعود الصوت بتلك اللغة. وإن لم تسمع أي ترجمة فاختر لغة غير التي يتحدث بها الفيديو أصلًا."
   },
   "optStartCreateApiKey": { "message": "Create API key" },

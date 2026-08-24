@@ -50,6 +50,13 @@ async function init() {
   loadCaptionSize();
   bind();
   renderKeyStatus();
+  // Whether the install card is open is decided here and nowhere else: once,
+  // from the key as this page loaded. It is deliberately not re-decided when a
+  // key is saved — pasting one is step 6 of the nine, and a card that folded
+  // itself away at that moment would take the last three steps with it, which
+  // are the ones about pinning the icon and pressing Start. The button on the
+  // last step is what closes it.
+  el("setupCard").hidden = Boolean(settings.apiKey);
   await refreshMicStatus();
   await loadDevices();
   renderGlossary(await ensureGlossary());
@@ -96,6 +103,9 @@ function bind() {
   // not be "press Stop first".
   el("apiTier").addEventListener("change", () => saveSettings({ apiTier: el("apiTier").value }));
   el("grantMic").addEventListener("click", grantMic);
+  el("setupClose").addEventListener("click", () => {
+    el("setupCard").hidden = true;
+  });
   // Unticking this is also what deletes the cached copy — the service worker
   // does it on the next read, so the switch means "and forget what you were
   // told" rather than only "stop asking".
@@ -161,11 +171,6 @@ function renderKeyStatus() {
   } else {
     setStatus(node, t("optKeySaved"), true);
   }
-  // The install card, shown to whoever has not got past the step it is about.
-  // Chrome opens this page by itself on install, so that is everybody once, and
-  // the card goes the moment a key is saved rather than at the next reload —
-  // this runs on both paths, which is why it lives here and not in `init`.
-  el("setupCard").hidden = Boolean(key);
 }
 
 function toggleKey() {

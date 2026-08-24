@@ -120,33 +120,30 @@
 
   "optStartHeading": { "message": "5 मिनट में शुरू करें" },
   "optStartStep1": {
-    "message": "<a1>Chrome Web Store पर Interpretab</a1> खोलें और <b>Chrome में जोड़ें</b> दबाएँ।"
-  },
-  "optStartStep2": {
     "message": "अनुवाद Google का Gemini करता है, और Gemini को आपकी अपनी API कुंजी चाहिए। कुंजी लेना मुफ़्त है: <a1>Google AI Studio</a1> खोलें और किसी Google खाते से साइन इन करें।"
   },
-  "optStartStep3": {
+  "optStartStep2": {
     "message": "यह पेज आपकी मौजूदा कुंजियाँ दिखाता है — नए खाते में एक भी नहीं। <b>Create API key</b> दबाएँ।"
   },
-  "optStartStep4": {
+  "optStartStep3": {
     "message": "कुंजी को एक नाम चाहिए, और एक Google Cloud प्रोजेक्ट जिसकी वह हो। नाम में <b>Interpretab</b> लिखें। उसके नीचे, जिस खाते ने API कभी इस्तेमाल नहीं की उसके पास चुनने को कुछ नहीं होता: <b>No Cloud Projects Available</b>।"
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "उस सूची को खोलें और <b>Create project</b> चुनें। जो नाम पहले से भरा आता है वह आपकी भाषा में होता है, और यह खाना सिर्फ़ लैटिन अक्षर लेता है — उसे मिटाएँ, <b>Interpretab</b> टाइप करें और <b>Create project</b> दबाएँ।"
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "कुंजी वाला डायलॉग नए प्रोजेक्ट के साथ वापस आ जाता है। <b>Create key</b> दबाएँ और कुंजी दिख जाती है — <b>Copy key</b> दबाएँ। वह API keys पेज पर बनी रहती है, इसलिए बाद में दोबारा ली जा सकती है।"
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "एक्सटेंशन का <b>विकल्प</b> पेज पहली बार अपने आप खुलता है, और साइड पैनल का <b>विकल्प</b> बटन उसे दोबारा खोल देता है। कुंजी को <b>Gemini API कुंजी</b> में पेस्ट करें। वह इसी ब्राउज़र में रहती है और Google के अलावा किसी को नहीं भेजी जाती।"
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "जिस पेज का अनुवाद चाहिए उसे खोलें — पहली जाँच के लिए <a1>youtube.com</a1> पर बोलने वाला कोई वीडियो सबसे आसान है। अभी-अभी इंस्टॉल हुए एक्सटेंशन का आइकॉन टूलबार में नहीं होता: Chrome का <b>पहेली के टुकड़े वाला बटन</b> दबाएँ, सूची में <b>Interpretab</b> ढूँढें और उसके बगल की पिन दबाएँ।"
   },
-  "optStartStep9": {
+  "optStartStep8": {
     "message": "अब आइकॉन टूलबार में है। <b>जिस टैब का अनुवाद चाहिए, उसी पर रहते हुए उसे क्लिक करें।</b> यही क्लिक उस टैब को सुनने की अनुमति है — इसे छोड़ देने पर त्रुटि मिलेगी।"
   },
-  "optStartStep10": {
+  "optStartStep9": {
     "message": "साइड पैनल में अपनी भाषा चुनें और <b>Start</b> दबाएँ। वीडियो चलाएँ — आवाज़ उसी भाषा में लौटती है। अनुवाद सुनाई न दे तो वीडियो जिस भाषा में है, उससे अलग कोई भाषा चुनें।"
   },
   "optStartCreateApiKey": { "message": "Create API key" },

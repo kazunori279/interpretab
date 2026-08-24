@@ -45,7 +45,7 @@
          inside it, and a height here would cut the last row off. */
       #setupCard .stepcard-viewport:not(.stepcard-viewport--dialog) { height: 7rem; }
       #setupCard .stepcard-say { min-height: 2.8rem; font-size: 13px; }
-      /* One height for all ten, so that Next stays under the hand that pressed
+      /* One height for all nine, so that Next stays under the hand that pressed
          it instead of walking up the page as the drawings change. */
       #setupCard .stepcard-pane { min-height: 17rem; }
       /* A stand-in for the page behind the subtitles, so the size is judged
@@ -77,16 +77,19 @@
          opens this page by itself on install. It used to be a paragraph saying
          the guide exists, and a paragraph is a thing to go and read later.
 
+         Nine steps and not the guide's ten. Its first is installing the
+         extension, and this page is inside the extension.
+
          The words are the guide's, out of `docs/_data/install.yml` and into the
          catalogue by hand; `tests/assets.test.js` is what keeps the two in step.
-         The pictures are not: three of the guide's ten are photographs, and the
-         other seven are drawings in its own stylesheet, so all ten are redrawn
-         here out of the same `.stepcard-*` pieces the side panel's cards use.
+         The pictures are not: three of the guide's are photographs, and the
+         rest are drawings in its own stylesheet, so all nine are redrawn here
+         out of the same `.stepcard-*` pieces the side panel's cards use.
 
          One pane at a time, picked by a hidden radio and shown by `:checked ~`,
          with no script behind it — see sidepanel.css. `options.js` decides
-         whether the card is here at all, and that is the whole of what it does
-         with it. -->
+         whether the card opens at all, and closes it on the last step; that is
+         the whole of what it does with it. -->
     <section class="stepcard" id="setupCard" hidden>
       <h2 class="stepcard-title" data-i18n="optStartHeading"></h2>
       <input class="stepcard-pick" type="radio" name="setupStep" id="setupstep-1" checked />
@@ -98,10 +101,9 @@
       <input class="stepcard-pick" type="radio" name="setupStep" id="setupstep-7" />
       <input class="stepcard-pick" type="radio" name="setupStep" id="setupstep-8" />
       <input class="stepcard-pick" type="radio" name="setupStep" id="setupstep-9" />
-      <input class="stepcard-pick" type="radio" name="setupStep" id="setupstep-10" />
 
       <!-- Numbers and no words. The guide's tab strip carries a phrase per step
-           and wraps to three rows doing it; ten of those on a settings page
+           and wraps to three rows doing it; nine of those on a settings page
            would be a table of contents above the setting somebody came for. -->
       <div class="stepcard-tabs">
         <label class="stepcard-tab stepcard-tab--1" for="setupstep-1">1</label>
@@ -113,46 +115,11 @@
         <label class="stepcard-tab stepcard-tab--7" for="setupstep-7">7</label>
         <label class="stepcard-tab stepcard-tab--8" for="setupstep-8">8</label>
         <label class="stepcard-tab stepcard-tab--9" for="setupstep-9">9</label>
-        <label class="stepcard-tab stepcard-tab--10" for="setupstep-10">10</label>
       </div>
 
       <div class="stepcard-panes">
       <div class="stepcard-pane stepcard-pane--1">
         <p class="stepcard-say" data-i18n="optStartStep1"
-           data-link1="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm"></p>
-        <!-- The listing: the extension's own icon, its name as a grey bar, and
-             the button. The words on the button are Chrome's, in whatever language
-             the store is being read in, so it is drawn as a shape. -->
-        <div class="stepcard-browser" aria-hidden="true">
-          <div class="stepcard-tabstrip"><span class="stepcard-tabchip"></span></div>
-          <div class="stepcard-omni">
-            <span class="stepcard-nav"></span>
-            <span class="stepcard-url">chromewebstore.google.com</span>
-            <span class="stepcard-avatar"></span>
-          </div>
-          <div class="stepcard-viewport">
-            <div class="stepcard-page">
-              <div class="stepcard-pagehead">
-                <span class="stepcard-listing">
-                  <img src="icons/icon-128.png" alt="" width="24" height="24" />
-                  <span class="stepcard-line stepcard-line--head"></span>
-                </span>
-                <span class="stepcard-cta stepcard-cta--blank"></span>
-              </div>
-              <span class="stepcard-line"></span>
-            </div>
-          </div>
-        </div>
-        <label class="stepcard-next" for="setupstep-2">
-          <span data-i18n="panelMeetNext"></span>
-          <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
-            <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
-                  stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </label>      </div>
-
-      <div class="stepcard-pane stepcard-pane--2">
-        <p class="stepcard-say" data-i18n="optStartStep2"
            data-link1="https://aistudio.google.com/apikey"></p>
         <!-- An address being typed, which is the whole of this step. The page
              below it is left blank: it is the page the next four steps draw. -->
@@ -166,16 +133,17 @@
           </div>
           <div class="stepcard-viewport"></div>
         </div>
-        <label class="stepcard-next" for="setupstep-3">
+        <label class="stepcard-next" for="setupstep-2">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--3">
-        <p class="stepcard-say" data-i18n="optStartStep3"></p>
+      <div class="stepcard-pane stepcard-pane--2">
+        <p class="stepcard-say" data-i18n="optStartStep2"></p>
         <!-- AI Studio's API keys page. The button is in the top corner across
              from the heading, not down the middle: a reader scanning the middle of
              the page does not find it. -->
@@ -196,16 +164,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-4">
+        <label class="stepcard-next" for="setupstep-3">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--4">
-        <p class="stepcard-say" data-i18n="optStartStep4"></p>
+      <div class="stepcard-pane stepcard-pane--3">
+        <p class="stepcard-say" data-i18n="optStartStep3"></p>
         <!-- The dialog that button opens: a name for the key, and the project
              it belongs to. The project list is drawn empty because that is what an
              account that has never used the API sees, and it is the reason there is
@@ -228,16 +197,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-5">
+        <label class="stepcard-next" for="setupstep-4">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--5">
-        <p class="stepcard-say" data-i18n="optStartStep5"></p>
+      <div class="stepcard-pane stepcard-pane--4">
+        <p class="stepcard-say" data-i18n="optStartStep4"></p>
         <!-- The second dialog. The name AI Studio fills in is in the reader's
              own language and the field takes Latin letters only, so the drawing
              shows the box already cleared and retyped. -->
@@ -256,16 +226,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-6">
+        <label class="stepcard-next" for="setupstep-5">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--6">
-        <p class="stepcard-say" data-i18n="optStartStep6"></p>
+      <div class="stepcard-pane stepcard-pane--5">
+        <p class="stepcard-say" data-i18n="optStartStep5"></p>
         <!-- The key, once it exists. The characters are dots on purpose: a
              picture of a plausible key is a thing somebody eventually types in. -->
         <div class="stepcard-browser" aria-hidden="true">
@@ -283,16 +254,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-7">
+        <label class="stepcard-next" for="setupstep-6">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--7">
-        <p class="stepcard-say" data-i18n="optStartStep7"></p>
+      <div class="stepcard-pane stepcard-pane--6">
+        <p class="stepcard-say" data-i18n="optStartStep6"></p>
         <!-- This page, a few centimetres above itself: the field the step is
              about is the one under this card. -->
         <div class="stepcard-dialog" aria-hidden="true">
@@ -300,16 +272,17 @@
           <span class="stepcard-field stepcard-field--marked">••••••••••••••••<span
               class="stepcard-caret"></span></span>
         </div>
-        <label class="stepcard-next" for="setupstep-8">
+        <label class="stepcard-next" for="setupstep-7">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--8">
-        <p class="stepcard-say" data-i18n="optStartStep8"></p>
+      <div class="stepcard-pane stepcard-pane--7">
+        <p class="stepcard-say" data-i18n="optStartStep7"></p>
         <!-- Chrome's extensions button and the menu behind it. A freshly
              installed extension is in there and not on the toolbar, so the step
              that says to click the icon needs this one before it. The guide links
@@ -346,16 +319,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-9">
+        <label class="stepcard-next" for="setupstep-8">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--9">
-        <p class="stepcard-say" data-i18n="optStartStep9"></p>
+      <div class="stepcard-pane stepcard-pane--8">
+        <p class="stepcard-say" data-i18n="optStartStep8"></p>
         <!-- The icon on the toolbar, and a hand on it. A dark rectangle with a
              play triangle is as much of YouTube as a diagram should draw. -->
         <div class="stepcard-browser" aria-hidden="true">
@@ -378,16 +352,17 @@
             </div>
           </div>
         </div>
-        <label class="stepcard-next" for="setupstep-10">
+        <label class="stepcard-next" for="setupstep-9">
           <span data-i18n="panelMeetNext"></span>
           <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
             <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
                   stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </label>      </div>
+        </label>
+      </div>
 
-      <div class="stepcard-pane stepcard-pane--10">
-        <p class="stepcard-say" data-i18n="optStartStep10"></p>
+      <div class="stepcard-pane stepcard-pane--9">
+        <p class="stepcard-say" data-i18n="optStartStep9"></p>
         <!-- The side panel: the language to translate into, and the button
              that starts it. The word on the button is not translated in any of the
              ten catalogues, so it is drawn rather than filled in. -->
@@ -408,6 +383,12 @@
           <span class="stepcard-round"></span>
           <span class="stepcard-ghost"></span>
         </div>
+        <!-- The corner Next has been in for the eight steps before this one, so
+             the hand is already there. The card is not folded away by saving a
+             key: somebody who pastes one at step 6 still has three steps to
+             read, and a card that vanished under them would take the rest of
+             the instructions with it. This is the only thing that closes it. -->
+        <button class="stepcard-close" type="button" id="setupClose" data-i18n="panelClose"></button>
       </div>
       </div>
     </section>

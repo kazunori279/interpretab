@@ -989,19 +989,28 @@ test("the options page's install card says what the guide says", () => {
     });
   };
 
+  // The card starts at the guide's second step. The first is installing the
+  // extension, and a reader on the options page is inside it — so the card's
+  // step N is the guide's step N + 1, and that offset is this one line.
+  const SKIPPED = 1;
   const english = guide("en");
   assert.equal(english.length, 10, `install.yml is down to ${english.length} English steps`);
+  const count = english.length - SKIPPED;
   for (const [dir, locale] of Object.entries({ en: "en", ...GUIDES })) {
     const messages = JSON.parse(fs.readFileSync(path.join(ROOT, "_locales", locale, "messages.json"), "utf8"));
-    guide(dir).forEach((body, i) => {
+    guide(dir).slice(SKIPPED).forEach((body, i) => {
       const key = `optStartStep${i + 1}`;
       assert.ok(messages[key], `_locales/${locale} has no ${key}`);
       assert.equal(
         messages[key].message,
         body,
-        `_locales/${locale}/${key} and docs/_data/install.yml ${dir} step ${i + 1} have drifted apart`
+        `_locales/${locale}/${key} and docs/_data/install.yml ${dir} step ${i + 1 + SKIPPED} have drifted apart`
       );
     });
+    assert.ok(
+      !messages[`optStartStep${count + 1}`],
+      `_locales/${locale} has an optStartStep${count + 1} for a card of ${count} steps`
+    );
   }
 
   // And the card that shows them. One pane per step, each reading its own
@@ -1011,7 +1020,7 @@ test("the options page's install card says what the guide says", () => {
   const card = html.match(/<section class="stepcard" id="setupCard"[\s\S]*?<\/section>/)?.[0];
   assert.ok(card, "the options page has no install card");
   const css = read("sidepanel.css");
-  for (let n = 1; n <= english.length; n += 1) {
+  for (let n = 1; n <= count; n += 1) {
     assert.match(card, new RegExp(`id="setupstep-${n}"`), `the card has no radio for step ${n}`);
     assert.match(card, new RegExp(`for="setupstep-${n}">${n}</label>`), `the card has no tab for step ${n}`);
     assert.match(card, new RegExp(`data-i18n="optStartStep${n}"`), `the card does not show step ${n}`);
@@ -1021,14 +1030,68 @@ test("the options page's install card says what the guide says", () => {
       `nothing opens pane ${n} of the install card`
     );
   }
+  assert.ok(!card.includes("setupstep-" + (count + 1)), `the card has a step ${count + 1} the guide does not`);
   // Its own group, so walking the install steps does not move the panel's cards.
   assert.match(card, /name="setupStep"/);
-  // The card is for a reader without a key, and nothing else on this page is.
+
+  // Opened for a reader with no key, and closed by the button on the last step
+  // and by nothing else. Pasting a key is one of the steps, so hiding the card
+  // on `renderKeyStatus` — which runs when one is saved — would fold the last
+  // three away under whoever was following them.
+  const js = read("options.js");
   assert.match(
-    body(read("options.js"), "renderKeyStatus"),
-    /el\("setupCard"\)\.hidden = Boolean\(key\);/,
-    "the install card is no longer tied to whether there is a key"
+    body(js, "init"),
+    /el\("setupCard"\)\.hidden = Boolean\(settings\.apiKey\);/,
+    "the install card is no longer opened for a reader without a key"
   );
+  assert.doesNotMatch(
+    body(js, "renderKeyStatus"),
+    /setupCard/,
+    "saving a key closes the install card again, taking the steps after it away"
+  );
+  assert.match(card, /id="setupClose"/, "the install card has no way to close it");
+  assert.match(body(js, "bind"), /el\("setupClose"\)\.addEventListener/);
+});
+
+test("the card before the call walks all four steps, and asks for the microphone in the one place that can", () => {
+  // The panel's own slideshow, and the only one of the three whose steps are not
+  // the guide's: the permission step has no equivalent in `meet.yml`, because a
+  // reader on the site is not the one Chrome is refusing. It is also the one
+  // step this card cannot finish — Chrome raises the prompt for a page and a
+  // side panel is not one — so it says the banner's sentence and points at the
+  // options page's button, through the action the panel already handles.
+  const html = read("sidepanel.html");
+  const card = html.match(/<section class="stepcard" id="prepCard"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(card, "the panel has no card for what to do before the call");
+  const css = read("sidepanel.css");
+  const steps = ["panelPrepPhones", "panelStepMic", "panelPrepTheirs", "panelPrepYours"];
+  steps.forEach((key, i) => {
+    const n = i + 1;
+    assert.match(card, new RegExp(`id="prepstep-${n}"`), `the card has no radio for step ${n}`);
+    assert.match(card, new RegExp(`for="prepstep-${n}">${n}</label>`), `the card has no tab for step ${n}`);
+    assert.match(card, new RegExp(`data-i18n="${key}"`), `the card does not show ${key}`);
+    assert.match(
+      css,
+      new RegExp(`#prepstep-${n}:checked ~ \\.stepcard-panes \\.stepcard-pane--${n}`),
+      `nothing opens pane ${n} of the card`
+    );
+  });
+  assert.ok(!card.includes(`prepstep-${steps.length + 1}`), `the card has a step ${steps.length + 1} nothing opens`);
+  // Its own group, so walking these does not move the Meet card underneath.
+  assert.match(card, /name="prepStep"/);
+
+  // The link out, and the drawing of what it lands on. `optionsMic` is the
+  // panel's own action rather than an address, so `lib/i18n.js` needs it on the
+  // element and `sidepanel.js` needs a branch for it; the guide's word for the
+  // button is the real one, so the reader is looking for the same words.
+  assert.match(
+    card,
+    /data-i18n="panelStepMic" data-link1="optionsMic"/,
+    "the microphone step's link no longer opens the options page at its Microphone section"
+  );
+  assert.match(read("sidepanel.js"), /action === "optionsMic"/);
+  assert.match(card, /data-i18n="optMicHeading"/, "the drawing no longer names the section to look for");
+  assert.match(card, /data-i18n="optMicGrant"/, "the drawing no longer shows the button to press");
 });
 
 test("the Google Meet slideshow has its steps, its two phases and its ten translations", () => {

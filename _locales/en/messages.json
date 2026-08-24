@@ -22,7 +22,7 @@
   },
   "panelStepMic": {
     "message": "Chrome has to let Interpretab use your microphone. You allow that once, in <a1>Options</a1>.",
-    "description": "Next-step banner shown when the microphone direction is on and Chrome has not granted the microphone. <a1> opens this extension's Options page at its Microphone section — a side panel cannot show the permission prompt itself."
+    "description": "Next-step banner shown when the microphone direction is on and Chrome has not granted the microphone, and the second step on the card panelStepLinksPrep opens. <a1> opens this extension's Options page at its Microphone section — a side panel cannot show the permission prompt itself."
   },
   "panelRunningOn": {
     "message": "Interpretab is running on “{1}”, and it runs on one tab at a time. Its controls are on that tab — Stop works from here.",
@@ -63,15 +63,15 @@
   },
   "panelPrepPhones": {
     "message": "Plug headphones in first. This half starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice and starts translating that too.",
-    "description": "First of the three steps on the card panelStepLinksPrep opens."
+    "description": "First of the four steps on the card panelStepLinksPrep opens."
   },
   "panelPrepTheirs": {
     "message": "Turn <b>Tab audio</b> on and set it to <b>your own</b> language. That is the half which translates what the other side says.",
-    "description": "Second step: the Tab audio half."
+    "description": "Third step: the Tab audio half."
   },
   "panelPrepYours": {
     "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the second of the two cards above.",
-    "description": "Third step: the Microphone half, the one the card hangs off."
+    "description": "Fourth step: the Microphone half, the one the card hangs off."
   },
 
   "panelMicToCall": {
@@ -205,54 +205,51 @@
 
   "optStartHeading": {
     "message": "Get started in 5 minutes",
-    "description": "Title of the card that walks a new reader through the install. The same words as the matching section of the user guide, and the ten steps under it are that section's."
+    "description": "Title of the card that walks a new reader through the install. The same words as the matching section of the user guide, and the nine steps under it are that section's."
   },
   "optStartStep1": {
-    "message": "Open <a1>Interpretab on the Chrome Web Store</a1> and press <b>Add to Chrome</b>.",
-    "description": "Step 1 of 10. These are the user guide's own install steps, redrawn on this page for a reader who has arrived here without a key — keep them in step with docs/_data/install.yml."
+    "message": "Interpretab translates with Google's Gemini, and Gemini needs an API key of your own. Getting one is free: open <a1>Google AI Studio</a1> and sign in with a Google account.",
+    "description": "Step 1 of 9. These are the user guide's install steps, redrawn on this page — but starting at its second one, because whoever is reading this has already installed the extension. Keep them in step with docs/_data/install.yml, where this is step 2."
   },
   "optStartStep2": {
-    "message": "Interpretab translates with Google's Gemini, and Gemini needs an API key of your own. Getting one is free: open <a1>Google AI Studio</a1> and sign in with a Google account."
-  },
-  "optStartStep3": {
     "message": "The page lists the keys you have, which on a new account is none. Press <b>Create API key</b>."
   },
-  "optStartStep4": {
+  "optStartStep3": {
     "message": "A key needs a name, and a Google Cloud project to belong to. Type <b>Interpretab</b> as the name. Underneath it, an account that has never used the API has nothing to choose from: <b>No Cloud Projects Available</b>."
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "Open that list and pick <b>Create project</b>. The name it fills in for you is in your own language, and the field takes Latin letters only — clear it, type <b>Interpretab</b>, and press <b>Create project</b>."
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "The key dialog comes back with the new project in it. Press <b>Create key</b> and the key appears — press <b>Copy key</b>. It stays on the API keys page, so you can come back for it later."
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "Interpretab's <b>Options</b> page opens by itself the first time, and the <b>Options</b> button at the bottom of the side panel opens it again. Paste the key into <b>Gemini API key</b>. It is kept in this browser and goes to nobody but Google."
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "Open the page you want translated — a video with talking in it on <a1>youtube.com</a1> is the easiest first test. A new extension has no icon on the toolbar yet: click Chrome's <b>puzzle-piece button</b>, find <b>Interpretab</b> in the list, and press the pin beside it."
   },
-  "optStartStep9": {
+  "optStartStep8": {
     "message": "The icon is on the toolbar now. <b>Click it, on the tab you want translated.</b> That click is how you give permission to listen to the tab; skip it and you get an error."
   },
-  "optStartStep10": {
+  "optStartStep9": {
     "message": "Pick your language in the side panel and press <b>Start</b>. Play the video: the voice comes back in that language. If you hear no translation, pick a language other than the one the video is already in."
   },
   "optStartCreateApiKey": {
     "message": "Create API key",
-    "description": "Drawn on a button in the picture beside step 3. Not ours: it is what Google AI Studio itself calls that button in this language, so use AI Studio's own wording rather than translating this."
+    "description": "Drawn on a button in the picture beside step 2. Not ours: it is what Google AI Studio itself calls that button in this language, so use AI Studio's own wording rather than translating this."
   },
   "optStartCreateKey": {
     "message": "Create key",
-    "description": "As optStartCreateApiKey: AI Studio's own label, drawn in the picture beside step 4."
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn in the picture beside step 3."
   },
   "optStartCreateProject": {
     "message": "Create project",
-    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside steps 5 and 6."
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside steps 4 and 5."
   },
   "optStartCopyKey": {
     "message": "Copy key",
-    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside step 6."
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside step 5."
   },
 
   "optSetupHeading": {

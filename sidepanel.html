@@ -206,12 +206,15 @@
          left down here — a second scroller would leave whichever part did
          not fit with no way to reach it. -->
     <div id="below">
-      <!-- The three things to do before the call: the guide's "Before the call"
+      <!-- The four things to do before the call: the guide's "Before the call"
            phase, drawn the same way as the card under it and opened by the first
-           of the two links above. Headphones first, then the two directions,
-           which is the order the guide puts them in and the order they matter
-           in — a call set up on speakers is a call the two halves spend
-           interpreting each other.
+           of the two links above. Headphones first, then the microphone Chrome
+           has to be asked for, then the two directions — the order the guide
+           puts its three in, and the order they matter in: a call set up on
+           speakers is a call the two halves spend interpreting each other, and
+           a direction switched on without the permission behind it is a switch
+           that does nothing. The permission step is the one the guide has not
+           got, because a reader on the site is not the one Chrome is refusing.
 
            The guide's own second and third steps are photographs of this panel.
            Here they are drawn instead, as the two rows they are: the switch, the
@@ -228,11 +231,13 @@
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-1" checked />
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-2" />
         <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-3" />
+        <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-4" />
 
         <div class="stepcard-tabs">
           <label class="stepcard-tab stepcard-tab--1" for="prepstep-1">1</label>
           <label class="stepcard-tab stepcard-tab--2" for="prepstep-2">2</label>
           <label class="stepcard-tab stepcard-tab--3" for="prepstep-3">3</label>
+          <label class="stepcard-tab stepcard-tab--4" for="prepstep-4">4</label>
         </div>
 
         <div class="stepcard-panes">
@@ -259,7 +264,28 @@
             </label>
           </div>
 
+          <!-- The one step on this card the panel cannot walk the reader
+               through by pointing at itself: Chrome only raises the microphone
+               prompt for a page, and a side panel is not one. So the step is a
+               drawing of the options page's own section, and the sentence is
+               the same one the banner uses when the permission is missing. -->
           <div class="stepcard-pane stepcard-pane--2">
+            <p class="stepcard-say" data-i18n="panelStepMic" data-link1="optionsMic"></p>
+            <div class="stepcard-dialog" aria-hidden="true">
+              <span class="stepcard-sectionhead" data-i18n="optMicHeading"></span>
+              <span class="stepcard-line"></span>
+              <span class="stepcard-cta stepcard-cta--plain" data-i18n="optMicGrant"></span>
+            </div>
+            <label class="stepcard-next" for="prepstep-3">
+              <span data-i18n="panelMeetNext"></span>
+              <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+                <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                      stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </label>
+          </div>
+
+          <div class="stepcard-pane stepcard-pane--3">
             <p class="stepcard-say" data-i18n="panelPrepTheirs"></p>
             <div class="stepcard-dialog" aria-hidden="true">
               <span class="stepcard-device">
@@ -298,7 +324,7 @@
                 </span>
               </span>
             </div>
-            <label class="stepcard-next" for="prepstep-3">
+            <label class="stepcard-next" for="prepstep-4">
               <span data-i18n="panelMeetNext"></span>
               <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
                 <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
@@ -307,7 +333,7 @@
             </label>
           </div>
 
-          <div class="stepcard-pane stepcard-pane--3">
+          <div class="stepcard-pane stepcard-pane--4">
             <p class="stepcard-say" data-i18n="panelPrepYours"></p>
             <div class="stepcard-dialog" aria-hidden="true">
               <span class="stepcard-device">

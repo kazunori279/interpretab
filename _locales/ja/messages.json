@@ -123,32 +123,31 @@
   "optHeading": { "message": "Interpretab のオプション" },
 
   "optStartHeading": { "message": "5 分ではじめる" },
-  "optStartStep1": { "message": "<a1>Chrome ウェブストアの Interpretab</a1> を開き、<b>Chrome に追加</b>を押す。" },
-  "optStartStep2": {
+  "optStartStep1": {
     "message": "翻訳するのは Google の Gemini で、Gemini には自分専用の API キーが必要です。取得は無料です。<a1>Google AI Studio</a1> を開き、Google アカウントでログインします。"
   },
-  "optStartStep3": {
+  "optStartStep2": {
     "message": "このページには持っているキーが並びます。新しいアカウントならまだ一つもありません。<b>API キーを作成</b> を押します。"
   },
-  "optStartStep4": {
+  "optStartStep3": {
     "message": "キーには名前と、所属する Google Cloud のプロジェクトが必要です。名前には <b>Interpretab</b> と入力します。その下のプロジェクト欄は、API を使ったことのないアカウントでは <b>No Cloud Projects Available</b> と出て、選べるものがありません。"
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "その一覧を開き、<b>プロジェクトを作成</b> を選びます。あらかじめ入っている名前は日本語で、この欄は英字しか受け付けません。消して <b>Interpretab</b> と入力し、<b>プロジェクトを作成</b> を押します。"
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "キーのダイアログに戻ると、作ったプロジェクトが入っています。<b>キーを作成</b> を押すとキーが表示されるので、<b>鍵をコピー</b> を押します。キーは API keys のページに残るので、あとから取り直せます。"
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "拡張機能の<b>オプション</b>ページは初回に自動で開きます。サイドパネル下部の <b>オプション</b> ボタンからも開けます。<b>Gemini API キー</b> にキーを貼り付けてください。キーはこのブラウザに保存され、Google 以外には送られません。"
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "翻訳したいページを開きます。最初の確認には <a1>youtube.com</a1> の話し声が入った動画が手軽です。入れたばかりの拡張機能はツールバーにアイコンが出ていません。Chrome の<b>パズルピースのボタン</b>を押し、一覧の <b>Interpretab</b> の横にあるピンを押してください。"
   },
-  "optStartStep9": {
+  "optStartStep8": {
     "message": "これでツールバーにアイコンが出ました。<b>翻訳したいタブで、そのアイコンをクリックします。</b>このクリックが、このタブの音声を聞いてよいという許可になります。押さずに始めるとエラーになります。"
   },
-  "optStartStep10": {
+  "optStartStep9": {
     "message": "サイドパネルで言語を選び、<b>Start</b> を押します。動画を再生すると、その言語で声が返ってきます。訳された声が聞こえないときは、動画そのものの言語とは別の言語を選んでみてください。"
   },
   "optStartCreateApiKey": { "message": "API キーを作成" },

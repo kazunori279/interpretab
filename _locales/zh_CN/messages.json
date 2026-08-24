@@ -117,28 +117,27 @@
   "optHeading": { "message": "Interpretab 选项" },
 
   "optStartHeading": { "message": "5 分钟上手" },
-  "optStartStep1": { "message": "打开 <a1>Chrome 应用商店中的 Interpretab</a1>，点击<b>添加至 Chrome</b>。" },
-  "optStartStep2": {
+  "optStartStep1": {
     "message": "翻译由 Google 的 Gemini 完成，而 Gemini 需要一个属于你自己的 API 密钥。申请是免费的：打开 <a1>Google AI Studio</a1>，用 Google 账号登录。"
   },
-  "optStartStep3": { "message": "这个页面会列出你已有的密钥，新账号还是空的。点击 <b>创建 API 密钥</b>。" },
-  "optStartStep4": {
+  "optStartStep2": { "message": "这个页面会列出你已有的密钥，新账号还是空的。点击 <b>创建 API 密钥</b>。" },
+  "optStartStep3": {
     "message": "密钥需要一个名字，还需要一个所属的 Google Cloud 项目。名字填 <b>Interpretab</b>。下面的项目一栏，在从没用过 API 的账号上会显示 <b>No Cloud Projects Available</b>，没有可选的项目。"
   },
-  "optStartStep5": {
+  "optStartStep4": {
     "message": "打开那个列表，选 <b>创建项目</b>。里面预填的名字是中文的，而这个输入框只收拉丁字母——清空它，输入 <b>Interpretab</b>，然后点 <b>创建项目</b>。"
   },
-  "optStartStep6": {
+  "optStartStep5": {
     "message": "回到密钥的对话框，新建的项目已经在里面了。点 <b>创建密钥</b>，密钥就会出现，再点 <b>复制密钥</b>。密钥会留在 API keys 页面上，之后还能回去再拿。"
   },
-  "optStartStep7": {
+  "optStartStep6": {
     "message": "扩展的<b>选项</b>页面第一次会自己打开，侧边栏底部的 <b>选项</b> 按钮也能再把它打开。把密钥粘贴到 <b>Gemini API 密钥</b> 里。它保存在这个浏览器中，除了 Google 不会发给任何人。"
   },
-  "optStartStep8": {
+  "optStartStep7": {
     "message": "打开要翻译的页面。第一次试的话，<a1>youtube.com</a1> 上一段有人说话的视频最方便。刚装好的扩展在工具栏上还没有图标：点 Chrome 的<b>拼图按钮</b>，在列表里找到 <b>Interpretab</b>，按一下旁边的图钉。"
   },
-  "optStartStep9": { "message": "现在图标在工具栏上了。<b>在要翻译的那个标签页上点它。</b>这次点击就是你授权它收听该标签页的方式——跳过它就会报错。" },
-  "optStartStep10": { "message": "在侧边栏选择语言，按 <b>Start</b>。播放视频，声音就会用那个语言回来。要是听不到翻译，就换一个和视频本身不同的语言试试。" },
+  "optStartStep8": { "message": "现在图标在工具栏上了。<b>在要翻译的那个标签页上点它。</b>这次点击就是你授权它收听该标签页的方式——跳过它就会报错。" },
+  "optStartStep9": { "message": "在侧边栏选择语言，按 <b>Start</b>。播放视频，声音就会用那个语言回来。要是听不到翻译，就换一个和视频本身不同的语言试试。" },
   "optStartCreateApiKey": { "message": "创建 API 密钥" },
   "optStartCreateKey": { "message": "创建密钥" },
   "optStartCreateProject": { "message": "创建项目" },
