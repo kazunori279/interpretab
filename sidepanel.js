@@ -94,15 +94,20 @@ let myTabUrl = "";
  */
 let micPermission = null;
 /**
- * Whether the Meet card under the microphone section is unfolded.
+ * Whether each of the two step cards under the microphone section is unfolded.
  *
- * Not a setting. It is what the reader is doing this minute rather than
- * something they chose, and it lives no longer than the document does, which
+ * Not settings. They are what the reader is doing this minute rather than
+ * something they chose, and they live no longer than the document does, which
  * for a side panel is until the next tab switch. Kept across `render()` all the
  * same: a card that folded itself away because a language dropdown moved would
- * lose the reader their place mid-step. Which of its four steps is showing is
- * not tracked here at all — that is a radio in the page, and CSS.
+ * lose the reader their place mid-step. Which step is showing is not tracked
+ * here at all — that is a radio in the page, and CSS.
+ *
+ * Two flags and not one open card: they answer different questions, one of them
+ * only ever asked on a Meet tab, and closing the answer somebody is reading
+ * because they asked for the other one is not tidiness.
  */
+let prepStepsOpen = false;
 let meetStepsOpen = false;
 /**
  * True once the config file says this build has been withdrawn.
@@ -337,7 +342,11 @@ function bind() {
     const action = event.target.closest?.("[data-action]")?.dataset.action;
     if (action === "options") openOptions(event);
     else if (action === "optionsMic") openOptions(event, "mic");
-    else if (action === "meetSteps") {
+    else if (action === "prepSteps") {
+      event.preventDefault();
+      prepStepsOpen = !prepStepsOpen;
+      render();
+    } else if (action === "meetSteps") {
       event.preventDefault();
       meetStepsOpen = !meetStepsOpen;
       render();
@@ -472,6 +481,13 @@ function render() {
   el("micSource").hidden = micSimul;
   el("micArrow").hidden = micSimul;
   el("micNoteConversation").hidden = micSimul;
+  // The card goes with the note that opens it. Conversation mode has a note of
+  // its own and no link, so switching modes with the card open takes it away —
+  // and leaves it open for whoever switches back.
+  el("prepCard").hidden = !micSimul || !prepStepsOpen;
+  document
+    .querySelector('#micNoteSimul [data-action="prepSteps"]')
+    ?.setAttribute("aria-expanded", String(prepStepsOpen));
 
   renderDirection("tabEnabled", settings.tabEnabled);
   renderDirection("micEnabled", settings.micEnabled);

@@ -130,48 +130,59 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 }
 .note.usage b { color: #202124; }
 
-/* The Meet card: the guide's "In the call" slideshow, redrawn for a column a
-   quarter the width. One pane showing at a time, chosen by a hidden radio —
-   the same mechanism `docs/_includes/meet-steps.html` uses, and the reason
-   there is no script behind any of this. The palette is the guide's rather
-   than the panel's, because the drawings are of Chrome and of Meet and those
-   are the colours they are. */
-.meetcard { display: flex; flex-direction: column; gap: 0.45rem; }
-.meetcard[hidden] { display: none; }
+/* The step cards: the guide's two Meet slideshows, "Before the call" and "In
+   the call", redrawn for a column a quarter the width. One pane showing at a
+   time, chosen by a hidden radio — the same mechanism
+   `docs/_includes/meet-steps.html` uses, and the reason there is no script
+   behind any of this. The palette is the guide's rather than the panel's,
+   because the drawings are of Chrome and of Meet and those are the colours
+   they are.
+
+   Everything below is shared by both cards. What is not shared is which radio
+   drives which pane, and that is the two lists of ids: the cards are siblings
+   in one document, so `.stepcard-pane--1` on its own would be two panes. */
+.stepcard { display: flex; flex-direction: column; gap: 0.45rem; }
+.stepcard[hidden] { display: none; }
 /* Hidden, not removed: `display: none` would take the radios out of the focus
    order, and the arrow keys walking the steps is the whole of the keyboard
    support this needs. */
-.meetcard-pick {
+.stepcard-pick {
   position: absolute; width: 1px; height: 1px;
   margin: -1px; padding: 0; border: 0; clip-path: inset(50%); overflow: hidden;
 }
-.meetcard-tabs { display: flex; justify-content: center; gap: 0.35rem; }
-.meetcard-tab {
+.stepcard-tabs { display: flex; justify-content: center; gap: 0.35rem; }
+.stepcard-tab {
   display: grid; place-items: center; cursor: pointer;
   width: 1.5rem; height: 1.5rem; border-radius: 50%;
   background: var(--agent-bubble); color: var(--muted);
   font-size: 11px; font-weight: 600; line-height: 1;
   -webkit-user-select: none; user-select: none;
 }
-.meetcard-tab:hover { background: #e2e5e9; }
-.meetcard-pane { display: none; }
-#meetcard-1:checked ~ .meetcard-tabs .meetcard-tab--1,
-#meetcard-2:checked ~ .meetcard-tabs .meetcard-tab--2,
-#meetcard-3:checked ~ .meetcard-tabs .meetcard-tab--3,
-#meetcard-4:checked ~ .meetcard-tabs .meetcard-tab--4 {
+.stepcard-tab:hover { background: #e2e5e9; }
+.stepcard-pane { display: none; }
+#prepstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
+#prepstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
+#prepstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
+#meetstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
+#meetstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
+#meetstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
+#meetstep-4:checked ~ .stepcard-tabs .stepcard-tab--4 {
   background: var(--primary); color: #fff;
 }
-#meetcard-1:checked ~ .meetcard-panes .meetcard-pane--1,
-#meetcard-2:checked ~ .meetcard-panes .meetcard-pane--2,
-#meetcard-3:checked ~ .meetcard-panes .meetcard-pane--3,
-#meetcard-4:checked ~ .meetcard-panes .meetcard-pane--4 {
+#prepstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
+#prepstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
+#prepstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
+#meetstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
+#meetstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
+#meetstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
+#meetstep-4:checked ~ .stepcard-panes .stepcard-pane--4 {
   display: flex;
 }
 /* The pane is the stage: sentence at the top, drawing in the middle of
    whatever is left, Next in the corner the eye is in when the sentence runs
    out. `flex-end` on the cross axis rather than `right`, so Arabic puts it in
    the corner it is mirrored into. */
-.meetcard-pane {
+.stepcard-pane {
   flex-direction: column;
   padding: 0.55rem;
   background: #f6f8fa;
@@ -183,113 +194,128 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
    and two differ by in most of the ten languages — enough that pressing Next
    does not move the drawing under the reader's eyes, and not so much that the
    one-line step opens with an inch of nothing. */
-.meetcard-say {
+.stepcard-say {
   flex: none; min-height: 3.2rem; margin: 0 0 0.4rem;
   color: var(--muted); font-size: 12px; line-height: 1.45;
 }
-.meetcard-browser, .meetcard-bar, .meetcard-badge { margin-block: auto; }
-.meetcard-next {
+.stepcard-browser, .stepcard-bar, .stepcard-badge, .stepcard-dialog { margin-block: auto; }
+.stepcard-next {
   flex: none; align-self: flex-end; margin-top: 0.5rem;
   display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer;
   padding: 0.25rem 0.75rem; border-radius: 2rem;
   background: var(--primary); color: #fff; font-size: 12px; line-height: 1.5;
   -webkit-user-select: none; user-select: none;
 }
-.meetcard-next svg { flex: none; width: 0.95rem; height: 0.72rem; }
-[dir="rtl"] .meetcard-next svg { transform: scaleX(-1); }
+.stepcard-next svg { flex: none; width: 0.95rem; height: 0.72rem; }
+[dir="rtl"] .stepcard-next svg { transform: scaleX(-1); }
 
 /* The top of a browser window with everything but the point of the step
    reduced to a grey shape — the same drawing the guide uses, at about a third
    of the size. */
-.meetcard-browser {
+.stepcard-browser {
   width: 100%; overflow: hidden;
   background: #dee1e6; border: 1px solid #c9ccd1; border-radius: 8px;
 }
-.meetcard-tabstrip { display: flex; align-items: flex-end; height: 1.5rem; padding: 0.35rem 0.4rem 0; }
-.meetcard-tabchip { width: 7rem; height: 1.15rem; border-radius: 6px 6px 0 0; background: #fff; }
-.meetcard-omni { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.45rem; background: #fff; }
-.meetcard-nav, .meetcard-avatar { flex: none; border-radius: 50%; background: #e8eaed; }
-.meetcard-nav { width: 0.8rem; height: 0.8rem; }
-.meetcard-avatar { width: 1.1rem; height: 1.1rem; }
+.stepcard-tabstrip { display: flex; align-items: flex-end; height: 1.5rem; padding: 0.35rem 0.4rem 0; }
+.stepcard-tabchip { width: 7rem; height: 1.15rem; border-radius: 6px 6px 0 0; background: #fff; }
+.stepcard-omni { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.45rem; background: #fff; }
+.stepcard-nav, .stepcard-avatar { flex: none; border-radius: 50%; background: #e8eaed; }
+.stepcard-nav { width: 0.8rem; height: 0.8rem; }
+.stepcard-avatar { width: 1.1rem; height: 1.1rem; }
 /* The one place in these drawings where the text is the point rather than a
    grey bar standing in for it. Latin either way, so it keeps its direction on
    the page that runs the other way. */
-.meetcard-url {
+.stepcard-url {
   flex: 1; min-width: 0; display: flex; align-items: center;
   height: 1.15rem; padding: 0 0.55rem; border-radius: 0.6rem;
   background: #f1f3f4; color: #5f6368; font-size: 10px;
   overflow: hidden; white-space: nowrap; direction: ltr;
 }
-.meetcard-viewport { height: 5.2rem; background: #fff; border-top: 1px solid #ebedf0; }
+.stepcard-viewport { height: 5.2rem; background: #fff; border-top: 1px solid #ebedf0; }
 /* The dialog sizes to its card instead: three rows do not fit in the height
    the page drawing is happy with. */
-.meetcard-viewport--dialog { display: grid; place-items: center; height: auto; padding: 0.6rem; }
-.meetcard-tiles { display: flex; gap: 0.35rem; height: 100%; padding: 0.45rem; }
-.meetcard-tile { flex: 1; border-radius: 6px; background: #e3e6ea; }
-.meetcard-tile--self { flex: none; width: 22%; background: #eef0f3; }
-.meetcard-dialog {
+.stepcard-viewport--dialog { display: grid; place-items: center; height: auto; padding: 0.6rem; }
+.stepcard-tiles { display: flex; gap: 0.35rem; height: 100%; padding: 0.45rem; }
+.stepcard-tile { flex: 1; border-radius: 6px; background: #e3e6ea; }
+.stepcard-tile--self { flex: none; width: 22%; background: #eef0f3; }
+.stepcard-dialog {
   display: flex; flex-direction: column; gap: 0.4rem; width: 100%;
   padding: 0.55rem 0.6rem; background: #fff;
   border: 1px solid #d7dadd; border-radius: 8px;
 }
-.meetcard-line { height: 0.4rem; width: 70%; border-radius: 0.2rem; background: #eceff3; }
-.meetcard-line--head { width: 40%; height: 0.55rem; background: #dfe3e8; }
-.meetcard-device { display: flex; align-items: center; gap: 0.4rem; }
-.meetcard-icon { flex: none; width: 0.95rem; height: 0.95rem; color: #5f6368; }
-.meetcard-icon svg { display: block; width: 100%; height: 100%; }
+.stepcard-line { height: 0.4rem; width: 70%; border-radius: 0.2rem; background: #eceff3; }
+.stepcard-line--head { width: 40%; height: 0.55rem; background: #dfe3e8; }
+.stepcard-device { display: flex; align-items: center; gap: 0.4rem; }
+.stepcard-icon { flex: none; width: 0.95rem; height: 0.95rem; color: #5f6368; }
+.stepcard-icon svg { display: block; width: 100%; height: 100%; }
 /* The device the extension puts in Meet's list, ringed; and below it the
    output, drawn so the dialog is recognisable and still so it is clear which
    of the two the step is asking for. */
-.meetcard-select {
+.stepcard-select {
   position: relative; flex: 1; min-width: 0;
   display: flex; align-items: center;
   padding: 0.22rem 1.1rem 0.22rem 0.45rem;
   border: 1px solid #c4c7cc; border-radius: 5px; background: #fff;
   color: #3c4043; font-size: 10px; line-height: 1.4;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr;
-  animation: meetcard-ring 1.9s ease-out infinite;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  animation: stepcard-ring 1.9s ease-out infinite;
 }
-.meetcard-select::after {
+/* Held the other way round only where there are words to hold: the device name
+   is Latin in every catalogue. The wordless ones keep the panel's direction, so
+   their arrow is on the side an Arabic reader's own dropdowns put it. */
+.stepcard-select--name { direction: ltr; }
+.stepcard-select::after {
   content: ""; position: absolute; inset-inline-end: 0.4rem; top: 50%;
   margin-top: -0.1rem; border: 0.22rem solid transparent; border-top-color: #5f6368;
 }
-.meetcard-select--still { animation: none; }
-.meetcard-select .meetcard-line { width: 4.5rem; }
+.stepcard-select--still { animation: none; }
+.stepcard-select .stepcard-line { width: 4.5rem; }
+/* The two cards of this panel, drawn as two rows of the same dialog: the
+   switch, what it listens to, and the language it is set to. Both rows are
+   drawn in both steps and the ring moves between them, because the point of
+   the pair is which one is which. The language is a grey bar and not a word —
+   it is whichever two the reader picked, and there is nothing to print. */
+.stepcard-check {
+  flex: none; display: grid; place-items: center;
+  width: 0.9rem; height: 0.9rem; border-radius: 3px;
+  background: var(--primary); color: #fff;
+}
+.stepcard-check svg { width: 0.62rem; height: 0.62rem; }
 
 /* This panel's own button row, drawn a few centimetres above the real one. */
-.meetcard-bar { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
-.meetcard-start {
+.stepcard-bar { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.stepcard-start {
   padding: 0.3rem 0.9rem; border-radius: 0.3rem;
   background: var(--primary); color: #fff; font-size: 11px; line-height: 1.5;
-  direction: ltr; animation: meetcard-ring 1.9s ease-out infinite;
+  direction: ltr; animation: stepcard-ring 1.9s ease-out infinite;
 }
-.meetcard-round, .meetcard-ghost {
+.stepcard-round, .stepcard-ghost {
   height: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 0.3rem;
 }
-.meetcard-round { width: 1.5rem; }
-.meetcard-ghost { width: 3.2rem; }
+.stepcard-round { width: 1.5rem; }
+.stepcard-ghost { width: 3.2rem; }
 
 /* The last step is not about a screen at all — you speak, and something
    arrives at the other end — so it is glyphs on their own. */
-.meetcard-badge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-.meetcard-glyph {
+.stepcard-badge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.stepcard-glyph {
   display: grid; place-items: center; flex: none;
   width: 3.6rem; height: 3.6rem; border-radius: 50%;
   background: #fff; border: 1px solid var(--border); color: #3f51b5;
 }
-.meetcard-glyph svg { width: 1.8rem; height: 1.8rem; }
-.meetcard-flow { flex: none; width: 1.5rem; height: 1.1rem; }
-[dir="rtl"] .meetcard-flow { transform: scaleX(-1); }
+.stepcard-glyph svg { width: 1.8rem; height: 1.8rem; }
+.stepcard-flow { flex: none; width: 1.5rem; height: 1.1rem; }
+[dir="rtl"] .stepcard-flow { transform: scaleX(-1); }
 
-@keyframes meetcard-ring {
+@keyframes stepcard-ring {
   0%, 100% { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
   55% { box-shadow: 0 0 0 10px rgba(63, 81, 181, 0); }
 }
 /* A ring that is drawn but still says the same sentence to somebody who has
    asked their machine to stop animating. */
 @media (prefers-reduced-motion: reduce) {
-  .meetcard-select, .meetcard-start { animation: none; box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
-  .meetcard-select--still { box-shadow: none; }
+  .stepcard-select, .stepcard-start { animation: none; box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
+  .stepcard-select--still { box-shadow: none; }
 }
 
 select.lang, select.mode, input[type="range"] {

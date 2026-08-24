@@ -412,12 +412,12 @@ test("a panel that does not own the run may stop it and nothing else", () => {
   const list = panel.match(/const RUN_CONTROLS = \[([\s\S]*?)\];/);
   assert.ok(list, "RUN_CONTROLS is gone");
   const listed = new Set([...list[1].matchAll(/"([\w-]+)"/g)].map((m) => m[1]));
-  // The Meet card's radios are the exception, and they are marked as one: they
+  // The step cards' radios are the exception, and they are marked as one: they
   // pick which drawing is showing, in CSS, and there is no setting behind them.
   // Greying them out because the run belongs to another tab would take the
   // instructions away at the one moment somebody is reading them.
   const controls = [...html.matchAll(/<(?:input|select)[^>]*\bid="([\w-]+)"/g)]
-    .filter(([tag]) => !tag.includes("meetcard-pick"))
+    .filter(([tag]) => !tag.includes("stepcard-pick"))
     .map((m) => m[1]);
   assert.ok(controls.length > 5, "the markup scan found suspiciously few controls");
   assert.deepEqual(
@@ -1154,7 +1154,7 @@ test("a class that sets display does not un-hide an element the panel hides", ()
     const display = /display:\s*([a-z-]+)/.exec(body);
     if (!display || display[1] === "none" || selector.includes("[hidden]")) continue;
     for (const name of hiddenClasses) {
-      // `\b` would let `.meetcard-bar` answer for `.meetcard`, which is another
+      // `\b` would let `.stepcard-bar` answer for `.stepcard`, which is another
       // class on another element: a hyphen ends a word but does not end a name.
       const worn = new RegExp(`\\.${name}(?![\\w-])`);
       if (!worn.test(selector)) continue;

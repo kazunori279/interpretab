@@ -59,11 +59,25 @@
     "description": "Prefixes panelMicNoteSimul while the sound button is off."
   },
   "panelMicNoteSimul": {
-    "message": "Wear headphones for this one. It starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice, starts translating that too, and the translation gets worse."
+    "message": "<a1>What to do before the call</a1>",
+    "description": "The link opens panelPrepPhones to panelPrepYours underneath. It used to be the headphones warning in full, which is panelPrepPhones now."
   },
   "panelMicNoteConversation": {
     "message": "For two people sharing one microphone: it hears one of your two languages and speaks the other, out loud through <b>your speakers</b>, which is the point of this mode. Keep the microphone away from the speakers, or it will hear itself."
   },
+  "panelPrepPhones": {
+    "message": "Plug headphones in first. This half starts translating while you are still speaking, so it cannot switch your microphone off while it talks — through a speaker it hears its own voice and starts translating that too.",
+    "description": "First of the three steps on the card the link in panelMicNoteSimul opens."
+  },
+  "panelPrepTheirs": {
+    "message": "Turn <b>Tab audio</b> on and set it to <b>your own</b> language. That is the half which translates what the other side says.",
+    "description": "Second step: the Tab audio half."
+  },
+  "panelPrepYours": {
+    "message": "Turn <b>Microphone</b> on and set it to <b>their</b> language. That is this half, the one this note is under.",
+    "description": "Third step: the Microphone half, the one the card is under."
+  },
+
   "panelMicToCall": {
     "message": "Send the translation into this Meet call",
     "description": "Checkbox, shown only on a meet.google.com tab."

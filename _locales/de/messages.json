@@ -43,12 +43,14 @@
   "panelMicNoteMuted": {
     "message": "Die übersetzte Stimme ist <b>stummgeschaltet</b>. Drücken Sie die Taste zum Aufheben, um sie über die Lautsprecher zu hören."
   },
-  "panelMicNoteSimul": {
-    "message": "Für diesen Modus bitte Kopfhörer aufsetzen. Er beginnt zu übersetzen, während Sie noch sprechen, und kann Ihr Mikrofon deshalb nicht abschalten, während er redet: über einen Lautsprecher hört er seine eigene Stimme, fängt an, auch die zu übersetzen, und die Übersetzung wird schlechter."
-  },
+  "panelMicNoteSimul": { "message": "<a1>Was vor dem Gespräch zu tun ist</a1>" },
   "panelMicNoteConversation": {
     "message": "Für zwei Personen, die sich ein Mikrofon teilen: Er hört eine Ihrer beiden Sprachen und spricht die andere, laut über <b>Ihre Lautsprecher</b> — genau darum geht es in diesem Modus. Halten Sie das Mikrofon von den Lautsprechern fern, sonst hört er sich selbst."
   },
+  "panelPrepPhones": { "message": "Schließen Sie zuerst Kopfhörer an. Diese Hälfte fängt schon zu übersetzen an, während Sie noch sprechen, und kann Ihr Mikrofon deshalb nicht abschalten, während sie redet — über Lautsprecher hört sie sich selbst und übersetzt das gleich mit." },
+  "panelPrepTheirs": { "message": "Schalten Sie <b>Tab-Audio</b> ein und stellen Sie es auf <b>Ihre</b> Sprache. Das ist die Hälfte, die übersetzt, was die andere Seite sagt." },
+  "panelPrepYours": { "message": "Schalten Sie <b>Mikrofon</b> ein und stellen Sie es auf <b>deren</b> Sprache. Das ist diese Hälfte hier, die zu diesem Hinweis." },
+
   "panelMicToCall": { "message": "Die Übersetzung in dieses Meet-Gespräch senden" },
   "panelMicToCallNote": { "message": "Solange das an ist, geht diese Stimme in das Gespräch statt aus diesem Rechner, und ihre Untertitel bleiben aus. <a1>Was in Meet zu tun ist</a1>" },
   "panelMeetJoin": { "message": "Treten Sie dem Meeting in diesem Tab bei." },

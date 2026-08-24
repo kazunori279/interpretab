@@ -107,12 +107,153 @@
          data-link1="meetSteps"></p>
       <!-- Two spans and not one sentence: the first is shown only while the
            sound button is off, and a message that had to be spliced into
-           another one would decide the word order of both. -->
+           another one would decide the word order of both. The second used to
+           carry the headphones warning in full, four lines of grey that people
+           read past on their way to Start; it is the first step of the card
+           below now, where somebody who opens it is looking for it. -->
       <p class="note indent" id="micNoteSimul">
         <span id="micNoteSimulMuted" data-i18n="panelMicNoteMuted"></span>
-        <span data-i18n="panelMicNoteSimul"></span>
+        <span data-i18n="panelMicNoteSimul" data-link1="prepSteps"></span>
       </p>
       <p class="note indent" id="micNoteConversation" hidden data-i18n="panelMicNoteConversation"></p>
+    </section>
+
+    <!-- The three things to do before the call: the guide's "Before the call"
+         phase, drawn the same way as the card under it and opened by the link
+         in the microphone note. Headphones first, then the two directions,
+         which is the order the guide puts them in and the order they matter
+         in — a call set up on speakers is a call the two halves spend
+         interpreting each other.
+
+         The guide's own second and third steps are photographs of this panel.
+         Here they are drawn instead, as the two rows they are: the switch, the
+         side it listens to, and the language it is set to. The ring moves
+         between the rows rather than the drawing changing, because which of
+         the two a step is about is the whole of what separates them. -->
+    <section class="stepcard" id="prepCard" hidden>
+      <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-1" checked />
+      <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-2" />
+      <input class="stepcard-pick" type="radio" name="prepStep" id="prepstep-3" />
+
+      <div class="stepcard-tabs">
+        <label class="stepcard-tab stepcard-tab--1" for="prepstep-1">1</label>
+        <label class="stepcard-tab stepcard-tab--2" for="prepstep-2">2</label>
+        <label class="stepcard-tab stepcard-tab--3" for="prepstep-3">3</label>
+      </div>
+
+      <div class="stepcard-panes">
+        <div class="stepcard-pane stepcard-pane--1">
+          <p class="stepcard-say" data-i18n="panelPrepPhones"></p>
+          <!-- Headphones, and nothing else. The step is about a cable, not
+               about a screen, and a browser drawn around it would be a lie. -->
+          <div class="stepcard-badge" aria-hidden="true">
+            <span class="stepcard-glyph">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 16v-4a8 8 0 0 1 16 0v4" />
+                <rect x="2.5" y="13.5" width="4.5" height="7.5" rx="2.2" />
+                <rect x="17" y="13.5" width="4.5" height="7.5" rx="2.2" />
+              </svg>
+            </span>
+          </div>
+          <label class="stepcard-next" for="prepstep-2">
+            <span data-i18n="panelMeetNext"></span>
+            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </label>
+        </div>
+
+        <div class="stepcard-pane stepcard-pane--2">
+          <p class="stepcard-say" data-i18n="panelPrepTheirs"></p>
+          <div class="stepcard-dialog" aria-hidden="true">
+            <span class="stepcard-device">
+              <span class="stepcard-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 12.5 9.5 18 20 6" />
+                </svg>
+              </span>
+              <span class="stepcard-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
+                  <path d="M16 9.2a4.4 4.4 0 0 1 0 5.6" />
+                </svg>
+              </span>
+              <span class="stepcard-select"><span class="stepcard-line"></span></span>
+            </span>
+            <span class="stepcard-device">
+              <span class="stepcard-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 12.5 9.5 18 20 6" />
+                </svg>
+              </span>
+              <span class="stepcard-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="2.5" width="6" height="11" rx="3" />
+                  <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+                  <path d="M12 18v3.5" />
+                </svg>
+              </span>
+              <span class="stepcard-select stepcard-select--still">
+                <span class="stepcard-line"></span>
+              </span>
+            </span>
+          </div>
+          <label class="stepcard-next" for="prepstep-3">
+            <span data-i18n="panelMeetNext"></span>
+            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </label>
+        </div>
+
+        <div class="stepcard-pane stepcard-pane--3">
+          <p class="stepcard-say" data-i18n="panelPrepYours"></p>
+          <div class="stepcard-dialog" aria-hidden="true">
+            <span class="stepcard-device">
+              <span class="stepcard-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 12.5 9.5 18 20 6" />
+                </svg>
+              </span>
+              <span class="stepcard-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
+                  <path d="M16 9.2a4.4 4.4 0 0 1 0 5.6" />
+                </svg>
+              </span>
+              <span class="stepcard-select stepcard-select--still">
+                <span class="stepcard-line"></span>
+              </span>
+            </span>
+            <span class="stepcard-device">
+              <span class="stepcard-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 12.5 9.5 18 20 6" />
+                </svg>
+              </span>
+              <span class="stepcard-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="2.5" width="6" height="11" rx="3" />
+                  <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+                  <path d="M12 18v3.5" />
+                </svg>
+              </span>
+              <span class="stepcard-select"><span class="stepcard-line"></span></span>
+            </span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- The four things to do once the meeting is on screen: the guide's "In
@@ -132,41 +273,41 @@
          mistranslated button in a picture sends somebody hunting for a control
          that is not there. The two words that are drawn — `meet.google.com` and
          `Interpretab (translated)` — are translated nowhere. -->
-    <section class="meetcard" id="meetCard" hidden>
-      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-1" checked />
-      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-2" />
-      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-3" />
-      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-4" />
+    <section class="stepcard" id="meetCard" hidden>
+      <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-1" checked />
+      <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-2" />
+      <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-3" />
+      <input class="stepcard-pick" type="radio" name="meetStep" id="meetstep-4" />
 
       <!-- Numbers and no words. Four labels wide enough to read do not fit in a
            360px column, and the sentence for the step is in the pane anyway. -->
-      <div class="meetcard-tabs">
-        <label class="meetcard-tab meetcard-tab--1" for="meetcard-1">1</label>
-        <label class="meetcard-tab meetcard-tab--2" for="meetcard-2">2</label>
-        <label class="meetcard-tab meetcard-tab--3" for="meetcard-3">3</label>
-        <label class="meetcard-tab meetcard-tab--4" for="meetcard-4">4</label>
+      <div class="stepcard-tabs">
+        <label class="stepcard-tab stepcard-tab--1" for="meetstep-1">1</label>
+        <label class="stepcard-tab stepcard-tab--2" for="meetstep-2">2</label>
+        <label class="stepcard-tab stepcard-tab--3" for="meetstep-3">3</label>
+        <label class="stepcard-tab stepcard-tab--4" for="meetstep-4">4</label>
       </div>
 
-      <div class="meetcard-panes">
-        <div class="meetcard-pane meetcard-pane--1">
-          <p class="meetcard-say" data-i18n="panelMeetJoin"></p>
-          <div class="meetcard-browser" aria-hidden="true">
-            <div class="meetcard-tabstrip"><span class="meetcard-tabchip"></span></div>
-            <div class="meetcard-omni">
-              <span class="meetcard-nav"></span>
-              <span class="meetcard-url">meet.google.com</span>
-              <span class="meetcard-avatar"></span>
+      <div class="stepcard-panes">
+        <div class="stepcard-pane stepcard-pane--1">
+          <p class="stepcard-say" data-i18n="panelMeetJoin"></p>
+          <div class="stepcard-browser" aria-hidden="true">
+            <div class="stepcard-tabstrip"><span class="stepcard-tabchip"></span></div>
+            <div class="stepcard-omni">
+              <span class="stepcard-nav"></span>
+              <span class="stepcard-url">meet.google.com</span>
+              <span class="stepcard-avatar"></span>
             </div>
             <!-- A call: the far end and you. Grey, because a mocked-up face is
                  detail a reader will try to read. -->
-            <div class="meetcard-viewport">
-              <div class="meetcard-tiles">
-                <span class="meetcard-tile"></span>
-                <span class="meetcard-tile meetcard-tile--self"></span>
+            <div class="stepcard-viewport">
+              <div class="stepcard-tiles">
+                <span class="stepcard-tile"></span>
+                <span class="stepcard-tile stepcard-tile--self"></span>
               </div>
             </div>
           </div>
-          <label class="meetcard-next" for="meetcard-2">
+          <label class="stepcard-next" for="meetstep-2">
             <span data-i18n="panelMeetNext"></span>
             <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
               <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
@@ -175,18 +316,18 @@
           </label>
         </div>
 
-        <div class="meetcard-pane meetcard-pane--2">
-          <p class="meetcard-say" data-i18n="panelMeetStart"></p>
+        <div class="stepcard-pane stepcard-pane--2">
+          <p class="stepcard-say" data-i18n="panelMeetStart"></p>
           <!-- This panel's own button row, a few centimetres below the drawing
                of it. The word is not translated in any of the ten catalogues,
                so it is drawn rather than filled in. -->
-          <div class="meetcard-bar" aria-hidden="true">
-            <span class="meetcard-start">Start</span>
-            <span class="meetcard-round"></span>
-            <span class="meetcard-round"></span>
-            <span class="meetcard-ghost"></span>
+          <div class="stepcard-bar" aria-hidden="true">
+            <span class="stepcard-start">Start</span>
+            <span class="stepcard-round"></span>
+            <span class="stepcard-round"></span>
+            <span class="stepcard-ghost"></span>
           </div>
-          <label class="meetcard-next" for="meetcard-3">
+          <label class="stepcard-next" for="meetstep-3">
             <span data-i18n="panelMeetNext"></span>
             <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
               <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
@@ -195,24 +336,24 @@
           </label>
         </div>
 
-        <div class="meetcard-pane meetcard-pane--3">
-          <p class="meetcard-say" data-i18n="panelMeetPick"></p>
-          <div class="meetcard-browser" aria-hidden="true">
-            <div class="meetcard-tabstrip"><span class="meetcard-tabchip"></span></div>
-            <div class="meetcard-omni">
-              <span class="meetcard-nav"></span>
-              <span class="meetcard-url">meet.google.com</span>
-              <span class="meetcard-avatar"></span>
+        <div class="stepcard-pane stepcard-pane--3">
+          <p class="stepcard-say" data-i18n="panelMeetPick"></p>
+          <div class="stepcard-browser" aria-hidden="true">
+            <div class="stepcard-tabstrip"><span class="stepcard-tabchip"></span></div>
+            <div class="stepcard-omni">
+              <span class="stepcard-nav"></span>
+              <span class="stepcard-url">meet.google.com</span>
+              <span class="stepcard-avatar"></span>
             </div>
             <!-- Meet's audio settings, with the microphone on the device this
                  extension puts there. The second row is the output, which is
                  where Bluetooth headphones get lost — drawn, and still, so it
                  is clear which of the two the step is asking for. -->
-            <div class="meetcard-viewport meetcard-viewport--dialog">
-              <div class="meetcard-dialog">
-                <span class="meetcard-line meetcard-line--head"></span>
-                <span class="meetcard-device">
-                  <span class="meetcard-icon">
+            <div class="stepcard-viewport stepcard-viewport--dialog">
+              <div class="stepcard-dialog">
+                <span class="stepcard-line stepcard-line--head"></span>
+                <span class="stepcard-device">
+                  <span class="stepcard-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                          stroke-linecap="round" stroke-linejoin="round">
                       <rect x="9" y="2.5" width="6" height="11" rx="3" />
@@ -220,24 +361,24 @@
                       <path d="M12 18v3.5" />
                     </svg>
                   </span>
-                  <span class="meetcard-select">Interpretab (translated)</span>
+                  <span class="stepcard-select stepcard-select--name">Interpretab (translated)</span>
                 </span>
-                <span class="meetcard-device">
-                  <span class="meetcard-icon">
+                <span class="stepcard-device">
+                  <span class="stepcard-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                          stroke-linecap="round" stroke-linejoin="round">
                       <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
                       <path d="M16 9.2a4.4 4.4 0 0 1 0 5.6" />
                     </svg>
                   </span>
-                  <span class="meetcard-select meetcard-select--still">
-                    <span class="meetcard-line"></span>
+                  <span class="stepcard-select stepcard-select--still">
+                    <span class="stepcard-line"></span>
                   </span>
                 </span>
               </div>
             </div>
           </div>
-          <label class="meetcard-next" for="meetcard-4">
+          <label class="stepcard-next" for="meetstep-4">
             <span data-i18n="panelMeetNext"></span>
             <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
               <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
@@ -246,13 +387,13 @@
           </label>
         </div>
 
-        <div class="meetcard-pane meetcard-pane--4">
-          <p class="meetcard-say" data-i18n="panelMeetTalk"></p>
+        <div class="stepcard-pane stepcard-pane--4">
+          <p class="stepcard-say" data-i18n="panelMeetTalk"></p>
           <!-- You speak, and something arrives at the other end. Two glyphs and
                the arrow between them, because the alternative is a drawing of a
                meeting with words in it. -->
-          <div class="meetcard-badge" aria-hidden="true">
-            <span class="meetcard-glyph">
+          <div class="stepcard-badge" aria-hidden="true">
+            <span class="stepcard-glyph">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                    stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="2.5" width="6" height="11" rx="3" />
@@ -260,11 +401,11 @@
                 <path d="M12 18v3.5" />
               </svg>
             </span>
-            <svg class="meetcard-flow" viewBox="0 0 32 24" fill="none">
+            <svg class="stepcard-flow" viewBox="0 0 32 24" fill="none">
               <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4"
                     stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span class="meetcard-glyph">
+            <span class="stepcard-glyph">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                    stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.5 12c0 3.9-3.8 7-8.5 7-1 0-2-.14-2.9-.4L4 20.5l1.4-3.7C4.2 15.5 3.5 13.8

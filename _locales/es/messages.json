@@ -43,12 +43,14 @@
   "panelMicNoteMuted": {
     "message": "La voz traducida está <b>silenciada</b>. Pulsa el botón de quitar silencio para oírla por los altavoces."
   },
-  "panelMicNoteSimul": {
-    "message": "Para este modo, ponte auriculares. Empieza a traducir mientras aún estás hablando, así que no puede apagar el micrófono mientras habla: por un altavoz oye su propia voz, se pone a traducirla también y la traducción empeora."
-  },
+  "panelMicNoteSimul": { "message": "<a1>Qué hacer antes de la llamada</a1>" },
   "panelMicNoteConversation": {
     "message": "Para dos personas que comparten un micrófono: oye uno de vuestros dos idiomas y habla el otro, en voz alta por <b>los altavoces</b>, que es de lo que se trata. Aleja el micrófono de los altavoces o se oirá a sí mismo."
   },
+  "panelPrepPhones": { "message": "Conecta unos auriculares antes que nada. Esta mitad empieza a traducir mientras aún estás hablando, así que no puede apagarte el micrófono mientras habla: por altavoz se oye a sí misma y se pone a traducir eso también." },
+  "panelPrepTheirs": { "message": "Activa <b>Audio de la pestaña</b> y ponlo en <b>tu</b> idioma. Esa es la mitad que traduce lo que dice la otra parte." },
+  "panelPrepYours": { "message": "Activa <b>Micrófono</b> y ponlo en el idioma <b>de ellos</b>. Esa es esta mitad, la de esta nota." },
+
   "panelMicToCall": { "message": "Enviar la traducción a esta llamada de Meet" },
   "panelMicToCallNote": { "message": "Mientras esto está activado, esa voz va a la llamada en vez de salir por este ordenador, y sus subtítulos quedan apagados. <a1>Qué hacer en Meet</a1>" },
   "panelMeetJoin": { "message": "Únete a la reunión en esta pestaña." },

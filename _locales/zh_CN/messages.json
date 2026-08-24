@@ -43,12 +43,14 @@
   "panelMicNoteMuted": {
     "message": "翻译后的语音已<b>静音</b>。想用扬声器听，请点取消静音按钮。"
   },
-  "panelMicNoteSimul": {
-    "message": "这个模式请戴耳机。它在你还在说话时就开始翻译，因此念的时候没法把麦克风关掉。用扬声器的话，麦克风会听见它自己的声音，连那也一起翻译，翻译质量就变差了。"
-  },
+  "panelMicNoteSimul": { "message": "<a1>通话之前要做的事</a1>" },
   "panelMicNoteConversation": {
     "message": "两个人共用一支麦克风时用这个模式。它听到你设定的两种语言中的一种，就用另一种从<b>扬声器</b>念出来，这正是这个模式的用意。请把麦克风放得离扬声器远一些，免得它听见自己的声音。"
   },
+  "panelPrepPhones": { "message": "先插上耳机。这一半在你还在说的时候就开始翻译，所以它说话时没法把你的麦克风关掉——用扬声器的话，它会听见自己的声音，连那个也一起翻译。" },
+  "panelPrepTheirs": { "message": "把<b>标签页音频</b>打开，译为<b>你自己的语言</b>。这一半负责翻译对方说的话。" },
+  "panelPrepYours": { "message": "把<b>麦克风</b>打开，译为<b>对方的语言</b>。就是这条说明所在的这一半。" },
+
   "panelMicToCall": { "message": "把译文语音送进这个 Meet 通话" },
   "panelMicToCallNote": { "message": "开启期间，这个声音只送进通话，不从本机放出来，它的字幕也会关掉。<a1>在 Meet 里要做的事</a1>" },
   "panelMeetJoin": { "message": "在这个标签页里加入会议。" },

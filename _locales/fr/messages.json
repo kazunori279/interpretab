@@ -43,12 +43,14 @@
   "panelMicNoteMuted": {
     "message": "La voix traduite est <b>coupée</b>. Appuyez sur le bouton de réactivation pour l'entendre dans vos haut-parleurs."
   },
-  "panelMicNoteSimul": {
-    "message": "Pour ce mode, mettez un casque. Il commence à traduire pendant que vous parlez encore, il ne peut donc pas couper votre microphone pendant qu'il parle : sur un haut-parleur, il entend sa propre voix, se met à la traduire aussi, et la traduction se dégrade."
-  },
+  "panelMicNoteSimul": { "message": "<a1>Que faire avant l'appel</a1>" },
   "panelMicNoteConversation": {
     "message": "Pour deux personnes qui partagent un microphone : il entend l'une de vos deux langues et parle l'autre, à voix haute dans <b>vos haut-parleurs</b>, et c'est tout l'intérêt de ce mode. Éloignez le microphone des haut-parleurs, sinon il s'entend lui-même."
   },
+  "panelPrepPhones": { "message": "Branchez un casque avant tout le reste. Cette moitié commence à traduire pendant que vous parlez encore, elle ne peut donc pas couper votre micro pendant qu'elle parle : sur haut-parleur elle s'entend elle-même et se met à traduire cela aussi." },
+  "panelPrepTheirs": { "message": "Activez <b>Audio de l'onglet</b> et mettez-le dans <b>votre</b> langue. C'est la moitié qui traduit ce que dit l'autre partie." },
+  "panelPrepYours": { "message": "Activez <b>Microphone</b> et mettez-le dans <b>leur</b> langue. C'est cette moitié-ci, celle de cette note." },
+
   "panelMicToCall": { "message": "Envoyer la traduction dans cet appel Meet" },
   "panelMicToCallNote": { "message": "Tant que ceci est activé, cette voix part dans l’appel au lieu de sortir de cet ordinateur, et ses sous-titres restent éteints. <a1>Ce qu’il faut faire dans Meet</a1>" },
   "panelMeetJoin": { "message": "Rejoignez la réunion dans cet onglet." },
