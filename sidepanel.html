@@ -18,6 +18,17 @@
       </div>
     </header>
 
+    <!-- This build has been withdrawn and nothing below it will work until
+         Chrome has fetched the new one. Above the error banner because it
+         outranks anything else the panel could say, and every word of it is
+         from `_locales`: the config file that raises it carries the verdict and
+         a link, never the sentence. -->
+    <div id="updateRequired" class="banner blocked" hidden>
+      <p data-i18n="updateRequiredTitle"></p>
+      <p id="updateSteps" class="small"></p>
+      <p><a id="updateLink" href="#" target="_blank" rel="noreferrer" data-i18n="updateRequiredMore"></a></p>
+    </div>
+
     <div id="error" class="banner error" hidden></div>
 
     <!-- The first precondition not yet met, in the order `lib/next-step.js`

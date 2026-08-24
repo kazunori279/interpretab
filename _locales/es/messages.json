@@ -94,6 +94,17 @@
   "panelCaptionsUnavailable": { "message": "No se pueden mostrar subtítulos en esta página." },
   "panelCaptionsStopped": { "message": "Los subtítulos han dejado de llegar a esta página." },
 
+  "updateRequiredTitle": {
+    "message": "Esta versión de Interpretab ya no puede traducir. Actualízala para seguir."
+  },
+  "updateRequiredSteps": {
+    "message": "Chrome suele actualizar las extensiones solo en unas horas. Para hacerlo ahora: abre <code>chrome://extensions</code>, activa el <b>Modo de desarrollador</b> y pulsa <b>Actualizar</b>."
+  },
+  "updateRequiredMore": { "message": "¿Qué ha pasado?" },
+  "updateRequiredShort": {
+    "message": "Hay que actualizar Interpretab para que vuelva a traducir."
+  },
+
   "optTitle": { "message": "Interpretab — Opciones" },
   "optHeading": { "message": "Opciones de Interpretab" },
 
@@ -218,6 +229,12 @@
   },
   "optDeviceSavedMissing": { "message": "Dispositivo guardado — ahora mismo no está conectado" },
 
+  "optConfigHeading": { "message": "Actualizaciones de modelos" },
+  "optConfigLabel": { "message": "Buscar nombres de modelo y precios nuevos" },
+  "optConfigNote": {
+    "message": "Google retira los modelos de Gemini Live avisando con unas pocas semanas, menos de lo que tarda una revisión en Chrome Web Store. Por eso Interpretab lee unas cuantas veces al día un pequeño <a1>archivo de configuración</a1> en su propio sitio: nombres de modelos, lo que cuestan y si esta versión sigue funcionando. La petición no lleva nada: ni la clave, ni el uso, ni nada sobre ti. Desactívalo e Interpretab no hablará con nadie más que Google, y se quedará con la lista de modelos con la que se publicó, aunque eso signifique no enterarse de que hay que actualizar."
+  },
+
   "optGlossaryHeading": { "message": "Glosario" },
   "optGlossaryNote": {
     "message": "Nombres y términos que quieres que se digan y se escriban de una manera concreta: productos, personas, jerga. Uno por línea, como <code>source,pronunciation,transcript</code>: la segunda columna es cómo debe decirse y la tercera, opcional, cómo debe escribirse en los subtítulos. En qué modo se aplica y cómo escribirlo está en la <a1>guía de uso</a1>."
@@ -248,6 +265,9 @@
   },
   "errQuota": {
     "message": "Esa clave ha agotado lo que Google permite por ahora. Espera a que se reinicie el límite y vuelve a pulsar Start, o añade una forma de pago para salir del plan gratuito — el gratuito es el que se agota antes."
+  },
+  "errModelGone": {
+    "message": "Google ha retirado el modelo de traducción que usa esta versión, y ninguna alternativa ha funcionado. Actualiza Interpretab y vuelve a intentarlo."
   },
   "errKeyForbidden": {
     "message": "Esa clave no puede usar la API de Gemini. Si le pusiste restricciones, comprueba que Gemini sigue en su lista — o crea una clave nueva en aistudio.google.com/apikey."

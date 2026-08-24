@@ -96,6 +96,17 @@
   },
   "panelCaptionsStopped": { "message": "Die Untertitel erreichen diese Seite nicht mehr." },
 
+  "updateRequiredTitle": {
+    "message": "Diese Version von Interpretab kann nicht mehr übersetzen. Aktualisieren Sie sie, um weiterzumachen."
+  },
+  "updateRequiredSteps": {
+    "message": "Chrome aktualisiert Erweiterungen normalerweise innerhalb weniger Stunden von selbst. Sofort geht es so: <code>chrome://extensions</code> öffnen, <b>Entwicklermodus</b> einschalten und auf <b>Aktualisieren</b> klicken."
+  },
+  "updateRequiredMore": { "message": "Was ist passiert?" },
+  "updateRequiredShort": {
+    "message": "Interpretab muss aktualisiert werden, bevor es wieder übersetzen kann."
+  },
+
   "optTitle": { "message": "Interpretab — Optionen" },
   "optHeading": { "message": "Interpretab-Optionen" },
 
@@ -224,6 +235,12 @@
   },
   "optDeviceSavedMissing": { "message": "Gespeichertes Gerät — derzeit nicht angeschlossen" },
 
+  "optConfigHeading": { "message": "Modell-Updates" },
+  "optConfigLabel": { "message": "Nach neuen Modellnamen und Preisen suchen" },
+  "optConfigNote": {
+    "message": "Google stellt Gemini-Live-Modelle mit wenigen Wochen Vorlauf ein, und das ist kürzer als eine Prüfung im Chrome Web Store dauert. Deshalb liest Interpretab ein paar Mal am Tag eine kleine <a1>Konfigurationsdatei</a1> auf der eigenen Website: Modellnamen, deren Preise und ob diese Version noch funktioniert. Mit der Anfrage geht nichts mit — kein Schlüssel, keine Nutzungsdaten, nichts über Sie. Schalten Sie es aus, und Interpretab spricht mit niemandem außer Google und behält die ausgelieferte Modellliste, auch wenn damit der Hinweis auf ein nötiges Update ausbleibt."
+  },
+
   "optGlossaryHeading": { "message": "Glossar" },
   "optGlossaryNote": {
     "message": "Namen und Begriffe, die auf eine bestimmte Weise gesprochen und geschrieben werden sollen — Produkte, Personen, Fachjargon. Einer pro Zeile, als <code>source,pronunciation,transcript</code>: die zweite Spalte sagt, wie es gesprochen wird, die dritte, optionale, wie es in den Untertiteln steht. In welchem Modus es wirkt und wie man eines schreibt, steht in der <a1>Anleitung</a1>."
@@ -254,6 +271,9 @@
   },
   "errQuota": {
     "message": "Dieser Schlüssel hat aufgebraucht, was Google im Moment zulässt. Warten Sie, bis das Limit zurückgesetzt wird, und drücken Sie erneut Start — oder hinterlegen Sie eine Zahlungsmethode, um den kostenlosen Tarif zu verlassen. Der kostenlose ist als Erstes aufgebraucht."
+  },
+  "errModelGone": {
+    "message": "Google hat das Übersetzungsmodell dieser Version eingestellt, und keine der Alternativen hat funktioniert. Aktualisieren Sie Interpretab und versuchen Sie es erneut."
   },
   "errKeyForbidden": {
     "message": "Dieser Schlüssel darf die Gemini-API nicht benutzen. Wenn Sie den Schlüssel eingeschränkt haben, prüfen Sie, ob Gemini noch auf seiner Liste steht — oder erstellen Sie unter aistudio.google.com/apikey einen neuen."

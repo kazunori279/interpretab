@@ -138,6 +138,19 @@
   "panelCaptionsUnavailable": { "message": "Subtitles can't be shown on this page." },
   "panelCaptionsStopped": { "message": "Subtitles stopped reaching this page." },
 
+  "updateRequiredTitle": {
+    "message": "This version of Interpretab can no longer translate. Update it to carry on."
+  },
+  "updateRequiredSteps": {
+    "message": "Chrome usually updates extensions by itself within a few hours. To do it now: open <code>chrome://extensions</code>, turn on <b>Developer mode</b>, then click <b>Update</b>.",
+    "description": "Steps to update the extension by hand. The <code> content is a Chrome address and must not be translated; the two <b> spans are Chrome's own UI labels, so use whatever Chrome calls them in this language."
+  },
+  "updateRequiredMore": { "message": "What happened?" },
+  "updateRequiredShort": {
+    "message": "Interpretab needs updating before it can translate again.",
+    "description": "The same verdict as updateRequiredTitle in one line, for the error thrown when Start is pressed on a withdrawn version."
+  },
+
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Interpretab options" },
 
@@ -284,6 +297,13 @@
   "optDeviceNamesHidden": { "message": "Allow the microphone above to see the device names." },
   "optDeviceSavedMissing": { "message": "Saved device — not connected right now" },
 
+  "optConfigHeading": { "message": "Model updates" },
+  "optConfigLabel": { "message": "Check for new model names and prices" },
+  "optConfigNote": {
+    "message": "Google retires Gemini Live models on a few weeks' notice, which is shorter than a Chrome Web Store review. So Interpretab reads a small <a1>configuration file</a1> on its own site a few times a day: model names, what they cost, and whether this version still works. Nothing is sent with the request — no key, no usage, nothing about you. Turn it off and Interpretab reaches nobody but Google, and keeps the model list it shipped with, including when that means missing the notice to update.",
+    "description": "<a1> links to the configuration file itself, on GitHub."
+  },
+
   "optGlossaryHeading": { "message": "Glossary" },
   "optGlossaryNote": {
     "message": "Names and terms you want said and spelled a particular way — products, people, jargon. One per line, as <code>source,pronunciation,transcript</code>: the second column is how it should be said, and the optional third is how it should be written in the subtitles. The <a1>user guide</a1> has which mode it applies to, and how to write one.",
@@ -311,6 +331,9 @@
   },
   "errQuota": {
     "message": "That key has used up what Google allows for now. Wait for the limit to reset and press Start again, or add a payment method to move off the free plan — the free one runs out first."
+  },
+  "errModelGone": {
+    "message": "Google has withdrawn the translation model this version uses, and none of the alternatives worked. Update Interpretab and try again."
   },
   "errKeyForbidden": {
     "message": "That key is not allowed to use the Gemini API. If you restricted the key, check that Gemini is still on its list — or make a new key at aistudio.google.com/apikey."

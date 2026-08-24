@@ -26,6 +26,7 @@ import {
 class FakeSession {
   static opened = [];
   static failNext = 0;
+  static failWith = "connect refused";
 
   constructor({ setup, onEvent, onStatus, closeHint }) {
     this.setup = setup;
@@ -40,10 +41,15 @@ class FakeSession {
   async open() {
     if (FakeSession.failNext > 0) {
       FakeSession.failNext--;
-      throw new Error("connect refused");
+      throw new Error(FakeSession.failWith);
     }
     this.onStatus("connected");
     return this;
+  }
+
+  /** The model this session was asked for, without the `models/` prefix. */
+  get model() {
+    return String(this.setup.setup.model || "").replace(/^models\//, "");
   }
 
   send(buffer) {
@@ -63,18 +69,23 @@ class FakeSession {
 }
 
 /** A settable clock, so a five-second drain does not take five seconds. */
-function harness() {
+function harness({ models, refreshModels } = {}) {
   FakeSession.opened = [];
   FakeSession.failNext = 0;
+  FakeSession.failWith = "connect refused";
   let clock = 1000;
   const events = [];
   const statuses = [];
+  const chosen = [];
   const loop = new SessionLoop({
     apiKey: "k",
-    setup: { setup: {} },
+    setup: { setup: { model: "models/bundled-model" } },
     closeHint: "the preflight said so",
+    models,
+    refreshModels,
     SessionClass: FakeSession,
     now: () => clock,
+    onModel: (model) => chosen.push(model),
     onEvent: (ev) => events.push(ev),
     onStatus: (status, detail) => statuses.push({ status, detail }),
   });
@@ -82,6 +93,7 @@ function harness() {
     loop,
     events,
     statuses,
+    chosen,
     sessions: FakeSession.opened,
     advance: (ms) => {
       clock += ms;
@@ -100,6 +112,11 @@ const frame = (n) => new Int16Array([n, n]).buffer;
 const QUOTA_CLOSE_REASON =
   "You exceeded your current quota, please check your plan and billing details. " +
   "For more information on this error, head to: h";
+
+/** A real retired-model close, verbatim — see `live-session.test.js`. */
+const MODEL_GONE_REASON =
+  "Publisher Model `models/gemini-3.5-live-translate-preview` was not found " +
+  "or is not supported for bidiGenerateContent";
 
 test("every session the loop opens carries the preflight's verdict", async () => {
   // Including the replacements. A loop that runs for an hour opens six of them,
@@ -318,6 +335,168 @@ test("a quota close mid-drain gives up rather than handing over", async () => {
 
   assert.equal(h.statuses.at(-1).status, "failed");
   assert.ok(h.sessions.every((s) => s.closed));
+});
+
+test("a loop given no list translates with the model its setup names", async () => {
+  const h = harness();
+  h.loop.start();
+  await settle();
+
+  assert.deepEqual(h.loop._models, ["bundled-model"]);
+  assert.equal(h.sessions[0].model, "bundled-model");
+  assert.deepEqual(h.loop._setup.setup, { model: "models/bundled-model" }, "the frame is not mutated");
+  h.loop.close();
+});
+
+test("a name rejected at the handshake is replaced by the next candidate", async () => {
+  // Which is how a retired preview usually announces itself: the name is turned
+  // down during `setup`, so it arrives as an `open()` that never completed
+  // rather than as a session that died.
+  const h = harness({ models: ["dead-model", "live-model"] });
+  FakeSession.failNext = 1;
+  FakeSession.failWith = MODEL_GONE_REASON;
+  h.loop.start();
+  await settle();
+
+  assert.deepEqual(
+    h.sessions.map((s) => s.model),
+    ["dead-model", "live-model"],
+  );
+  assert.deepEqual(h.chosen, ["live-model"], "whoever is pricing the run is told");
+  assert.equal(h.loop._retryTimer, null, "and it went straight there, off the backoff curve");
+  assert.notEqual(h.statuses.at(-1).status, "failed");
+  h.loop.close();
+});
+
+test("a model retired underneath a working session is swapped mid-run", async () => {
+  const h = harness({ models: ["dead-model", "live-model"] });
+  h.loop.start();
+  await settle();
+
+  h.sessions[0].onEvent({ type: "closed", code: 1008, reason: MODEL_GONE_REASON });
+  await settle();
+
+  assert.equal(h.sessions[0].closed, true);
+  assert.equal(h.sessions[1].model, "live-model");
+  assert.equal(h.loop._retryTimer, null);
+  h.loop.close();
+});
+
+test("the routine expiry that closes on the same code does not spend the list", async () => {
+  // 1008 is both "that model is gone" and "your ten minutes are up", and the
+  // second of those happens 31 times an hour. Keying on the code would have the
+  // loop working its way down the candidates during a healthy run.
+  const h = harness({ models: ["first-model", "second-model"] });
+  h.loop.start();
+  await settle();
+
+  h.sessions[0].onEvent({ type: "closed", code: 1008 });
+  await settle();
+
+  assert.equal(h.loop._model, 0, "still on the first candidate");
+  assert.deepEqual(h.chosen, []);
+  assert.equal(h.statuses.at(-1).status, "disconnected", "an ordinary drop, handled the ordinary way");
+  h.loop.close();
+});
+
+test("a drain mid-flight is abandoned rather than handed over to a dead name", async () => {
+  // The replacement is being opened on the same model, so there is nothing for
+  // it to hand over to — same reasoning as the quota close above.
+  const h = harness({ models: ["dead-model", "live-model"] });
+  h.loop.start();
+  await settle();
+  h.sessions[0].onEvent({ type: "goAway", timeLeft: 30000 });
+  await settle();
+  assert.equal(h.sessions.length, 2, "a replacement was on its way");
+
+  h.sessions[0].onEvent({ type: "closed", code: 1008, reason: MODEL_GONE_REASON });
+  await settle();
+
+  assert.equal(h.sessions[1].closed, true, "the replacement went with it");
+  assert.equal(h.sessions[2].model, "live-model");
+  assert.equal(h.loop._drainTimer, null, "and the drain clock is not still running");
+  h.loop.close();
+});
+
+test("running out of candidates asks the config file for a fresher one", async () => {
+  // The list was read at Start and may be hours old by now, which is the point:
+  // this is the exact moment the file is most likely to have been corrected.
+  let asked = 0;
+  const h = harness({
+    models: ["dead-model"],
+    refreshModels: async () => {
+      asked += 1;
+      return ["dead-model", "successor-model"];
+    },
+  });
+  FakeSession.failNext = 1;
+  FakeSession.failWith = MODEL_GONE_REASON;
+  h.loop.start();
+  await settle();
+  await settle();
+
+  assert.equal(asked, 1);
+  assert.equal(h.sessions[1].model, "successor-model", "only the name it did not already have");
+  assert.deepEqual(h.chosen, ["successor-model"]);
+  assert.notEqual(h.statuses.at(-1).status, "failed");
+  h.loop.close();
+});
+
+test("the file is asked once per run, however many names it gives", async () => {
+  let asked = 0;
+  const h = harness({
+    models: ["dead-model"],
+    refreshModels: async () => {
+      asked += 1;
+      return ["successor-model"];
+    },
+  });
+  FakeSession.failNext = 100;
+  FakeSession.failWith = MODEL_GONE_REASON;
+  h.loop.start();
+  for (let i = 0; i < 4; i++) await settle();
+
+  assert.equal(asked, 1, "a second fetch would be one per failed reconnect");
+  assert.deepEqual(
+    h.sessions.map((s) => s.model),
+    ["dead-model", "successor-model"],
+  );
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.match(h.statuses.at(-1).detail, /Update Interpretab/);
+  assert.ok(h.loop._closed);
+});
+
+test("a run with nowhere left to go stops and says why", async () => {
+  // No refresh hook at all — the soak harness and every pre-config caller. The
+  // one thing that must not happen is ten backoff attempts against a name that
+  // is never coming back.
+  const h = harness({ models: ["dead-model"] });
+  FakeSession.failNext = 1;
+  FakeSession.failWith = MODEL_GONE_REASON;
+  h.loop.start();
+  await settle();
+
+  assert.equal(h.sessions.length, 1, "no retry");
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.match(h.statuses.at(-1).detail, /withdrawn/);
+  assert.ok(h.loop._closed);
+});
+
+test("a refresh that fails leaves the run stopped rather than hanging", async () => {
+  const h = harness({
+    models: ["dead-model"],
+    refreshModels: async () => {
+      throw new Error("the service worker was asleep");
+    },
+  });
+  FakeSession.failNext = 1;
+  FakeSession.failWith = MODEL_GONE_REASON;
+  h.loop.start();
+  await settle();
+  await settle();
+
+  assert.equal(h.statuses.at(-1).status, "failed");
+  assert.ok(h.loop._closed);
 });
 
 test("a failed connect backs off instead of spinning", async () => {

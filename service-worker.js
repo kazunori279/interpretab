@@ -14,6 +14,7 @@
 import { CALL_ORIGIN, loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 import { preflight } from "./lib/preflight.js";
+import { clearCached, ensureConfig, isBlocked } from "./lib/remote-config.js";
 import { t } from "./lib/i18n.js";
 
 const OFFSCREEN_URL = "offscreen.html";
@@ -177,6 +178,13 @@ async function handle(msg, sender) {
       // itself — see `applyLive` there.
       if (await hasOffscreen()) await toOffscreen({ type: "live", patch: msg.patch });
       return {};
+    case "config": {
+      // Asked by the panel when it opens, so the banner is right and the cache
+      // is warm before Start; and by a session loop that has run out of model
+      // names, with `force`, which is the one caller that cannot wait for a TTL.
+      const config = await currentConfig({ force: !!msg.force });
+      return { config, blocked: isBlocked(config, version()) };
+    }
     default:
       throw new Error(t("errUnknownMessage", [msg.type]));
   }
@@ -283,12 +291,42 @@ async function refuseSecondRun(panelTabId) {
   );
 }
 
+/** This build, as the manifest states it. */
+function version() {
+  return chrome.runtime.getManifest().version;
+}
+
+/**
+ * The config file's last word, or null.
+ *
+ * The one place the Options switch is honoured, so that turning it off is
+ * exactly what it says: no request, no cached copy left on disk, and every
+ * caller below falling through to what the build shipped — including the update
+ * check, which a user who has opted out of the connection cannot be subject to.
+ */
+async function currentConfig({ force = false, settings } = {}) {
+  const { configUpdates } = settings || (await loadSettings());
+  if (configUpdates === false) {
+    await clearCached();
+    return null;
+  }
+  return ensureConfig({ version: version(), force });
+}
+
 async function start(panelTabId = null) {
   await refuseSecondRun(panelTabId);
   const settings = await loadSettings();
   if (!settings.tabEnabled && !settings.micEnabled) {
     throw new Error(t("errNoDirection"));
   }
+
+  // Before the key is read and long before the tab is captured. A build the
+  // config file has withdrawn is one whose sessions are expected to fail, and
+  // failing at Start with an instruction beats failing four seconds later with
+  // a close code. Usually free: the panel warmed this cache when it opened.
+  const config = await currentConfig({ settings });
+  if (isBlocked(config, version())) throw new Error(t("updateRequiredShort"));
+
   // Checked before anything is captured, so a missing key costs the user a
   // message rather than a tab-capture prompt followed by silence.
   const apiKey = requireApiKey(settings);
@@ -337,6 +375,7 @@ async function start(panelTabId = null) {
     settings,
     glossary,
     closeHint,
+    config,
   });
   if (!started.ok) throw new Error(started.error);
 

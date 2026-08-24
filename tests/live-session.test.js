@@ -13,7 +13,7 @@ import assert from "node:assert/strict";
 // Real prose behind every message key, so the assertions below can be about it.
 import "./messages.mjs";
 
-import { isQuotaClose, LiveSession, UPLINK_RATE } from "../lib/live-session.js";
+import { isModelUnavailableClose, isQuotaClose, LiveSession, UPLINK_RATE } from "../lib/live-session.js";
 
 /**
  * A real quota close, verbatim, from `tests/quota-close.mjs`. Copied rather
@@ -159,6 +159,27 @@ test("a quota close is recognised from what survives the 123-byte limit", () => 
   assert.ok(isQuotaClose("RESOURCE_EXHAUSTED"));
   assert.ok(!isQuotaClose(""));
   assert.ok(!isQuotaClose("Deadline exceeded"));
+});
+
+test("a retired model is recognised from the sentence, never from the code", () => {
+  // The observed close, verbatim. It arrives on 1008 — and so does the routine
+  // expiry that follows every `goAway`, 31 times an hour, which is why nothing
+  // here may key on the code.
+  assert.ok(
+    isModelUnavailableClose(
+      "Publisher Model `models/gemini-3.5-live-translate-preview` was not found " +
+        "or is not supported for bidiGenerateContent",
+    ),
+  );
+  assert.ok(isModelUnavailableClose("model gemini-x has been retired"));
+  assert.ok(isModelUnavailableClose("This model is deprecated"));
+
+  assert.ok(!isModelUnavailableClose(""));
+  assert.ok(!isModelUnavailableClose("Request contains an invalid argument"));
+  assert.ok(!isModelUnavailableClose(QUOTA_CLOSE_REASON));
+  // Both halves are required, so an unrelated absence cannot spend the list.
+  assert.ok(!isModelUnavailableClose("The requested voice was not found"));
+  assert.ok(!isModelUnavailableClose("the model returned nothing"));
 });
 
 test("close suppresses the closed event so the loop does not reconnect", async () => {

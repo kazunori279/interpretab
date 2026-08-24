@@ -94,6 +94,13 @@
   "panelCaptionsUnavailable": { "message": "이 페이지에는 자막을 표시할 수 없습니다." },
   "panelCaptionsStopped": { "message": "자막이 이 페이지에 더 이상 도달하지 않습니다." },
 
+  "updateRequiredTitle": { "message": "이 버전의 Interpretab으로는 더 이상 번역할 수 없습니다. 업데이트하면 계속 쓸 수 있습니다." },
+  "updateRequiredSteps": {
+    "message": "크롬은 보통 몇 시간 안에 확장 프로그램을 알아서 업데이트합니다. 지금 하려면 <code>chrome://extensions</code>를 열고 <b>개발자 모드</b>를 켠 다음 <b>업데이트</b>를 클릭하세요."
+  },
+  "updateRequiredMore": { "message": "무슨 일이 있었나요?" },
+  "updateRequiredShort": { "message": "다시 번역하려면 Interpretab을 업데이트해야 합니다." },
+
   "optTitle": { "message": "Interpretab — 옵션" },
   "optHeading": { "message": "Interpretab 옵션" },
 
@@ -204,6 +211,12 @@
   "optDeviceNamesHidden": { "message": "기기 이름을 보려면 위에서 마이크를 허용하세요." },
   "optDeviceSavedMissing": { "message": "저장된 장치 — 지금은 연결되어 있지 않음" },
 
+  "optConfigHeading": { "message": "모델 업데이트 확인" },
+  "optConfigLabel": { "message": "새 모델 이름과 요금 확인" },
+  "optConfigNote": {
+    "message": "Google이 Gemini Live 모델을 종료할 때 주는 예고 기간은 몇 주로, 크롬 웹 스토어 검토 기간보다 짧습니다. 그래서 Interpretab은 하루에 몇 번, 자체 사이트에 있는 작은 <a1>설정 파일</a1>을 읽습니다. 담긴 것은 모델 이름, 요금, 그리고 이 버전이 아직 동작하는지 세 가지뿐입니다. 요청에는 아무것도 실리지 않습니다. API 키도, 사용량도, 사용자에 관한 정보도 보내지 않습니다. 끄면 Interpretab은 Google 외에는 어디에도 연결하지 않고 빌드 당시의 모델 목록을 그대로 씁니다. 업데이트 안내도 받지 못합니다."
+  },
+
   "optGlossaryHeading": { "message": "용어집" },
   "optGlossaryNote": {
     "message": "이렇게 읽고 이렇게 쓰라고 정해 두고 싶은 이름과 용어 — 제품명, 사람 이름, 전문 용어 — 의 목록입니다. 한 줄에 하나씩 <code>source,pronunciation,transcript</code> 형식으로 적습니다. 둘째 칸은 어떻게 읽을지, 생략할 수 있는 셋째 칸은 자막에 어떻게 쓸지입니다. 어느 모드에서 쓰이는지와 작성 방법은 <a1>사용 안내서</a1>에 있습니다."
@@ -230,6 +243,9 @@
   },
   "errQuota": {
     "message": "이 키는 지금 Google이 허용하는 만큼을 다 썼습니다. 한도가 풀릴 때까지 기다렸다가 Start를 다시 누르거나, 결제 수단을 등록해 무료 요금제에서 벗어나세요. 먼저 한도에 닿는 쪽은 무료 요금제입니다."
+  },
+  "errModelGone": {
+    "message": "이 버전이 쓰는 번역 모델이 Google에서 종료되었고, 대체 모델도 모두 연결되지 않았습니다. Interpretab을 업데이트한 뒤 다시 시도하세요."
   },
   "errKeyForbidden": {
     "message": "이 키로는 Gemini API를 쓸 수 없습니다. 키에 제한을 걸어 두었다면 Gemini가 아직 목록에 있는지 확인하거나, aistudio.google.com/apikey에서 새 키를 만드세요."

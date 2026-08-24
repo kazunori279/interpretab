@@ -96,6 +96,15 @@
   },
   "panelCaptionsStopped": { "message": "لم تعد الترجمة النصية تصل إلى هذه الصفحة." },
 
+  "updateRequiredTitle": {
+    "message": "لم يعد هذا الإصدار من Interpretab قادرًا على الترجمة. حدّثه لتتابع."
+  },
+  "updateRequiredSteps": {
+    "message": "يحدّث Chrome الإضافات من تلقاء نفسه خلال ساعات عادةً. ولفعل ذلك الآن: افتح <code>chrome://extensions</code>، وفعّل <b>وضع المطوّر</b>، ثم انقر <b>تحديث</b>."
+  },
+  "updateRequiredMore": { "message": "ماذا حدث؟" },
+  "updateRequiredShort": { "message": "يحتاج Interpretab إلى تحديث قبل أن يترجم من جديد." },
+
   "optTitle": { "message": "Interpretab — الخيارات" },
   "optHeading": { "message": "خيارات Interpretab" },
 
@@ -218,6 +227,12 @@
   },
   "optDeviceSavedMissing": { "message": "جهاز محفوظ — غير موصول حاليًا" },
 
+  "optConfigHeading": { "message": "تحديثات النماذج" },
+  "optConfigLabel": { "message": "التحقّق من أسماء النماذج وأسعارها الجديدة" },
+  "optConfigNote": {
+    "message": "تمهل Google بضعة أسابيع قبل إيقاف أي نموذج من نماذج Gemini Live، وهي مدة أقصر من مراجعة Chrome Web Store. لذلك يقرأ Interpretab بضع مرات في اليوم <a1>ملف إعدادات</a1> صغيرًا على موقعه هو: أسماء النماذج، وكم تكلّف، وهل ما زال هذا الإصدار يعمل. لا يُرسل مع الطلب شيء: لا المفتاح، ولا الاستخدام، ولا أي شيء عنك. أوقفه فلا يتصل Interpretab بغير Google، ويبقى على قائمة النماذج التي صدر بها، ولو كان الثمن ألّا يصلك إشعار التحديث."
+  },
+
   "optGlossaryHeading": { "message": "قائمة المصطلحات" },
   "optGlossaryNote": {
     "message": "أسماء ومصطلحات تريدها أن تُنطق وتُكتب على نحو بعينه — منتجات وأشخاص ومفردات تخصصية. واحد في كل سطر، بالصيغة <code>source,pronunciation,transcript</code>: العمود الثاني كيف يُنطق، والثالث الاختياري كيف يُكتب في الترجمة المعروضة. وفي أي وضع تعمل وكيف تُكتب، ذلك في <a1>دليل الاستخدام</a1>."
@@ -248,6 +263,9 @@
   },
   "errQuota": {
     "message": "استهلك هذا المفتاح ما تسمح به Google في الوقت الحالي. انتظر عودة الحد ثم اضغط Start من جديد، أو أضف وسيلة دفع لتخرج من الخطة المجانية — فهي التي تنفد أولًا."
+  },
+  "errModelGone": {
+    "message": "أوقفت Google نموذج الترجمة الذي يستخدمه هذا الإصدار، ولم ينجح أي بديل. حدّث Interpretab ثم أعد المحاولة."
   },
   "errKeyForbidden": {
     "message": "لا يُسمح لهذا المفتاح باستخدام Gemini API. إن كنت قد قيّدت المفتاح فتأكد أن Gemini ما زال في قائمته — أو أنشئ مفتاحًا جديدًا من aistudio.google.com/apikey."

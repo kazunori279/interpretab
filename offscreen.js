@@ -37,7 +37,7 @@ import {
   buildSetup,
   isSimul,
   LIVE_KEYS,
-  modelFor,
+  modelsFor,
   usesDuplexGate,
   UPLINK_RATE,
 } from "./lib/live-session.js";
@@ -130,6 +130,10 @@ const state = {
   // socket that then closes on 1006 with no reason of its own. Empty unless the
   // preflight had an opinion — see `lib/preflight.js`.
   closeHint: "",
+  // The config file's last word on model names and prices, handed over with the
+  // `start` message. Read-only here, and null whenever the fetch had nothing to
+  // say, in which case everything below falls back to what the build ships.
+  config: null,
   active: false,
 };
 
@@ -205,11 +209,12 @@ function dropQueuedVoice() {
   }
 }
 
-async function start({ apiKey, streamId, settings, glossary, closeHint }) {
+async function start({ apiKey, streamId, settings, glossary, closeHint, config }) {
   await ensureContexts();
   await stop();
   state.settings = settings;
   state.apiKey = apiKey;
+  state.config = config || null;
   state.displayMap = buildDisplayMap(glossary);
   // Before the sessions open rather than after: opening them is where a slow
   // microphone permission goes, and the clock beside the cost has to cover the
@@ -456,18 +461,36 @@ function openDirection(name, stream, glossary, simul, outputCtx) {
   // live out here rather than in the session: `SessionLoop` retires a session
   // roughly every ten minutes, and a counter inside one would restart from zero
   // with each of them.
+  const models = modelsFor(name, state.settings, state.config);
   const acc = {
     input: "",
     output: "",
     simul,
     idle: null,
     usage: emptyUsage(),
-    model: modelFor(name, state.settings),
+    model: models[0],
   };
   const session = new SessionLoop({
     apiKey: state.apiKey,
     setup: buildSetup(name, state.settings, glossary || []),
     closeHint: state.closeHint,
+    models,
+    // A fallback changes the rate card mid-run, and the tally it applies to
+    // carries on across the swap — so the model has to follow it, or every
+    // second after the swap is priced at the dead model's price.
+    onModel: (model) => {
+      acc.model = model;
+    },
+    // The list above was read at Start and the file may have been corrected
+    // since; this is the moment it is worth asking again. Routed through the
+    // service worker because an offscreen document has `chrome.runtime` and
+    // nothing else — no `chrome.storage`, so no cache and no fetch policy here.
+    refreshModels: async () => {
+      const res = await chrome.runtime.sendMessage({ target: "sw", type: "config", force: true });
+      if (!res?.ok) return [];
+      state.config = res.config || state.config;
+      return modelsFor(name, state.settings, state.config);
+    },
     onStatus: (status, detail) => {
       post({ type: "status", direction: name, status, detail });
       // The loop has stopped trying and will not restart itself. Both
@@ -624,7 +647,7 @@ function usageSnapshot() {
   for (const name of ["tab", "mic"]) {
     const acc = state[name]?.acc;
     if (!acc?.usage.inSeconds && !acc?.usage.outSeconds) continue;
-    snapshot[name] = { cost: costOf(acc.usage, acc.model) };
+    snapshot[name] = { cost: costOf(acc.usage, acc.model, state.config?.rates) };
     mergeUsage(combined, acc.usage);
     // Summed per direction rather than priced from the combined tally: with the
     // microphone in conversation mode the two directions are two models on two
@@ -761,6 +784,7 @@ async function stop() {
   state.apiKey = null;
   // The verdict was about the key this run held, at the moment it was asked.
   state.closeHint = "";
+  state.config = null;
   // `start` calls this first to clear any previous run. Announcing a stop that
   // never followed a start would flip the side panel's button to Start for the
   // instant between the two.

@@ -37,7 +37,7 @@ The extension's entire user interface is a side panel: the language pickers, the
 ## `storage`
 
 ```
-Stores the user's own settings on their device: their Gemini API key, chosen languages, voice, subtitle switches, subtitle size, the ducking level, and their glossary CSV. chrome.storage.session additionally holds which tab is currently being captured, because a Manifest V3 service worker cannot keep that in a variable across its own restarts. Nothing in storage is transmitted anywhere except the API key, which is sent only to generativelanguage.googleapis.com to authenticate the user's own connection.
+Stores the user's own settings on their device: their Gemini API key, chosen languages, voice, subtitle switches, subtitle size, the ducking level, and their glossary CSV. chrome.storage.session additionally holds which tab is currently being captured, because a Manifest V3 service worker cannot keep that in a variable across its own restarts, and chrome.storage.local caches the downloaded list of Gemini model names and prices so that it is fetched a few times a day rather than on every run. Nothing in storage is transmitted anywhere except the API key, which is sent only to generativelanguage.googleapis.com to authenticate the user's own connection.
 ```
 
 ## `activeTab`
@@ -55,7 +55,7 @@ Used with activeTab to inject the extension's own scripts into the tab the user 
 ## Host permission — `https://generativelanguage.googleapis.com/*`
 
 ```
-The extension opens a WebSocket to the Gemini Live API at this host to perform the translation. This is the only host it can reach, and it is the whole of the extension's network activity — there is no backend service of the developer's, and no analytics or telemetry endpoint. It is declared as a required host permission rather than an optional one so that the single destination is visible in the manifest and cannot be widened silently.
+The extension opens a WebSocket to the Gemini Live API at this host to perform the translation. This is the only host any user data is sent to — there is no backend service of the developer's, and no analytics or telemetry endpoint. It is declared as a required host permission rather than an optional one so that the destination is visible in the manifest and cannot be widened silently. The extension also downloads one static JSON file, https://kazunori279.github.io/interpretab/config.json, which lists the names and prices of the Gemini models it uses; Google withdraws preview models on two weeks' notice, which is shorter than a store review, so the model name cannot be corrected by shipping a new version in time. That request needs no host permission because GitHub Pages serves the file with access-control-allow-origin: *. It is a plain GET with no query string and no identifier, it uploads nothing, and the reply is validated field by field as data and never executed — it is the remote configuration pattern the Manifest V3 migration guide permits, not remotely hosted code. Users can turn it off on the Options page, and it is disclosed in the privacy policy.
 ```
 
 ---
@@ -93,8 +93,13 @@ renders `PRIVACY.md` at that path. Re-check it right before submitting anyway: a
 
 Answer **"No, I am not using remote code."** Manifest V3 forbids it and the extension complies:
 both AudioWorklet processors are bundled in `audio/`, every script is a local file, and nothing
-is loaded with `eval` or from a URL. The only network traffic is the Gemini API WebSocket, which
-carries audio and JSON, never code.
+is loaded with `eval` or from a URL. Two things come over the network and neither is code. The
+Gemini API WebSocket carries audio and JSON. `config.json` carries model names, prices and a
+version threshold, which `lib/remote-config.js` validates field by field against a fixed shape
+and uses as values — it is never parsed as markup, never evaluated, and never describes a step to
+perform. That is the "load and cache a remote configuration (for example a JSON file) at runtime"
+pattern the migration guide names as supported, and if a reviewer asks, the file itself is in the
+repository at `docs/config.json`.
 
 ---
 

@@ -958,6 +958,103 @@ If the wording of either sentence changes, `README.md` and all ten guide pages q
 is written in, since what a reader of that page sees in the panel is that language's sentence and
 not the English one.
 
+### The two facts that expire
+
+Two things this extension hardcodes belong to Google rather than to it: which Live models exist,
+and what they cost. Both change on Google's schedule. A preview model gets two weeks' notice
+before it is switched off; a Chrome Web Store review takes, in the words on the submission dialog,
+*up to several weeks*. The notice period is shorter than the fix, so on the day
+`gemini-3.5-live-translate-preview` goes away, every installed copy stops translating and there is
+nothing a new version can do about it in time. The price table goes stale the same way, more
+quietly: the meter keeps printing a figure and the figure is simply wrong.
+
+So `lib/remote-config.js` reads a file at runtime:
+
+    https://kazunori279.github.io/interpretab/config.json
+
+It is `docs/config.json` in this repository, served by the same GitHub Pages site as the guide.
+Publishing a correction is a commit to `main`, live in about a minute, and it reaches an installed
+copy within six hours without anyone updating anything.
+
+**It is data and never logic.** MV3 bans remotely hosted *code* and explicitly permits the
+opposite of it — Chrome's own migration guide names "your extension loads and caches a remote
+configuration (for example a JSON file) at runtime" as a supported pattern. The line that gets
+crossed is interpreting the file: a JSON document describing steps to perform is an interpreter
+whatever its MIME type. Nothing here is executed, evaluated, or rendered as markup. Every field is
+a model name, a number, a version or a link, and `parseConfig` checks each against a fixed shape
+before anything else sees it.
+
+```json
+{
+  "schemaVersion": 1,
+  "models": {
+    "simul": ["gemini-3.5-live-translate-preview"],
+    "conversation": ["gemini-3.1-flash-live-preview"]
+  },
+  "rates": {
+    "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21.0 },
+    "gemini-3.1-flash-live-preview": { "audioIn": 3.0, "audioOut": 12.0 }
+  },
+  "blockBelowVersion": "",
+  "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
+}
+```
+
+**A missing answer changes nothing.** Every field has a bundled counterpart that was correct the
+day the build shipped, and the file only ever replaces one. An offline user, a 404, a truncated
+body, a `schemaVersion` this build has never heard of — all four land where never having asked
+lands. That is also the rule for anything malformed *inside* a valid file: a model list that lost
+an entry to validation is dropped whole rather than used in half, because guessing which half was
+meant is worse than using none of it, and a rate table with no valid entries is null rather than
+empty, since an empty table would price every model as the expensive one.
+
+The failure this design has to survive is its own. A text file that can name the models is a text
+file that can brick every installation at once, so `modelCandidates` always puts the bundled model
+in the list — appended when the file omits it, left in place when the file names it. The worst a
+wrong file can do to models is add names that do not work in front of the one that does.
+
+**When a model dies mid-run**, `SessionLoop` spends what it holds before it asks for more. A
+retired name usually announces itself during `setup`, so it arrives as an `open()` that never
+completed rather than as a session that died; `isModelUnavailableClose` reads the sentence in the
+close — *Publisher Model `models/…` was not found or is not supported for bidiGenerateContent* —
+and never the code, which is 1008, which is also what a routine session expiry closes with 31
+times an hour. The next candidate is tried immediately, off the backoff curve, because the audio
+is still arriving. Only when the candidates are gone does the loop force a re-fetch with the TTL
+ignored, once per run: this is the moment the file is most likely to have been corrected, and the
+list in hand may be hours old. If that turns up nothing new, the run stops and says so.
+
+**`blockBelowVersion` is the emergency brake**, and the one field that can hurt someone whose
+extension is working. It exists for the case the fallback cannot reach: Google changes the
+protocol, or a new model behaves differently enough that a shipped build produces nonsense rather
+than an error. Setting it to a version above the ones in the wild disables **Start** and puts a
+notice in the side panel explaining how to update, with a *What happened?* link to
+`learnMoreUrl` — which may only point at this project's own site or repository, because a field
+that can send every user of the extension anywhere is a larger thing than that notice needs.
+
+Because a mistake here is inflicted on everybody at once, the recovery path is the fast one: a
+build that believes it is blocked re-checks every 15 minutes instead of every 6 hours, so
+publishing `""` again lifts the block on the user's next panel open. `isBlocked` answers false for
+every uncertain state — no file, no threshold, an unparseable version on either side — since
+refusing to translate for someone whose extension works is worse than translating with one that is
+about to fail on its own and say why. Raising a block is:
+
+```jsonc
+"blockBelowVersion": "1.0.4"   // every build below 1.0.4 stops; "" lifts it
+```
+
+**The request sends nothing.** A plain `GET` of a static file: no query string, no key, no version,
+no identifier, `credentials: "omit"`, `referrerPolicy: "no-referrer"`, a four-second timeout and a
+64 KB cap on the body before it is parsed. GitHub Pages was chosen over `raw.githubusercontent.com`
+— both answer `access-control-allow-origin: *`, which is what lets either be fetched from a service
+worker with no new host permission and therefore no new permission warning on update — because it
+is the host already named in the store listing and in the guide, and a connection to somewhere the
+user has been told about is a smaller claim than a new one. It is disclosed in `PRIVACY.md` and
+switchable off at **Options → Model updates**, which also deletes the cached copy.
+
+One shape worth noting: the fetch lives in the service worker, not in the offscreen document.
+`chrome.storage` is undefined in an offscreen document — it gets `chrome.runtime` messaging and
+nothing else — so the forced re-fetch a dying model triggers is a message to the worker and back.
+
 ### Ten languages, one catalogue
 
 Every string the user reads comes from `_locales/<lang>/messages.json` through `lib/i18n.js`
@@ -1358,6 +1455,33 @@ so the microphone link did nothing at all when Options was open, which after the
 open is the likely case, and left `optionsFocus` in session storage to ambush some later visit.
 The page now takes the request as a `chrome.storage.session` change as well as on load. Step 6 of
 the walkthrough is that bug.
+
+**`tests/config-ui.mjs` — does the update notice still work?**
+
+```bash
+node tests/config-ui.mjs              # headless, ~10 seconds
+node tests/config-ui.mjs --lang=ja    # the same walk in another catalogue
+```
+
+The same harness, pointed at [the file the extension reads](#the-two-facts-that-expire). The
+notice it draws is the one piece of this extension that is written years before it is needed and
+seen once, by everybody, on a day when nothing else works — so it is exactly the thing that rots
+unnoticed. Twenty-three assertions and five screenshots in `tests/config-ui/report.md`: that a
+file blocking nothing is invisible, that a block reaches a panel which has already finished
+rendering, that the *What happened?* link appears only when the file offered a destination, and
+that **Options → Model updates** both stops the request and deletes the cached copy — the second
+half being what stops an opt-out from stranding somebody behind a block that nothing can now lift.
+
+It reaches no network. Every state is seeded into `chrome.storage.local` the way a successful
+fetch would have left it, with a timestamp inside the TTL, so the worker answers from the cache
+and never opens a socket: the subject is the wiring between the worker, the panel and the Options
+page, not GitHub's uptime.
+
+`--lang=ja` runs the whole walk in a Chrome set to another of the ten languages, and every
+assertion then reads `_locales/ja` instead of `_locales/en`. `tests/i18n.test.js` can only say
+that all ten catalogues have the key; this says the notice renders in the language the browser is
+set to. macOS ignores `--lang` and asks Cocoa, so the harness also passes `-AppleLanguages` — see
+the comment in `chrome-harness.mjs` for why the blank start page has to come out with it.
 
 **`tests/store-shots.mjs` — the store screenshots that are pure extension UI.**
 

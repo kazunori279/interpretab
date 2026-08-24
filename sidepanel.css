@@ -51,6 +51,29 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 #nextStep, #elsewhereNote { background: #e8f0fe; color: #174ea6; font-size: 12px; }
 #nextStep a { color: inherit; }
 
+/* The update notice is neither of those. It is not a failure of anything the
+   user did, so it is not red; but it is the only banner that means nothing on
+   the page below it will work, so it does not sit in the same informational
+   blue as "you still need an API key". Amber, and the only banner with a
+   border. */
+.banner.blocked {
+  background: #fef7e0;
+  color: #7f5700;
+  border: 1px solid #f9c22e;
+  font-size: 12px;
+}
+/* Spaced from the top rather than the bottom, so that the "what happened?"
+   line being hidden — which it is whenever the file offered no link — leaves no
+   margin behind it. */
+.banner.blocked p { margin: 0; }
+.banner.blocked p + p { margin-top: 0.35rem; }
+.banner.blocked code {
+  background: #00000012;
+  border-radius: 0.2rem;
+  padding: 0 0.2rem;
+}
+.banner.blocked a { color: inherit; }
+
 .direction {
   border: 1px solid var(--border);
   border-radius: 0.4rem;

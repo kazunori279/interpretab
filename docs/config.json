@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "models": {
+    "simul": ["gemini-3.5-live-translate-preview"],
+    "conversation": ["gemini-3.1-flash-live-preview"]
+  },
+  "rates": {
+    "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21.0 },
+    "gemini-3.1-flash-live-preview": { "audioIn": 3.0, "audioOut": 12.0 }
+  },
+  "blockBelowVersion": "",
+  "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
+}

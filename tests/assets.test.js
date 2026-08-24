@@ -16,6 +16,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { readCatalogue } from "./messages.mjs";
+import { MODEL, SIMUL_MODEL } from "../lib/languages.js";
+import { parseConfig, SCHEMA_VERSION } from "../lib/remote-config.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
@@ -173,20 +175,22 @@ test("the only host the extension may reach is the Gemini API", () => {
   assert.equal(manifest.optional_permissions, undefined);
 });
 
-test("no code names a server other than the Gemini API", () => {
+test("no code names a server other than the Gemini API and this project's own", () => {
   const offenders = [];
   for (const file of sources()) {
     const text = fs.readFileSync(file, "utf8");
     for (const [, url] of text.matchAll(/["'](?:https?|wss?):\/\/([\w.-]+)[^"']*["']/g)) {
-      // Documentation links the user clicks are fine; a socket or fetch target
-      // is not. Anything not obviously a doc link has to be the API itself.
-      // `kazunori279.github.io` is this project's own guide, and it is only ever
-      // a `data-linkN` destination — nothing here ever fetches it.
+      // Google is where the translation happens. `kazunori279.github.io` is this
+      // project's own site — the guide, the privacy policy, and since 1.0.4 the
+      // config file, which is the one thing here that is fetched rather than
+      // linked; the test below is about that one. `github.com` is the source
+      // repository, and is only ever a destination the user clicks.
       if (
         url.endsWith("googleapis.com") ||
         url.endsWith("google.com") ||
         url.endsWith("google.dev") ||
-        url === "kazunori279.github.io"
+        url === "kazunori279.github.io" ||
+        url === "github.com"
       ) {
         continue;
       }
@@ -194,6 +198,34 @@ test("no code names a server other than the Gemini API", () => {
     }
   }
   assert.deepEqual(offenders, []);
+});
+
+test("the config file is fetched from one place, and it is a static file", () => {
+  // The extension makes exactly one request to anywhere other than the Gemini
+  // API, and everything users have been told about it — PRIVACY.md, the store
+  // listing, the sentence in Options — rests on what that request is. So: one
+  // URL, named in one file, on this project's own Pages site, with no query
+  // string. A key on the end of it would be the whole claim gone.
+  const source = fs.readFileSync(path.join(ROOT, "lib/remote-config.js"), "utf8");
+  const [, url] = source.match(/^export const CONFIG_URL = "([^"]+)";$/m) || [];
+  assert.equal(url, "https://kazunori279.github.io/interpretab/config.json");
+
+  const named = sources().filter((file) => fs.readFileSync(file, "utf8").includes(url));
+  assert.deepEqual(named.map((file) => path.relative(ROOT, file)), ["lib/remote-config.js"]);
+
+  // And the file it points at is in the repository, valid, and readable by the
+  // parser that will meet it. A published config that this build rejects is a
+  // silent no-op; one that fails to parse is the same thing more loudly.
+  const config = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/config.json"), "utf8"));
+  assert.equal(config.schemaVersion, SCHEMA_VERSION);
+  assert.ok(parseConfig(JSON.stringify(config)), "the published config does not survive parseConfig");
+
+  // Whatever the file says, the models this build ships must still be reachable
+  // — `modelCandidates` guarantees it, and this is the published file put
+  // through the guarantee.
+  const parsed = parseConfig(JSON.stringify(config));
+  assert.ok(parsed.models.simul.includes(SIMUL_MODEL));
+  assert.ok(parsed.models.conversation.includes(MODEL));
 });
 
 test("every referenced asset path resolves", () => {
@@ -491,29 +523,43 @@ test("the cost meter's clock is stamped where the run is", () => {
 
 /**
  * What `npm run package` would put in the ZIP, worked out from the script's own
- * `-x` list rather than by running `zip`.
+ * argument list rather than by running `zip`.
  *
- * The globs are matched the way zip matches them, which is the part worth
- * stating: its `*` crosses directory separators, so `store/*` takes the whole
- * subtree and `.*` takes every dotfile and dot-directory at once.
+ * The script names what goes in rather than what stays out. It used to be the
+ * other way round, and the reason it changed is the reason this reads the list
+ * at all: an exclude list ships anything nobody thought to exclude, and six
+ * live-test artifacts had been riding along in the package for two releases
+ * before anyone opened it. An include list can only be wrong in the direction
+ * that breaks loudly, and the loop below is what makes it break here instead of
+ * in the store listing.
+ *
+ * The one `-x` glob left is matched the way zip matches it: `*` crosses
+ * directory separators, so `.*` takes every dotfile and dot-directory at once.
  */
 function packagedFiles() {
   const script = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")).scripts
     .package;
+  const [, list] = script.match(/zip -r interpretab\.zip (.+?) -x /) || [];
+  assert.ok(list, "the package script is not the shape this test can read");
   const excludes = [...script.matchAll(/'([^']+)'/g)].map(
     ([, glob]) =>
       new RegExp(`^${glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`)
   );
   const out = [];
-  const walk = (dir) => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const rel = path.relative(ROOT, path.join(dir, entry.name));
-      if (excludes.some((re) => re.test(rel))) continue;
-      if (entry.isDirectory()) walk(path.join(dir, entry.name));
+  const walk = (start) => {
+    for (const entry of fs.readdirSync(start, { withFileTypes: true })) {
+      const rel = path.relative(ROOT, path.join(start, entry.name));
+      if (excludes.some((re) => re.test(path.basename(rel)))) continue;
+      if (entry.isDirectory()) walk(path.join(start, entry.name));
       else out.push(rel);
     }
   };
-  walk(ROOT);
+  for (const name of list.trim().split(/\s+/)) {
+    const full = path.join(ROOT, name);
+    assert.ok(fs.existsSync(full), `the package script names ${name}, which is not there`);
+    if (fs.statSync(full).isDirectory()) walk(full);
+    else out.push(name);
+  }
   return new Set(out);
 }
 
@@ -532,11 +578,27 @@ test("the package script ships the extension and nothing else", () => {
   ].filter(Boolean)) {
     assert.ok(zipped.has(reference), `the ZIP is missing ${reference}`);
   }
-  // Every locale, not just the default one: `npm run package` builds from an
-  // exclude list, so a new `_locales` directory is carried automatically and
-  // this is what notices if that ever stops being true.
+  // Every locale, not just the default one.
   for (const locale of fs.readdirSync(path.join(ROOT, "_locales"))) {
     assert.ok(zipped.has(`_locales/${locale}/messages.json`), `the ZIP is missing ${locale}`);
+  }
+
+  // And every file any of them reaches for at runtime. This is the check the
+  // include list needs and the old exclude list did not: adding a module to a
+  // directory already in the list is free, but a *new* directory is a file that
+  // resolves in the checkout, passes every other test here, and is not in the
+  // package. The symptom would be an extension that works for its author and
+  // 404s for everyone else.
+  for (const file of sources()) {
+    const text = fs.readFileSync(file, "utf8");
+    for (const reference of new Set([...text.matchAll(PATH_RE)].map((m) => m[1]))) {
+      const rel = reference.startsWith(".")
+        ? path.relative(ROOT, path.resolve(path.dirname(file), reference))
+        : reference;
+      // Only what lives under the extension root; a `../tests/` seam is not shipped.
+      if (rel.startsWith("..") || !fs.existsSync(path.join(ROOT, rel))) continue;
+      assert.ok(zipped.has(rel), `${path.relative(ROOT, file)} loads ${rel}, which is not in the ZIP`);
+    }
   }
   // The licence and the privacy policy are documents users are entitled to, and
   // they are two files and a few KB.

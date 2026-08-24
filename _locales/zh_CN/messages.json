@@ -94,6 +94,13 @@
   "panelCaptionsUnavailable": { "message": "无法在此页面上显示字幕。" },
   "panelCaptionsStopped": { "message": "字幕已无法送达此页面。" },
 
+  "updateRequiredTitle": { "message": "这个版本的 Interpretab 已经无法翻译。更新后即可继续使用。" },
+  "updateRequiredSteps": {
+    "message": "Chrome 通常会在几小时内自动更新扩展程序。想立刻更新：打开 <code>chrome://extensions</code>，开启<b>开发者模式</b>，然后点击<b>更新</b>。"
+  },
+  "updateRequiredMore": { "message": "发生了什么？" },
+  "updateRequiredShort": { "message": "需要更新 Interpretab 才能继续翻译。" },
+
   "optTitle": { "message": "Interpretab — 选项" },
   "optHeading": { "message": "Interpretab 选项" },
 
@@ -204,6 +211,12 @@
   "optDeviceNamesHidden": { "message": "先在上面允许使用麦克风，才能看到设备名称。" },
   "optDeviceSavedMissing": { "message": "已保存的设备 — 目前未连接" },
 
+  "optConfigHeading": { "message": "模型更新检查" },
+  "optConfigLabel": { "message": "检查新的模型名称和价格" },
+  "optConfigNote": {
+    "message": "Google 停用 Gemini Live 模型时只提前几周通知，比 Chrome 应用商店的审核还要快。所以 Interpretab 每天会读几次自己站点上的一个小<a1>配置文件</a1>：模型名称、价格，以及当前版本是否还能用。请求不携带任何东西，不发送密钥、用量，也不发送关于你的任何信息。关掉它，Interpretab 就只连接 Google，并一直使用发布时自带的模型列表，代价是收不到需要更新的通知。"
+  },
+
   "optGlossaryHeading": { "message": "术语表" },
   "optGlossaryNote": {
     "message": "你希望按固定读法和写法处理的名称和术语——产品名、人名、行话。一行一个，格式为 <code>source,pronunciation,transcript</code>：第二列是该怎么念，可省略的第三列是字幕里该怎么写。它在哪个模式下有效、该怎么写，都在<a1>使用指南</a1>里。"
@@ -231,6 +244,7 @@
   "errQuota": {
     "message": "这个密钥已经用完了 Google 目前允许的额度。等额度恢复后再按 Start，或者绑定付款方式离开免费方案——先到顶的总是免费方案。"
   },
+  "errModelGone": { "message": "这个版本使用的翻译模型已被 Google 停用，备选模型也都无法连接。请更新 Interpretab 后重试。" },
   "errKeyForbidden": {
     "message": "这个密钥不能使用 Gemini API。如果你给密钥加过限制，请确认 Gemini 还在允许的名单里；也可以到 aistudio.google.com/apikey 重新做一个。"
   },

@@ -82,6 +82,21 @@ test("an unknown model is priced as the more expensive of the two", () => {
   assert.equal(costOf(totals, "models/whatever-comes-next"), costOf(totals, SIMUL_MODEL));
 });
 
+test("a price the config file corrects is the one the meter uses", () => {
+  // Google's prices outlive a store review no better than its model names do,
+  // and a meter reading half what the bill will say is worse than no meter.
+  const hour = noteAudioOut(noteAudioIn(emptyUsage(), 3600), 3600);
+  const doubled = { [SIMUL_MODEL]: { audioIn: 7.0, audioOut: 42.0 } };
+
+  assert.ok(Math.abs(costOf(hour, SIMUL_MODEL, doubled) - 2 * costOf(hour, SIMUL_MODEL)) < 0.01);
+  assert.equal(costOf(hour, SIMUL_MODEL, null), costOf(hour, SIMUL_MODEL), "no file, no change");
+  assert.equal(
+    costOf(hour, SIMUL_MODEL, { "another-model": { audioIn: 7, audioOut: 42 } }),
+    costOf(hour, SIMUL_MODEL),
+    "a file that prices something else changes nothing",
+  );
+});
+
 test("the two directions merge into one run total", () => {
   const tab = noteAudioOut(noteAudioIn(emptyUsage(), 100), 40);
   const mic = noteAudioOut(noteAudioIn(emptyUsage(), 30), 10);

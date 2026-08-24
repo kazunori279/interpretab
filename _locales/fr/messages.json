@@ -96,6 +96,17 @@
   },
   "panelCaptionsStopped": { "message": "Les sous-titres n'atteignent plus cette page." },
 
+  "updateRequiredTitle": {
+    "message": "Cette version d'Interpretab ne peut plus traduire. Mettez-la à jour pour continuer."
+  },
+  "updateRequiredSteps": {
+    "message": "Chrome met normalement les extensions à jour tout seul en quelques heures. Pour le faire maintenant : ouvrez <code>chrome://extensions</code>, activez le <b>Mode développeur</b>, puis cliquez sur <b>Actualiser</b>."
+  },
+  "updateRequiredMore": { "message": "Que s'est-il passé ?" },
+  "updateRequiredShort": {
+    "message": "Interpretab doit être mis à jour avant de pouvoir traduire à nouveau."
+  },
+
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Options d'Interpretab" },
 
@@ -224,6 +235,12 @@
   },
   "optDeviceSavedMissing": { "message": "Périphérique enregistré — non branché actuellement" },
 
+  "optConfigHeading": { "message": "Mises à jour des modèles" },
+  "optConfigLabel": { "message": "Rechercher les nouveaux noms de modèles et les nouveaux tarifs" },
+  "optConfigNote": {
+    "message": "Google retire les modèles Gemini Live avec quelques semaines de préavis, soit moins que la durée d'un examen sur le Chrome Web Store. Interpretab lit donc plusieurs fois par jour un petit <a1>fichier de configuration</a1> hébergé sur son propre site : les noms des modèles, leur tarif, et si cette version fonctionne encore. Rien n'accompagne la requête : ni la clé, ni l'usage, rien qui vous concerne. Désactivez-le et Interpretab ne parlera à personne d'autre que Google, en conservant la liste de modèles livrée avec lui, quitte à manquer l'avis de mise à jour."
+  },
+
   "optGlossaryHeading": { "message": "Glossaire" },
   "optGlossaryNote": {
     "message": "Les noms et les termes que vous voulez voir prononcés et écrits d'une certaine façon : produits, personnes, jargon. Un par ligne, sous la forme <code>source,pronunciation,transcript</code> : la deuxième colonne dit comment le prononcer, la troisième, facultative, comment l'écrire dans les sous-titres. Le <a1>guide d'utilisation</a1> indique dans quel mode il s'applique et comment en écrire un."
@@ -254,6 +271,9 @@
   },
   "errQuota": {
     "message": "Cette clé a épuisé ce que Google autorise pour le moment. Attendez que la limite se remette à zéro et appuyez de nouveau sur Start, ou ajoutez un moyen de paiement pour quitter le forfait gratuit — c'est lui qui s'épuise en premier."
+  },
+  "errModelGone": {
+    "message": "Google a retiré le modèle de traduction qu'utilise cette version, et aucune solution de repli n'a fonctionné. Mettez Interpretab à jour et réessayez."
   },
   "errKeyForbidden": {
     "message": "Cette clé n'a pas le droit d'utiliser l'API Gemini. Si vous l'avez restreinte, vérifiez que Gemini figure toujours dans sa liste — ou créez une nouvelle clé sur aistudio.google.com/apikey."

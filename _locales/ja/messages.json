@@ -100,6 +100,13 @@
   "panelCaptionsUnavailable": { "message": "このページには字幕を表示できません。" },
   "panelCaptionsStopped": { "message": "このページへの字幕表示が止まりました。" },
 
+  "updateRequiredTitle": { "message": "このバージョンの Interpretab では翻訳できなくなりました。更新すると続けられます。" },
+  "updateRequiredSteps": {
+    "message": "Chrome は通常、数時間以内に拡張機能を自動で更新します。すぐに更新するには、<code>chrome://extensions</code> を開き、<b>デベロッパー モード</b> をオンにして <b>更新</b> をクリックしてください。"
+  },
+  "updateRequiredMore": { "message": "何が起きたのか" },
+  "updateRequiredShort": { "message": "翻訳を再開するには Interpretab の更新が必要です。" },
+
   "optTitle": { "message": "Interpretab — オプション" },
   "optHeading": { "message": "Interpretab のオプション" },
 
@@ -214,6 +221,12 @@
   },
   "optDeviceSavedMissing": { "message": "保存済みのデバイス — いまは接続されていません" },
 
+  "optConfigHeading": { "message": "モデルの更新確認" },
+  "optConfigLabel": { "message": "新しいモデル名と料金を確認する" },
+  "optConfigNote": {
+    "message": "Google が Gemini Live のモデルを終了するまでの予告期間は数週間で、Chrome ウェブストアの審査期間より短いことがあります。そのため Interpretab は 1 日に数回、自身のサイトにある小さな<a1>設定ファイル</a1>を読みます。中身はモデル名、料金、このバージョンがまだ動くかどうかの 3 つだけです。リクエストには何も含めません。API キーも、利用状況も、あなたに関する情報も送りません。オフにすると Interpretab の通信先は Google だけになり、モデル一覧はビルド時のまま固定されます。更新のお知らせも届かなくなります。"
+  },
+
   "optGlossaryHeading": { "message": "用語集" },
   "optGlossaryNote": {
     "message": "読み方や表記を決めておきたい名前や用語 — 製品名、人名、専門用語など — の一覧です。用語ごとに <code>source,pronunciation,transcript</code> の CSV 形式で書きます。2 列目は用語の読み方、3 列目（省略可能）には字幕での表記を書きます。どのモードで使えるか、どう書くかは<a1>ユーザーガイド</a1>を参照してください。"
@@ -244,6 +257,9 @@
   },
   "errQuota": {
     "message": "このキーは、いま Google が許可している利用上限を使い切りました。しばらく待ってからもう一度 Start を押すか、支払い方法を登録して有料プランに変更してください。"
+  },
+  "errModelGone": {
+    "message": "このバージョンが使う翻訳モデルは Google によって終了され、代替のモデルにも接続できませんでした。Interpretab を更新してからもう一度お試しください。"
   },
   "errKeyForbidden": {
     "message": "このキーでは Gemini API を使えません。Gemini API が利用可能なキーかを確認するか、aistudio.google.com/apikey で新しいキーを作ってください。"

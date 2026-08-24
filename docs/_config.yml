@@ -4,6 +4,11 @@
 # why those images are in `assets/` and not in the `store/` and `icons/`
 # directories the pages used to point at.
 #
+# One file here is not a page: `config.json` has no front matter, so Jekyll
+# copies it to the site root verbatim, and that is the copy every installed
+# extension reads. See "The two facts that expire" in the README before editing
+# it — a mistake in that file reaches every user within six hours.
+#
 # Until this file existed, Pages ran with its own defaults, which meant the theme
 # below applied anyway. It is named here so that `_layouts/default.html` is
 # understood as an override of a known layout rather than the only one.

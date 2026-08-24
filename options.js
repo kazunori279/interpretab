@@ -45,6 +45,7 @@ async function init() {
   settings = await loadSettings();
   el("apiKey").value = settings.apiKey;
   el("apiTier").value = settings.apiTier;
+  el("configUpdates").checked = settings.configUpdates !== false;
   loadVoices();
   loadCaptionSize();
   bind();
@@ -95,6 +96,12 @@ function bind() {
   // not be "press Stop first".
   el("apiTier").addEventListener("change", () => saveSettings({ apiTier: el("apiTier").value }));
   el("grantMic").addEventListener("click", grantMic);
+  // Unticking this is also what deletes the cached copy — the service worker
+  // does it on the next read, so the switch means "and forget what you were
+  // told" rather than only "stop asking".
+  el("configUpdates").addEventListener("change", () =>
+    saveSettings({ configUpdates: el("configUpdates").checked })
+  );
   el("voice").addEventListener("change", () => saveSettings({ voice: el("voice").value }));
   // `input`, not `change`: the overlay follows the store, so writing on every
   // drag step is what makes the size adjustable against the live video.

@@ -93,6 +93,15 @@ let myTabUrl = "";
  * confirm is unmet is a banner that will not go away when it is.
  */
 let micPermission = null;
+/**
+ * True once the config file says this build has been withdrawn.
+ *
+ * It only ever goes true. The check runs once, when the panel opens, and a
+ * corrected config reaches the user through the same route — the panel is
+ * rebuilt on every tab switch, so "reopen it" is not a thing anyone has to be
+ * told to do.
+ */
+let blocked = false;
 
 init();
 
@@ -111,6 +120,39 @@ async function init() {
   const state = await send({ type: "getState" });
   running = !!state?.running;
   restore(state);
+  render();
+  // Last, and not awaited by anything above it: this is the one thing on the
+  // page that reaches the network, and the panel must be usable before it
+  // answers — or instead of it, on a machine that is offline. Opening the panel
+  // is also what keeps the cache warm, so the check Start makes is a read.
+  checkForUpdate();
+}
+
+/**
+ * Ask whether this build has been withdrawn, and say so if it has.
+ *
+ * The verdict comes from the config file — see `lib/remote-config.js` — and the
+ * file supplies nothing but the verdict and a link. Every word below is from
+ * `_locales`, in all ten languages, which is the difference between a
+ * configuration channel and a way to put arbitrary text in front of every user
+ * of this extension.
+ */
+async function checkForUpdate() {
+  const res = await send({ type: "config" }).catch(() => null);
+  if (!res?.blocked) return;
+  blocked = true;
+  const banner = el("updateRequired");
+  setMessage(el("updateSteps"), "updateRequiredSteps");
+  const link = el("updateLink");
+  const learnMore = res.config?.learnMoreUrl || "";
+  // No destination, no link. `remote-config.js` only ever passes one through
+  // that starts with this project's own site, so the fallback here is silence
+  // rather than a guess.
+  // The paragraph, not the anchor: an empty `<p>` left behind is a gap under the
+  // last line that reads as a rendering fault.
+  link.parentElement.hidden = !learnMore;
+  if (learnMore) link.href = learnMore;
+  banner.hidden = false;
   render();
 }
 
@@ -459,9 +501,12 @@ function render() {
   el("toggle").classList.toggle("running", running);
   // Stop is the exception to the paragraph above: it is the whole reason the
   // icon opens this panel on a tab that was never translating.
+  // A withdrawn build cannot start a run, and Stop on someone else's tab is
+  // still the one thing worth leaving lit — a run already going is not made
+  // safer by taking away the button that ends it.
   el("toggle").disabled = elsewhere
     ? false
-    : (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
+    : blocked || (!settings.tabEnabled && !settings.micEnabled) || !hasKey;
   if (!running) setStatus("disconnected", t("statusIdle"));
 }
 

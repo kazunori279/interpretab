@@ -53,13 +53,25 @@ export class Chrome {
   #child;
   #profile;
 
-  static async launch({ headed = false } = {}) {
+  /**
+   * @param {object} [opts]
+   * @param {boolean} [opts.headed]
+   * @param {string} [opts.lang]  a UI language to run Chrome in, e.g. `ja`
+   */
+  static async launch({ headed = false, lang = "" } = {}) {
     const chrome = new Chrome();
     chrome.#profile = fs.mkdtempSync(path.join(os.tmpdir(), "interpretab-ui-"));
     chrome.#child = spawn(
       CHROME_PATH,
       [
         `--user-data-dir=${chrome.#profile}`,
+        // Chrome on macOS ignores `--lang` — verified: with it alone the page
+        // still reports en-US — and asks Cocoa instead, so the language goes in
+        // as a defaults override on the process. The switch is passed too, for
+        // a run on Linux. The `(ja)` half is a single-dash argument, which
+        // Chrome's parser reads as a URL, so the blank start page has to go:
+        // two of those and it exits with "Multiple targets are not supported".
+        ...(lang ? [`--lang=${lang}`, "-AppleLanguages", `(${lang})`] : []),
         // 0 asks for a free port, which Chrome then writes into the profile.
         // A fixed one would collide with whatever the last run left behind.
         "--remote-debugging-port=0",
@@ -69,7 +81,7 @@ export class Chrome {
         // of tabs and dialogs in a test that counts tabs.
         "--disable-sync",
         ...(headed ? [] : ["--headless=new"]),
-        "about:blank",
+        ...(lang ? [] : ["about:blank"]),
       ],
       { stdio: "ignore" }
     );

@@ -96,6 +96,17 @@
   },
   "panelCaptionsStopped": { "message": "As legendas pararam de chegar a esta página." },
 
+  "updateRequiredTitle": {
+    "message": "Esta versão do Interpretab não consegue mais traduzir. Atualize para continuar."
+  },
+  "updateRequiredSteps": {
+    "message": "O Chrome costuma atualizar as extensões sozinho em algumas horas. Para fazer agora: abra <code>chrome://extensions</code>, ative o <b>Modo do desenvolvedor</b> e clique em <b>Atualizar</b>."
+  },
+  "updateRequiredMore": { "message": "O que aconteceu?" },
+  "updateRequiredShort": {
+    "message": "O Interpretab precisa ser atualizado antes de voltar a traduzir."
+  },
+
   "optTitle": { "message": "Interpretab — Opções" },
   "optHeading": { "message": "Opções do Interpretab" },
 
@@ -222,6 +233,12 @@
   },
   "optDeviceSavedMissing": { "message": "Dispositivo salvo — não conectado no momento" },
 
+  "optConfigHeading": { "message": "Atualizações de modelos" },
+  "optConfigLabel": { "message": "Verificar novos nomes de modelos e preços" },
+  "optConfigNote": {
+    "message": "O Google encerra modelos do Gemini Live avisando com poucas semanas de antecedência, menos do que leva uma revisão na Chrome Web Store. Por isso o Interpretab lê algumas vezes por dia um pequeno <a1>arquivo de configuração</a1> no próprio site: nomes de modelos, quanto custam e se esta versão ainda funciona. Nada vai junto na requisição: nem a chave, nem o uso, nada sobre você. Desligue e o Interpretab não fala com ninguém além do Google, mantendo a lista de modelos com que foi publicado, mesmo que isso signifique não receber o aviso de atualizar."
+  },
+
   "optGlossaryHeading": { "message": "Glossário" },
   "optGlossaryNote": {
     "message": "Nomes e termos que você quer ver ditos e escritos de um jeito específico — produtos, pessoas, jargão. Um por linha, no formato <code>source,pronunciation,transcript</code>: a segunda coluna é como deve ser dito, e a terceira, opcional, é como deve aparecer nas legendas. Em qual modo ele vale e como escrever um está no <a1>guia do usuário</a1>."
@@ -252,6 +269,9 @@
   },
   "errQuota": {
     "message": "Essa chave já usou o que o Google permite por enquanto. Espere o limite voltar e aperte Start de novo, ou adicione uma forma de pagamento para sair do plano gratuito — é o gratuito que acaba primeiro."
+  },
+  "errModelGone": {
+    "message": "O Google encerrou o modelo de tradução que esta versão usa, e nenhuma alternativa funcionou. Atualize o Interpretab e tente de novo."
   },
   "errKeyForbidden": {
     "message": "Essa chave não pode usar a API do Gemini. Se você restringiu a chave, confira se o Gemini ainda está na lista dela — ou crie uma nova em aistudio.google.com/apikey."
