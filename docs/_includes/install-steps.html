@@ -34,6 +34,16 @@
 {%- endcomment -%}
 {%- assign copy = site.data.install[page.lang] | default: site.data.install.en -%}
 {%- assign steps = copy.steps -%}
+{%- comment -%}
+  The words on the buttons in the drawings. They are not ours: they are what AI
+  Studio itself puts on those buttons in each language, read out of its own
+  bundles by `tools/aistudio-strings.mjs`. A reader following the guide in
+  Korean is looking at a Korean page, and a picture captioned in English sends
+  them hunting for a button that is not there. Hindi and Arabic are the two
+  exceptions, and they are English here because AI Studio has no Hindi or
+  Arabic to serve — those readers really do see English buttons.
+{%- endcomment -%}
+{%- assign ui = copy.ui | default: site.data.install.en.ui -%}
 {%- assign figures = "store,studio,create,keyname,project,copy,key,pin,toolbar,start" | split: "," -%}
 <div class="install">
   {%- for step in steps %}
@@ -123,14 +133,12 @@
               from it, and the list of keys below — which on the account this
               guide is written for is empty. The button is in the top right
               corner on the real page, not down the middle, and a reader
-              scanning the middle of the page does not find it. The button keeps
-              its English label, like every other picture in the guide — the
-              sentence under it is the translated half.
+              scanning the middle of the page does not find it.
             {%- endcomment -%}
             <div class="install-page">
               <div class="install-pagehead">
                 <span class="install-line install-line--head"></span>
-                <span class="install-cta">Create API key
+                <span class="install-cta">{{ ui.createApiKey }}
                   <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
                     <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -153,7 +161,7 @@
               <span class="install-line install-line--head"></span>
               <span class="install-field install-field--marked">Interpretab<span class="install-caret"></span></span>
               <span class="install-select install-select--still">No Cloud Projects Available</span>
-              <span class="install-cta install-cta--off">Create key</span>
+              <span class="install-cta install-cta--off">{{ ui.createKey }}</span>
             </div>
             {%- endif %}
             {%- if figure == "project" %}
@@ -166,7 +174,7 @@
             <div class="install-dialog">
               <span class="install-line install-line--head"></span>
               <span class="install-field">Interpretab<span class="install-caret"></span></span>
-              <span class="install-cta">Create project
+              <span class="install-cta">{{ ui.createProject }}
                 <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -206,7 +214,7 @@
             <div class="install-page">
               <span class="install-line install-line--head"></span>
               <span class="install-keyline">AIzaSy••••••••••••••••••••••••••••••</span>
-              <span class="install-cta">Copy
+              <span class="install-cta">{{ ui.copyKey }}
                 <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none">
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>

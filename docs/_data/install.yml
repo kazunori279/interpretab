@@ -42,6 +42,11 @@
 
 en:
   next: Next
+  ui:
+    createApiKey: Create API key
+    createKey: Create key
+    createProject: Create project
+    copyKey: Copy key
   steps:
     - tab: Add to Chrome
       body: >-
@@ -63,19 +68,19 @@ en:
         <b>No Cloud Projects Available</b>.
     - tab: Make a project
       body: >-
-        Open that list and pick <b>Create new project</b>. The name it fills in for you is in your
+        Open that list and pick <b>Create project</b>. The name it fills in for you is in your
         own language, and the field takes Latin letters only — clear it, type <b>Interpretab</b>,
         and press <b>Create project</b>.
     - tab: Copy the key
       body: >-
         The key dialog comes back with the new project in it. Press <b>Create key</b> and the key
-        appears — press <b>Copy</b>. It stays on the API keys page, so you can come back for it
+        appears — press <b>Copy key</b>. It stays on the API keys page, so you can come back for it
         later.
     - tab: Paste it in
       body: >-
         Interpretab's <b>Options</b> page opens by itself the first time, and the <b>Options</b>
-        button at the bottom of the side panel opens it again. Paste the key into <b>Gemini API
-        key</b>. It is kept in this browser and goes to nobody but Google.
+        button at the bottom of the side panel opens it again. Paste the key into
+        <b>Gemini API key</b>. It is kept in this browser and goes to nobody but Google.
     - tab: Pin the icon
       body: >-
         Open the page you want translated — a video with talking in it on
@@ -97,21 +102,26 @@ en:
 # space a reader sees.
 ja:
   next: 次へ
+  ui:
+    createApiKey: API キーを作成
+    createKey: キーを作成
+    createProject: プロジェクトを作成
+    copyKey: 鍵をコピー
   steps:
     - tab: Chrome に追加
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome ウェブストアの Interpretab</a> を開き、<b>Chrome に追加</b>を押す。
     - tab: Google AI Studio を開く
       body: 翻訳するのは Google の Gemini で、Gemini には自分専用の API キーが必要です。取得は無料です。<a href="https://aistudio.google.com/apikey">Google AI Studio</a> を開き、Google アカウントでログインします。
     - tab: キーを作成
-      body: このページには持っているキーが並びます。新しいアカウントならまだ一つもありません。<b>Create API key</b> を押します。
+      body: このページには持っているキーが並びます。新しいアカウントならまだ一つもありません。<b>API キーを作成</b> を押します。
     - tab: キーに名前を付ける
       body: キーには名前と、所属する Google Cloud のプロジェクトが必要です。名前には <b>Interpretab</b> と入力します。その下のプロジェクト欄は、API を使ったことのないアカウントでは <b>No Cloud Projects Available</b> と出て、選べるものがありません。
     - tab: プロジェクトを作る
-      body: その一覧を開き、<b>Create new project</b> を選びます。あらかじめ入っている名前は日本語で、この欄は英字しか受け付けません。消して <b>Interpretab</b> と入力し、<b>Create project</b> を押します。
+      body: その一覧を開き、<b>プロジェクトを作成</b> を選びます。あらかじめ入っている名前は日本語で、この欄は英字しか受け付けません。消して <b>Interpretab</b> と入力し、<b>プロジェクトを作成</b> を押します。
     - tab: キーをコピー
-      body: キーのダイアログに戻ると、作ったプロジェクトが入っています。<b>Create key</b> を押すとキーが表示されるので、<b>Copy</b> を押します。キーは API keys のページに残るので、あとから取り直せます。
+      body: キーのダイアログに戻ると、作ったプロジェクトが入っています。<b>キーを作成</b> を押すとキーが表示されるので、<b>鍵をコピー</b> を押します。キーは API keys のページに残るので、あとから取り直せます。
     - tab: キーを貼り付け
-      body: 拡張機能の<b>オプション</b>ページは初回に自動で開きます。サイドパネル下部の <b>Options</b> ボタンからも開けます。<b>Gemini API key</b> にキーを貼り付けてください。キーはこのブラウザに保存され、Google 以外には送られません。
+      body: 拡張機能の<b>オプション</b>ページは初回に自動で開きます。サイドパネル下部の <b>オプション</b> ボタンからも開けます。<b>Gemini API キー</b> にキーを貼り付けてください。キーはこのブラウザに保存され、Google 以外には送られません。
     - tab: アイコンを固定
       body: 翻訳したいページを開きます。最初の確認には <a href="https://www.youtube.com/">youtube.com</a> の話し声が入った動画が手軽です。入れたばかりの拡張機能はツールバーにアイコンが出ていません。Chrome の<b>パズルピースのボタン</b>を押し、一覧の <b>Interpretab</b> の横にあるピンを押してください。
     - tab: アイコンをクリック
@@ -121,21 +131,26 @@ ja:
 
 zh:
   next: 下一步
+  ui:
+    createApiKey: 创建 API 密钥
+    createKey: 创建密钥
+    createProject: 创建项目
+    copyKey: 复制密钥
   steps:
     - tab: 添加至 Chrome
       body: 打开 <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 应用商店中的 Interpretab</a>，点击<b>添加至 Chrome</b>。
     - tab: 打开 Google AI Studio
       body: 翻译由 Google 的 Gemini 完成，而 Gemini 需要一个属于你自己的 API 密钥。申请是免费的：打开 <a href="https://aistudio.google.com/apikey">Google AI Studio</a>，用 Google 账号登录。
     - tab: 创建密钥
-      body: 这个页面会列出你已有的密钥，新账号还是空的。点击 <b>Create API key</b>。
+      body: 这个页面会列出你已有的密钥，新账号还是空的。点击 <b>创建 API 密钥</b>。
     - tab: 给密钥命名
       body: 密钥需要一个名字，还需要一个所属的 Google Cloud 项目。名字填 <b>Interpretab</b>。下面的项目一栏，在从没用过 API 的账号上会显示 <b>No Cloud Projects Available</b>，没有可选的项目。
     - tab: 新建项目
-      body: 打开那个列表，选 <b>Create new project</b>。里面预填的名字是中文的，而这个输入框只收拉丁字母——清空它，输入 <b>Interpretab</b>，然后点 <b>Create project</b>。
+      body: 打开那个列表，选 <b>创建项目</b>。里面预填的名字是中文的，而这个输入框只收拉丁字母——清空它，输入 <b>Interpretab</b>，然后点 <b>创建项目</b>。
     - tab: 复制密钥
-      body: 回到密钥的对话框，新建的项目已经在里面了。点 <b>Create key</b>，密钥就会出现，再点 <b>Copy</b>。密钥会留在 API keys 页面上，之后还能回去再拿。
+      body: 回到密钥的对话框，新建的项目已经在里面了。点 <b>创建密钥</b>，密钥就会出现，再点 <b>复制密钥</b>。密钥会留在 API keys 页面上，之后还能回去再拿。
     - tab: 粘贴密钥
-      body: 扩展的<b>选项</b>页面第一次会自己打开，侧边栏底部的 <b>Options</b> 按钮也能再把它打开。把密钥粘贴到 <b>Gemini API key</b> 里。它保存在这个浏览器中，除了 Google 不会发给任何人。
+      body: 扩展的<b>选项</b>页面第一次会自己打开，侧边栏底部的 <b>选项</b> 按钮也能再把它打开。把密钥粘贴到 <b>Gemini API 密钥</b> 里。它保存在这个浏览器中，除了 Google 不会发给任何人。
     - tab: 固定图标
       body: 打开要翻译的页面。第一次试的话，<a href="https://www.youtube.com/">youtube.com</a> 上一段有人说话的视频最方便。刚装好的扩展在工具栏上还没有图标：点 Chrome 的<b>拼图按钮</b>，在列表里找到 <b>Interpretab</b>，按一下旁边的图钉。
     - tab: 点击图标
@@ -145,6 +160,11 @@ zh:
 
 es:
   next: Siguiente
+  ui:
+    createApiKey: Crear clave de API
+    createKey: Crear clave
+    createProject: Crear proyecto
+    copyKey: Copiar clave
   steps:
     - tab: Añadir a Chrome
       body: >-
@@ -158,7 +178,7 @@ es:
     - tab: Crea la clave
       body: >-
         La página lista las claves que tienes, que en una cuenta nueva son ninguna. Pulsa
-        <b>Create API key</b>.
+        <b>Crear clave de API</b>.
     - tab: Nombra la clave
       body: >-
         Una clave necesita un nombre y un proyecto de Google Cloud al que pertenecer. Escribe
@@ -166,19 +186,19 @@ es:
         que elegir: <b>No Cloud Projects Available</b>.
     - tab: Crea el proyecto
       body: >-
-        Abre esa lista y elige <b>Create new project</b>. El nombre que viene puesto está en tu
+        Abre esa lista y elige <b>Crear proyecto</b>. El nombre que viene puesto está en tu
         idioma y el campo solo acepta letras latinas: bórralo, escribe <b>Interpretab</b> y pulsa
-        <b>Create project</b>.
+        <b>Crear proyecto</b>.
     - tab: Copia la clave
       body: >-
-        Vuelves al cuadro de la clave, ya con el proyecto nuevo. Pulsa <b>Create key</b> y aparece
-        la clave: pulsa <b>Copy</b>. Se queda en la página de API keys, así que puedes volver a por
-        ella.
+        Vuelves al cuadro de la clave, ya con el proyecto nuevo. Pulsa <b>Crear clave</b> y aparece
+        la clave: pulsa <b>Copiar clave</b>. Se queda en la página de API keys, así que puedes
+        volver a por ella.
     - tab: Pégala
       body: >-
         La página de <b>Opciones</b> de la extensión se abre sola la primera vez, y el botón
-        <b>Options</b> del panel lateral la vuelve a abrir. Pega la clave en <b>Gemini API key</b>. Se guarda en
-        este navegador y no se envía a nadie más que a Google.
+        <b>Opciones</b> del panel lateral la vuelve a abrir. Pega la clave en <b>Clave de la API de
+        Gemini</b>. Se guarda en este navegador y no se envía a nadie más que a Google.
     - tab: Fija el icono
       body: >-
         Abre la página que quieras traducir — un vídeo con voz en
@@ -198,6 +218,11 @@ es:
 
 fr:
   next: Suivant
+  ui:
+    createApiKey: Créer une clé API
+    createKey: Créer une clé
+    createProject: Créer un projet
+    copyKey: Copier la clé
   steps:
     - tab: Ajouter à Chrome
       body: >-
@@ -211,7 +236,7 @@ fr:
     - tab: Créez la clé
       body: >-
         La page liste les clés que vous avez, c'est-à-dire aucune sur un compte neuf. Cliquez sur
-        <b>Create API key</b>.
+        <b>Créer une clé API</b>.
     - tab: Nommez la clé
       body: >-
         Une clé a besoin d'un nom et d'un projet Google Cloud auquel appartenir. Saisissez
@@ -219,18 +244,18 @@ fr:
         choisir : <b>No Cloud Projects Available</b>.
     - tab: Créez le projet
       body: >-
-        Ouvrez cette liste et choisissez <b>Create new project</b>. Le nom déjà inscrit est dans
+        Ouvrez cette liste et choisissez <b>Créer un projet</b>. Le nom déjà inscrit est dans
         votre langue et le champ n'accepte que les lettres latines : effacez-le, tapez
-        <b>Interpretab</b>, puis cliquez sur <b>Create project</b>.
+        <b>Interpretab</b>, puis cliquez sur <b>Créer un projet</b>.
     - tab: Copiez la clé
       body: >-
-        La boîte de dialogue revient avec le nouveau projet. Cliquez sur <b>Create key</b> : la clé
-        apparaît, cliquez sur <b>Copy</b>. Elle reste sur la page API keys, vous pouvez donc y
+        La boîte de dialogue revient avec le nouveau projet. Cliquez sur <b>Créer une clé</b> : la clé
+        apparaît, cliquez sur <b>Copier la clé</b>. Elle reste sur la page API keys, vous pouvez donc y
         revenir plus tard.
     - tab: Collez-la
       body: >-
         La page <b>Options</b> de l'extension s'ouvre d'elle-même la première fois, et le bouton
-        <b>Options</b> du panneau latéral la rouvre. Collez la clé dans <b>Gemini API key</b>. Elle
+        <b>Options</b> du panneau latéral la rouvre. Collez la clé dans <b>Clé d'API Gemini</b>. Elle
         reste dans ce navigateur et n'est envoyée à personne d'autre que Google.
     - tab: Épinglez l'icône
       body: >-
@@ -252,6 +277,11 @@ fr:
 
 de:
   next: Weiter
+  ui:
+    createApiKey: API-Schlüssel erstellen
+    createKey: Schlüssel erstellen
+    createProject: Projekt erstellen
+    copyKey: Schlüssel kopieren
   steps:
     - tab: Hinzufügen
       body: >-
@@ -264,8 +294,8 @@ de:
         öffnen und mit einem Google-Konto anmelden.
     - tab: Schlüssel erstellen
       body: >-
-        Die Seite listet Ihre Schlüssel auf — bei einem neuen Konto also keinen. Auf <b>Create API
-        key</b> klicken.
+        Die Seite listet Ihre Schlüssel auf — bei einem neuen Konto also keinen. Auf
+        <b>API-Schlüssel erstellen</b> klicken.
     - tab: Schlüssel benennen
       body: >-
         Ein Schlüssel braucht einen Namen und ein Google-Cloud-Projekt, zu dem er gehört. Als Namen
@@ -273,19 +303,20 @@ de:
         nichts zur Auswahl: <b>No Cloud Projects Available</b>.
     - tab: Projekt anlegen
       body: >-
-        Diese Liste öffnen und <b>Create new project</b> wählen. Der Name, der dort schon steht, ist
+        Diese Liste öffnen und <b>Projekt erstellen</b> wählen. Der Name, der dort schon steht, ist
         in Ihrer Sprache, und das Feld nimmt nur lateinische Buchstaben — also löschen,
-        <b>Interpretab</b> eintippen und auf <b>Create project</b> klicken.
+        <b>Interpretab</b> eintippen und auf <b>Projekt erstellen</b> klicken.
     - tab: Schlüssel kopieren
       body: >-
-        Der Dialog kommt mit dem neuen Projekt zurück. Auf <b>Create key</b> klicken, und der
-        Schlüssel erscheint — auf <b>Copy</b> klicken. Er bleibt auf der Seite API keys, Sie können
-        ihn also später wieder holen.
+        Der Dialog kommt mit dem neuen Projekt zurück. Auf <b>Schlüssel erstellen</b> klicken, und
+        der Schlüssel erscheint — auf <b>Schlüssel kopieren</b> klicken. Er bleibt auf der Seite
+        API keys, Sie können ihn also später wieder holen.
     - tab: Schlüssel einfügen
       body: >-
         Die Seite <b>Optionen</b> der Erweiterung öffnet sich beim ersten Mal von selbst, und die
-        Schaltfläche <b>Options</b> im Seitenbereich öffnet sie wieder. Den Schlüssel in <b>Gemini API key</b>
-        einfügen. Er bleibt in diesem Browser und geht an niemanden außer Google.
+        Schaltfläche <b>Optionen</b> im Seitenbereich öffnet sie wieder. Den Schlüssel in
+        <b>Gemini-API-Schlüssel</b> einfügen. Er bleibt in diesem Browser und geht an niemanden
+        außer Google.
     - tab: Symbol anheften
       body: >-
         Die zu übersetzende Seite öffnen — ein Video mit Sprache auf
@@ -306,6 +337,11 @@ de:
 
 pt:
   next: Próximo
+  ui:
+    createApiKey: Criar chave de API
+    createKey: Criar chave
+    createProject: Criar projeto
+    copyKey: Copiar chave
   steps:
     - tab: Usar no Chrome
       body: >-
@@ -318,8 +354,8 @@ pt:
         conta Google.
     - tab: Crie a chave
       body: >-
-        A página lista as chaves que você tem, que numa conta nova é nenhuma. Clique em <b>Create
-        API key</b>.
+        A página lista as chaves que você tem, que numa conta nova é nenhuma. Clique em
+        <b>Criar chave de API</b>.
     - tab: Nomeie a chave
       body: >-
         Uma chave precisa de um nome e de um projeto do Google Cloud ao qual pertencer. Digite
@@ -327,18 +363,19 @@ pt:
         escolher: <b>No Cloud Projects Available</b>.
     - tab: Crie o projeto
       body: >-
-        Abra essa lista e escolha <b>Create new project</b>. O nome que já vem preenchido está no seu
+        Abra essa lista e escolha <b>Criar projeto</b>. O nome que já vem preenchido está no seu
         idioma, e o campo só aceita letras latinas — apague, digite <b>Interpretab</b> e clique em
-        <b>Create project</b>.
+        <b>Criar projeto</b>.
     - tab: Copie a chave
       body: >-
-        A caixa da chave volta com o projeto novo. Clique em <b>Create key</b> e a chave aparece —
-        clique em <b>Copy</b>. Ela fica na página API keys, então dá para voltar e pegá-la depois.
+        A caixa da chave volta com o projeto novo. Clique em <b>Criar chave</b> e a chave aparece —
+        clique em <b>Copiar chave</b>. Ela fica na página API keys, então dá para voltar e pegá-la
+        depois.
     - tab: Cole a chave
       body: >-
-        A página de <b>Opções</b> da extensão abre sozinha na primeira vez, e o botão <b>Options</b> do
-        painel lateral abre de novo. Cole a chave em <b>Gemini API key</b>. Ela fica guardada neste
-        navegador e não vai para ninguém além do Google.
+        A página de <b>Opções</b> da extensão abre sozinha na primeira vez, e o botão <b>Opções</b>
+        do painel lateral abre de novo. Cole a chave em <b>Chave de API do Gemini</b>. Ela fica
+        guardada neste navegador e não vai para ninguém além do Google.
     - tab: Fixe o ícone
       body: >-
         Abra a página que quer traduzir — um vídeo com fala no
@@ -359,21 +396,26 @@ pt:
 
 ko:
   next: 다음
+  ui:
+    createApiKey: API 키 만들기
+    createKey: 키 만들기
+    createProject: 프로젝트 만들기
+    copyKey: 키 복사
   steps:
     - tab: Chrome에 추가
       body: <a href="https://chromewebstore.google.com/detail/interpretab/johnocemcoemdhiogfgmphjmlghgdnbm">Chrome 웹 스토어의 Interpretab</a>을 열고 <b>Chrome에 추가</b>를 누릅니다.
     - tab: Google AI Studio 열기
       body: 번역은 Google의 Gemini가 하고, Gemini에는 본인 명의의 API 키가 필요합니다. 발급은 무료입니다. <a href="https://aistudio.google.com/apikey">Google AI Studio</a>를 열고 Google 계정으로 로그인합니다.
     - tab: 키 만들기
-      body: 이 페이지에는 가지고 있는 키가 나열됩니다. 새 계정이라면 아직 하나도 없습니다. <b>Create API key</b>를 누릅니다.
+      body: 이 페이지에는 가지고 있는 키가 나열됩니다. 새 계정이라면 아직 하나도 없습니다. <b>API 키 만들기</b>를 누릅니다.
     - tab: 키 이름 짓기
       body: 키에는 이름과, 키가 속할 Google Cloud 프로젝트가 필요합니다. 이름에는 <b>Interpretab</b>을 입력합니다. 그 아래에는, API를 한 번도 쓴 적 없는 계정이라면 고를 것이 없습니다. <b>No Cloud Projects Available</b>이라고 나옵니다.
     - tab: 프로젝트 만들기
-      body: 그 목록을 열고 <b>Create new project</b>를 고릅니다. 미리 채워져 있는 이름은 사용자의 언어로 되어 있는데, 이 칸은 라틴 문자만 받습니다. 지우고 <b>Interpretab</b>을 입력한 뒤 <b>Create project</b>를 누릅니다.
+      body: 그 목록을 열고 <b>프로젝트 만들기</b>를 고릅니다. 미리 채워져 있는 이름은 사용자의 언어로 되어 있는데, 이 칸은 라틴 문자만 받습니다. 지우고 <b>Interpretab</b>을 입력한 뒤 <b>프로젝트 만들기</b>를 누릅니다.
     - tab: 키 복사
-      body: 새 프로젝트가 들어간 채로 키 대화상자가 다시 나옵니다. <b>Create key</b>를 누르면 키가 나타나니 <b>Copy</b>를 누릅니다. 키는 API keys 페이지에 남아 있어서 나중에 다시 가져올 수 있습니다.
+      body: 새 프로젝트가 들어간 채로 키 대화상자가 다시 나옵니다. <b>키 만들기</b>를 누르면 키가 나타나니 <b>키 복사</b>를 누릅니다. 키는 API keys 페이지에 남아 있어서 나중에 다시 가져올 수 있습니다.
     - tab: 키 붙여넣기
-      body: 확장 프로그램의 <b>옵션</b> 페이지는 처음에 저절로 열리고, 사이드 패널의 <b>Options</b> 버튼으로 다시 열 수 있습니다. <b>Gemini API key</b>에 키를 붙여넣습니다. 키는 이 브라우저에 저장되며 Google 외에는 어디로도 보내지 않습니다.
+      body: 확장 프로그램의 <b>옵션</b> 페이지는 처음에 저절로 열리고, 사이드 패널의 <b>옵션</b> 버튼으로 다시 열 수 있습니다. <b>Gemini API 키</b>에 키를 붙여넣습니다. 키는 이 브라우저에 저장되며 Google 외에는 어디로도 보내지 않습니다.
     - tab: 아이콘 고정
       body: 번역할 페이지를 엽니다. 처음 시험해 볼 때는 <a href="https://www.youtube.com/">youtube.com</a>에서 사람이 말하는 영상이 가장 간편합니다. 새로 설치한 확장 프로그램은 아직 툴바에 아이콘이 없습니다. Chrome의 <b>퍼즐 조각 버튼</b>을 누르고 목록에서 <b>Interpretab</b>을 찾아 옆에 있는 핀을 누릅니다.
     - tab: 아이콘 클릭
@@ -383,6 +425,11 @@ ko:
 
 hi:
   next: आगे
+  ui:
+    createApiKey: Create API key
+    createKey: Create key
+    createProject: Create project
+    copyKey: Copy key
   steps:
     - tab: Chrome में जोड़ें
       body: >-
@@ -402,16 +449,16 @@ hi:
         जिस खाते ने API कभी इस्तेमाल नहीं की उसके पास चुनने को कुछ नहीं होता: <b>No Cloud Projects Available</b>।
     - tab: प्रोजेक्ट बनाएँ
       body: >-
-        उस सूची को खोलें और <b>Create new project</b> चुनें। जो नाम पहले से भरा आता है वह आपकी भाषा में होता है, और यह
+        उस सूची को खोलें और <b>Create project</b> चुनें। जो नाम पहले से भरा आता है वह आपकी भाषा में होता है, और यह
         खाना सिर्फ़ लैटिन अक्षर लेता है — उसे मिटाएँ, <b>Interpretab</b> टाइप करें और <b>Create project</b> दबाएँ।
     - tab: कुंजी कॉपी करें
       body: >-
-        कुंजी वाला डायलॉग नए प्रोजेक्ट के साथ वापस आ जाता है। <b>Create key</b> दबाएँ और कुंजी दिख जाती है — <b>Copy</b>
+        कुंजी वाला डायलॉग नए प्रोजेक्ट के साथ वापस आ जाता है। <b>Create key</b> दबाएँ और कुंजी दिख जाती है — <b>Copy key</b>
         दबाएँ। वह API keys पेज पर बनी रहती है, इसलिए बाद में दोबारा ली जा सकती है।
     - tab: कुंजी पेस्ट करें
       body: >-
-        एक्सटेंशन का <b>विकल्प</b> पेज पहली बार अपने आप खुलता है, और साइड पैनल का <b>Options</b> बटन उसे दोबारा खोल देता है।
-        कुंजी को <b>Gemini API key</b> में पेस्ट करें। वह इसी ब्राउज़र में रहती है और Google के अलावा किसी को नहीं
+        एक्सटेंशन का <b>विकल्प</b> पेज पहली बार अपने आप खुलता है, और साइड पैनल का <b>विकल्प</b> बटन उसे दोबारा खोल देता है।
+        कुंजी को <b>Gemini API कुंजी</b> में पेस्ट करें। वह इसी ब्राउज़र में रहती है और Google के अलावा किसी को नहीं
         भेजी जाती।
     - tab: आइकॉन पिन करें
       body: >-
@@ -429,6 +476,11 @@ hi:
 
 ar:
   next: التالي
+  ui:
+    createApiKey: Create API key
+    createKey: Create key
+    createProject: Create project
+    copyKey: Copy key
   steps:
     - tab: الإضافة إلى Chrome
       body: >-
@@ -448,16 +500,16 @@ ar:
         Available</b>.
     - tab: أنشئ المشروع
       body: >-
-        افتح تلك القائمة واختر <b>Create new project</b>. الاسم المكتوب سلفًا يكون بلغتك، والحقل لا
+        افتح تلك القائمة واختر <b>Create project</b>. الاسم المكتوب سلفًا يكون بلغتك، والحقل لا
         يقبل غير الحروف اللاتينية — امسحه واكتب <b>Interpretab</b> ثم اضغط <b>Create project</b>.
     - tab: انسخ المفتاح
       body: >-
         يعود مربّع المفتاح ومعه المشروع الجديد. اضغط <b>Create key</b> فيظهر المفتاح — اضغط
-        <b>Copy</b>. يبقى المفتاح في صفحة API keys، فيمكنك العودة إليه لاحقًا.
+        <b>Copy key</b>. يبقى المفتاح في صفحة API keys، فيمكنك العودة إليه لاحقًا.
     - tab: الصق المفتاح
       body: >-
-        تُفتح صفحة <b>الخيارات</b> في الإضافة من تلقاء نفسها في المرة الأولى، ويعيد فتحها زر <b>Options</b>
-        في اللوحة الجانبية. الصق المفتاح في <b>Gemini API key</b>. يبقى في هذا المتصفح ولا يُرسَل إلى
+        تُفتح صفحة <b>الخيارات</b> في الإضافة من تلقاء نفسها في المرة الأولى، ويعيد فتحها زر <b>الخيارات</b>
+        في اللوحة الجانبية. الصق المفتاح في <b>مفتاح Gemini API</b>. يبقى في هذا المتصفح ولا يُرسَل إلى
         أحد غير Google.
     - tab: ثبِّت الأيقونة
       body: >-

@@ -864,6 +864,14 @@ test("the install slideshow has its pictures, its steps and its ten translations
   const english = languages[translated.indexOf("en")];
   const count = [...english.matchAll(/^ {4}- tab: \S/gm)].length;
   assert.ok(count >= 4, `install.yml: English is down to ${count} steps`);
+
+  // Which button labels the drawings need is not a list kept in two places: it
+  // is whatever the include asks `ui` for. They are AI Studio's own words, kept
+  // honest by `tools/aistudio-strings.mjs`; all this can check is that every
+  // language has one, because a missing key draws a button with nothing on it.
+  const drawn = [...new Set([...include.matchAll(/\{\{ ui\.(\w+) \}\}/g)].map(([, key]) => key))];
+  assert.ok(drawn.length >= 4, "install-steps.html has gone back to English labels in the drawings");
+
   for (const [i, block] of languages.entries()) {
     const steps = [...block.matchAll(/^ {4}- tab: \S/gm)].length;
     const bodies = [...block.matchAll(/^ {6}body: \S/gm)].length;
@@ -872,6 +880,10 @@ test("the install slideshow has its pictures, its steps and its ten translations
     // The Next button falls back to English rather than rendering blank, which
     // is the failure that would never be noticed on the one page anybody reads.
     assert.match(block, /^ {2}next: \S/m, `install.yml: ${translated[i]} has no word for Next`);
+    for (const key of drawn) {
+      const has = new RegExp(`^ {2}ui:\\n(?: {4}\\w+: .*\\n)* {4}${key}: \\S`, "m");
+      assert.match(block, has, `install.yml: ${translated[i]} has no ${key} label for the drawings`);
+    }
   }
   assert.match(
     include,
