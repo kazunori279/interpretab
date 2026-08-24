@@ -55,6 +55,7 @@
   "panelMeetStart": { "message": "اضغط <b>Start</b> بالأسفل. لا يصل الميكروفون المترجم إلى Meet إلا مع بدء التشغيل، فلا جديد في قائمته قبل ذلك." },
   "panelMeetPick": { "message": "في Meet افتح <b>الإعدادات ← الصوت</b> واختر <b>Interpretab (translated)</b> ميكروفونًا. وأثناء وجودك هناك أوقِف <b>Studio Sound</b>. ومع سمّاعة بلوتوث تأكّد أن Meet يشغّل الصوت عليها أيضًا." },
   "panelMeetTalk": { "message": "تكلّم. يسمع الطرف الآخر الترجمة بعد نحو ثلاث ثوانٍ، وصوتك أنت ممزوج تحته بهدوء، فتسمعك المكالمة إلى جانب صوت الترجمة." },
+  "panelMeetNext": { "message": "التالي" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

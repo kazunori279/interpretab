@@ -55,6 +55,7 @@
   "panelMeetStart": { "message": "Pulsa <b>Start</b> aquí abajo. El micrófono traducido se le entrega a Meet al arrancar, así que antes de eso no está en su lista." },
   "panelMeetPick": { "message": "En Meet, abre <b>Configuración → Audio</b> y elige <b>Interpretab (translated)</b> como micrófono. Aprovecha para desactivar <b>Studio Sound</b>. Con auriculares Bluetooth, comprueba que Meet también suena por ellos." },
   "panelMeetTalk": { "message": "Habla. El otro lado oye la traducción unos tres segundos después, con tu propia voz mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete." },
+  "panelMeetNext": { "message": "Siguiente" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

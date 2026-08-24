@@ -412,7 +412,13 @@ test("a panel that does not own the run may stop it and nothing else", () => {
   const list = panel.match(/const RUN_CONTROLS = \[([\s\S]*?)\];/);
   assert.ok(list, "RUN_CONTROLS is gone");
   const listed = new Set([...list[1].matchAll(/"([\w-]+)"/g)].map((m) => m[1]));
-  const controls = [...html.matchAll(/<(?:input|select)[^>]*\bid="([\w-]+)"/g)].map((m) => m[1]);
+  // The Meet card's radios are the exception, and they are marked as one: they
+  // pick which drawing is showing, in CSS, and there is no setting behind them.
+  // Greying them out because the run belongs to another tab would take the
+  // instructions away at the one moment somebody is reading them.
+  const controls = [...html.matchAll(/<(?:input|select)[^>]*\bid="([\w-]+)"/g)]
+    .filter(([tag]) => !tag.includes("meetcard-pick"))
+    .map((m) => m[1]);
   assert.ok(controls.length > 5, "the markup scan found suspiciously few controls");
   assert.deepEqual(
     controls.filter((id) => !listed.has(id)),
@@ -1131,8 +1137,10 @@ test("a class that sets display does not un-hide an element the panel hides", ()
   const html = fs.readFileSync(path.join(ROOT, "sidepanel.html"), "utf8");
   const css = fs.readFileSync(path.join(ROOT, "sidepanel.css"), "utf8");
 
+  // The attribute itself, and not `aria-hidden`: a drawing hidden from a screen
+  // reader is on screen, and its classes are supposed to give it a display.
   const hiddenClasses = new Set();
-  for (const [tag] of html.matchAll(/<[a-z]+\b[^>]*\bhidden\b[^>]*>/g)) {
+  for (const [tag] of html.matchAll(/<[a-z]+\b[^>]*\shidden(?=[\s>])[^>]*>/g)) {
     const classes = /class="([^"]*)"/.exec(tag);
     for (const name of classes?.[1].split(/\s+/) ?? []) if (name) hiddenClasses.add(name);
   }
@@ -1146,11 +1154,14 @@ test("a class that sets display does not un-hide an element the panel hides", ()
     const display = /display:\s*([a-z-]+)/.exec(body);
     if (!display || display[1] === "none" || selector.includes("[hidden]")) continue;
     for (const name of hiddenClasses) {
-      if (!new RegExp(`\\.${name}\\b`).test(selector)) continue;
+      // `\b` would let `.meetcard-bar` answer for `.meetcard`, which is another
+      // class on another element: a hyphen ends a word but does not end a name.
+      const worn = new RegExp(`\\.${name}(?![\\w-])`);
+      if (!worn.test(selector)) continue;
       const undone = rules.some(
         (rule) =>
           rule.selector.includes("[hidden]") &&
-          new RegExp(`\\.${name}\\b`).test(rule.selector) &&
+          worn.test(rule.selector) &&
           /display:\s*none/.test(rule.body)
       );
       assert.ok(undone, `\`${selector}\` gives .${name} a display but never [hidden] one back`);

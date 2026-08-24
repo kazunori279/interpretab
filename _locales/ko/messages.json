@@ -55,6 +55,7 @@
   "panelMeetStart": { "message": "아래 <b>Start</b>를 누르세요. 번역 마이크는 실행이 시작될 때 Meet에 넘어가므로, 그전에는 목록에 없습니다." },
   "panelMeetPick": { "message": "Meet에서 <b>설정 → 오디오</b>를 열고 마이크로 <b>Interpretab (translated)</b>를 고르세요. 온 김에 <b>Studio Sound</b>는 꺼 두세요. 블루투스 헤드폰이라면 Meet도 그쪽으로 소리를 내보내는지 확인하세요." },
   "panelMeetTalk": { "message": "말해 보세요. 3초쯤 뒤에 상대에게 번역이 들립니다. 당신 목소리도 아래에 작게 섞여 있어서, 통화에서는 통역과 함께 당신 목소리도 들립니다." },
+  "panelMeetNext": { "message": "다음" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

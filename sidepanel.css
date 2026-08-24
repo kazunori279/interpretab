@@ -106,19 +106,6 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 .grow { flex: 1; }
 .small, .note { color: var(--muted); }
 .note { margin: 0; line-height: 1.45; font-size: 12px; }
-/* The Meet steps, opened by the link at the end of the note above them. They
-   are numbered because they are done in order and the third is the one people
-   miss, and the indent is only as wide as the digits: a list marker sitting out
-   in the margin of a 360px panel costs a word off every line.
-   The card sits closer to the note that opened it than to the note after it,
-   which is the section's own `gap` plus this: without the difference, step four
-   and the headphones note below read as one list. */
-.note.steps {
-  margin: 0 0 0.25rem;
-  padding-inline-start: 1.4rem;
-}
-.note.steps li + li { margin-top: 0.3rem; }
-
 /* Subtitles failing is not an error — the translation is still running and the
    transcript is still here — so it is not given the red banner. */
 .note.warn { color: #b06000; }
@@ -142,6 +129,168 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   stroke-linejoin: round;
 }
 .note.usage b { color: #202124; }
+
+/* The Meet card: the guide's "In the call" slideshow, redrawn for a column a
+   quarter the width. One pane showing at a time, chosen by a hidden radio —
+   the same mechanism `docs/_includes/meet-steps.html` uses, and the reason
+   there is no script behind any of this. The palette is the guide's rather
+   than the panel's, because the drawings are of Chrome and of Meet and those
+   are the colours they are. */
+.meetcard { display: flex; flex-direction: column; gap: 0.45rem; }
+.meetcard[hidden] { display: none; }
+/* Hidden, not removed: `display: none` would take the radios out of the focus
+   order, and the arrow keys walking the steps is the whole of the keyboard
+   support this needs. */
+.meetcard-pick {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0; clip-path: inset(50%); overflow: hidden;
+}
+.meetcard-tabs { display: flex; justify-content: center; gap: 0.35rem; }
+.meetcard-tab {
+  display: grid; place-items: center; cursor: pointer;
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: var(--agent-bubble); color: var(--muted);
+  font-size: 11px; font-weight: 600; line-height: 1;
+  -webkit-user-select: none; user-select: none;
+}
+.meetcard-tab:hover { background: #e2e5e9; }
+.meetcard-pane { display: none; }
+#meetcard-1:checked ~ .meetcard-tabs .meetcard-tab--1,
+#meetcard-2:checked ~ .meetcard-tabs .meetcard-tab--2,
+#meetcard-3:checked ~ .meetcard-tabs .meetcard-tab--3,
+#meetcard-4:checked ~ .meetcard-tabs .meetcard-tab--4 {
+  background: var(--primary); color: #fff;
+}
+#meetcard-1:checked ~ .meetcard-panes .meetcard-pane--1,
+#meetcard-2:checked ~ .meetcard-panes .meetcard-pane--2,
+#meetcard-3:checked ~ .meetcard-panes .meetcard-pane--3,
+#meetcard-4:checked ~ .meetcard-panes .meetcard-pane--4 {
+  display: flex;
+}
+/* The pane is the stage: sentence at the top, drawing in the middle of
+   whatever is left, Next in the corner the eye is in when the sentence runs
+   out. `flex-end` on the cross axis rather than `right`, so Arabic puts it in
+   the corner it is mirrored into. */
+.meetcard-pane {
+  flex-direction: column;
+  padding: 0.55rem;
+  background: #f6f8fa;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+}
+/* A floor and not a ceiling: a step whose sentence runs longer pushes the pane
+   taller rather than being cut off. Two lines' worth, which is what steps one
+   and two differ by in most of the ten languages — enough that pressing Next
+   does not move the drawing under the reader's eyes, and not so much that the
+   one-line step opens with an inch of nothing. */
+.meetcard-say {
+  flex: none; min-height: 3.2rem; margin: 0 0 0.4rem;
+  color: var(--muted); font-size: 12px; line-height: 1.45;
+}
+.meetcard-browser, .meetcard-bar, .meetcard-badge { margin-block: auto; }
+.meetcard-next {
+  flex: none; align-self: flex-end; margin-top: 0.5rem;
+  display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer;
+  padding: 0.25rem 0.75rem; border-radius: 2rem;
+  background: var(--primary); color: #fff; font-size: 12px; line-height: 1.5;
+  -webkit-user-select: none; user-select: none;
+}
+.meetcard-next svg { flex: none; width: 0.95rem; height: 0.72rem; }
+[dir="rtl"] .meetcard-next svg { transform: scaleX(-1); }
+
+/* The top of a browser window with everything but the point of the step
+   reduced to a grey shape — the same drawing the guide uses, at about a third
+   of the size. */
+.meetcard-browser {
+  width: 100%; overflow: hidden;
+  background: #dee1e6; border: 1px solid #c9ccd1; border-radius: 8px;
+}
+.meetcard-tabstrip { display: flex; align-items: flex-end; height: 1.5rem; padding: 0.35rem 0.4rem 0; }
+.meetcard-tabchip { width: 7rem; height: 1.15rem; border-radius: 6px 6px 0 0; background: #fff; }
+.meetcard-omni { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.45rem; background: #fff; }
+.meetcard-nav, .meetcard-avatar { flex: none; border-radius: 50%; background: #e8eaed; }
+.meetcard-nav { width: 0.8rem; height: 0.8rem; }
+.meetcard-avatar { width: 1.1rem; height: 1.1rem; }
+/* The one place in these drawings where the text is the point rather than a
+   grey bar standing in for it. Latin either way, so it keeps its direction on
+   the page that runs the other way. */
+.meetcard-url {
+  flex: 1; min-width: 0; display: flex; align-items: center;
+  height: 1.15rem; padding: 0 0.55rem; border-radius: 0.6rem;
+  background: #f1f3f4; color: #5f6368; font-size: 10px;
+  overflow: hidden; white-space: nowrap; direction: ltr;
+}
+.meetcard-viewport { height: 5.2rem; background: #fff; border-top: 1px solid #ebedf0; }
+/* The dialog sizes to its card instead: three rows do not fit in the height
+   the page drawing is happy with. */
+.meetcard-viewport--dialog { display: grid; place-items: center; height: auto; padding: 0.6rem; }
+.meetcard-tiles { display: flex; gap: 0.35rem; height: 100%; padding: 0.45rem; }
+.meetcard-tile { flex: 1; border-radius: 6px; background: #e3e6ea; }
+.meetcard-tile--self { flex: none; width: 22%; background: #eef0f3; }
+.meetcard-dialog {
+  display: flex; flex-direction: column; gap: 0.4rem; width: 100%;
+  padding: 0.55rem 0.6rem; background: #fff;
+  border: 1px solid #d7dadd; border-radius: 8px;
+}
+.meetcard-line { height: 0.4rem; width: 70%; border-radius: 0.2rem; background: #eceff3; }
+.meetcard-line--head { width: 40%; height: 0.55rem; background: #dfe3e8; }
+.meetcard-device { display: flex; align-items: center; gap: 0.4rem; }
+.meetcard-icon { flex: none; width: 0.95rem; height: 0.95rem; color: #5f6368; }
+.meetcard-icon svg { display: block; width: 100%; height: 100%; }
+/* The device the extension puts in Meet's list, ringed; and below it the
+   output, drawn so the dialog is recognisable and still so it is clear which
+   of the two the step is asking for. */
+.meetcard-select {
+  position: relative; flex: 1; min-width: 0;
+  display: flex; align-items: center;
+  padding: 0.22rem 1.1rem 0.22rem 0.45rem;
+  border: 1px solid #c4c7cc; border-radius: 5px; background: #fff;
+  color: #3c4043; font-size: 10px; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr;
+  animation: meetcard-ring 1.9s ease-out infinite;
+}
+.meetcard-select::after {
+  content: ""; position: absolute; inset-inline-end: 0.4rem; top: 50%;
+  margin-top: -0.1rem; border: 0.22rem solid transparent; border-top-color: #5f6368;
+}
+.meetcard-select--still { animation: none; }
+.meetcard-select .meetcard-line { width: 4.5rem; }
+
+/* This panel's own button row, drawn a few centimetres above the real one. */
+.meetcard-bar { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.meetcard-start {
+  padding: 0.3rem 0.9rem; border-radius: 0.3rem;
+  background: var(--primary); color: #fff; font-size: 11px; line-height: 1.5;
+  direction: ltr; animation: meetcard-ring 1.9s ease-out infinite;
+}
+.meetcard-round, .meetcard-ghost {
+  height: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 0.3rem;
+}
+.meetcard-round { width: 1.5rem; }
+.meetcard-ghost { width: 3.2rem; }
+
+/* The last step is not about a screen at all — you speak, and something
+   arrives at the other end — so it is glyphs on their own. */
+.meetcard-badge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.meetcard-glyph {
+  display: grid; place-items: center; flex: none;
+  width: 3.6rem; height: 3.6rem; border-radius: 50%;
+  background: #fff; border: 1px solid var(--border); color: #3f51b5;
+}
+.meetcard-glyph svg { width: 1.8rem; height: 1.8rem; }
+.meetcard-flow { flex: none; width: 1.5rem; height: 1.1rem; }
+[dir="rtl"] .meetcard-flow { transform: scaleX(-1); }
+
+@keyframes meetcard-ring {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
+  55% { box-shadow: 0 0 0 10px rgba(63, 81, 181, 0); }
+}
+/* A ring that is drawn but still says the same sentence to somebody who has
+   asked their machine to stop animating. */
+@media (prefers-reduced-motion: reduce) {
+  .meetcard-select, .meetcard-start { animation: none; box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
+  .meetcard-select--still { box-shadow: none; }
+}
 
 select.lang, select.mode, input[type="range"] {
   font: inherit;

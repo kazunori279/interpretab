@@ -55,6 +55,7 @@
   "panelMeetStart": { "message": "Aperte <b>Start</b> aqui embaixo. O microfone traduzido só é entregue ao Meet quando a execução começa, então antes disso não tem nada de novo na lista dele." },
   "panelMeetPick": { "message": "No Meet, abra <b>Configurações → Áudio</b> e escolha <b>Interpretab (translated)</b> como microfone. Já que está lá, desligue o <b>Studio Sound</b>. Com fones Bluetooth, confira que o Meet também está tocando por eles." },
   "panelMeetTalk": { "message": "Fale. Do outro lado a tradução chega uns três segundos depois, com a sua própria voz misturada baixinho por baixo, então a chamada ouve você além do intérprete." },
+  "panelMeetNext": { "message": "Próximo" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

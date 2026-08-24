@@ -74,7 +74,7 @@
   },
   "panelMeetJoin": {
     "message": "Join the meeting in this tab.",
-    "description": "First of four numbered steps, shown once the link in panelMicToCallNote is clicked."
+    "description": "First of the four steps on the Meet card, which the link in panelMicToCallNote opens."
   },
   "panelMeetStart": {
     "message": "Press <b>Start</b> below. Meet is given the translated microphone by the run starting, so its list has nothing new in it before that."
@@ -84,6 +84,10 @@
   },
   "panelMeetTalk": {
     "message": "Talk. The far end hears the translation about three seconds later, with your own voice mixed in quietly underneath, so the call hears you as well as the interpreter."
+  },
+  "panelMeetNext": {
+    "message": "Next",
+    "description": "Walks the Meet card on to its next step. Same word as the guide slideshow's."
   },
 
   "panelStart": { "message": "Start" },

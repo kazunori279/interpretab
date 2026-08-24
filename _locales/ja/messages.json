@@ -55,6 +55,7 @@
   "panelMeetStart": { "message": "下の <b>Start</b> を押します。翻訳マイクは実行を開始したときに Meet へ渡されるので、それまでは一覧に出てきません。" },
   "panelMeetPick": { "message": "Meet の<b>設定 → 音声</b>を開き、マイクに <b>Interpretab (translated)</b> を選びます。ついでに <b>Studio Sound</b> はオフにしてください。Bluetooth のヘッドホンなら、Meet の再生先もそれになっているか確かめます。" },
   "panelMeetTalk": { "message": "話しかけます。3 秒ほど遅れて相手に訳が届きます。下にはあなたの声も小さく混ざっているので、通話では通訳とあなたの声の両方が聞こえます。" },
+  "panelMeetNext": { "message": "次へ" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

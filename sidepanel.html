@@ -100,19 +100,11 @@
           <span data-i18n="panelMicToCall"></span>
         </label>
       </div>
-      <!-- What to do in Meet is four steps done in order, and as one paragraph
-           of grey it was a wall the eye slid off. Folded away behind the link
-           the note ends on, so it is there for the call where it is needed and
-           out of the way of the panel the rest of the time. Same four steps as
-           the guide's "In the call" phase — `docs/_data/meet.yml`. -->
+      <!-- What to do in Meet was one paragraph carrying four instructions, and
+           as a block of grey it was a wall the eye slid off. Two lines now,
+           ending in a link that opens the card below. -->
       <p class="note indent" id="micToCallNote" hidden data-i18n="panelMicToCallNote"
          data-link1="meetSteps"></p>
-      <ol class="note indent steps" id="micToCallSteps" hidden>
-        <li data-i18n="panelMeetJoin"></li>
-        <li data-i18n="panelMeetStart"></li>
-        <li data-i18n="panelMeetPick"></li>
-        <li data-i18n="panelMeetTalk"></li>
-      </ol>
       <!-- Two spans and not one sentence: the first is shown only while the
            sound button is off, and a message that had to be spliced into
            another one would decide the word order of both. -->
@@ -121,6 +113,167 @@
         <span data-i18n="panelMicNoteSimul"></span>
       </p>
       <p class="note indent" id="micNoteConversation" hidden data-i18n="panelMicNoteConversation"></p>
+    </section>
+
+    <!-- The four things to do once the meeting is on screen: the guide's "In
+         the call" phase, redrawn at the width of this column. Opened by the
+         link in the note above and closed by default, because it is the size of
+         the microphone card and the panel is not a page.
+
+         One step at a time, picked by a hidden radio and shown by `:checked ~`.
+         No script: the card works before `init` has run, and there is no second
+         copy of "which step is showing" for `render()` to disagree with.
+
+         Nothing here is a photograph. Three of the guide's seven steps are
+         pictures of this very panel, which is what the reader already has in
+         front of them, and the other four are drawings that cost nothing to
+         redraw narrower. Meet's own labels are left out, for the reason the
+         guide gives: they would have to be sourced per language, and a
+         mistranslated button in a picture sends somebody hunting for a control
+         that is not there. The two words that are drawn — `meet.google.com` and
+         `Interpretab (translated)` — are translated nowhere. -->
+    <section class="meetcard" id="meetCard" hidden>
+      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-1" checked />
+      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-2" />
+      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-3" />
+      <input class="meetcard-pick" type="radio" name="meetcardStep" id="meetcard-4" />
+
+      <!-- Numbers and no words. Four labels wide enough to read do not fit in a
+           360px column, and the sentence for the step is in the pane anyway. -->
+      <div class="meetcard-tabs">
+        <label class="meetcard-tab meetcard-tab--1" for="meetcard-1">1</label>
+        <label class="meetcard-tab meetcard-tab--2" for="meetcard-2">2</label>
+        <label class="meetcard-tab meetcard-tab--3" for="meetcard-3">3</label>
+        <label class="meetcard-tab meetcard-tab--4" for="meetcard-4">4</label>
+      </div>
+
+      <div class="meetcard-panes">
+        <div class="meetcard-pane meetcard-pane--1">
+          <p class="meetcard-say" data-i18n="panelMeetJoin"></p>
+          <div class="meetcard-browser" aria-hidden="true">
+            <div class="meetcard-tabstrip"><span class="meetcard-tabchip"></span></div>
+            <div class="meetcard-omni">
+              <span class="meetcard-nav"></span>
+              <span class="meetcard-url">meet.google.com</span>
+              <span class="meetcard-avatar"></span>
+            </div>
+            <!-- A call: the far end and you. Grey, because a mocked-up face is
+                 detail a reader will try to read. -->
+            <div class="meetcard-viewport">
+              <div class="meetcard-tiles">
+                <span class="meetcard-tile"></span>
+                <span class="meetcard-tile meetcard-tile--self"></span>
+              </div>
+            </div>
+          </div>
+          <label class="meetcard-next" for="meetcard-2">
+            <span data-i18n="panelMeetNext"></span>
+            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </label>
+        </div>
+
+        <div class="meetcard-pane meetcard-pane--2">
+          <p class="meetcard-say" data-i18n="panelMeetStart"></p>
+          <!-- This panel's own button row, a few centimetres below the drawing
+               of it. The word is not translated in any of the ten catalogues,
+               so it is drawn rather than filled in. -->
+          <div class="meetcard-bar" aria-hidden="true">
+            <span class="meetcard-start">Start</span>
+            <span class="meetcard-round"></span>
+            <span class="meetcard-round"></span>
+            <span class="meetcard-ghost"></span>
+          </div>
+          <label class="meetcard-next" for="meetcard-3">
+            <span data-i18n="panelMeetNext"></span>
+            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </label>
+        </div>
+
+        <div class="meetcard-pane meetcard-pane--3">
+          <p class="meetcard-say" data-i18n="panelMeetPick"></p>
+          <div class="meetcard-browser" aria-hidden="true">
+            <div class="meetcard-tabstrip"><span class="meetcard-tabchip"></span></div>
+            <div class="meetcard-omni">
+              <span class="meetcard-nav"></span>
+              <span class="meetcard-url">meet.google.com</span>
+              <span class="meetcard-avatar"></span>
+            </div>
+            <!-- Meet's audio settings, with the microphone on the device this
+                 extension puts there. The second row is the output, which is
+                 where Bluetooth headphones get lost — drawn, and still, so it
+                 is clear which of the two the step is asking for. -->
+            <div class="meetcard-viewport meetcard-viewport--dialog">
+              <div class="meetcard-dialog">
+                <span class="meetcard-line meetcard-line--head"></span>
+                <span class="meetcard-device">
+                  <span class="meetcard-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="2.5" width="6" height="11" rx="3" />
+                      <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+                      <path d="M12 18v3.5" />
+                    </svg>
+                  </span>
+                  <span class="meetcard-select">Interpretab (translated)</span>
+                </span>
+                <span class="meetcard-device">
+                  <span class="meetcard-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z" />
+                      <path d="M16 9.2a4.4 4.4 0 0 1 0 5.6" />
+                    </svg>
+                  </span>
+                  <span class="meetcard-select meetcard-select--still">
+                    <span class="meetcard-line"></span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <label class="meetcard-next" for="meetcard-4">
+            <span data-i18n="panelMeetNext"></span>
+            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </label>
+        </div>
+
+        <div class="meetcard-pane meetcard-pane--4">
+          <p class="meetcard-say" data-i18n="panelMeetTalk"></p>
+          <!-- You speak, and something arrives at the other end. Two glyphs and
+               the arrow between them, because the alternative is a drawing of a
+               meeting with words in it. -->
+          <div class="meetcard-badge" aria-hidden="true">
+            <span class="meetcard-glyph">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="2.5" width="6" height="11" rx="3" />
+                <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+                <path d="M12 18v3.5" />
+              </svg>
+            </span>
+            <svg class="meetcard-flow" viewBox="0 0 32 24" fill="none">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="meetcard-glyph">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.5 12c0 3.9-3.8 7-8.5 7-1 0-2-.14-2.9-.4L4 20.5l1.4-3.7C4.2 15.5 3.5 13.8
+                         3.5 12c0-3.9 3.8-7 8.5-7s8.5 3.1 8.5 7z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="row buttons">

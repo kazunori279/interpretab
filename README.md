@@ -1985,8 +1985,8 @@ Meet's Studio Sound.
 out mid-sentence now stops and says so, rather than reconnecting ten times and blaming the network
 — [Session expiry](#session-expiry) has what the server actually does, which took an override on
 the project's per-minute limit to find out — and the panel's Meet note is down to two lines and a
-link, with the four things to do over in Meet folded behind it instead of stacked into one grey
-paragraph. The third is audible from the first call: with the translation going into
+link, with the four things to do over in Meet behind it as the guide's own card, redrawn at the
+width of the panel. The third is audible from the first call: with the translation going into
 a Meet call, the microphone's voice no longer also comes out of this computer and its subtitles
 here are off, which is [`callMicOn`](#meetings) above. Held while 1.0.2 was in review, because a
 package uploaded over one under review replaces it rather than queueing behind it, and that hold

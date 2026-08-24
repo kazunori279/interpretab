@@ -94,13 +94,14 @@ let myTabUrl = "";
  */
 let micPermission = null;
 /**
- * Whether the four Meet steps under the note are unfolded.
+ * Whether the Meet card under the microphone section is unfolded.
  *
  * Not a setting. It is what the reader is doing this minute rather than
  * something they chose, and it lives no longer than the document does, which
  * for a side panel is until the next tab switch. Kept across `render()` all the
  * same: a card that folded itself away because a language dropdown moved would
- * lose the reader their place mid-step.
+ * lose the reader their place mid-step. Which of its four steps is showing is
+ * not tracked here at all — that is a radio in the page, and CSS.
  */
 let meetStepsOpen = false;
 /**
@@ -446,7 +447,7 @@ function render() {
   const intoCall = callMicOn(settings, myTabUrl);
   el("micToCallRow").hidden = !onCall;
   el("micToCallNote").hidden = !onCall || !settings.micToCall;
-  el("micToCallSteps").hidden = el("micToCallNote").hidden || !meetStepsOpen;
+  el("meetCard").hidden = el("micToCallNote").hidden || !meetStepsOpen;
   // The link is written by the catalogue, wherever in the sentence the
   // translation put it, so it is found by what it does rather than by an id.
   document
