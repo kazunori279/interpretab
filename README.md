@@ -1929,7 +1929,7 @@ There is no build. The extension directory is what ships.
 npm run package    # interpretab.zip, ready for the Web Store dashboard
 ```
 
-Verified 2026-08-24 at 1.0.3: 43 files, 653 KB unpacked and 220 KB zipped — most of the growth is
+Verified 2026-08-24 at 1.0.4: 43 files, 653 KB unpacked and 220 KB zipped — most of the growth is
 the ten `_locales` catalogues, which do not compress the way code does. `manifest.json` at the root,
 nothing from `.git`, `tests/`, `store/`, `docs/` or `package.json`. This file is excluded too —
 37 KB of developer documentation that no user or reviewer opens, and it was a quarter of the
@@ -2000,9 +2000,20 @@ four lines to skim past on the way to Start; the step after it is the microphone
 which is the one thing on that card the panel cannot do for you — Chrome raises the prompt for a
 page, so the step draws the options page's button and links to it. The third is audible from the first call: with the translation going into
 a Meet call, the microphone's voice no longer also comes out of this computer and its subtitles
-here are off, which is [`callMicOn`](#meetings) above. Held while 1.0.2 was in review, because a
-package uploaded over one under review replaces it rather than queueing behind it, and that hold
-is now over.
+here are off, which is [`callMicOn`](#meetings) above. Held while 1.0.2 was in review, because the
+dashboard will not take a package while one is queued, and submitted once 1.0.2 published on the
+22nd — where it sat, queued, while the step cards were being drawn.
+
+1.0.4 is that draft with the step cards in it, and it is a separate number because of what a
+submission under review will not let you do. While one is queued the dashboard disables Upload new
+package, Save draft and Submit for review together: the draft belongs to the reviewer until they
+are done with it. The way back is Cancel review, on the ⋮ menu beside the header buttons, which
+returns the item to a draft you can edit — it does not touch what is published, which stayed 1.0.2
+throughout. After that the upload is allowed, but the version has to move, because 1.0.3 is a
+number the dashboard has already seen. So the install card's nine steps and the panel's microphone
+step went up as 1.0.4, submitted 2026-08-24 with auto-publish on approval, and the review clock
+started again from zero — which is the price of cancelling, and the reason to decide whether a
+change is going in *before* pressing submit rather than after.
 
 A soak spends an hour of real quota, so handle the key the way every run here has: write it to a
 temp file, never echo it, delete it afterwards — the Live API takes the key as a query parameter,

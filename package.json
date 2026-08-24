@@ -1,6 +1,6 @@
 {
   "name": "interpretab",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "type": "module",
   "description": "Chrome extension that interprets tab audio and your microphone in real time via the Gemini Live API.",
