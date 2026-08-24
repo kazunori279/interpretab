@@ -297,6 +297,14 @@ background noise from a microphone this device is not. Your own voice is mixed i
 `micToCallOwnVoice` (0.15, the same level the passthrough ducks to) so the call hears you as well
 as the interpreter. How that is possible at all is [below](#the-translated-microphone).
 
+While that switch is on, the microphone direction goes to the call *instead of* here: the
+translated voice is not played out of this machine, and the microphone's subtitles are off — the
+switch for them is disabled in the panel and says so. Both used to happen anyway, and both were
+the same thing on screen and in the ear: an interpreter saying what you had just said, three
+seconds late, over the person you were listening to. `callMicOn` in `lib/settings.js` is the one
+copy of that rule; the panel, the service worker and the offscreen document all act on it, and
+the offscreen document is handed the answer at Start because it has no way to ask.
+
 **Everywhere else, being heard needs a virtual audio device.** An extension has no API that
 registers an audio *input*, and Manifest V3 has nothing planned, so on any other site the
 translated voice can only be played somewhere the meeting is already listening:
@@ -331,9 +339,11 @@ add a device to the answer and hand back a stream of its own when the page picks
 Meet only, and that is a decision rather than a first step. "How much of the plumbing does this
 tolerate" was answered by running it against one application's device picker, and the answer does
 not carry to Zoom or Teams without being asked again — so `CALL_ORIGIN` is one exported constant
-in `lib/settings.js` that the panel and the service worker both import, the panel to decide
-whether the switch exists and the worker to decide whether the shim goes in. Two copies of that
-string is how the two come to disagree, which shows up as a checkbox that does nothing.
+in `lib/settings.js`, and the rule built on it, `callMicOn`, is one exported function. The panel
+imports both, the origin to decide whether the switch exists and the rule to decide what the rest
+of the card means; the service worker imports the rule to decide whether the shim goes in. Two
+copies of that string is how the two come to disagree, which shows up as a checkbox that does
+nothing.
 
 Three files, and each does the half the other cannot. `content/mic-shim.js` goes into the page's
 world with `world: "MAIN"` — a content script's `navigator.mediaDevices` is a *different object*

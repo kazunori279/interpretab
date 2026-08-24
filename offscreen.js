@@ -74,6 +74,12 @@ const USAGE_POST_MS = 1000;
 
 const state = {
   settings: null,
+  // Whether this run's microphone translation is going into a call — the
+  // service worker's verdict, worked out from the run's tab and handed over
+  // with the settings, because `chrome.tabs` and `chrome.storage` are both out
+  // of reach from an offscreen document. Fixed for the run: the switch behind
+  // it is not a live key, so flipping it reconnects.
+  intoCall: false,
   // Held only for the life of a run, and only so a reconnect can reopen the
   // socket without waking the service worker for the key again.
   apiKey: null,
@@ -209,10 +215,11 @@ function dropQueuedVoice() {
   }
 }
 
-async function start({ apiKey, streamId, settings, glossary, closeHint, config }) {
+async function start({ apiKey, streamId, settings, intoCall, glossary, closeHint, config }) {
   await ensureContexts();
   await stop();
   state.settings = settings;
+  state.intoCall = !!intoCall;
   state.apiKey = apiKey;
   state.config = config || null;
   state.displayMap = buildDisplayMap(glossary);
@@ -562,6 +569,14 @@ function onEvent(direction, ev, player, acc) {
     // translation arriving. `micMuted` is the switch that means "the call hears
     // nothing", and it stops the audio going up rather than coming down.
     if (direction === "mic") sendToCall(ev.buffer);
+    // And on a call it goes there *instead*. The other end is who this voice is
+    // for; playing it here as well puts an interpreter saying what the user has
+    // just said over the top of the person they are listening to, in their own
+    // headphones, three seconds late. Above the play-out bookkeeping too, so
+    // nothing that is not audible ducks what is: the deadline below is what
+    // holds the captured tab at 15%, and the room's own voice is not competing
+    // with anything in this room.
+    if (direction === "mic" && state.intoCall) return;
     // Only the audio is dropped. The transcript of the same sentence goes on
     // arriving, so the sound can be switched off and the translation still read
     // — in the panel and, if they are on, in the subtitles on the page.
@@ -781,6 +796,7 @@ async function stop() {
   }
   state.playoutEndsAt = { tab: 0, mic: 0 };
   state.ducked = false;
+  state.intoCall = false;
   state.apiKey = null;
   // The verdict was about the key this run held, at the moment it was asked.
   state.closeHint = "";
@@ -828,7 +844,7 @@ function resume(ctx) {
  * stops the audio being sent up.
  */
 function sendToCall(buffer) {
-  if (!state.settings?.micToCall) return;
+  if (!state.intoCall) return;
   const bytes = new Uint8Array(buffer);
   let binary = "";
   // In chunks: `String.fromCharCode` takes its bytes as arguments, and a frame
@@ -904,7 +920,11 @@ function history() {
 
 function captionsOn(direction) {
   if (!state.settings) return false;
-  return direction === "tab" ? !!state.settings.tabCaptions : !!state.settings.micCaptions;
+  if (direction === "tab") return !!state.settings.tabCaptions;
+  // Never on a call: they are subtitles of what the user said themselves,
+  // across the face of the person they are talking to. The panel disables the
+  // switch there; this is the same rule where the lines are actually sent.
+  return !!state.settings.micCaptions && !state.intoCall;
 }
 
 /**

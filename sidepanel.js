@@ -9,7 +9,7 @@
  */
 
 import { LIVE_KEYS } from "./lib/live-session.js";
-import { CALL_ORIGIN, DEFAULTS, loadSettings, saveSettings } from "./lib/settings.js";
+import { CALL_ORIGIN, DEFAULTS, callMicOn, loadSettings, saveSettings } from "./lib/settings.js";
 import { formatCost, formatDuration } from "./lib/usage.js";
 import {
   agentLanguageCode,
@@ -415,7 +415,6 @@ function render() {
   el("tabEnabled").checked = settings.tabEnabled;
   el("tabCaptions").checked = settings.tabCaptions;
   el("micEnabled").checked = settings.micEnabled;
-  el("micCaptions").checked = settings.micCaptions;
   el("micToCall").checked = settings.micToCall;
   el("tabTarget").value = settings.tabTarget;
   el("micMode").value = settings.micMode;
@@ -426,23 +425,33 @@ function render() {
 
   // Simultaneous detects the source, so naming one would be a control with
   // nothing behind it; conversation needs both halves of the pair.
-  const micSimul = settings.micMode !== "conversation";
-  el("micInto").hidden = !micSimul;
-  el("micDetected").hidden = !micSimul;
-  el("micNoteSimul").hidden = !micSimul;
-  // The rest of that note is the headphones warning, which is true either way.
-  el("micNoteSimulMuted").hidden = !settings.soundMuted;
-  el("micSource").hidden = micSimul;
-  el("micArrow").hidden = micSimul;
-  el("micNoteConversation").hidden = micSimul;
-
   // A call is the one place the translated voice has somewhere else to go, and
   // this is the only page where it can get there without a virtual cable. The
   // instructions below it are two things the user has to do in Meet, so they
   // are worth their line only once the switch is actually on.
   const onCall = myTabUrl.startsWith(CALL_ORIGIN);
+  const intoCall = callMicOn(settings, myTabUrl);
   el("micToCallRow").hidden = !onCall;
   el("micToCallNote").hidden = !onCall || !settings.micToCall;
+
+  // Two controls stop meaning anything once the voice is going into the call
+  // rather than out of this machine, and both of them confused people who got
+  // that far: subtitles of your own speech, over the person you are talking to,
+  // and a mute button whose note offers to play a voice this machine is not
+  // playing. The stored switch is left where the user put it — this is the
+  // call's doing, and the box goes back to what they chose when they leave.
+  el("micCaptions").checked = settings.micCaptions && !intoCall;
+  el("micNoteSimulMuted").hidden = !settings.soundMuted || intoCall;
+
+  // Simultaneous detects the source, so naming one would be a control with
+  // nothing behind it; conversation needs both halves of the pair.
+  const micSimul = settings.micMode !== "conversation";
+  el("micInto").hidden = !micSimul;
+  el("micDetected").hidden = !micSimul;
+  el("micNoteSimul").hidden = !micSimul;
+  el("micSource").hidden = micSimul;
+  el("micArrow").hidden = micSimul;
+  el("micNoteConversation").hidden = micSimul;
 
   renderDirection("tabEnabled", settings.tabEnabled);
   renderDirection("micEnabled", settings.micEnabled);
@@ -476,7 +485,11 @@ function render() {
   if (runTabTitle) setMessage(el("elsewhereNote"), "panelRunningOn", [runTabTitle]);
   else setMessage(el("elsewhereNote"), "panelRunningElsewhere");
   el("elsewhereNote").hidden = !elsewhere;
-  for (const id of RUN_CONTROLS) el(id).disabled = elsewhere;
+  // Here and not above, because this is the line that owns `disabled` on all of
+  // them: setting it earlier would be undone by the time anyone looked.
+  for (const id of RUN_CONTROLS) {
+    el(id).disabled = elsewhere || (id === "micCaptions" && intoCall);
+  }
 
   // Nothing to mute when the direction behind the button is switched off. The
   // sound button stops every translated voice there is, wherever it is being

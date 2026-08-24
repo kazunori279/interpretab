@@ -145,24 +145,17 @@ coupe l'entrée à tout moment.
 activez l'audio de l'onglet, choisissez votre langue et appuyez sur Start. Ce qu'ils disent arrive
 dans votre langue, parlé et sous-titré.
 
+#### 🤝 L'utiliser avec Google Meet
+
 **Pour qu'ils entendent votre voix traduite sur Google Meet, il n'y a rien à installer.**
 
-1. Branchez un casque ou des écouteurs sur l'ordinateur — sur haut-parleurs, le micro entend
-   l'appel et les deux directions se mettent à s'interpréter l'une l'autre.
-2. Activez l'audio de l'onglet — d'eux vers vous — et réglez-le sur votre langue. Activez le
-   microphone — de vous vers eux — et réglez-le sur la leur.
-3. Sur un onglet Meet, la carte Microphone affiche un interrupteur de plus : **Envoyer la traduction
-   dans cet appel Meet**. Laissez-le activé.
-4. Appuyez sur Start.
-5. Dans Meet, **Paramètres → Audio → Micro** → choisissez **Interpretab (translated)**. Profitez-en
-   pour désactiver **Studio Sound**.
+{% include meet-steps.html %}
 
-Votre propre voix est mixée en dessous, en sourdine, donc l'appel vous entend en plus de
-l'interprète. Comptez environ trois secondes entre ce que vous dites et ce qu'entend l'autre bout.
+#### 🔌 Tout autre service de réunion
 
-**Sur tout autre service**, la voix traduite doit parvenir à l'application de réunion comme entrée
-microphone, et cela demande un périphérique audio virtuel. Le plus simple reste qu'ils installent
-Interpretab de leur côté ; s'ils ne peuvent pas :
+La voix traduite doit parvenir à l'application de réunion comme entrée microphone, et cela demande
+un périphérique audio virtuel. Le plus simple reste qu'ils installent Interpretab de leur côté ;
+s'ils ne peuvent pas :
 
 1. Installez un périphérique audio virtuel : [BlackHole](https://existential.audio/blackhole/) sur macOS, [VB-Cable](https://vb-audio.com/Cable/) sur Windows.
 2. Branchez un casque, comme ci-dessus.

@@ -142,23 +142,17 @@ jederzeit ab.
 einem Tab, schalten Sie Tab-Audio ein, wählen Sie Ihre Sprache und drücken Sie Start. Was gesagt
 wird, kommt in Ihrer Sprache an, gesprochen und untertitelt.
 
+#### 🤝 Mit Google Meet nutzen
+
 **Damit die anderen Ihre übersetzte Stimme hören, ist auf Google Meet nichts zu installieren.**
 
-1. Kopfhörer oder Ohrhörer an den Rechner anschließen — über Lautsprecher hört das Mikrofon das
-   Gespräch, und die beiden Richtungen fangen an, einander zu dolmetschen.
-2. Tab-Audio einschalten — von ihnen zu Ihnen — und auf Ihre Sprache stellen. Das Mikrofon
-   einschalten — von Ihnen zu ihnen — und auf deren Sprache stellen.
-3. Auf einem Meet-Tab zeigt die Karte Microphone einen zusätzlichen Schalter: **Die Übersetzung in
-   dieses Meet-Gespräch senden**. Eingeschaltet lassen.
-4. Start drücken.
-5. In Meet **Einstellungen → Audio → Mikrofon** öffnen und **Interpretab (translated)** wählen. Schalten Sie bei der Gelegenheit **Studio Sound** aus.
+{% include meet-steps.html %}
 
-Ihre eigene Stimme liegt leise darunter, das Gespräch hört also Sie und die Dolmetscherstimme.
-Rechnen Sie mit etwa drei Sekunden zwischen dem, was Sie sagen, und dem, was drüben ankommt.
+#### 🔌 Jeder andere Meeting-Dienst
 
-**Bei jedem anderen Dienst** muss die übersetzte Stimme als Mikrofoneingang in die Meeting-App
-gelangen, und dafür braucht es ein virtuelles Audiogerät. Am einfachsten ist es nach wie vor, wenn
-die anderen Interpretab ebenfalls installieren; geht das nicht:
+Die übersetzte Stimme muss als Mikrofoneingang in die Meeting-App gelangen, und dafür braucht es
+ein virtuelles Audiogerät. Am einfachsten ist es nach wie vor, wenn die anderen Interpretab
+ebenfalls installieren; geht das nicht:
 
 1. Ein virtuelles Audiogerät installieren: [BlackHole](https://existential.audio/blackhole/) unter macOS, [VB-Cable](https://vb-audio.com/Cable/) unter Windows.
 2. Kopfhörer anschließen, wie oben.

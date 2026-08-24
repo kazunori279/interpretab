@@ -1,0 +1,179 @@
+{%- comment -%}
+  The Google Meet slideshow, under "Using with Google Meet". Same shape as
+  `install-steps.html` and the same CSS — one step showing at a time, a picture
+  and a marker on the one thing the step asks for — with its own words in
+  `_data/meet.yml` and its own radio group, so a reader can be on step three of
+  the install and step six of this one at the same time.
+
+  The tab strip is in two rows, one per phase: everything before the call, then
+  everything with a meeting already on screen. The heading that breaks the row is
+  the `phase` written on the step it starts at, and the tabs and panes are picked
+  out by index classes rather than by `nth-child` — a heading in the middle of
+  the strip makes the nth tab and the nth child two different things.
+
+  `figures` is positional, as it is in the install slideshow: the nth step gets
+  the nth picture. Three are photographs of the side panel, taken per language by
+  `tests/guide-shots.mjs` and measured into `_data/shots.yml`, because the panel
+  is the extension's own UI and a reader in Korean is looking at a Korean panel.
+  The other four are drawings, and the only words in any of them are
+  `meet.google.com` and `Interpretab (translated)` — neither of which is
+  translated anywhere. Meet's own labels are deliberately not drawn: they would
+  have to be sourced per language the way `tools/aistudio-strings.mjs` sources AI
+  Studio's, and a mistranslated button in a picture sends a reader hunting for
+  something that is not there.
+{%- endcomment -%}
+{%- assign copy = site.data.meet[page.lang] | default: site.data.meet.en -%}
+{%- assign steps = copy.steps -%}
+{%- assign figures = "phones,meettab,meetmic,join,meetstart,device,talk" | split: "," -%}
+<div class="install meet">
+  {%- for step in steps %}
+  <input class="install-pick" type="radio" name="meet-step" id="meet-step-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+  {%- endfor %}
+
+  <div class="install-tabs">
+    {%- for step in steps %}
+    {%- if step.phase %}
+    <span class="meet-phase">{{ step.phase }}</span>
+    {%- endif %}
+    <label class="install-tab meet-tab--{{ forloop.index }}" for="meet-step-{{ forloop.index }}"><span class="install-n">{{ forloop.index }}</span>{{ step.tab }}</label>
+    {%- endfor %}
+  </div>
+
+  <div class="install-panes">
+    {%- for step in steps %}
+    {%- assign figure = figures[forloop.index0] -%}
+    {%- assign shot = site.data.shots[figure][page.lang] | default: site.data.shots[figure].en -%}
+    <div class="install-pane meet-pane--{{ forloop.index }}">
+      <div class="install-shot">
+        <p class="install-say">{{ step.body | replace: '<a href=', '<a target="_blank" rel="noopener" href=' }}</p>
+        {%- if shot -%}
+        {%- comment -%}
+          A photograph of the side panel, with the ring where `shots.yml` says
+          the control is. Both were measured on the live panel when the picture
+          was taken, so re-taking it moves the ring with the control.
+        {%- endcomment -%}
+        <div class="install-figure" style="--wpx: {{ shot.width }}; --hpx: {{ shot.height }}">
+          <img src="{{ "/assets/" | append: shot.file | relative_url }}" alt="{{ step.tab }}" width="{{ shot.width }}" height="{{ shot.height }}">
+          <span class="install-mark install-mark--{{ shot.side }}" aria-hidden="true"
+                style="--x: {{ shot.mark.x }}%; --y: {{ shot.mark.y }}%; --w: {{ shot.mark.width }}%; --h: {{ shot.mark.height }}%">
+            <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        {%- elsif figure == "phones" -%}
+        {%- comment -%}
+          Headphones, and nothing else. The step is about a cable, not about a
+          screen, and a browser window drawn around it would be a lie.
+        {%- endcomment -%}
+        <div class="meet-badge" aria-hidden="true">
+          <span class="meet-glyph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 16v-4a8 8 0 0 1 16 0v4"/>
+              <rect x="2.5" y="13.5" width="4.5" height="7.5" rx="2.2"/>
+              <rect x="17" y="13.5" width="4.5" height="7.5" rx="2.2"/>
+            </svg>
+          </span>
+        </div>
+        {%- elsif figure == "talk" -%}
+        {%- comment -%}
+          What the last step is: you speak, and something arrives at the other
+          end. Two glyphs and the arrow between them, because the alternative is
+          a drawing of a meeting with words in it.
+        {%- endcomment -%}
+        <div class="meet-badge" aria-hidden="true">
+          <span class="meet-glyph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="2.5" width="6" height="11" rx="3"/>
+              <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/>
+              <path d="M12 18v3.5"/>
+            </svg>
+          </span>
+          <svg class="install-arrow meet-flow" viewBox="0 0 32 24" width="32" height="24" fill="none">
+            <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="meet-glyph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.5 12c0 3.9-3.8 7-8.5 7-1 0-2-.14-2.9-.4L4 20.5l1.4-3.7C4.2 15.5 3.5 13.8 3.5 12c0-3.9 3.8-7 8.5-7s8.5 3.1 8.5 7z"/>
+            </svg>
+          </span>
+        </div>
+        {%- else -%}
+        {%- comment -%}
+          The two steps that happen on Meet's own page, drawn the way the install
+          slideshow draws Chrome: a browser window with everything but the one
+          thing the step is about reduced to a grey shape.
+        {%- endcomment -%}
+        <div class="install-browser" aria-hidden="true">
+          <div class="install-tabstrip"><span class="install-tabchip"></span></div>
+          <div class="install-omni">
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            <span class="install-url install-url--page">meet.google.com</span>
+            <span class="install-ext"></span>
+            <span class="install-ext"></span>
+            <span class="install-avatar"></span>
+          </div>
+          <div class="install-viewport install-viewport--{{ figure }}">
+            {%- if figure == "join" %}
+            {%- comment -%}
+              A call: two tiles, the far end and you. Grey, because a mocked-up
+              face is detail a reader will try to read.
+            {%- endcomment -%}
+            <div class="meet-tiles">
+              <span class="meet-tile"></span>
+              <span class="meet-tile meet-tile--self"></span>
+            </div>
+            {%- endif %}
+            {%- if figure == "device" %}
+            {%- comment -%}
+              Meet's audio settings, with the microphone list open on the device
+              the extension puts there. The second row is the output, which is
+              the one Bluetooth headphones get lost in — drawn, and still, so it
+              is clear which of the two the step is asking for.
+            {%- endcomment -%}
+            <div class="install-dialog">
+              <span class="install-line install-line--head"></span>
+              <span class="meet-device">
+                <span class="meet-device-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="2.5" width="6" height="11" rx="3"/>
+                    <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/>
+                    <path d="M12 18v3.5"/>
+                  </svg>
+                </span>
+                <span class="install-select">Interpretab (translated)</span>
+              </span>
+              <span class="meet-device">
+                <span class="meet-device-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/>
+                    <path d="M16 9.2a4.4 4.4 0 0 1 0 5.6"/>
+                  </svg>
+                </span>
+                <span class="install-select install-select--still"><span class="install-line"></span></span>
+              </span>
+            </div>
+            {%- endif %}
+          </div>
+        </div>
+        {%- endif %}
+        {%- unless forloop.last %}
+        <label class="install-next" for="meet-step-{{ forloop.index | plus: 1 }}">{{ copy.next | default: site.data.meet.en.next }}
+          <svg viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+            <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </label>
+        {%- endunless %}
+      </div>
+    </div>
+    {%- endfor %}
+  </div>
+</div>

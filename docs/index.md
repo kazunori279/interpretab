@@ -141,24 +141,17 @@ turns the input off at any time.
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
 and subtitled.
 
-**On Google Meet, for them to hear your voice translated, there is nothing to install.**
+#### 🤝 Using with Google Meet
 
-1. Plug headphones or earphones into the computer — on speakers the microphone hears the call, and
-   the two directions start interpreting each other.
-2. Turn on tab audio — them to you — and set its language to yours. Turn on the microphone — you to
-   them — and set its language to theirs.
-3. On a Meet tab the Microphone card shows an extra switch, **Send the translation into this Meet
-   call**. Leave it on.
-4. Press Start.
-5. In Meet, **Settings → Audio → Microphone** → choose **Interpretab (translated)**. While you are
-   in that dialog, **turn Studio Sound off**.
+**On Google Meet, for them to hear your voice translated too, there is nothing to install.**
 
-Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter.
-Expect the far end to hear the translation about three seconds after you speak.
+{% include meet-steps.html %}
 
-**On any other service** the translated voice has to reach the meeting app as a microphone input,
-and that needs a virtual audio device. The simplest answer is still that the other side installs
-Interpretab too and translates your voice on their end; failing that:
+#### 🔌 Any other meeting service
+
+The translated voice has to reach the meeting app as a microphone input, and that needs a virtual
+audio device. The simplest answer is still that the other side installs Interpretab too and
+translates your voice on their end; failing that:
 
 1. Install a virtual audio device: [BlackHole](https://existential.audio/blackhole/) on macOS,
    [VB-Cable](https://vb-audio.com/Cable/) on Windows.

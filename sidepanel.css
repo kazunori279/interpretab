@@ -98,6 +98,11 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 .row.indent { padding-inline-start: 1.35rem; }
 .row.buttons { gap: 0.5rem; }
 .inline { display: flex; align-items: center; gap: 0.3rem; }
+/* A checkbox greyed out on its own is a box that looks unticked rather than
+   unavailable. The words beside it have to go with it — the microphone's
+   subtitles are the one switch this happens to, on a Meet call, where they
+   would be subtitles of your own voice. */
+.inline:has(input:disabled) { opacity: 0.5; }
 .grow { flex: 1; }
 .small, .note { color: var(--muted); }
 .note { margin: 0; line-height: 1.45; font-size: 12px; }

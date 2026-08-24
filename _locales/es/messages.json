@@ -50,7 +50,7 @@
     "message": "Para dos personas que comparten un micrófono: oye uno de vuestros dos idiomas y habla el otro, en voz alta por <b>los altavoces</b>, que es de lo que se trata. Aleja el micrófono de los altavoces o se oirá a sí mismo."
   },
   "panelMicToCall": { "message": "Enviar la traducción a esta llamada de Meet" },
-  "panelMicToCallNote": { "message": "En Meet, abre <b>Configuración → Audio → Micrófono</b> y elige <b>Interpretab (translated)</b>. Aprovecha para desactivar <b>Studio Sound</b>. Tu propia voz va mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete." },
+  "panelMicToCallNote": { "message": "En Meet, abre <b>Configuración → Audio → Micrófono</b> y elige <b>Interpretab (translated)</b>. Aprovecha para desactivar <b>Studio Sound</b>. Tu propia voz va mezclada por debajo, en bajo, así que la llamada te oye a ti además del intérprete. Mientras esto está activado, esa voz va a la llamada en vez de salir por este ordenador, y sus subtítulos quedan apagados." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

@@ -50,7 +50,7 @@
     "message": "마이크 하나를 두 사람이 함께 쓰는 모드입니다. 정해 둔 두 언어 중 들린 쪽을 다른 언어로 <b>스피커</b>에서 소리 내어 말합니다. 그것이 이 모드의 목적이지만, 마이크가 그 소리를 듣지 않도록 스피커에서 떨어뜨려 두세요."
   },
   "panelMicToCall": { "message": "이 Meet 통화로 통역 음성 보내기" },
-  "panelMicToCallNote": { "message": "Meet에서 <b>설정 → 오디오 → 마이크</b>를 열고 <b>Interpretab (translated)</b>를 고르세요. 온 김에 <b>Studio Sound</b>는 꺼 두세요. 당신 목소리도 아래에 작게 섞여 있어서, 통화에서는 통역과 함께 당신 목소리도 들립니다." },
+  "panelMicToCallNote": { "message": "Meet에서 <b>설정 → 오디오 → 마이크</b>를 열고 <b>Interpretab (translated)</b>를 고르세요. 온 김에 <b>Studio Sound</b>는 꺼 두세요. 당신 목소리도 아래에 작게 섞여 있어서, 통화에서는 통역과 함께 당신 목소리도 들립니다. 켜져 있는 동안 그 목소리는 이 컴퓨터가 아니라 통화로만 나가고, 자막도 꺼집니다." },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },

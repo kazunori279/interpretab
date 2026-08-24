@@ -1,26 +1,29 @@
 /**
- * The three photographed panels of the guide's install slideshow, in each of
- * the ten languages the guide is written in.
+ * The photographed panels of the guide's two slideshows, in each of the ten
+ * languages the guide is written in.
  *
  *     node tests/guide-shots.mjs [--headed] [--keep]
  *
  * `docs/assets/install-1-store-<lang>.png`, `-2-key-<lang>.png` and
  * `-4-start-<lang>.png` are the three photographs in the install section — the
  * store listing with its Add to Chrome button, the Options page with a key in
- * it, and the side panel with its language picker and Start. The section's
- * other steps are AI Studio, which is behind a Google sign-in, and a click on
- * Chrome's own toolbar, which no page can photograph; both are drawn in CSS
- * inside `docs/_includes/install-steps.html` and there is nothing here to take.
+ * it, and the side panel with its language picker and Start. `meet-1-tab`,
+ * `-2-mic` and `-3-start` are the three in the Google Meet section: the two
+ * direction cards set up for a call, and the button row. The steps either
+ * section does not photograph are AI Studio, which is behind a Google sign-in,
+ * Chrome's own toolbar, which no page can photograph, and Meet itself, whose
+ * labels are not ours to translate; all of them are drawn in CSS inside the two
+ * includes and there is nothing here to take.
  *
- * Thirty pictures rather than three because all three are localized and none of
- * them is ours to translate. The store listing is Google's page and says
- * `Chrome に追加` to a reader whose Chrome is Japanese; the other two are the
+ * Sixty pictures rather than six because all six are localized and none of them
+ * is ours to translate. The store listing is Google's page and says
+ * `Chrome に追加` to a reader whose Chrome is Japanese; the rest are the
  * extension's own UI coming out of `_locales`. A guide that walks a reader
  * through a screen and shows them a different screen is the failure this
  * repository keeps finding, and the fix is the same each time: take the picture
  * the reader is actually looking at. So Chrome is launched once per language —
  * which is what decides both the store's language and the catalogue the
- * extension loads — and the same three crops come out ten times.
+ * extension loads — and the same six crops come out ten times.
  *
  * Sibling of `tests/store-shots.mjs`, and deliberately not part of it. Those
  * three are 1280×800 because the store demands it, and are composed to be
@@ -60,6 +63,14 @@ const OUT = path.join(ROOT, "docs", "assets");
 
 const headed = process.argv.includes("--headed");
 const keepOpen = process.argv.includes("--keep");
+
+/**
+ * How wide a picture ends up in the guide: `.container-lg` less its padding.
+ * Both the crops and the arrows are sized against it — one to be rasterized at
+ * the width it is drawn at, the other to know whether a percentage of margin is
+ * room for an arrow or eleven pixels.
+ */
+const COLUMN = 980;
 
 /** Same fake as `store-shots.mjs`, for the same reason: no real key in frame. */
 const FAKE_KEY = "NOT-A-REAL-KEY-only-a-placeholder-00000";
@@ -111,8 +122,30 @@ const panelState = (lang) => ({
   duckLevel: 0.15,
 });
 
+/**
+ * The one state the Meet section is about: both directions on, tab audio into
+ * the reader's language and the microphone out of it, with the Meet switch
+ * left where it defaults. `micCaptions` is stored on, and the panel is expected
+ * to render it off and greyed — the pictures are of a call, and on a call the
+ * microphone's subtitles would be subtitles of your own voice.
+ */
+const callState = (lang) => ({
+  ...panelState(lang),
+  micEnabled: true,
+  micTarget: lang === "en" ? "ja" : "en",
+  micCaptions: true,
+  micToCall: true,
+});
+
 /** Which numbered file each figure's pictures are, one per language. */
-const FILES = { store: "install-1-store", key: "install-2-key", start: "install-4-start" };
+const FILES = {
+  store: "install-1-store",
+  key: "install-2-key",
+  start: "install-4-start",
+  meettab: "meet-1-tab",
+  meetmic: "meet-2-mic",
+  meetstart: "meet-3-start",
+};
 
 /** Filled in by `capture()`, written out as `docs/_data/shots.yml` at the end. */
 const shots = {};
@@ -139,6 +172,7 @@ for (const [lang, ui] of Object.entries(LANGUAGES)) {
 
     await key(chrome, origin, lang);
     await start(chrome, origin, lang);
+    await meet(chrome, origin, lang);
   } finally {
     await chrome.close({ keepOpen });
   }
@@ -279,6 +313,115 @@ async function start(chrome, origin, lang) {
   await page.close();
 }
 
+/**
+ * The side panel set up for a Meet call, cropped three ways.
+ *
+ * One page load and three pictures, because the three steps are three parts of
+ * one screen and photographing them separately would let them drift out of
+ * step with each other. The crops are the two direction cards and the button
+ * row rather than the whole panel: a 420-wide panel with both directions open
+ * is taller than it is wide, and a picture that tall comes out about a third of
+ * the column and unreadable.
+ *
+ * The panel only offers the Meet switch on `meet.google.com` — `callMicOn` in
+ * `lib/settings.js` — and it learns where it is from `chrome.tabs`, which here
+ * answers with the extension page it is being photographed in. So the answer is
+ * wrapped before any of the panel's own scripts run. Nothing else about the
+ * page is faked: the switch, the greyed-out subtitles box and the note under it
+ * are the panel's own rendering of that URL.
+ */
+async function meet(chrome, origin, lang) {
+  const page = await chrome.newPage(`${origin}/sidepanel.html`, { width: 420, height: 900 });
+  await page.chrome.send(
+    "Page.addScriptToEvaluateOnNewDocument",
+    { source: `(${asMeetTab})("https://meet.google.com/abc-defg-hij")` },
+    page.sessionId
+  );
+  await page.eval(`chrome.storage.local.set(${JSON.stringify(callState(lang))})`);
+  await page.reload();
+  const ok = await page.waitFor(`!document.getElementById("micToCallRow").hidden`);
+  if (!ok) throw new Error("the panel never believed it was on a Meet tab");
+
+  const wanted = simulLanguageCode(lang);
+  const picked = await page.eval(`document.getElementById("tabTarget").value`);
+  if (picked !== wanted) throw new Error(`the panel will not translate into ${lang}: it picked ${picked}`);
+  // The picture is of the rule this section exists to explain, so it is checked
+  // rather than trusted: on a call the microphone's subtitles come off and stay
+  // off, and a shot of a ticked box would be a shot contradicting its caption.
+  const captions = await page.eval(`(() => {
+    const box = document.getElementById("micCaptions");
+    return { checked: box.checked, disabled: box.disabled };
+  })()`);
+  if (captions.checked || !captions.disabled) {
+    throw new Error(`the panel still offers the microphone's subtitles on a call: ${JSON.stringify(captions)}`);
+  }
+  await sleep(400);
+
+  // The microphone card stops at the Meet switch rather than at its own bottom
+  // edge. Below it are two notes that run to six lines in some languages, and a
+  // card that tall renders about a third of the column wide — the switch this
+  // step is about would be eleven pixels of it. The notes say what the step
+  // says anyway. The cut goes in the gap between the switch and the first of
+  // them: far enough down that the marker's ring is whole, and not so far that
+  // the picture ends on the top halves of a line of letters.
+  const clips = await page.eval(`(() => {
+    const cards = document.querySelectorAll("section.direction");
+    const bar = document.querySelector("section.buttons");
+    const buttons = bar.getBoundingClientRect();
+    const row = document.getElementById("micToCallRow").getBoundingClientRect();
+    const note = document.getElementById("micToCallNote").getBoundingClientRect();
+    const call = { bottom: note.height ? (row.bottom + note.top) / 2 : row.bottom + 8 };
+    const from = (el, bottom) => {
+      const r = el.getBoundingClientRect();
+      return { x: Math.round(r.left) - 6, y: Math.round(r.top) - 6,
+               width: Math.round(r.width) + 12, height: Math.round(bottom - r.top) + 12 };
+    };
+    // The button row stops after the last button rather than at the panel's
+    // edge. What is past it is empty, and empty pixels in a picture this wide
+    // are pixels taken off Start: the wider the crop, the smaller everything in
+    // it renders in a column of a fixed width. Measured off the buttons rather
+    // than off the row, and from both ends, because in Arabic they run the
+    // other way.
+    const ends = [...bar.children].map((el) => el.getBoundingClientRect());
+    const left = Math.max(0, Math.round(Math.min(...ends.map((r) => r.left))) - 20);
+    const right = Math.round(Math.max(...ends.map((r) => r.right))) + 20;
+    return {
+      meettab: from(cards[0], cards[0].getBoundingClientRect().bottom),
+      meetmic: from(cards[1], call.bottom),
+      meetstart: { x: left, y: Math.round(buttons.top) - 6, width: right - left,
+                   height: Math.round(buttons.height) + 12 },
+    };
+  })()`);
+  // Both arrows stand on the side of their subject that has nothing else on it:
+  // the language picker has its `into` in front of it, and Start has the
+  // microphone button behind it. Which side that is swaps with the panel's own
+  // direction, so it is read off the panel rather than off a list of languages.
+  const rtl = await page.eval(`document.documentElement.dir === "rtl"`);
+  // 2.4 on the wide crop and 2 on the tall one: both end up about as wide as the
+  // guide's column allows, and a crop rasterized below the width it is drawn at
+  // is a crop the browser has to invent pixels for. The button row is a third of
+  // the width of either, so its multiple is worked out rather than picked —
+  // 2.4 there would be a picture stretched to two-thirds again.
+  const target = await rect(page, "tabTarget");
+  await capture(page, "meettab", lang, { ...clips.meettab, scale: 2.4 }, target, rtl ? "left" : "right");
+  await capture(page, "meetmic", lang, { ...clips.meetmic, scale: 2 }, await rect(page, "micToCallRow"));
+  const toggle = await rect(page, "toggle");
+  const scale = COLUMN / clips.meetstart.width;
+  await capture(page, "meetstart", lang, { ...clips.meetstart, scale }, toggle, rtl ? "right" : "left");
+  await page.close();
+}
+
+/**
+ * Injected into the panel before its own scripts: every tab `chrome.tabs`
+ * hands back is on *url*. The panel asks once, at startup, for the active tab
+ * — and what it does with the answer is the whole subject of the section being
+ * photographed.
+ */
+function asMeetTab(url) {
+  const query = chrome.tabs.query.bind(chrome.tabs);
+  chrome.tabs.query = async (info) => (await query(info)).map((tab) => ({ ...tab, url }));
+}
+
 /** One element's box, in the page's own coordinates — the ones `clip` is in. */
 async function rect(page, id) {
   const box = await page.eval(`(() => {
@@ -300,7 +443,7 @@ async function rect(page, id) {
  * column has left. It has to be inside the crop, or the arrow points off the
  * edge of a picture and the step has lost its subject.
  */
-async function capture(page, name, lang, clip, mark) {
+async function capture(page, name, lang, clip, mark, prefer) {
   const file = `${FILES[name]}-${lang}.png`;
   const { data } = await page.chrome.send(
     "Page.captureScreenshot",
@@ -327,7 +470,7 @@ async function capture(page, name, lang, clip, mark) {
     height: percent((mark.bottom - mark.top) / clip.height),
   };
   shots[name] ??= {};
-  shots[name][lang] = { file, width, height, side: arrowSide(box, width / height), mark: box };
+  shots[name][lang] = { file, width, height, side: arrowSide(box, width / height, prefer), mark: box };
   console.log(`   ok   docs/assets/${file} — ${width}×${height}`);
 }
 
@@ -341,15 +484,24 @@ async function capture(page, name, lang, clip, mark) {
  * because the alternative is arithmetic in Liquid, which cannot do it in
  * pixels at all: a percentage of room is generous on a picture that renders a
  * thousand pixels wide and is eleven pixels on one that renders four hundred.
+ *
+ * Room is all this can see, and room is not the same as empty: a control with
+ * its label beside it has both. `prefer` is the caller saying which side it
+ * knows to be blank, and it is still only a preference — a side with a label in
+ * it and a side too narrow to draw in are different problems.
  */
-function arrowSide(box, ratio) {
-  const COLUMN = 980; // `.container-lg` less its padding.
+function arrowSide(box, ratio, prefer) {
   const FRAME = 362; // `--stage`, less `--pad` twice, `--say` and `--gap`, at 16px to the rem.
   const ARROW = 34; // The arrow, and enough of a gap to read as pointing.
 
   const rendered = Math.min(COLUMN, FRAME * ratio);
-  if ((box.x / 100) * rendered >= ARROW) return "left";
-  if (((100 - box.x - box.width) / 100) * rendered >= ARROW) return "right";
+  const room = {
+    left: (box.x / 100) * rendered,
+    right: ((100 - box.x - box.width) / 100) * rendered,
+  };
+  for (const side of prefer ? [prefer, "left", "right"] : ["left", "right"]) {
+    if (room[side] >= ARROW) return side;
+  }
   return "above";
 }
 
@@ -363,19 +515,19 @@ function arrowSide(box, ratio) {
  */
 function writeShots() {
   const lines = [
-    "# Where each photographed picture in the install slideshow is, and where the one",
-    "# thing it is about sits inside it — for every language the guide is written in.",
+    "# Where each photographed picture in the guide's two slideshows is, and where the",
+    "# one thing it is about sits inside it — for every language the guide is written in.",
     "#",
     "# Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not",
     "# this: the next run overwrites the file.",
     "#",
-    "# A picture per language because all three are localized: the store listing is",
-    "# Google's, the other two are the extension's own UI. The numbers differ with",
-    "# the words — a button called `Hinzufügen` is not where a button called `Add to",
+    "# A picture per language because all six are localized: the store listing is",
+    "# Google's, the rest are the extension's own UI. The numbers differ with the",
+    "# words — a button called `Hinzufügen` is not where a button called `Add to",
     "# Chrome` is — which is why none of this is typed in by hand.",
     "#",
     "# `mark` is a rectangle in percentages of the picture, and it is what lets",
-    "# `_includes/install-steps.html` put a ring and an arrow on the right button",
+    "# `_includes/install-steps.html` and `meet-steps.html` put a ring and an arrow on the right button",
     "# without anybody measuring a screenshot by hand. Re-take a picture and the",
     "# ring moves with the button. `side` is where the arrow stands, which is",
     "# wherever it fits — see `arrowSide()`. `width` and `height` are the picture's own, and",

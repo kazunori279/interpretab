@@ -142,24 +142,17 @@ corta a entrada a qualquer momento.
 áudio da aba, escolha o seu idioma e aperte Start. O que disserem chega no seu idioma, falado e
 legendado.
 
+#### 🤝 Usar com o Google Meet
+
 **Para que eles ouçam a sua voz traduzida no Google Meet, não há nada a instalar.**
 
-1. Ligue fones de ouvido no computador — em caixas de som o microfone ouve a chamada e as duas
-   direções começam a interpretar uma à outra.
-2. Ligue o áudio da aba — deles para você — e deixe no seu idioma. Ligue o microfone — de você para
-   eles — e deixe no idioma deles.
-3. Numa aba do Meet, o cartão Microphone mostra um interruptor a mais: **Enviar a tradução para esta
-   chamada do Meet**. Deixe ligado.
-4. Aperte Start.
-5. No Meet, **Configurações → Áudio → Microfone** → escolha **Interpretab (translated)**. Já que
-   está lá, desligue o **Studio Sound**.
+{% include meet-steps.html %}
 
-A sua própria voz vai misturada baixinho por baixo, então a chamada ouve você além do intérprete.
-Conte com uns três segundos entre o que você diz e o que o outro lado ouve.
+#### 🔌 Qualquer outro serviço de reunião
 
-**Em qualquer outro serviço**, a voz traduzida precisa chegar ao aplicativo da reunião como entrada
-de microfone, e isso pede um dispositivo de áudio virtual. O mais simples continua sendo que eles
-instalem o Interpretab também; se não puderem:
+A voz traduzida precisa chegar ao aplicativo da reunião como entrada de microfone, e isso pede um
+dispositivo de áudio virtual. O mais simples continua sendo que eles instalem o Interpretab
+também; se não puderem:
 
 1. Instale um dispositivo de áudio virtual: [BlackHole](https://existential.audio/blackhole/) no macOS, [VB-Cable](https://vb-audio.com/Cable/) no Windows.
 2. Ligue os fones, como acima.

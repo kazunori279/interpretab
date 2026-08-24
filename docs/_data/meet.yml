@@ -1,0 +1,342 @@
+# The Google Meet steps, in the ten languages the guide is written in.
+#
+# Sibling of `install.yml`, and the same arrangement for the same reason:
+# `_includes/meet-steps.html` is the markup once, this is the words ten times.
+# The two slideshows share their CSS and differ in their radio names, so the
+# reader can be on step three of one and step six of the other.
+#
+# Two phases, because the call is the line between them. Everything before it is
+# set up in the side panel and can be done while nobody is waiting; everything
+# after it happens with a meeting already on screen. `phase` is written on the
+# step the phase starts at rather than on all of them — the include prints it as
+# a heading and breaks the tab strip onto a new row there, and a label repeated
+# on every step is a label that has to be kept identical in ten files.
+#
+# Seven steps and not six. Meet cannot offer `Interpretab (translated)` in its
+# microphone list until the run has started: the shim that puts it there is
+# injected by `start()`, on the tab the run is on. So pressing Start is a step of
+# its own, between joining the call and choosing the device — and a reader who
+# looks for the device first finds an empty list and stops.
+#
+# Ordering has one other constraint. The Meet switch on the Microphone card only
+# exists on `meet.google.com`, so the panel has to be looked at from that tab
+# before the call rather than from anywhere else, which is why step two opens the
+# site and not the meeting.
+#
+# `body` is HTML, `tab` is the short label on the step's button, and links are
+# written with no `target` — all three the same as `install.yml`, and for the
+# reasons written there.
+
+en:
+  next: Next
+  steps:
+    - tab: Plug in headphones
+      phase: Before the call
+      body: >-
+        On speakers the microphone hears the call coming back out of them, and the two directions
+        start interpreting each other. Plug headphones or earphones into the computer before
+        anything else.
+    - tab: Them to you
+      body: >-
+        Open <a href="https://meet.google.com/">meet.google.com</a> and open Interpretab's side
+        panel on that tab. Turn <b>Tab audio</b> on and set it to <b>your own</b> language — that is
+        the half which translates what the other side says.
+    - tab: You to them
+      body: >-
+        Turn <b>Microphone</b> on and set it to <b>their</b> language. On a Meet tab that card
+        carries one extra switch, <b>Send the translation into this Meet call</b> — leave it on.
+        While it is on, that voice goes into the call instead of out of this computer, and its
+        subtitles here stay off.
+    - tab: Join the call
+      phase: In the call
+      body: Join the meeting in that same tab.
+    - tab: Press Start
+      body: >-
+        Press <b>Start</b> in the side panel. Nothing appears in Meet's own microphone list until
+        you do — the translated microphone is put there by starting the run.
+    - tab: Pick the microphone
+      body: >-
+        In Meet, open <b>Settings → Audio</b> and choose <b>Interpretab (translated)</b> as the
+        microphone. Turn <b>Studio Sound</b> off while you are in there. On Bluetooth headphones,
+        check that they are what Meet is playing through.
+    - tab: Talk
+      body: >-
+        Say something. The far end hears the translation about three seconds later, with your own
+        voice mixed in quietly underneath, so they can still hear you.
+
+# Chinese, Japanese and Korean below are one line per `body`, as in `install.yml`:
+# a folded scalar joins its lines with a space, and a space between two kanji is
+# a space a reader sees.
+ja:
+  next: 次へ
+  steps:
+    - tab: ヘッドホンをつなぐ
+      phase: 通話の前に
+      body: スピーカーのままだと通話の音をマイクが拾ってしまい、二つの方向がお互いを通訳し合います。まずヘッドホンかイヤホンをパソコンにつないでください。
+    - tab: 相手の声を自分の言語へ
+      body: <a href="https://meet.google.com/">meet.google.com</a> を開き、そのタブで Interpretab のサイドパネルを開きます。<b>タブ音声翻訳</b>をオンにして、翻訳先を<b>自分の言語</b>にします。これが相手の話を訳す側です。
+    - tab: 自分の声を相手の言語へ
+      body: <b>マイク音声翻訳</b>をオンにして、翻訳先を<b>相手の言語</b>にします。Meet のタブでは、このカードに <b>この Meet 通話に翻訳音声を流す</b> というスイッチが一つ増えます。オンのままにしてください。オンの間、その声はこのパソコンからは出ず、通話にだけ送られます。字幕もオフになります。
+    - tab: 通話に参加
+      phase: 通話中に
+      body: 同じタブのまま、会議に参加します。
+    - tab: Start を押す
+      body: サイドパネルの <b>Start</b> を押します。押すまでは Meet のマイク一覧に何も出てきません。翻訳マイクは、実行を開始したときに入るからです。
+    - tab: マイクを選ぶ
+      body: Meet の<b>設定 → 音声</b>を開き、マイクに <b>Interpretab (translated)</b> を選びます。ついでに <b>Studio Sound</b> はオフにしてください。Bluetooth のヘッドホンを使っているときは、Meet の再生先もそれになっているか確かめます。
+    - tab: 話す
+      body: 何か話してみてください。3 秒ほど遅れて、訳された声が相手に届きます。自分の声も小さく混ぜてあるので、相手にはあなたの声も聞こえます。
+
+zh:
+  next: 下一步
+  steps:
+    - tab: 插上耳机
+      phase: 通话之前
+      body: 用扬声器的话，麦克风会把通话的声音又收进去，两个方向就开始互相翻译。先把耳机或耳塞插到电脑上。
+    - tab: 对方说的话
+      body: 打开 <a href="https://meet.google.com/">meet.google.com</a>，在那个标签页上打开 Interpretab 的侧边栏。把<b>标签页音频</b>打开，译为<b>你自己的语言</b>——这一半负责翻译对方说的话。
+    - tab: 你说的话
+      body: 把<b>麦克风</b>打开，译为<b>对方的语言</b>。在 Meet 的标签页上，这张卡片会多出一个开关，<b>把译文语音送进这个 Meet 通话</b>，保持打开。开着的时候，那个声音不从这台电脑放出来，只送进通话，这边的字幕也会关掉。
+    - tab: 加入通话
+      phase: 通话之中
+      body: 就在这个标签页里加入会议。
+    - tab: 按 Start
+      body: 在侧边栏按 <b>Start</b>。不按的话，Meet 自己的麦克风列表里什么都不会出现——那个翻译麦克风是运行开始时才装进去的。
+    - tab: 选择麦克风
+      body: 在 Meet 里打开<b>设置 → 音频</b>，麦克风选 <b>Interpretab (translated)</b>。顺手把 <b>Studio Sound</b> 关掉。要是用蓝牙耳机，也确认一下 Meet 的播放设备就是它。
+    - tab: 开口说话
+      body: 说点什么。大约三秒后，对面会听到译文，你自己的声音也小声混在下面，所以他们还是能听见你。
+
+es:
+  next: Siguiente
+  steps:
+    - tab: Ponte auriculares
+      phase: Antes de la llamada
+      body: >-
+        Con altavoces, el micrófono oye la llamada saliendo de ellos y las dos direcciones empiezan
+        a interpretarse entre sí. Conecta unos auriculares antes que nada.
+    - tab: De ellos a ti
+      body: >-
+        Abre <a href="https://meet.google.com/">meet.google.com</a> y abre ahí el panel lateral de
+        Interpretab. Activa <b>Audio de la pestaña</b> y ponlo en <b>tu</b> idioma: esa es la mitad
+        que traduce lo que dice la otra parte.
+    - tab: De ti a ellos
+      body: >-
+        Activa <b>Micrófono</b> y ponlo en el idioma <b>de ellos</b>. En una pestaña de Meet la
+        tarjeta trae un interruptor más, <b>Enviar la traducción a esta llamada de Meet</b>: déjalo
+        puesto. Mientras lo esté, esa voz va a la llamada en vez de salir de este ordenador, y sus
+        subtítulos aquí se quedan apagados.
+    - tab: Entra en la llamada
+      phase: En la llamada
+      body: Únete a la reunión en esa misma pestaña.
+    - tab: Pulsa Start
+      body: >-
+        Pulsa <b>Start</b> en el panel lateral. Hasta que lo hagas no aparece nada en la lista de
+        micrófonos de Meet: el micrófono traducido lo pone ahí el arranque.
+    - tab: Elige el micrófono
+      body: >-
+        En Meet, abre <b>Configuración → Audio</b> y elige <b>Interpretab (translated)</b> como
+        micrófono. Ya que estás, apaga <b>Sonido de estudio</b>. Si llevas auriculares Bluetooth,
+        comprueba que son por donde Meet está sonando.
+    - tab: Habla
+      body: >-
+        Di algo. Al otro lado oyen la traducción unos tres segundos después, con tu propia voz
+        mezclada bajito por debajo, así que también te siguen oyendo a ti.
+
+fr:
+  next: Suivant
+  steps:
+    - tab: Branchez un casque
+      phase: Avant l'appel
+      body: >-
+        Sur haut-parleurs, le micro entend l'appel qui en sort et les deux directions se mettent à
+        s'interpréter l'une l'autre. Branchez un casque ou des écouteurs avant tout le reste.
+    - tab: Eux vers vous
+      body: >-
+        Ouvrez <a href="https://meet.google.com/">meet.google.com</a> et ouvrez-y le panneau latéral
+        d'Interpretab. Activez <b>Audio de l'onglet</b> et mettez-le dans <b>votre</b> langue :
+        c'est la moitié qui traduit ce que dit l'autre partie.
+    - tab: Vous vers eux
+      body: >-
+        Activez <b>Microphone</b> et mettez-le dans <b>leur</b> langue. Sur un onglet Meet, la carte
+        porte un interrupteur de plus, <b>Envoyer la traduction dans cet appel Meet</b> — laissez-le
+        activé. Tant qu'il l'est, cette voix part dans l'appel au lieu de sortir de cet ordinateur,
+        et ses sous-titres restent éteints ici.
+    - tab: Rejoignez l'appel
+      phase: Pendant l'appel
+      body: Rejoignez la réunion dans ce même onglet.
+    - tab: Appuyez sur Start
+      body: >-
+        Appuyez sur <b>Start</b> dans le panneau latéral. Rien n'apparaît dans la liste des micros
+        de Meet avant ça : le micro traduit y est installé au démarrage.
+    - tab: Choisissez le micro
+      body: >-
+        Dans Meet, ouvrez <b>Paramètres → Audio</b> et choisissez <b>Interpretab (translated)</b>
+        comme microphone. Profitez-en pour désactiver <b>Son studio</b>. Si vous êtes sur un casque
+        Bluetooth, vérifiez que c'est bien par là que Meet joue le son.
+    - tab: Parlez
+      body: >-
+        Dites quelque chose. En face, la traduction arrive environ trois secondes plus tard, avec
+        votre propre voix mêlée doucement en dessous, si bien qu'on vous entend toujours.
+
+de:
+  next: Weiter
+  steps:
+    - tab: Kopfhörer anschließen
+      phase: Vor dem Gespräch
+      body: >-
+        Über Lautsprecher hört das Mikrofon das Gespräch, das aus ihnen kommt, und die beiden
+        Richtungen fangen an, sich gegenseitig zu dolmetschen. Schließen Sie zuerst Kopfhörer oder
+        Ohrhörer an den Rechner an.
+    - tab: Die anderen zu Ihnen
+      body: >-
+        Öffnen Sie <a href="https://meet.google.com/">meet.google.com</a> und dort Interpretabs
+        Seitenleiste. Schalten Sie <b>Tab-Audio</b> ein und stellen Sie es auf <b>Ihre</b> Sprache —
+        das ist die Hälfte, die übersetzt, was die andere Seite sagt.
+    - tab: Sie zu den anderen
+      body: >-
+        Schalten Sie <b>Mikrofon</b> ein und stellen Sie es auf <b>deren</b> Sprache. Auf einem
+        Meet-Tab hat die Karte einen Schalter mehr, <b>Die Übersetzung in dieses Meet-Gespräch
+        senden</b> — lassen Sie ihn an. Solange er an ist, geht diese Stimme ins Gespräch statt aus
+        diesem Rechner, und ihre Untertitel bleiben hier aus.
+    - tab: Dem Gespräch beitreten
+      phase: Im Gespräch
+      body: Treten Sie der Besprechung im selben Tab bei.
+    - tab: Start drücken
+      body: >-
+        Drücken Sie <b>Start</b> in der Seitenleiste. Vorher steht in Meets eigener Mikrofonliste
+        nichts — das übersetzte Mikrofon kommt erst mit dem Start dorthin.
+    - tab: Mikrofon auswählen
+      body: >-
+        Öffnen Sie in Meet <b>Einstellungen → Audio</b> und wählen Sie <b>Interpretab
+        (translated)</b> als Mikrofon. Schalten Sie bei der Gelegenheit <b>Studio-Sound</b> aus. Bei
+        Bluetooth-Kopfhörern prüfen Sie, ob Meet auch über sie ausgibt.
+    - tab: Sprechen
+      body: >-
+        Sagen Sie etwas. Die Gegenseite hört die Übersetzung etwa drei Sekunden später, mit Ihrer
+        eigenen Stimme leise darunter gemischt, sodass Sie weiterhin zu hören sind.
+
+pt:
+  next: Próximo
+  steps:
+    - tab: Ponha fones de ouvido
+      phase: Antes da chamada
+      body: >-
+        Nas caixas de som o microfone escuta a chamada saindo delas, e as duas direções começam a
+        interpretar uma à outra. Ligue fones de ouvido no computador antes de qualquer coisa.
+    - tab: Deles para você
+      body: >-
+        Abra <a href="https://meet.google.com/">meet.google.com</a> e abra ali o painel lateral do
+        Interpretab. Ligue <b>Áudio da aba</b> e deixe no <b>seu</b> idioma — essa é a metade que
+        traduz o que o outro lado fala.
+    - tab: De você para eles
+      body: >-
+        Ligue <b>Microfone</b> e deixe no idioma <b>deles</b>. Numa aba do Meet o cartão ganha mais
+        um botão, <b>Enviar a tradução para esta chamada do Meet</b> — deixe ligado. Enquanto
+        estiver, essa voz vai para a chamada em vez de sair deste computador, e as legendas dela
+        aqui ficam desligadas.
+    - tab: Entre na chamada
+      phase: Na chamada
+      body: Entre na reunião nessa mesma aba.
+    - tab: Aperte Start
+      body: >-
+        Aperte <b>Start</b> no painel lateral. Antes disso não aparece nada na lista de microfones
+        do Meet — o microfone traduzido só entra ali quando a tradução começa.
+    - tab: Escolha o microfone
+      body: >-
+        No Meet, abra <b>Configurações → Áudio</b> e escolha <b>Interpretab (translated)</b> como
+        microfone. Já que está ali, desligue o <b>Som de estúdio</b>. Se estiver de fones Bluetooth,
+        confira que é por eles que o Meet está tocando.
+    - tab: Fale
+      body: >-
+        Fale alguma coisa. Do outro lado a tradução chega uns três segundos depois, com a sua
+        própria voz misturada baixinho por baixo, então continuam ouvindo você também.
+
+ko:
+  next: 다음
+  steps:
+    - tab: 헤드폰 연결
+      phase: 통화 전에
+      body: 스피커로 들으면 통화 소리를 마이크가 다시 주워서, 두 방향이 서로를 통역하기 시작합니다. 무엇보다 먼저 헤드폰이나 이어폰을 컴퓨터에 꽂으세요.
+    - tab: 상대의 말
+      body: <a href="https://meet.google.com/">meet.google.com</a> 을 열고, 그 탭에서 Interpretab 사이드 패널을 엽니다. <b>탭 오디오</b>를 켜고 번역할 언어를 <b>내 언어</b>로 맞춥니다. 상대가 하는 말을 옮기는 쪽입니다.
+    - tab: 내 말
+      body: <b>마이크</b>를 켜고 번역할 언어를 <b>상대의 언어</b>로 맞춥니다. Meet 탭에서는 이 카드에 <b>이 Meet 통화로 통역 음성 보내기</b> 스위치가 하나 더 붙습니다. 켠 채로 두세요. 켜져 있는 동안 그 음성은 이 컴퓨터로 나오지 않고 통화로만 가며, 여기 자막도 꺼집니다.
+    - tab: 통화 참여
+      phase: 통화 중에
+      body: 같은 탭에서 회의에 참여합니다.
+    - tab: Start 누르기
+      body: 사이드 패널의 <b>Start</b> 를 누릅니다. 누르기 전에는 Meet의 마이크 목록에 아무것도 나타나지 않습니다. 통역 마이크는 실행을 시작할 때 들어가기 때문입니다.
+    - tab: 마이크 선택
+      body: Meet에서 <b>설정 → 오디오</b>를 열고 마이크로 <b>Interpretab (translated)</b> 를 고릅니다. 온 김에 <b>스튜디오 사운드</b>는 꺼 두세요. 블루투스 헤드폰을 쓴다면 Meet의 출력도 그쪽인지 확인합니다.
+    - tab: 말하기
+      body: 한마디 해 보세요. 3초쯤 뒤에 상대에게 번역이 도착합니다. 내 목소리도 아래에 작게 섞여 있어서 상대는 나도 계속 들을 수 있습니다.
+
+hi:
+  next: आगे
+  steps:
+    - tab: हेडफ़ोन लगाएँ
+      phase: कॉल से पहले
+      body: >-
+        स्पीकर पर माइक्रोफ़ोन कॉल की आवाज़ को ही वापस सुन लेता है, और दोनों दिशाएँ एक-दूसरे का अनुवाद करने लगती हैं।
+        सबसे पहले कंप्यूटर में हेडफ़ोन या ईयरफ़ोन लगाएँ।
+    - tab: उनकी बात, आपकी भाषा में
+      body: >-
+        <a href="https://meet.google.com/">meet.google.com</a> खोलें और उसी टैब पर Interpretab का साइड पैनल
+        खोलें। <b>टैब का ऑडियो</b> चालू करें और उसे <b>अपनी</b> भाषा पर रखें — यही आधा हिस्सा सामने वाले की बात
+        का अनुवाद करता है।
+    - tab: आपकी बात, उनकी भाषा में
+      body: >-
+        <b>माइक्रोफ़ोन</b> चालू करें और उसे <b>उनकी</b> भाषा पर रखें। Meet के टैब पर इस कार्ड में एक स्विच और आता
+        है, <b>इस Meet कॉल में अनुवाद भेजें</b> — उसे चालू रहने दें। जब तक वह चालू है, वह आवाज़ इस कंप्यूटर से
+        नहीं निकलती, सिर्फ़ कॉल में जाती है, और यहाँ उसके सबटाइटल बंद रहते हैं।
+    - tab: कॉल में शामिल हों
+      phase: कॉल के दौरान
+      body: उसी टैब में मीटिंग में शामिल हो जाएँ।
+    - tab: Start दबाएँ
+      body: >-
+        साइड पैनल में <b>Start</b> दबाएँ। इससे पहले Meet की माइक्रोफ़ोन सूची में कुछ नहीं दिखता — अनुवाद वाला
+        माइक्रोफ़ोन वहाँ शुरू करने पर ही आता है।
+    - tab: माइक्रोफ़ोन चुनें
+      body: >-
+        Meet में <b>Settings → Audio</b> खोलें और माइक्रोफ़ोन में <b>Interpretab (translated)</b> चुनें। साथ ही
+        <b>Studio Sound</b> बंद कर दें। ब्लूटूथ हेडफ़ोन पर हों तो देख लें कि Meet उन्हीं से आवाज़ निकाल रहा है।
+    - tab: बोलिए
+      body: >-
+        कुछ बोलिए। लगभग तीन सेकंड बाद सामने वाले को अनुवाद सुनाई देता है, और नीचे धीमे से आपकी अपनी आवाज़ भी
+        मिली रहती है, तो वे आपको भी सुनते रहते हैं।
+
+ar:
+  next: التالي
+  steps:
+    - tab: وصِّل سماعة رأس
+      phase: قبل المكالمة
+      body: >-
+        مع مكبّرات الصوت يلتقط الميكروفون صوت المكالمة الخارج منها، فيبدأ الاتجاهان بترجمة أحدهما
+        الآخر. وصِّل سماعة رأس أو سماعات أذن بالحاسوب قبل أي شيء.
+    - tab: منهم إليك
+      body: >-
+        افتح <a href="https://meet.google.com/">meet.google.com</a> وافتح لوحة Interpretab الجانبية
+        في العلامة نفسها. شغِّل <b>صوت علامة التبويب</b> واضبطه على <b>لغتك</b> — هذا هو النصف الذي
+        يترجم ما يقوله الطرف الآخر.
+    - tab: منك إليهم
+      body: >-
+        شغِّل <b>الميكروفون</b> واضبطه على <b>لغتهم</b>. في علامة تبويب Meet تحمل البطاقة مفتاحًا
+        إضافيًا، <b>أرسِل الترجمة إلى مكالمة Meet هذه</b> — اتركه مشغَّلًا. وما دام مشغَّلًا يذهب ذلك
+        الصوت إلى المكالمة بدل أن يخرج من هذا الحاسوب، وتبقى ترجمته المكتوبة هنا مطفأة.
+    - tab: انضم إلى المكالمة
+      phase: أثناء المكالمة
+      body: انضم إلى الاجتماع في العلامة نفسها.
+    - tab: اضغط Start
+      body: >-
+        اضغط <b>Start</b> في اللوحة الجانبية. قبل ذلك لا يظهر شيء في قائمة ميكروفونات Meet — إذ
+        يُضاف الميكروفون المترجم عند بدء التشغيل.
+    - tab: اختر الميكروفون
+      body: >-
+        في Meet افتح <b>الإعدادات ← الصوت</b> واختر <b>Interpretab (translated)</b> ميكروفونًا.
+        وأطفئ <b>Studio Sound</b> ما دمت هناك. وإن كنت على سماعة بلوتوث فتأكّد أن Meet يشغّل الصوت
+        عبرها.
+    - tab: تكلَّم
+      body: >-
+        قل شيئًا. يسمع الطرف الآخر الترجمة بعد نحو ثلاث ثوانٍ، وصوتك أنت ممزوج تحتها بهدوء، فيظلّون
+        يسمعونك أيضًا.

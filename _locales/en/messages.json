@@ -69,7 +69,7 @@
     "description": "Checkbox, shown only on a meet.google.com tab."
   },
   "panelMicToCallNote": {
-    "message": "In Meet, open <b>Settings → Audio → Microphone</b> and pick <b>Interpretab (translated)</b>. Turn <b>Studio Sound</b> off while you are in there. Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter."
+    "message": "In Meet, open <b>Settings → Audio → Microphone</b> and pick <b>Interpretab (translated)</b>. Turn <b>Studio Sound</b> off while you are in there. Your own voice is mixed in quietly underneath, so the call hears you as well as the interpreter. While this is on, that voice goes into the call instead of out of this computer, and its subtitles here are off."
   },
 
   "panelStart": { "message": "Start" },

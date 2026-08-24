@@ -1,5 +1,6 @@
 /**
- * The install slideshow, in a browser, in all ten languages.
+ * The guide's two slideshows — the install steps and the Google Meet steps —
+ * in a browser, in all ten languages.
  *
  *     node tests/guide-preview.mjs [en|ja|ar|…] [--no-open]
  *
@@ -58,10 +59,14 @@ const wanted = args.find((a) => /^[a-z]{2}$/.test(a)) || "en";
 
 const data = {
   install: readData("install.yml"),
+  meet: readData("meet.yml"),
   shots: readData("shots.yml"),
   languages: readData("languages.yml"),
 };
-const markup = fs.readFileSync(path.join(SITE, "_includes", "install-steps.html"), "utf8");
+/** Both slideshows, one after the other, the way the guide page has them. */
+const markup = ["install-steps.html", "meet-steps.html"].map((file) =>
+  fs.readFileSync(path.join(SITE, "_includes", file), "utf8")
+);
 const style = readStyle();
 
 fs.mkdirSync(OUT, { recursive: true });
@@ -88,7 +93,7 @@ function preview(language) {
 <html lang="${language.code}" dir="${language.code === "ar" ? "rtl" : "ltr"}">
 <head>
 <meta charset="utf-8">
-<title>Install — ${language.name} (preview)</title>
+<title>Slideshows — ${language.name} (preview)</title>
 <link rel="stylesheet" href="${THEME}">
 <style>
   /* Not the site's language bar. This one says which preview you are looking at. */
@@ -102,7 +107,7 @@ function preview(language) {
 <nav class="preview-bar">${strip}</nav>
 <!-- The wrapper is the one in _layouts/default.html, class for class. -->
 <div class="container-lg px-3 my-5 markdown-body">
-${render(markup, scope)}
+${markup.map((template) => render(template, scope)).join("\n<hr>\n")}
 </div>
 </body>
 </html>

@@ -11,7 +11,7 @@
  * minting a tab-capture stream id, and creating the offscreen document.
  */
 
-import { CALL_ORIGIN, loadSettings, requireApiKey } from "./lib/settings.js";
+import { callMicOn, loadSettings, requireApiKey } from "./lib/settings.js";
 import { ensureGlossary } from "./lib/glossary.js";
 import { preflight } from "./lib/preflight.js";
 import { clearCached, ensureConfig, isBlocked } from "./lib/remote-config.js";
@@ -118,7 +118,7 @@ async function adoptCaptionTab(tabId) {
     "captionTabId",
     "captionStatus",
   ]);
-  if (!running || !wantsCaptions(await loadSettings())) return;
+  if (!running || !wantsCaptions(await loadSettings(), await runIntoCall())) return;
   const working = captionStatus === "ok";
   if (working && tabId === captionTabId) return;
   if (!(await injectCaptions(tabId, !working))) return;
@@ -367,12 +367,20 @@ async function start(panelTabId = null) {
 
   const glossary = await ensureGlossary();
 
+  // Worked out here and carried, rather than asked again where it is needed.
+  // The offscreen document has to know before its first translated frame —
+  // `ensureCallTab` below is two awaits too late for that — and it cannot look
+  // at a tab or at storage to find out. The tab's URL is already in hand, and
+  // it is the same grant that would answer the question later.
+  const intoCall = callMicOn(settings, tab?.url);
+
   await ensureOffscreen();
   const started = await toOffscreen({
     type: "start",
     apiKey,
     streamId,
     settings,
+    intoCall,
     glossary,
     closeHint,
     config,
@@ -392,13 +400,17 @@ async function start(panelTabId = null) {
     capturedTabId: tabId,
     runTabId: tab?.id ?? null,
     runTabTitle: tab?.title || "",
+    // Written down for the two listeners that re-check the subtitles later, on
+    // a tab switch and on a switch being flipped. Neither has the run's tab in
+    // hand, and both have to reach the same answer this one did.
+    intoCall,
     captionStatus: null,
     lastError: null,
   });
   announceRun(tab?.id ?? null, tab?.title || "");
   await markTab(settings);
-  await ensureCaptionTab(settings);
-  await ensureCallTab(settings);
+  await ensureCaptionTab(settings, intoCall);
+  await ensureCallTab(settings, intoCall);
   return { capturedTabId: tabId };
 }
 
@@ -464,11 +476,25 @@ async function remarkTab(tabId) {
   await applyTabMark(tabId, tabMarkPrefix);
 }
 
-/** Are subtitles wanted by either of the directions that are actually running? */
-function wantsCaptions(settings) {
+/**
+ * Are subtitles wanted by either of the directions that are actually running?
+ *
+ * The microphone's are off on a call whatever the switch says: they are
+ * subtitles of what the user just said themselves, over the top of the person
+ * they are talking to. The panel disables the switch there rather than leaving
+ * it looking live, and this is the same rule on the other side of the wire.
+ */
+function wantsCaptions(settings, intoCall) {
   return (
-    (settings.tabEnabled && settings.tabCaptions) || (settings.micEnabled && settings.micCaptions)
+    (settings.tabEnabled && settings.tabCaptions) ||
+    (settings.micEnabled && settings.micCaptions && !intoCall)
   );
+}
+
+/** What `start` worked out about this run, for the listeners that come later. */
+async function runIntoCall() {
+  const { intoCall } = await chrome.storage.session.get("intoCall");
+  return !!intoCall;
 }
 
 /**
@@ -481,8 +507,8 @@ function wantsCaptions(settings) {
  * the only one `activeTab` lets us inject into — which is what `runTabId`
  * already holds, for the mark and for the panel as well.
  */
-async function ensureCaptionTab(settings) {
-  if (!wantsCaptions(settings)) return reportCaptions("off");
+async function ensureCaptionTab(settings, intoCall) {
+  if (!wantsCaptions(settings, intoCall)) return reportCaptions("off");
   const existing = (await chrome.storage.session.get("captionTabId")).captionTabId;
   if (existing != null) {
     // The overlay is already on that page, so there is nothing to inject — but
@@ -549,7 +575,7 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
   ]) {
     if (changes[key] && !changes[key].newValue) await clearCaptions(direction);
   }
-  await ensureCaptionTab(await loadSettings());
+  await ensureCaptionTab(await loadSettings(), await runIntoCall());
 });
 
 /**
@@ -738,30 +764,24 @@ async function sendToCaptions(payload) {
 /**
  * Offer the page a microphone carrying the translation (#9).
  *
- * Three gates. The switch, which the side panel shows on a Meet tab and nowhere
- * else. The microphone direction, because the tab direction's translation is
- * the one you are listening to and putting it into a call would play the room
- * its own voice. And Meet, because "how much of the plumbing does it tolerate"
- * is a question about one application's device picker, and the answer will not
- * generalise to Zoom or Teams without being asked again.
+ * Three gates, and they are `callMicOn`: the switch, which the side panel shows
+ * on a Meet tab and nowhere else; the microphone direction, because the tab
+ * direction's translation is the one you are listening to and putting it into a
+ * call would play the room its own voice; and Meet, because "how much of the
+ * plumbing does it tolerate" is a question about one application's device
+ * picker, and the answer will not generalise to Zoom or Teams without being
+ * asked again. `start` has already applied all three — the offscreen document
+ * needed the answer before this runs — so what arrives here is that verdict.
  *
  * No host permission for any of it: the shim goes in under `activeTab`, the
  * same grant that puts the subtitles on a page, which is why the run tab is the
- * only tab this can ever reach. That grant is also what makes `chrome.tabs.get`
- * return a URL here — without it there would be nothing to match against.
+ * only tab this can ever reach. That grant is also what made the URL readable
+ * in the first place — without it there would have been nothing to match.
  */
-async function ensureCallTab(settings) {
-  if (!settings.micToCall || !settings.micEnabled) return;
+async function ensureCallTab(settings, intoCall) {
+  if (!intoCall) return;
   const { runTabId } = await chrome.storage.session.get("runTabId");
   if (runTabId == null) return;
-  let url = "";
-  try {
-    url = (await chrome.tabs.get(runTabId)).url || "";
-  } catch {
-    // No `activeTab` grant on this tab, so no URL and no injection either.
-    return;
-  }
-  if (!url.startsWith(CALL_ORIGIN)) return;
   try {
     // The page's world, where its own `navigator.mediaDevices` lives, and then
     // the isolated one, which is the only half that can still hear from here.

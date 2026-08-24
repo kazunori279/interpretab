@@ -1,16 +1,16 @@
-# Where each photographed picture in the install slideshow is, and where the one
-# thing it is about sits inside it — for every language the guide is written in.
+# Where each photographed picture in the guide's two slideshows is, and where the
+# one thing it is about sits inside it — for every language the guide is written in.
 #
 # Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not
 # this: the next run overwrites the file.
 #
-# A picture per language because all three are localized: the store listing is
-# Google's, the other two are the extension's own UI. The numbers differ with
-# the words — a button called `Hinzufügen` is not where a button called `Add to
+# A picture per language because all six are localized: the store listing is
+# Google's, the rest are the extension's own UI. The numbers differ with the
+# words — a button called `Hinzufügen` is not where a button called `Add to
 # Chrome` is — which is why none of this is typed in by hand.
 #
 # `mark` is a rectangle in percentages of the picture, and it is what lets
-# `_includes/install-steps.html` put a ring and an arrow on the right button
+# `_includes/install-steps.html` and `meet-steps.html` put a ring and an arrow on the right button
 # without anybody measuring a screenshot by hand. Re-take a picture and the
 # ring moves with the button. `side` is where the arrow stands, which is
 # wherever it fits — see `arrowSide()`. `width` and `height` are the picture's own, and
@@ -323,3 +323,309 @@ start:
       y: 88.3
       width: 15.9
       height: 8.2
+
+meettab:
+  en:
+    file: meet-1-tab-en.png
+    width: 979
+    height: 374
+    side: right
+    mark:
+      x: 16.1
+      y: 25.6
+      width: 43.1
+      height: 16.9
+  ja:
+    file: meet-1-tab-ja.png
+    width: 979
+    height: 449
+    side: right
+    mark:
+      x: 20.1
+      y: 35.5
+      width: 43.1
+      height: 14.1
+  zh:
+    file: meet-1-tab-zh.png
+    width: 979
+    height: 379
+    side: right
+    mark:
+      x: 16.9
+      y: 25.3
+      width: 43.1
+      height: 16.7
+  es:
+    file: meet-1-tab-es.png
+    width: 979
+    height: 374
+    side: right
+    mark:
+      x: 12.3
+      y: 25.6
+      width: 43.1
+      height: 16.9
+  fr:
+    file: meet-1-tab-fr.png
+    width: 979
+    height: 374
+    side: right
+    mark:
+      x: 16.8
+      y: 25.6
+      width: 43.1
+      height: 16.9
+  de:
+    file: meet-1-tab-de.png
+    width: 979
+    height: 374
+    side: right
+    mark:
+      x: 17.7
+      y: 25.6
+      width: 43.1
+      height: 16.9
+  pt:
+    file: meet-1-tab-pt.png
+    width: 979
+    height: 374
+    side: right
+    mark:
+      x: 17.1
+      y: 25.6
+      width: 43.1
+      height: 16.9
+  ko:
+    file: meet-1-tab-ko.png
+    width: 979
+    height: 377
+    side: right
+    mark:
+      x: 25.2
+      y: 25.8
+      width: 43.1
+      height: 16.8
+  hi:
+    file: meet-1-tab-hi.png
+    width: 979
+    height: 389
+    side: right
+    mark:
+      x: 23.9
+      y: 25.3
+      width: 43.1
+      height: 16.3
+  ar:
+    file: meet-1-tab-ar.png
+    width: 979
+    height: 322
+    side: left
+    mark:
+      x: 43.1
+      y: 29.8
+      width: 43.1
+      height: 19.7
+
+meetmic:
+  en:
+    file: meet-2-mic-en.png
+    width: 816
+    height: 408
+    side: above
+    mark:
+      x: 3.7
+      y: 86.4
+      width: 92.6
+      height: 9.3
+  ja:
+    file: meet-2-mic-ja.png
+    width: 816
+    height: 428
+    side: above
+    mark:
+      x: 3.7
+      y: 86.3
+      width: 92.6
+      height: 9.3
+  zh:
+    file: meet-2-mic-zh.png
+    width: 816
+    height: 368
+    side: above
+    mark:
+      x: 3.7
+      y: 84.7
+      width: 92.6
+      height: 10.3
+  es:
+    file: meet-2-mic-es.png
+    width: 816
+    height: 408
+    side: above
+    mark:
+      x: 3.7
+      y: 86.4
+      width: 92.6
+      height: 9.3
+  fr:
+    file: meet-2-mic-fr.png
+    width: 816
+    height: 408
+    side: above
+    mark:
+      x: 3.7
+      y: 86.4
+      width: 92.6
+      height: 9.3
+  de:
+    file: meet-2-mic-de.png
+    width: 816
+    height: 364
+    side: above
+    mark:
+      x: 3.7
+      y: 84.5
+      width: 92.6
+      height: 10.4
+  pt:
+    file: meet-2-mic-pt.png
+    width: 816
+    height: 364
+    side: above
+    mark:
+      x: 3.7
+      y: 84.5
+      width: 92.6
+      height: 10.4
+  ko:
+    file: meet-2-mic-ko.png
+    width: 816
+    height: 366
+    side: above
+    mark:
+      x: 3.7
+      y: 84.3
+      width: 92.6
+      height: 10.4
+  hi:
+    file: meet-2-mic-hi.png
+    width: 816
+    height: 378
+    side: above
+    mark:
+      x: 3.7
+      y: 84.6
+      width: 92.6
+      height: 10.6
+  ar:
+    file: meet-2-mic-ar.png
+    width: 816
+    height: 320
+    side: left
+    mark:
+      x: 3.7
+      y: 81.9
+      width: 92.6
+      height: 11.9
+
+meetstart:
+  en:
+    file: meet-3-start-en.png
+    width: 980
+    height: 160
+    side: left
+    mark:
+      x: 4.4
+      y: 12.5
+      width: 24.7
+      height: 73.6
+  ja:
+    file: meet-3-start-ja.png
+    width: 980
+    height: 164
+    side: left
+    mark:
+      x: 4.2
+      y: 16.1
+      width: 23.3
+      height: 67.4
+  zh:
+    file: meet-3-start-zh.png
+    width: 980
+    height: 182
+    side: left
+    mark:
+      x: 4.8
+      y: 15.1
+      width: 26.9
+      height: 70.4
+  es:
+    file: meet-3-start-es.png
+    width: 980
+    height: 154
+    side: left
+    mark:
+      x: 4.3
+      y: 12.5
+      width: 23.9
+      height: 73.6
+  fr:
+    file: meet-3-start-fr.png
+    width: 980
+    height: 160
+    side: left
+    mark:
+      x: 4.4
+      y: 12.5
+      width: 24.7
+      height: 73.6
+  de:
+    file: meet-3-start-de.png
+    width: 980
+    height: 155
+    side: left
+    mark:
+      x: 4.3
+      y: 12.5
+      width: 24
+      height: 73.6
+  pt:
+    file: meet-3-start-pt.png
+    width: 980
+    height: 160
+    side: left
+    mark:
+      x: 4.5
+      y: 13.9
+      width: 24.8
+      height: 73.6
+  ko:
+    file: meet-3-start-ko.png
+    width: 980
+    height: 180
+    side: left
+    mark:
+      x: 4.9
+      y: 15.4
+      width: 27.3
+      height: 71.9
+  hi:
+    file: meet-3-start-hi.png
+    width: 980
+    height: 182
+    side: left
+    mark:
+      x: 4.6
+      y: 17.4
+      width: 25.8
+      height: 67.4
+  ar:
+    file: meet-3-start-ar.png
+    width: 980
+    height: 161
+    side: right
+    mark:
+      x: 67.5
+      y: 13.1
+      width: 25
+      height: 73.6

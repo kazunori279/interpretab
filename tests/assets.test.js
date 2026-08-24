@@ -398,7 +398,9 @@ test("a panel that does not own the run may stop it and nothing else", () => {
   const html = read("sidepanel.html");
 
   assert.match(panel, /const elsewhere = running && runTabId !== myTabId;/);
-  assert.match(panel, /for \(const id of RUN_CONTROLS\) el\(id\)\.disabled = elsewhere;/);
+  // Every one of them, and from one line: a control disabled somewhere else in
+  // `render` would be handed back the moment this ran.
+  assert.match(panel, /for \(const id of RUN_CONTROLS\) \{\n\s*el\(id\)\.disabled = elsewhere \|\|/);
   // Stop is the one exemption: reaching it from a tab that was never
   // translating is what the toolbar icon is for.
   assert.match(panel, /el\("toggle"\)\.disabled = elsewhere\s*\n?\s*\?\s*false/);
@@ -426,9 +428,8 @@ test("the translated microphone is offered on exactly the page it can be injecte
   // nothing and no way of knowing why. One exported constant, imported twice.
   const settings = read("lib/settings.js");
   assert.match(settings, /export const CALL_ORIGIN = "https:\/\/meet\.google\.com\/";/);
-  for (const file of ["sidepanel.js", "service-worker.js"]) {
+  for (const file of ["sidepanel.js", "service-worker.js", "offscreen.js"]) {
     const src = read(file);
-    assert.match(src, /import \{[^}]*\bCALL_ORIGIN\b[^}]*\} from "\.\/lib\/settings\.js";/, file);
     assert.equal(
       (src.match(/meet\.google\.com/g) || []).length,
       0,
@@ -436,7 +437,29 @@ test("the translated microphone is offered on exactly the page it can be injecte
     );
   }
   assert.match(read("sidepanel.js"), /myTabUrl\.startsWith\(CALL_ORIGIN\)/);
-  assert.match(read("service-worker.js"), /url\.startsWith\(CALL_ORIGIN\)/);
+
+  // The three conditions are one function, because four files now act on the
+  // answer and two of them cannot work it out for themselves: the offscreen
+  // document has neither tabs nor storage, and the panel is asking about a
+  // different tab from the one the service worker is. A second copy of the rule
+  // is how the switch comes to be on in one place and off in another — the
+  // voice going into the call and out of the speakers at the same time, which
+  // is the state this replaced.
+  assert.match(settings, /export function callMicOn\(settings, url\)/);
+  for (const file of ["sidepanel.js", "service-worker.js"]) {
+    assert.match(read(file), /import \{[^}]*\bcallMicOn\b[^}]*\} from "\.\/lib\/settings\.js";/, file);
+  }
+  // And the offscreen document is told, once, at Start: it has to know before
+  // the first translated frame, and by then it is too late to ask.
+  assert.match(read("service-worker.js"), /const intoCall = callMicOn\(settings, tab\?\.url\);/);
+  assert.match(read("offscreen.js"), /state\.intoCall = !!intoCall;/);
+  // What hangs on it: the voice is not played here, and neither are its
+  // subtitles. Both were the same complaint — an interpreter in your own ear,
+  // saying what you have just said, over the person you are listening to.
+  assert.match(read("offscreen.js"), /if \(direction === "mic" && state\.intoCall\) return;/);
+  assert.match(read("offscreen.js"), /state\.settings\.micCaptions && !state\.intoCall/);
+  assert.match(read("sidepanel.js"), /el\("micCaptions"\)\.checked = settings\.micCaptions && !intoCall;/);
+  assert.match(read("sidepanel.js"), /id === "micCaptions" && intoCall/);
 
   // On by default. What it costs when it is not wanted is one more entry in
   // Meet's microphone list; what it saves when it is wanted is a kernel
@@ -811,13 +834,21 @@ test("the install slideshow has its pictures, its steps and its ten translations
   // a step with no picture in it.
   const shots = fs.readFileSync(path.join(SITE, "_data", "shots.yml"), "utf8");
   const figures = include.match(/assign figures = "([^"]+)"/)[1].split(",");
+  // `shots.yml` is written wholesale by `guide-shots.mjs` and read by both
+  // slideshows, so a name in it has to belong to one of them, not to this one.
+  const named = ["install-steps.html", "meet-steps.html"].flatMap((file) =>
+    fs
+      .readFileSync(path.join(SITE, "_includes", file), "utf8")
+      .match(/assign figures = "([^"]+)"/)[1]
+      .split(",")
+  );
   const photographed = [...shots.matchAll(/^([a-z]+):$/gm)].map(([, name]) => name);
   for (const name of photographed) {
     assert.ok(
-      figures.includes(name),
-      `docs/_data/shots.yml has a picture called ${name} that no step in the slideshow uses`
+      named.includes(name),
+      `docs/_data/shots.yml has a picture called ${name} that no step in either slideshow uses`
     );
-    // Each of the three is a picture of something localized — Google's store
+    // Each is a picture of something localized — Google's store
     // listing, or the extension's own UI out of `_locales` — so each is taken
     // once per guide language. A language missing here falls back to English
     // under the reader's own words, which is the thing the pictures are for.
@@ -922,6 +953,84 @@ test("the install slideshow has its pictures, its steps and its ten translations
       fs.readFileSync(path.join(SITE, file), "utf8"),
       /\{%\s*include install-steps\.html\s*%\}/,
       `docs/${file} does not include the install slideshow`
+    );
+  }
+});
+
+test("the Google Meet slideshow has its steps, its two phases and its ten translations", () => {
+  // Same four files as the install slideshow, and the same silent failures, with
+  // one more thing to keep straight: the tab strip is broken into two rows by the
+  // `phase` written on the step each row starts at. Lose a phase and the strip is
+  // one undivided run of seven; gain one and the rows stop matching the two
+  // halves the section is written around, before the call and in it.
+  const include = fs.readFileSync(path.join(SITE, "_includes", "meet-steps.html"), "utf8");
+  const figures = include.match(/assign figures = "([^"]+)"/)[1].split(",");
+  const yaml = fs.readFileSync(path.join(SITE, "_data", "meet.yml"), "utf8");
+  const languages = yaml.split(/^(?=[a-z]{2}:$)/m).slice(1);
+  const translated = languages.map((block) => block.split(":")[0]);
+  assert.deepEqual(
+    translated.slice().sort(),
+    ["en", ...guideDirs()].sort(),
+    "docs/_data/meet.yml and the guide pages on disk disagree"
+  );
+
+  // As in `install.yml`: the include adds the `target`, so a body that wrote its
+  // own would end up with two.
+  assert.match(
+    include,
+    /replace: '<a href=', '<a target="_blank" rel="noopener" href='/,
+    "meet-steps.html no longer opens the steps' links in a new tab"
+  );
+  for (const anchor of yaml.match(/<a [^>]*>/g) || []) {
+    assert.match(anchor, /^<a href="https:/, `meet.yml writes a link the include cannot retarget: ${anchor}`);
+  }
+
+  const english = languages[translated.indexOf("en")];
+  const count = [...english.matchAll(/^ {4}- tab: \S/gm)].length;
+  assert.ok(count >= 4, `meet.yml: English is down to ${count} steps`);
+  for (const [i, block] of languages.entries()) {
+    const steps = [...block.matchAll(/^ {4}- tab: \S/gm)].length;
+    const bodies = [...block.matchAll(/^ {6}body: \S/gm)].length;
+    const phases = [...block.matchAll(/^ {6}phase: \S/gm)].length;
+    assert.equal(steps, count, `meet.yml: ${translated[i]} has ${steps} steps, not ${count}`);
+    assert.equal(bodies, count, `meet.yml: ${translated[i]} has ${bodies} of its ${count} sentences`);
+    assert.equal(phases, 2, `meet.yml: ${translated[i]} splits the steps into ${phases} phases, not two`);
+    assert.match(block, /^ {2}next: \S/m, `meet.yml: ${translated[i]} has no word for Next`);
+  }
+  assert.equal(
+    figures.length,
+    count,
+    `meet-steps.html names ${figures.length} pictures for ${count} steps`
+  );
+
+  // The three photographs, which `guide-shots.mjs` takes of the panel on a Meet
+  // tab. Renaming one there and not here draws a step with no picture in it; the
+  // install test checks the other direction, that nothing in `shots.yml` is
+  // orphaned.
+  for (const name of ["meettab", "meetmic", "meetstart"]) {
+    assert.ok(figures.includes(name), `meet-steps.html no longer uses the ${name} photograph`);
+  }
+
+  // Which pane is on screen is decided by index classes rather than `nth-child`,
+  // because the phase heading sits in the tab strip and makes the nth tab and the
+  // nth child two different elements. The include writes them and the CSS loop
+  // matches them, and neither half is any use alone.
+  assert.match(include, /class="install-tab meet-tab--\{\{ forloop\.index \}\}"/);
+  assert.match(include, /class="install-pane meet-pane--\{\{ forloop\.index \}\}"/);
+  const css = fs.readFileSync(path.join(SITE, "_includes", "head-custom.html"), "utf8");
+  assert.match(css, /assign meet_count = site\.data\.meet\.en\.steps \| size/);
+  assert.match(css, /for i in \(1\.\.meet_count\)/);
+  assert.match(css, /#meet-step-\{\{ i \}\}:checked ~ \.install-panes \.meet-pane--\{\{ i \}\}/);
+  // Its own radio group, so a reader can be on step three of the install and step
+  // six of this one without one slideshow moving the other.
+  assert.match(include, /name="meet-step"/);
+
+  for (const code of ["en", ...guideDirs()]) {
+    const file = code === "en" ? "index.md" : path.join(code, "index.md");
+    assert.match(
+      fs.readFileSync(path.join(SITE, file), "utf8"),
+      /\{%\s*include meet-steps\.html\s*%\}/,
+      `docs/${file} does not include the Google Meet slideshow`
     );
   }
 });

@@ -68,7 +68,7 @@
         border: 1px solid #d0d7de; border-radius: 6px;
       }
       /* Whatever height the sentence leaves, the picture takes the middle of. */
-      .install-figure, .install-browser { margin-block: auto; }
+      .install-figure, .install-browser, .meet-badge { margin-block: auto; }
       /* `object-fit` would fit the picture and leave the box it is in the size
          of the frame, and the ring is positioned in percentages of that box. So
          the box is given the picture's own ratio and made exactly as wide as it
@@ -199,7 +199,7 @@
       .install-viewport { position: relative; height: 9rem; background: #fff; border-top: 1px solid #ebedf0; }
       /* The dialog steps size to their card instead: four rows do not fit in
          the height the page drawings are happy with. */
-      .install-viewport--keyname, .install-viewport--project {
+      .install-viewport--keyname, .install-viewport--project, .install-viewport--device {
         display: grid; place-items: center; height: auto; padding: 1rem;
       }
       /* The arrow the address-bar step points back up with, standing in the
@@ -346,6 +346,59 @@
         width: 11rem; height: 6.2rem; border-radius: 6px; background: #1f2328;
       }
 
+      /* The Meet slideshow — `_includes/meet-steps.html`. Everything above is
+         shared with it; what is here is the two things it has that the install
+         section does not.
+
+         The first is the phase heading. The steps split at the call — before it
+         is setting the panel up with nobody waiting, after it is a meeting
+         already on screen — and the heading takes a whole row of the tab strip,
+         which is what puts each phase on its own line. It is a plain small
+         label rather than tracked-out capitals: three of the ten languages have
+         no capitals to make, and letter-spacing between two hanzi is a gap. */
+      .meet-phase {
+        flex-basis: 100%; margin-top: 0.3rem;
+        font-size: 0.82rem; font-weight: 600; color: #57606a;
+      }
+      .meet-phase:first-child { margin-top: 0; }
+
+      /* The second is the two steps that are not about a screen at all: plug
+         headphones in, and say something. A browser window drawn around either
+         would be a picture of the wrong thing, so they are glyphs on their own. */
+      .meet-badge { display: flex; align-items: center; justify-content: center; gap: 0.9rem; }
+      .meet-glyph {
+        display: grid; place-items: center; flex: none;
+        width: 8rem; height: 8rem; border-radius: 50%;
+        background: #fff; border: 1px solid #d0d7de; color: #3f51b5;
+        box-shadow: 0 6px 18px rgba(31, 35, 40, 0.1);
+      }
+      .meet-glyph svg { width: 3.8rem; height: 3.8rem; }
+      /* The only arrow in either slideshow that is part of the layout rather
+         than parked against something, so it is the only one left static. */
+      [dir="rtl"] .meet-flow { transform: scaleX(-1); }
+      @media (max-width: 40rem) {
+        .meet-glyph { width: 5rem; height: 5rem; }
+        .meet-glyph svg { width: 2.4rem; height: 2.4rem; }
+      }
+
+      /* A call, drawn: the far end and you. Grey, because a mocked-up face is
+         detail a reader will try to read. */
+      .meet-tiles { display: flex; gap: 0.5rem; height: 100%; padding: 0.6rem; }
+      .meet-tile { flex: 1; border-radius: 8px; background: #e3e6ea; }
+      .meet-tile--self { flex: none; width: 22%; background: #eef0f3; }
+
+      /* Meet's audio settings: two device rows, the microphone and the output.
+         The icons stand in for Meet's own labels, which are not drawn — they
+         would have to be sourced per language, and a mistranslated label in a
+         picture sends a reader looking for a control that is not there. */
+      .meet-device { display: flex; align-items: center; gap: 0.55rem; }
+      .meet-device-icon { flex: none; width: 1.2rem; height: 1.2rem; color: #5f6368; }
+      .meet-device-icon svg { display: block; width: 100%; height: 100%; }
+      .install-dialog .meet-device .install-select {
+        flex: 1; min-width: 0; align-self: auto; display: flex; align-items: center;
+      }
+      .meet-device .install-line { width: 8rem; max-width: 100%; }
+
       @keyframes install-pulse {
         0% { transform: scale(0.8); opacity: 1; }
         70% { transform: scale(1.3); opacity: 0; }
@@ -396,6 +449,27 @@
         outline: 2px solid #0969da; outline-offset: 2px;
       }
       #install-step-{{ i }}:checked ~ .install-panes .install-pane:nth-child({{ i }}) { display: block; }
+      {%- endfor %}
+
+      {%- comment -%}
+        And the same for the Meet slideshow, off its own data. Its tabs and
+        panes are picked out by an index class rather than by `nth-child`: the
+        phase heading is a child of the tab strip too, so the nth tab and the
+        nth child stopped being the same element the moment the strip grew a
+        second row.
+      {%- endcomment -%}
+      {%- assign meet_count = site.data.meet.en.steps | size -%}
+      {%- for i in (1..meet_count) %}
+      #meet-step-{{ i }}:checked ~ .install-tabs .meet-tab--{{ i }} {
+        background: #0969da; border-color: #0969da; color: #fff;
+      }
+      #meet-step-{{ i }}:checked ~ .install-tabs .meet-tab--{{ i }} .install-n {
+        background: rgba(255, 255, 255, 0.25); color: #fff;
+      }
+      #meet-step-{{ i }}:focus-visible ~ .install-tabs .meet-tab--{{ i }} {
+        outline: 2px solid #0969da; outline-offset: 2px;
+      }
+      #meet-step-{{ i }}:checked ~ .install-panes .meet-pane--{{ i }} { display: block; }
       {%- endfor %}
     </style>
     <script>

@@ -50,7 +50,7 @@
     "message": "マイクを複数人で使うモードです。設定した 2 つの言語のうち聞こえたほうを、もう一方の言語で<b>スピーカー</b>から声に出して読み上げます。"
   },
   "panelMicToCall": { "message": "この Meet 通話に翻訳音声を流す" },
-  "panelMicToCallNote": { "message": "Meet の<b>設定 → 音声 → マイク</b>を開いて <b>Interpretab (translated)</b> を選び、また <b>Studio Sound</b> をオフにします。" },
+  "panelMicToCallNote": { "message": "Meet の<b>設定 → 音声 → マイク</b>を開いて <b>Interpretab (translated)</b> を選び、また <b>Studio Sound</b> をオフにします。オンの間、その声はこのパソコンからは出ず、通話にだけ送られます。字幕もオフになります。" },
 
   "panelStart": { "message": "Start" },
   "panelStop": { "message": "Stop" },
