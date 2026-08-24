@@ -1908,6 +1908,29 @@ behaviour itself needs two tabs and a person. Six checks, a couple of minutes:
 6. Tab audio on A: closing A stops the run. Subtitles handed to C by a click there: closing C
    loses the overlay and nothing else.
 
+**The model menu, by hand.** `tests/config-ui.mjs` walks the menu as far as storage: the names it
+offers per mode, the order, and that a choice is saved for the mode it was made in. What no test
+follows is the rest of the way, from the setting to the socket. `SessionLoop` writes the candidate
+it is on into every `setup` frame it sends, so the check is to read one, and the only place a frame
+can be read is the offscreen document — which exists only while a run does.
+
+1. Options → **Which model to run**, and pick the name that is not the recommendation, for
+   whichever mode you are about to start.
+2. Start a run. Then `chrome://extensions` → the extension's **Inspect views** → `offscreen.html`,
+   which is listed only now, and open **Network** in the window that opens.
+3. Change a language in the panel. That reconnects, so a fresh `wss://` entry appears with DevTools
+   already attached — the socket from step 2 opened before there was anything watching it.
+4. Open that entry's **Messages**. The first frame out is `setup`, and its `model` is the name you
+   picked, prefixed with `models/`.
+5. Say a sentence and listen to the translation. `checkModel` stops at `setupComplete`, so both the
+   hourly check and the discovery agent will pass a name that accepts the frame and then returns
+   nothing worth hearing; a person is the only thing between that name and the front of the list.
+
+Then clear the choice back to **Recommended**, press Start again — the menu says it applies then,
+not sooner — and confirm the `setup` frame follows it. The
+handshake URL in that Network panel carries the API key as a query parameter, so the panel is not
+something to screenshot or paste.
+
 ### Soak results — 1 hour, microphone, the conversation model, en → ja
 
 Taken before the microphone gained a mode switch, so it measures the agent model under the
