@@ -963,6 +963,74 @@ test("the install slideshow has its pictures, its steps and its ten translations
   }
 });
 
+test("the options page's install card says what the guide says", () => {
+  // The same ten steps as the slideshow above, in the extension itself, for the
+  // reader Chrome drops on the options page on install — which is everybody,
+  // once, before they have a key. The words are the guide's, copied into the
+  // catalogues: `install.yml` is Jekyll's and the extension does not ship it,
+  // and a translation is not something to write twice. So this is the copy, and
+  // it fails the moment either side is edited alone.
+  //
+  // What differs is only the markup a link is written in: the guide writes the
+  // address, and a catalogue is not allowed to — `lib/i18n.js` takes the
+  // destination off the element instead, so the body's `<a href="…">` is an
+  // `<a1>` here. Everything else, bold included, is the same string.
+  const yaml = fs.readFileSync(path.join(SITE, "_data", "install.yml"), "utf8");
+  const guide = (code) => {
+    const block = yaml.split(new RegExp(`^${code}:$`, "m"))[1].split(/^\S/m)[0];
+    // Folded scalars, which is how the English block writes every one of them:
+    // the value is the lines under `body: >-` joined by spaces.
+    return [...block.matchAll(/^ {6}body: (>-\n(?: {8}.*\n)+|.*\n)/gm)].map(([, raw]) => {
+      const text = raw.startsWith(">-")
+        ? raw.split("\n").slice(1).map((line) => line.trim()).filter(Boolean).join(" ")
+        : raw.trim();
+      let n = 0;
+      return text.replace(/<a href="[^"]*">/g, () => `<a${++n}>`).replace(/<\/a>/g, () => `</a${n}>`);
+    });
+  };
+
+  const english = guide("en");
+  assert.equal(english.length, 10, `install.yml is down to ${english.length} English steps`);
+  for (const [dir, locale] of Object.entries({ en: "en", ...GUIDES })) {
+    const messages = JSON.parse(fs.readFileSync(path.join(ROOT, "_locales", locale, "messages.json"), "utf8"));
+    guide(dir).forEach((body, i) => {
+      const key = `optStartStep${i + 1}`;
+      assert.ok(messages[key], `_locales/${locale} has no ${key}`);
+      assert.equal(
+        messages[key].message,
+        body,
+        `_locales/${locale}/${key} and docs/_data/install.yml ${dir} step ${i + 1} have drifted apart`
+      );
+    });
+  }
+
+  // And the card that shows them. One pane per step, each reading its own
+  // message: a pane short is a numbered tab that opens onto nothing, and the
+  // radios are what the CSS matches on, so the ids are not free to change.
+  const html = read("options.html");
+  const card = html.match(/<section class="stepcard" id="setupCard"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(card, "the options page has no install card");
+  const css = read("sidepanel.css");
+  for (let n = 1; n <= english.length; n += 1) {
+    assert.match(card, new RegExp(`id="setupstep-${n}"`), `the card has no radio for step ${n}`);
+    assert.match(card, new RegExp(`for="setupstep-${n}">${n}</label>`), `the card has no tab for step ${n}`);
+    assert.match(card, new RegExp(`data-i18n="optStartStep${n}"`), `the card does not show step ${n}`);
+    assert.match(
+      css,
+      new RegExp(`#setupstep-${n}:checked ~ \\.stepcard-panes \\.stepcard-pane--${n}`),
+      `nothing opens pane ${n} of the install card`
+    );
+  }
+  // Its own group, so walking the install steps does not move the panel's cards.
+  assert.match(card, /name="setupStep"/);
+  // The card is for a reader without a key, and nothing else on this page is.
+  assert.match(
+    body(read("options.js"), "renderKeyStatus"),
+    /el\("setupCard"\)\.hidden = Boolean\(key\);/,
+    "the install card is no longer tied to whether there is a key"
+  );
+});
+
 test("the Google Meet slideshow has its steps, its two phases and its ten translations", () => {
   // Same four files as the install slideshow, and the same silent failures, with
   // one more thing to keep straight: the tab strip is broken into two rows by the

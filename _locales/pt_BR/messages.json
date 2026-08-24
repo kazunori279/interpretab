@@ -122,10 +122,43 @@
   "optTitle": { "message": "Interpretab — Opções" },
   "optHeading": { "message": "Opções do Interpretab" },
 
-  "optSetupHeading": { "message": "Antes de começar" },
-  "optSetupNote": {
-    "message": "Sem a chave nada funciona. As outras duas se respondem uma vez só, no mesmo momento: em qual plano sua chave está e — só se você quiser a própria voz traduzida — a permissão para usar o microfone. O <a1>guia do usuário</a1> explica as três."
+  "optStartHeading": { "message": "Comece em 5 minutos" },
+  "optStartStep1": {
+    "message": "Abra o <a1>Interpretab na Chrome Web Store</a1> e clique em <b>Usar no Chrome</b>."
   },
+  "optStartStep2": {
+    "message": "Quem traduz é o Gemini, do Google, e o Gemini precisa de uma chave de API sua. Consegui-la é gratuito: abra o <a1>Google AI Studio</a1> e entre com uma conta Google."
+  },
+  "optStartStep3": {
+    "message": "A página lista as chaves que você tem, que numa conta nova é nenhuma. Clique em <b>Criar chave de API</b>."
+  },
+  "optStartStep4": {
+    "message": "Uma chave precisa de um nome e de um projeto do Google Cloud ao qual pertencer. Digite <b>Interpretab</b> como nome. Logo abaixo, uma conta que nunca usou a API não tem nada para escolher: <b>No Cloud Projects Available</b>."
+  },
+  "optStartStep5": {
+    "message": "Abra essa lista e escolha <b>Criar projeto</b>. O nome que já vem preenchido está no seu idioma, e o campo só aceita letras latinas — apague, digite <b>Interpretab</b> e clique em <b>Criar projeto</b>."
+  },
+  "optStartStep6": {
+    "message": "A caixa da chave volta com o projeto novo. Clique em <b>Criar chave</b> e a chave aparece — clique em <b>Copiar chave</b>. Ela fica na página API keys, então dá para voltar e pegá-la depois."
+  },
+  "optStartStep7": {
+    "message": "A página de <b>Opções</b> da extensão abre sozinha na primeira vez, e o botão <b>Opções</b> do painel lateral abre de novo. Cole a chave em <b>Chave de API do Gemini</b>. Ela fica guardada neste navegador e não vai para ninguém além do Google."
+  },
+  "optStartStep8": {
+    "message": "Abra a página que quer traduzir — um vídeo com fala no <a1>youtube.com</a1> é o teste mais fácil para começar. Uma extensão recém-instalada ainda não tem ícone na barra de ferramentas: clique no <b>botão de peça de quebra-cabeça</b> do Chrome, ache <b>Interpretab</b> na lista e clique no alfinete ao lado."
+  },
+  "optStartStep9": {
+    "message": "Agora o ícone está na barra de ferramentas. <b>Clique nele estando na aba que quer traduzir.</b> Esse clique é como você dá permissão para ouvir a aba — sem ele, aparece um erro."
+  },
+  "optStartStep10": {
+    "message": "Escolha o seu idioma no painel lateral e aperte <b>Start</b>. Dê play no vídeo: a voz volta nesse idioma. Se você não ouvir tradução nenhuma, escolha um idioma diferente do que o vídeo já fala."
+  },
+  "optStartCreateApiKey": { "message": "Criar chave de API" },
+  "optStartCreateKey": { "message": "Criar chave" },
+  "optStartCreateProject": { "message": "Criar projeto" },
+  "optStartCopyKey": { "message": "Copiar chave" },
+
+  "optSetupHeading": { "message": "Antes de começar" },
   "optRestHeading": { "message": "Todo o resto" },
   "optRestNote": {
     "message": "Tudo isto já está num valor que funciona. Volte para mudar algum se ele não servir para você."

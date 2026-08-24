@@ -116,10 +116,39 @@
   "optTitle": { "message": "Interpretab — 옵션" },
   "optHeading": { "message": "Interpretab 옵션" },
 
-  "optSetupHeading": { "message": "시작하기 전에" },
-  "optSetupNote": {
-    "message": "키가 없으면 아무것도 동작하지 않습니다. 나머지 둘도 키를 붙여 넣을 때 한 번만 답하면 됩니다. 그 키가 어느 요금제인지, 그리고 — 내 목소리를 번역할 때만 — 마이크를 쓸 권한입니다. <a1>사용 안내서</a1>에 셋 모두 설명해 두었습니다."
+  "optStartHeading": { "message": "5분 만에 시작하기" },
+  "optStartStep1": { "message": "<a1>Chrome 웹 스토어의 Interpretab</a1>을 열고 <b>Chrome에 추가</b>를 누릅니다." },
+  "optStartStep2": {
+    "message": "번역은 Google의 Gemini가 하고, Gemini에는 본인 명의의 API 키가 필요합니다. 발급은 무료입니다. <a1>Google AI Studio</a1>를 열고 Google 계정으로 로그인합니다."
   },
+  "optStartStep3": { "message": "이 페이지에는 가지고 있는 키가 나열됩니다. 새 계정이라면 아직 하나도 없습니다. <b>API 키 만들기</b>를 누릅니다." },
+  "optStartStep4": {
+    "message": "키에는 이름과, 키가 속할 Google Cloud 프로젝트가 필요합니다. 이름에는 <b>Interpretab</b>을 입력합니다. 그 아래에는, API를 한 번도 쓴 적 없는 계정이라면 고를 것이 없습니다. <b>No Cloud Projects Available</b>이라고 나옵니다."
+  },
+  "optStartStep5": {
+    "message": "그 목록을 열고 <b>프로젝트 만들기</b>를 고릅니다. 미리 채워져 있는 이름은 사용자의 언어로 되어 있는데, 이 칸은 라틴 문자만 받습니다. 지우고 <b>Interpretab</b>을 입력한 뒤 <b>프로젝트 만들기</b>를 누릅니다."
+  },
+  "optStartStep6": {
+    "message": "새 프로젝트가 들어간 채로 키 대화상자가 다시 나옵니다. <b>키 만들기</b>를 누르면 키가 나타나니 <b>키 복사</b>를 누릅니다. 키는 API keys 페이지에 남아 있어서 나중에 다시 가져올 수 있습니다."
+  },
+  "optStartStep7": {
+    "message": "확장 프로그램의 <b>옵션</b> 페이지는 처음에 저절로 열리고, 사이드 패널의 <b>옵션</b> 버튼으로 다시 열 수 있습니다. <b>Gemini API 키</b>에 키를 붙여넣습니다. 키는 이 브라우저에 저장되며 Google 외에는 어디로도 보내지 않습니다."
+  },
+  "optStartStep8": {
+    "message": "번역할 페이지를 엽니다. 처음 시험해 볼 때는 <a1>youtube.com</a1>에서 사람이 말하는 영상이 가장 간편합니다. 새로 설치한 확장 프로그램은 아직 툴바에 아이콘이 없습니다. Chrome의 <b>퍼즐 조각 버튼</b>을 누르고 목록에서 <b>Interpretab</b>을 찾아 옆에 있는 핀을 누릅니다."
+  },
+  "optStartStep9": {
+    "message": "이제 툴바에 아이콘이 있습니다. <b>번역할 탭에서 그 아이콘을 클릭합니다.</b> 이 클릭이 탭 소리를 들어도 된다는 허가입니다. 건너뛰면 오류가 납니다."
+  },
+  "optStartStep10": {
+    "message": "사이드 패널에서 언어를 고르고 <b>Start</b>를 누릅니다. 영상을 재생하면 그 언어로 목소리가 돌아옵니다. 번역된 목소리가 들리지 않으면, 영상에서 원래 쓰는 언어가 아닌 다른 언어를 골라 보세요."
+  },
+  "optStartCreateApiKey": { "message": "API 키 만들기" },
+  "optStartCreateKey": { "message": "키 만들기" },
+  "optStartCreateProject": { "message": "프로젝트 만들기" },
+  "optStartCopyKey": { "message": "키 복사" },
+
+  "optSetupHeading": { "message": "시작하기 전에" },
   "optRestHeading": { "message": "그 밖의 설정" },
   "optRestNote": {
     "message": "모두 그대로 동작하는 값입니다. 맞지 않는 것이 있을 때 바꾸러 오세요."

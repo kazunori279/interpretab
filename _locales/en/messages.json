@@ -203,12 +203,61 @@
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Interpretab options" },
 
+  "optStartHeading": {
+    "message": "Get started in 5 minutes",
+    "description": "Title of the card that walks a new reader through the install. The same words as the matching section of the user guide, and the ten steps under it are that section's."
+  },
+  "optStartStep1": {
+    "message": "Open <a1>Interpretab on the Chrome Web Store</a1> and press <b>Add to Chrome</b>.",
+    "description": "Step 1 of 10. These are the user guide's own install steps, redrawn on this page for a reader who has arrived here without a key — keep them in step with docs/_data/install.yml."
+  },
+  "optStartStep2": {
+    "message": "Interpretab translates with Google's Gemini, and Gemini needs an API key of your own. Getting one is free: open <a1>Google AI Studio</a1> and sign in with a Google account."
+  },
+  "optStartStep3": {
+    "message": "The page lists the keys you have, which on a new account is none. Press <b>Create API key</b>."
+  },
+  "optStartStep4": {
+    "message": "A key needs a name, and a Google Cloud project to belong to. Type <b>Interpretab</b> as the name. Underneath it, an account that has never used the API has nothing to choose from: <b>No Cloud Projects Available</b>."
+  },
+  "optStartStep5": {
+    "message": "Open that list and pick <b>Create project</b>. The name it fills in for you is in your own language, and the field takes Latin letters only — clear it, type <b>Interpretab</b>, and press <b>Create project</b>."
+  },
+  "optStartStep6": {
+    "message": "The key dialog comes back with the new project in it. Press <b>Create key</b> and the key appears — press <b>Copy key</b>. It stays on the API keys page, so you can come back for it later."
+  },
+  "optStartStep7": {
+    "message": "Interpretab's <b>Options</b> page opens by itself the first time, and the <b>Options</b> button at the bottom of the side panel opens it again. Paste the key into <b>Gemini API key</b>. It is kept in this browser and goes to nobody but Google."
+  },
+  "optStartStep8": {
+    "message": "Open the page you want translated — a video with talking in it on <a1>youtube.com</a1> is the easiest first test. A new extension has no icon on the toolbar yet: click Chrome's <b>puzzle-piece button</b>, find <b>Interpretab</b> in the list, and press the pin beside it."
+  },
+  "optStartStep9": {
+    "message": "The icon is on the toolbar now. <b>Click it, on the tab you want translated.</b> That click is how you give permission to listen to the tab; skip it and you get an error."
+  },
+  "optStartStep10": {
+    "message": "Pick your language in the side panel and press <b>Start</b>. Play the video: the voice comes back in that language. If you hear no translation, pick a language other than the one the video is already in."
+  },
+  "optStartCreateApiKey": {
+    "message": "Create API key",
+    "description": "Drawn on a button in the picture beside step 3. Not ours: it is what Google AI Studio itself calls that button in this language, so use AI Studio's own wording rather than translating this."
+  },
+  "optStartCreateKey": {
+    "message": "Create key",
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn in the picture beside step 4."
+  },
+  "optStartCreateProject": {
+    "message": "Create project",
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside steps 5 and 6."
+  },
+  "optStartCopyKey": {
+    "message": "Copy key",
+    "description": "As optStartCreateApiKey: AI Studio's own label, drawn beside step 6."
+  },
+
   "optSetupHeading": {
     "message": "Before you start",
     "description": "Group label over the three settings a first run needs: the key, the plan, and Chrome's microphone permission. It labels the section headings under it rather than a control of its own."
-  },
-  "optSetupNote": {
-    "message": "Nothing works without the key. The other two you answer once, at the same time: which plan your key is on, and — only if you want your own voice translated — permission to use the microphone. The <a1>user guide</a1> walks through all three."
   },
   "optRestHeading": {
     "message": "Everything else",

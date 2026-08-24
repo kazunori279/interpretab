@@ -138,9 +138,11 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
    because the drawings are of Chrome and of Meet and those are the colours
    they are.
 
-   Everything below is shared by both cards. What is not shared is which radio
-   drives which pane, and that is the two lists of ids: the cards are siblings
-   in one document, so `.stepcard-pane--1` on its own would be two panes. */
+   Everything below is shared by all three cards — the two here and the install
+   card on the options page, which loads this file for them. What is not shared
+   is which radio drives which pane, and that is the lists of ids: two of the
+   cards are siblings in one document, so `.stepcard-pane--1` on its own would
+   be two panes. */
 .stepcard { display: flex; flex-direction: column; gap: 0.45rem; }
 .stepcard[hidden] { display: none; }
 /* Hidden, not removed: `display: none` would take the radios out of the focus
@@ -169,6 +171,16 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 }
 .stepcard-tab:hover { background: #e2e5e9; }
 .stepcard-pane { display: none; }
+#setupstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
+#setupstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
+#setupstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
+#setupstep-4:checked ~ .stepcard-tabs .stepcard-tab--4,
+#setupstep-5:checked ~ .stepcard-tabs .stepcard-tab--5,
+#setupstep-6:checked ~ .stepcard-tabs .stepcard-tab--6,
+#setupstep-7:checked ~ .stepcard-tabs .stepcard-tab--7,
+#setupstep-8:checked ~ .stepcard-tabs .stepcard-tab--8,
+#setupstep-9:checked ~ .stepcard-tabs .stepcard-tab--9,
+#setupstep-10:checked ~ .stepcard-tabs .stepcard-tab--10,
 #prepstep-1:checked ~ .stepcard-tabs .stepcard-tab--1,
 #prepstep-2:checked ~ .stepcard-tabs .stepcard-tab--2,
 #prepstep-3:checked ~ .stepcard-tabs .stepcard-tab--3,
@@ -178,6 +190,16 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 #meetstep-4:checked ~ .stepcard-tabs .stepcard-tab--4 {
   background: var(--primary); color: #fff;
 }
+#setupstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
+#setupstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
+#setupstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
+#setupstep-4:checked ~ .stepcard-panes .stepcard-pane--4,
+#setupstep-5:checked ~ .stepcard-panes .stepcard-pane--5,
+#setupstep-6:checked ~ .stepcard-panes .stepcard-pane--6,
+#setupstep-7:checked ~ .stepcard-panes .stepcard-pane--7,
+#setupstep-8:checked ~ .stepcard-panes .stepcard-pane--8,
+#setupstep-9:checked ~ .stepcard-panes .stepcard-pane--9,
+#setupstep-10:checked ~ .stepcard-panes .stepcard-pane--10,
 #prepstep-1:checked ~ .stepcard-panes .stepcard-pane--1,
 #prepstep-2:checked ~ .stepcard-panes .stepcard-pane--2,
 #prepstep-3:checked ~ .stepcard-panes .stepcard-pane--3,
@@ -208,6 +230,10 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   color: var(--muted); font-size: 12px; line-height: 1.45;
 }
 .stepcard-browser, .stepcard-bar, .stepcard-badge, .stepcard-dialog { margin-block: auto; }
+/* Two drawings of the same panel, so they centre as one thing rather than
+   drifting to opposite ends of the pane. */
+.stepcard-dialog:has(+ .stepcard-bar) { margin-block-end: 0; }
+.stepcard-dialog + .stepcard-bar { margin-block-start: 0.6rem; }
 .stepcard-next {
   flex: none; align-self: flex-end; margin-top: 0.5rem;
   display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer;
@@ -302,6 +328,113 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
 }
 .stepcard-check svg { width: 0.62rem; height: 0.62rem; }
 
+/* The rest of the pieces belong to the install card on the options page: the
+   store listing, AI Studio's two dialogs and the key it hands back, and the two
+   clicks on Chrome's own toolbar. Same drawings as `install-*` in the guide's
+   `_includes/head-custom.html`, at about half the size — the options page is a
+   readable column, not a quarter-width panel, but it is not a full-width guide
+   either. */
+.stepcard-page { display: flex; flex-direction: column; gap: 0.45rem; padding: 0.7rem 0.75rem; }
+.stepcard-pagehead { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.stepcard-pagehead .stepcard-line--head { flex: none; }
+/* The store listing: the extension's own icon and its name. The icon is the
+   real one, because a grey square there would be a drawing of any extension. */
+.stepcard-listing { display: flex; align-items: center; gap: 0.4rem; }
+.stepcard-listing img { flex: none; border-radius: 5px; }
+/* A width and not the 40% the page's own heading takes: this row is as wide as
+   what is in it, and 40% of that is a smudge beside the icon. */
+.stepcard-listing .stepcard-line--head { width: 5rem; }
+.stepcard-cta {
+  align-self: center; padding: 0.25rem 0.7rem; border-radius: 2rem;
+  background: #0b57d0; color: #fff; font-size: 10px; line-height: 1.4;
+  white-space: nowrap; direction: ltr;
+  animation: stepcard-ring 1.9s ease-out infinite;
+}
+/* Chrome writes the store's own button in whatever language the store is being
+   read in, so the drawing is the shape and not a word this catalogue guesses. */
+.stepcard-cta--blank { width: 3.4rem; height: 1.25rem; }
+/* Create key with no project to create it in: AI Studio greys the button out,
+   and a drawing that leaves it blue is a drawing of a step that works. */
+.stepcard-cta--off {
+  animation: none; background: #fff; border: 1px solid #dadce0; color: #b4b7bb;
+}
+.stepcard-dialog .stepcard-cta { align-self: flex-end; }
+/* A text field with something typed into it. The caret is the difference
+   between a box the reader fills in and a box that is already filled. */
+.stepcard-field {
+  display: flex; align-items: center; gap: 0.1rem;
+  padding: 0.25rem 0.45rem; border: 1px solid #c4c7cc; border-radius: 5px;
+  background: #fff; color: #3c4043; font-size: 10px; line-height: 1.4;
+  white-space: nowrap; direction: ltr;
+}
+.stepcard-field--marked { animation: stepcard-ring 1.9s ease-out infinite; }
+.stepcard-caret {
+  flex: none; width: 2px; height: 0.7rem; background: #3f51b5;
+  animation: stepcard-blink 1.1s steps(1) infinite;
+}
+/* The address bar with something in it. `--typed` is being typed and is what
+   its step is about; `--page` is only where the reader already is. */
+.stepcard-url--typed { color: #3c4043; animation: stepcard-ring 1.9s ease-out infinite; }
+.stepcard-url--typed, .stepcard-url--page { gap: 0.15rem; }
+.stepcard-keyline {
+  align-self: center; max-width: 100%; overflow: hidden;
+  padding: 0.22rem 0.5rem; border-radius: 5px; background: #f1f3f4;
+  color: #5f6368; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px; letter-spacing: 0.02em; white-space: nowrap; direction: ltr;
+}
+/* Chrome's extensions button, and the extension's own icon once it is pinned
+   beside it. Both are ringed where they sit on the toolbar rather than pointed
+   at from below: there is no room under a 1.15rem address bar for an arrow. */
+.stepcard-puzzle, .stepcard-target { position: relative; flex: none; }
+.stepcard-puzzle {
+  display: grid; place-items: center;
+  width: 1.1rem; height: 1.1rem; border-radius: 50%; background: #e8eaed;
+}
+.stepcard-puzzle svg { display: block; width: 0.7rem; height: 0.7rem; fill: #3c4043; }
+.stepcard-target img { display: block; width: 1.1rem; height: 1.1rem; border-radius: 4px; }
+.stepcard-puzzle::before, .stepcard-target::before {
+  content: ""; position: absolute; inset: -0.25rem; border-radius: 50%;
+  border: 1.5px solid #3f51b5; animation: stepcard-pulse 1.9s ease-out infinite;
+}
+.stepcard-pointer {
+  position: absolute; inset-inline-start: 55%; inset-block-start: 60%;
+  width: 0.9rem; height: 0.9rem;
+}
+[dir="rtl"] .stepcard-pointer { transform: scaleX(-1); }
+/* The menu behind the extensions button, hanging under the corner it opens
+   from — so the drawing has to be the anchor. */
+.stepcard-viewport { position: relative; }
+.stepcard-menu {
+  position: absolute; inset-inline-end: 0.5rem; top: 0.4rem;
+  display: flex; flex-direction: column; gap: 0.4rem;
+  width: 9rem; padding: 0.45rem;
+  background: #fff; border: 1px solid #e3e5e8; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(31, 35, 40, 0.16);
+}
+.stepcard-menu .stepcard-line--head { width: 55%; }
+.stepcard-menu-row { display: flex; align-items: center; gap: 0.35rem; }
+.stepcard-menu-row img { flex: none; width: 0.95rem; height: 0.95rem; border-radius: 4px; }
+/* The name is Latin either way, so it keeps its own direction — but in an RTL
+   row it has to sit against the icon rather than against the pin. */
+.stepcard-menu-name {
+  flex: 1; color: #3c4043; font-size: 10px; line-height: 1.4;
+  white-space: nowrap; direction: ltr;
+}
+[dir="rtl"] .stepcard-menu-name { text-align: right; }
+.stepcard-pin {
+  flex: none; display: grid; place-items: center;
+  width: 1.05rem; height: 1.05rem; border-radius: 50%;
+  animation: stepcard-ring 1.9s ease-out infinite;
+}
+.stepcard-pin svg { display: block; width: 0.72rem; height: 0.72rem; fill: #3c4043; }
+/* The page the toolbar step is looking at, which the step names. */
+.stepcard-video {
+  position: absolute; inset-inline-start: 50%; top: 0.9rem; translate: -50% 0;
+  display: grid; place-items: center;
+  width: 7rem; height: 3.4rem; border-radius: 5px; background: #1f2328;
+}
+.stepcard-video svg { width: 1.4rem; height: 1.4rem; }
+
 /* This panel's own button row, drawn a few centimetres above the real one. */
 .stepcard-bar { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
 .stepcard-start {
@@ -331,11 +464,24 @@ header h1 { font-size: 1rem; margin: 0; font-weight: 500; }
   0%, 100% { box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
   55% { box-shadow: 0 0 0 10px rgba(63, 81, 181, 0); }
 }
+/* The same ring around something round, where a box-shadow would draw a square
+   corner on a circle. */
+@keyframes stepcard-pulse {
+  0%, 100% { opacity: 1; scale: 1; }
+  55% { opacity: 0; scale: 1.5; }
+}
+@keyframes stepcard-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 /* A ring that is drawn but still says the same sentence to somebody who has
-   asked their machine to stop animating. */
+   asked their machine to stop animating. The caret stops mid-blink rather than
+   disappearing: it is what marks the box you type in. */
 @media (prefers-reduced-motion: reduce) {
-  .stepcard-select, .stepcard-start { animation: none; box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32); }
-  .stepcard-select--still { box-shadow: none; }
+  .stepcard-select, .stepcard-start, .stepcard-cta, .stepcard-pin,
+  .stepcard-field--marked, .stepcard-url--typed {
+    animation: none; box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.32);
+  }
+  .stepcard-select--still, .stepcard-cta--off { box-shadow: none; }
+  .stepcard-caret { animation: none; }
+  .stepcard-puzzle::before, .stepcard-target::before { animation: none; }
 }
 
 select.lang, select.mode, input[type="range"] {

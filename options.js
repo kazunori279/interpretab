@@ -161,6 +161,11 @@ function renderKeyStatus() {
   } else {
     setStatus(node, t("optKeySaved"), true);
   }
+  // The install card, shown to whoever has not got past the step it is about.
+  // Chrome opens this page by itself on install, so that is everybody once, and
+  // the card goes the moment a key is saved rather than at the next reload —
+  // this runs on both paths, which is why it lives here and not in `init`.
+  el("setupCard").hidden = Boolean(key);
 }
 
 function toggleKey() {

@@ -122,10 +122,43 @@
   "optTitle": { "message": "Interpretab — Options" },
   "optHeading": { "message": "Options d'Interpretab" },
 
-  "optSetupHeading": { "message": "Avant de commencer" },
-  "optSetupNote": {
-    "message": "Rien ne fonctionne sans la clé. Les deux autres se règlent une seule fois, au même moment : le forfait de votre clé et — seulement si vous voulez faire traduire votre propre voix — l'autorisation d'utiliser le microphone. Le <a1>guide d'utilisation</a1> détaille les trois."
+  "optStartHeading": { "message": "Commencez en 5 minutes" },
+  "optStartStep1": {
+    "message": "Ouvrez <a1>Interpretab sur le Chrome Web Store</a1> et cliquez sur <b>Ajouter à Google Chrome</b>."
   },
+  "optStartStep2": {
+    "message": "C'est Gemini, de Google, qui traduit, et Gemini a besoin d'une clé d'API à vous. L'obtenir est gratuit : ouvrez <a1>Google AI Studio</a1> et connectez-vous avec un compte Google."
+  },
+  "optStartStep3": {
+    "message": "La page liste les clés que vous avez, c'est-à-dire aucune sur un compte neuf. Cliquez sur <b>Créer une clé API</b>."
+  },
+  "optStartStep4": {
+    "message": "Une clé a besoin d'un nom et d'un projet Google Cloud auquel appartenir. Saisissez <b>Interpretab</b> comme nom. En dessous, un compte qui n'a jamais utilisé l'API n'a rien à choisir : <b>No Cloud Projects Available</b>."
+  },
+  "optStartStep5": {
+    "message": "Ouvrez cette liste et choisissez <b>Créer un projet</b>. Le nom déjà inscrit est dans votre langue et le champ n'accepte que les lettres latines : effacez-le, tapez <b>Interpretab</b>, puis cliquez sur <b>Créer un projet</b>."
+  },
+  "optStartStep6": {
+    "message": "La boîte de dialogue revient avec le nouveau projet. Cliquez sur <b>Créer une clé</b> : la clé apparaît, cliquez sur <b>Copier la clé</b>. Elle reste sur la page API keys, vous pouvez donc y revenir plus tard."
+  },
+  "optStartStep7": {
+    "message": "La page <b>Options</b> de l'extension s'ouvre d'elle-même la première fois, et le bouton <b>Options</b> du panneau latéral la rouvre. Collez la clé dans <b>Clé d'API Gemini</b>. Elle reste dans ce navigateur et n'est envoyée à personne d'autre que Google."
+  },
+  "optStartStep8": {
+    "message": "Ouvrez la page à traduire — une vidéo où quelqu'un parle sur <a1>youtube.com</a1> est le test le plus simple pour commencer. Une extension qui vient d'être installée n'a pas encore d'icône dans la barre d'outils : cliquez sur le <b>bouton en forme de pièce de puzzle</b> de Chrome, trouvez <b>Interpretab</b> dans la liste et cliquez sur l'épingle à côté."
+  },
+  "optStartStep9": {
+    "message": "L'icône est maintenant dans la barre d'outils. <b>Cliquez dessus depuis l'onglet à traduire.</b> Ce clic est la façon dont vous donnez la permission d'écouter l'onglet : sans lui, vous obtenez une erreur."
+  },
+  "optStartStep10": {
+    "message": "Choisissez votre langue dans le panneau latéral et appuyez sur <b>Start</b>. Lancez la vidéo : la voix revient dans cette langue. Si vous n'entendez aucune traduction, choisissez une langue autre que celle que parle déjà la vidéo."
+  },
+  "optStartCreateApiKey": { "message": "Créer une clé API" },
+  "optStartCreateKey": { "message": "Créer une clé" },
+  "optStartCreateProject": { "message": "Créer un projet" },
+  "optStartCopyKey": { "message": "Copier la clé" },
+
+  "optSetupHeading": { "message": "Avant de commencer" },
   "optRestHeading": { "message": "Tout le reste" },
   "optRestNote": {
     "message": "Tout cela est déjà réglé sur quelque chose qui marche. Revenez en changer un le jour où il ne vous convient pas."
