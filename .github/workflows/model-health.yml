@@ -1,0 +1,113 @@
+# Are the models in docs/config.json still there?
+#
+# That file is read by every installed copy of this extension within a few hours
+# of it changing, and the names in it are previews with about two weeks to live.
+# Nothing else in this repository notices when one is switched off -- the users
+# notice, all at once, in the middle of a sentence. So this asks the API.
+#
+# GitHub runs scheduled workflows on a best-effort queue, so */5 means "about
+# every five minutes when the fleet is quiet" and sometimes fifteen. That is
+# still two orders of magnitude better than waiting for a bug report.
+name: Model health
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+# Never two at once. A backed-up queue firing three of these together would
+# open three Live sessions per model and hit a concurrency limit that looks
+# exactly like a retired model.
+concurrency:
+  group: model-health
+  cancel-in-progress: false
+
+# A called workflow cannot ask for more than its caller was given, so the two
+# `model-discovery.yml` needs are declared here as well: `contents: write` for
+# the commit and `id-token: write` for the federation. Each job below narrows
+# that down to what it actually uses.
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      healthy: ${{ steps.check.outputs.healthy }}
+      gone: ${{ steps.check.outputs.gone }}
+      alreadyOpen: ${{ steps.lock.outputs.alreadyOpen }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # `continue-on-error` because an unhealthy model is the thing this
+      # workflow is for, not a broken workflow. The step still writes its
+      # verdict to GITHUB_OUTPUT before it exits non-zero.
+      - id: check
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node tests/model-check.mjs --json
+
+      # One open issue is the lock as well as the alert: while it is open the
+      # discovery agent below does not run again, so a model that stays gone
+      # costs one agent run rather than one every five minutes.
+      - id: lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create model-outage --color d73a4a --description "A model in docs/config.json is unreachable" 2>/dev/null || true
+          count=$(gh issue list --label model-outage --state open --json number --jq 'length')
+          echo "alreadyOpen=$([ "$count" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      # The body goes through the environment rather than into the command line:
+      # it carries a model name and a URL that this workflow did not choose, and
+      # a shell that interpolates those directly is one backtick away from a
+      # command substitution.
+      - if: steps.check.outputs.healthy != 'true' && steps.lock.outputs.alreadyOpen == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GONE: ${{ steps.check.outputs.gone }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gone="${GONE:-none classified as gone — this may be a network or quota failure}"
+          gh issue create --label model-outage \
+            --title "Model unreachable: ${gone}" \
+            --body "The five-minute check could not use a model named in docs/config.json.
+
+          Gone: ${gone}
+
+          Run: ${RUN_URL}
+
+          The discovery agent runs once while this issue is open; closing the issue arms it again.
+          This issue closes itself when the check next passes."
+
+      # Back to normal. Closed rather than left for someone to tidy, because an
+      # issue nobody closes is a lock nobody releases.
+      - if: steps.check.outputs.healthy == 'true' && steps.lock.outputs.alreadyOpen == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for number in $(gh issue list --label model-outage --state open --json number --jq '.[].number'); do
+            gh issue comment "$number" --body "Healthy again as of run ${{ github.run_id }}."
+            gh issue close "$number"
+          done
+
+  # Only when a model is *gone*, and only once per outage. A run that failed
+  # because the network was down leaves `gone` empty, and rewriting the config
+  # file over a bad minute is the one mistake this must not make.
+  discover:
+    needs: check
+    if: needs.check.outputs.healthy != 'true' && needs.check.outputs.gone != '' && needs.check.outputs.alreadyOpen == 'false'
+    uses: ./.github/workflows/model-discovery.yml
+    permissions:
+      contents: write
+      id-token: write
+    secrets: inherit

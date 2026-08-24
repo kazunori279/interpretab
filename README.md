@@ -1055,6 +1055,60 @@ One shape worth noting: the fetch lives in the service worker, not in the offscr
 `chrome.storage` is undefined in an offscreen document — it gets `chrome.runtime` messaging and
 nothing else — so the forced re-fetch a dying model triggers is a message to the worker and back.
 
+### Who watches the config file
+
+A file that corrects the build is only as good as whoever notices it needs correcting. Left alone,
+that is the users: a preview is switched off, and the first anyone here hears about it is a bug
+report. Two workflows stand in for that.
+
+**`.github/workflows/model-health.yml`, every five minutes.** `tests/model-check.mjs` asks the API
+two questions about every name in `docs/config.json` *and* the two compiled into the build, since
+`modelCandidates` keeps the bundled name as the last resort and a bundled model going away is an
+outage the config file says nothing about. First `ListModels`, which is where a withdrawn name
+stops appearing and where a surviving name can quietly lose `bidiGenerateContent`. Then a real
+socket: the same `setup` frame the extension sends, built by `buildSetup` so that a change to what
+this extension asks for is a change to what gets checked — including `translationConfig`, the field
+a general-purpose model rejects and the reason a catalogue lookup is not enough. It waits for
+`setupComplete` and closes, sending no audio, so a run costs two sessions and no tokens.
+
+Failures are split into *gone* and *something else went wrong*, by the same
+`isModelUnavailableClose` the extension's own fallback keys on. Only *gone* is allowed to start a
+rewrite. A network blip at 03:00 must not read as Google retiring a preview.
+
+GitHub queues scheduled workflows on a best-effort basis, so `*/5` means about five minutes when
+the fleet is quiet and sometimes fifteen. Against a two-week notice period, that is fine.
+
+**`.github/workflows/model-discovery.yml`, daily and on an outage.** The other half of the
+question: what replaced it. The names appear on Google's own documentation pages hours before
+anything else knows, which is a job for a model with a browser attached rather than for a scraper
+this repository would then maintain against someone else's HTML. `tools/find-models.mjs` asks
+`gemini-3.5-flash` on Vertex AI, with `url_context` and `google_search`, what the current Live
+model ids and audio prices are, then asks a second time — no tools, a response schema — to turn
+that prose into JSON. Grounding and a schema fight each other; two calls is cheaper than the
+prompt engineering to make one work.
+
+It commits to `main`, which means it edits the file every installation reads within hours with no
+human in between. Three things stand between a guess and that file:
+
+- **A name is verified before it is written.** Every candidate goes through the same `checkModel` —
+  a real session, `setupComplete` or nothing. An invented name never verifies, so an invented name
+  never ships.
+- **`mergeConfig` may only widen.** Newcomers go *behind* the name already serving users, because
+  the first name is the one every session starts on and a discovery should be a fallback before it
+  is a default. A name that verified gone is dropped, except the last one: an empty list means "the
+  file has no opinion", which is the opposite of what an outage should say.
+- **The emergency brake is not the agent's to pull.** `blockBelowVersion` is copied through
+  untouched, and the script aborts rather than writes if it ever differs. The output is re-read
+  through `parseConfig` before it is committed, and `npm test` runs against the committed file.
+
+The discovery run is locked behind one open issue labelled `model-outage`. While it is open the
+agent does not run again, so a model that stays gone costs one agent run and not one every five
+minutes; the issue closes itself when the check next passes. `tests/model-tools.test.js` is about
+`mergeConfig`, which is the only function in any of this that decides what gets committed.
+
+Setting it up needs three repository variables and one secret — see
+[Development](#development).
+
 ### Ten languages, one catalogue
 
 Every string the user reads comes from `_locales/<lang>/messages.json` through `lib/i18n.js`
@@ -1279,7 +1333,7 @@ Anything that asserts about a sentence rather than a key imports `tests/messages
 `lib/i18n.js` to `_locales/en/messages.json` off disk — `chrome.i18n` does not exist in Node, and
 without it every message is its own key.
 
-None of that talks to Google. Four scripts do, and all of them sit outside `npm test` because they
+None of that talks to Google. Five scripts do, and all of them sit outside `npm test` because they
 need a key and spend quota.
 
 **`tests/live-smoke.mjs` — does the wire format work?**
@@ -1418,6 +1472,100 @@ verbatim `reason`, the frames either side of it, and how long after the last fra
 dimension is the model *family* — there is no `gemini-3.1-flash-live` bucket at all, so
 `gemini-3.1-flash-live-preview` accounts under `gemini-3-flash-live` — and an override on the id
 the extension sends is accepted and does nothing. What it found is above, under the session loop.
+
+**`tests/model-check.mjs` — are the models in `docs/config.json` still there?**
+
+```bash
+node tests/model-check.mjs /tmp/key.txt          # a line per model
+node tests/model-check.mjs /tmp/key.txt --json   # what the workflow reads
+```
+
+What `.github/workflows/model-health.yml` runs every five minutes, and the same thing to run by
+hand before a release. `ListModels` for whether a name is still in the catalogue and still does
+`bidiGenerateContent`, then a real `BidiGenerateContent` socket for whether a session actually
+opens. No audio is sent, so a run costs two sessions and no tokens. Exits non-zero if anything is
+unreachable. See [Who watches the config file](#who-watches-the-config-file).
+
+**`tools/find-models.mjs` — and what replaced the one that went away?**
+
+```bash
+node tools/find-models.mjs /tmp/key.txt --dry    # print the merge, write nothing
+node tools/find-models.mjs /tmp/key.txt          # write docs/config.json if it changed
+```
+
+The Vertex AI half: `gemini-3.5-flash` reads Google's model and pricing pages, and every id it
+comes back with is opened as a real session before it is allowed anywhere near `docs/config.json`.
+Locally it borrows whatever `gcloud` is signed in as; in CI it gets an access token through
+Workload Identity Federation. `--dry` is the one to reach for first — the merge rules are stricter
+than they look, and seeing what it would have written is usually the answer.
+
+Running it in CI needs, on the repository:
+
+| | |
+| --- | --- |
+| `GEMINI_API_KEY` (secret) | the key both scripts check models with |
+| `GCP_PROJECT` (variable) | `gcp-samples-ic0` |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` (variable) | `projects/<number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>` |
+| `GCP_SERVICE_ACCOUNT` (variable) | the service account the provider may impersonate, with `roles/aiplatform.user` |
+
+The federation is a one-time setup, and the point of it is that no service-account key ever lands
+in this repository: the runner proves which repo it is with a short-lived OIDC token, and Google
+trades that for an access token good for the hour.
+
+The pool and the OIDC provider are per-owner, not per-repository, so check for one before creating
+another — `gcp-samples-ic0` already had `github-actions-pool/github-provider`, which admits any
+repository under `kazunori279`. What narrows that to this one is the `workloadIdentityUser` binding
+below: it names `attribute.repository/kazunori279/interpretab`, so a token from a sibling repository
+authenticates and then cannot impersonate the account.
+
+```bash
+project=gcp-samples-ic0
+number=$(gcloud projects describe "$project" --format='value(projectNumber)')
+account=interpretab-models@$project.iam.gserviceaccount.com
+pool=github-actions-pool     # gcloud iam workload-identity-pools list --location=global
+provider=github-provider     # ... providers list --workload-identity-pool="$pool"
+
+gcloud iam service-accounts create interpretab-models --project="$project" \
+  --display-name="Interpretab model discovery"
+gcloud projects add-iam-policy-binding "$project" \
+  --member="serviceAccount:$account" --role=roles/aiplatform.user
+
+gcloud iam service-accounts add-iam-policy-binding "$account" --project="$project" \
+  --role=roles/iam.workloadIdentityUser \
+  --member="principalSet://iam.googleapis.com/projects/$number/locations/global/workloadIdentityPools/$pool/attribute.repository/kazunori279/interpretab"
+
+gh variable set GCP_PROJECT --body "$project"
+gh variable set GCP_SERVICE_ACCOUNT --body "$account"
+gh variable set GCP_WORKLOAD_IDENTITY_PROVIDER \
+  --body "projects/$number/locations/global/workloadIdentityPools/$pool/providers/$provider"
+```
+
+If there is no pool yet, create one and point the provider at GitHub's issuer first. The mapping has
+to carry `attribute.repository` or the binding above has nothing to match on:
+
+```bash
+gcloud iam workload-identity-pools create "$pool" --project="$project" --location=global
+gcloud iam workload-identity-pools providers create-oidc "$provider" \
+  --project="$project" --location=global --workload-identity-pool="$pool" \
+  --issuer-uri="https://token.actions.githubusercontent.com" \
+  --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
+  --attribute-condition="assertion.repository_owner=='kazunori279'"
+```
+
+The key is the one thing with no federation behind it, so it gets its own, restricted to the one
+API the checks call and revocable without touching anything else in the project. It goes to GitHub
+through a file, because a key on a command line is a key in the shell history:
+
+```bash
+umask 077
+key=$(mktemp)
+gcloud services api-keys create --project="$project" \
+  --display-name="interpretab model health (GitHub Actions)" \
+  --api-target=service=generativelanguage.googleapis.com \
+  --format='value(response.keyString)' > "$key"
+gh secret set GEMINI_API_KEY < "$key"
+rm -f "$key"
+```
 
 **`tests/onboarding.mjs` — does the first run still guide anyone?**
 

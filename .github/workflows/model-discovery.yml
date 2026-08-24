@@ -1,0 +1,74 @@
+# Find the successor to a Live model that has gone away, and commit it.
+#
+# Runs once a day, and out of turn whenever `model-health.yml` finds a model
+# that the API says is not there any more.
+#
+# It commits straight to main, which means it edits a file every installed copy
+# of the extension reads within hours, with no human in between. Three things
+# stand between a language model's guess and that file:
+#
+#   1. A name only reaches the config after a real Live session has been opened
+#      with it and answered `setupComplete`. An invented name never verifies.
+#   2. `mergeConfig` may add, but it reorders nothing: a newcomer goes behind
+#      the name already serving users, and it cannot empty a list.
+#   3. `blockBelowVersion` -- the field that can stop every installation -- is
+#      copied through untouched, and the script aborts if it ever isn't.
+#
+# See `tests/model-tools.test.js`, which is about exactly those rules.
+name: Model discovery
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: model-discovery
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # Workload Identity Federation. No service-account key lives in this
+  # repository: the runner proves who it is with a short-lived OIDC token and
+  # Google hands back an access token good for the hour.
+  id-token: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
+
+      - id: find
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VERTEX_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          GOOGLE_CLOUD_PROJECT: ${{ vars.GCP_PROJECT }}
+          COMMIT_MESSAGE_FILE: ${{ runner.temp }}/commit-message.txt
+        run: node tools/find-models.mjs
+
+      # The unit tests, against the file the agent just wrote. `mergeConfig` is
+      # covered by them either way, but "the committed config round-trips
+      # through the extension's own parser" is only true of a real file.
+      - if: steps.find.outputs.changed == 'true'
+        run: npm test
+
+      - if: steps.find.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/config.json
+          git commit -F "${{ runner.temp }}/commit-message.txt"
+          git push
