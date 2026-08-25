@@ -228,10 +228,8 @@ Le panneau latéral tient un compteur de ce que l'exécution a consommé jusqu'i
 chaque appui sur Start. Ce qu'il affiche dépend de **Options → Forfait de l'API Gemini**, où vous
 indiquez si votre clé est **Free** ou **Paid**.
 
-- **Free** (par défaut) : *12 min écoulées, 18 min d'audio Gemini. Le forfait gratuit ne facture
-  rien pour cela.* Pas de prix, parce qu'il n'y a pas de prix. Le temps d'audio est le chiffre qui
-  vaut la peine d'être suivi : le forfait gratuit limite ce que vous pouvez consommer à la fois
-  plutôt que de le facturer, et c'est donc cela qui s'épuise.
+- **Free** (par défaut) : *12 min écoulées, 18 min d'utilisation totale. Le forfait gratuit ne
+  facture rien pour cela.*
 - **Paid** : *12 min écoulées, ~$0.31 d'usage Gemini sur cette exécution — une estimation, pas votre
   facture réelle.*
 

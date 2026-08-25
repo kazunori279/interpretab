@@ -226,10 +226,8 @@ El panel lateral lleva un medidor de lo que ha consumido la ejecución hasta aho
 empezar en cero cada vez que pulsas Start. Lo que muestra depende de **Opciones → Plan de la API de
 Gemini**, donde dices si tu clave es **Free** o **Paid**.
 
-- **Free** (por defecto): *12 min hasta ahora, 18 min de audio de Gemini. En el plan gratuito no se
-  cobra nada por ello.* Sin precio, porque no hay precio. El tiempo de audio es el número que
-  merece la pena mirar: el plan gratuito limita cuánto puedes usar a la vez en lugar de cobrarlo,
-  así que es eso lo que se gasta.
+- **Free** (por defecto): *12 min hasta ahora, 18 min de uso total. En el plan gratuito no se
+  cobra nada por ello.*
 - **Paid**: *12 min hasta ahora, ~$0.31 de uso de Gemini en esta ejecución: es una estimación, no tu
   factura real.*
 

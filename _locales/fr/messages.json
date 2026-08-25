@@ -75,7 +75,7 @@
     "message": "<b>{1}</b> écoulées, <b>{2}</b> d'usage Gemini sur cette exécution — une estimation, pas votre facture réelle."
   },
   "panelUsageFree": {
-    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'audio Gemini. Le forfait gratuit ne facture rien pour cela."
+    "message": "<b>{1}</b> écoulées, <b>{2}</b> d'utilisation totale. Le forfait gratuit ne facture rien pour cela."
   },
   "panelUsageTip": {
     "message": "Démarré il y a {1}. Depuis, {2} d'audio envoyés à Google et {3} reçus, et les deux sont facturés."

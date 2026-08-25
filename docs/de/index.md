@@ -224,10 +224,8 @@ Der Seitenbereich führt einen Zähler dessen, was der Lauf bisher verbraucht ha
 jedem Start wieder bei null. Was er zeigt, hängt von **Optionen → Gemini-API-Tarif** ab, wo Sie
 angeben, ob Ihr Schlüssel **Free** oder **Paid** ist.
 
-- **Free** (die Voreinstellung): *12 Min. bisher, 18 Min. Gemini-Audio. Im kostenlosen Tarif wird
-  dafür nichts berechnet.* Kein Preis, weil es keinen gibt. Die Audiozeit ist die Zahl, die sich zu
-  beobachten lohnt: der kostenlose Tarif begrenzt, wie viel Sie auf einmal nutzen können, statt es
-  zu berechnen, und genau das wird aufgebraucht.
+- **Free** (die Voreinstellung): *12 Min. bisher, 18 Min. Gesamtnutzung. Im kostenlosen Tarif wird
+  dafür nichts berechnet.*
 - **Paid**: *12 Min. bisher, ~$0.31 Gemini-Nutzung in diesem Lauf — eine Schätzung, nicht Ihre
   tatsächliche Rechnung.*
 

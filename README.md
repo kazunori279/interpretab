@@ -956,19 +956,21 @@ user was last in AI Studio and knows which project they made it in. It defaults 
 that is what the install steps tell people to get and since a price shown to someone who is not
 paying is the worse of the two mistakes.
 
-The free tail counts the audio instead — *12 min so far, 18 min of Gemini audio. The free tier is
-charged nothing for it.* — and that is not a consolation figure. The free tier is limited by rate
-rather than by money, so seconds of audio are what its limits are actually spent on, and the
-number that predicts a run failing to reconnect
+The free tail counts the audio instead — *12 min so far, 18 min of total usage. Google charges
+nothing for this on the free plan.* — and that is not a consolation figure. "Total usage" is the
+audio moved in both directions added together: the free tier is limited by rate rather than by
+money, so seconds of audio are what its limits are actually spent on, and the number that predicts
+a run failing to reconnect
 ([#13](https://github.com/kazunori279/interpretab/issues/13)). Both tails are whole messages —
 `panelUsagePaid` and `panelUsageFree` — rather than markup assembled around a number, so which of
 the two to use is the only choice `renderUsage` makes and the disclaimer cannot fall off the paid
 one. The clock is shared: it is the question either tier is asking.
 
-If the wording of either sentence changes, `README.md` and all ten guide pages quote them, and
+If the wording of either sentence changes, all ten guide pages quote both of them, and
 `tests/assets.test.js` fails until they agree — each page against the catalogue of the language it
 is written in, since what a reader of that page sees in the panel is that language's sentence and
-not the English one.
+not the English one. This file quotes them too, and nothing checks that, so it is the copy to look
+at first when the wording moves.
 
 ### The two facts that expire
 

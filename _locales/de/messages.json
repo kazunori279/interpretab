@@ -75,7 +75,7 @@
     "message": "<b>{1}</b> bisher, <b>{2}</b> Gemini-Nutzung in diesem Lauf — eine Schätzung, nicht Ihre tatsächliche Rechnung."
   },
   "panelUsageFree": {
-    "message": "<b>{1}</b> bisher, <b>{2}</b> Gemini-Audio. Im kostenlosen Tarif wird dafür nichts berechnet."
+    "message": "<b>{1}</b> bisher, <b>{2}</b> Gesamtnutzung. Im kostenlosen Tarif wird dafür nichts berechnet."
   },
   "panelUsageTip": {
     "message": "Vor {1} gestartet. Seitdem wurden {2} Audio an Google geschickt und {3} zurückempfangen, und beides wird berechnet."

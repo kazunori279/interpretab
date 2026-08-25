@@ -820,12 +820,30 @@ test("the cost figure disclaims itself where the user can actually see it", () =
     Object.keys(GUIDES).sort(),
     "a guide page exists that no catalogue is checked against"
   );
-  for (const [dir, locale] of Object.entries(GUIDES)) {
+  // Both sentences, because the free one is what most readers see — the plan
+  // defaults to free — and it is the one that drifted, in ten languages at once,
+  // while only the paid one was checked. Every word of each is checked, not the
+  // tail: the label in front of a figure is where the wording moves, and a run
+  // of guides kept "Gemini audio" for a panel that had stopped saying it.
+  const quoted = (locale, key) =>
+    readCatalogue(locale)
+      [key].message.replace(/<\/?b>/g, "")
+      // The bidi marks a catalogue needs around a Latin id are not in the prose.
+      .replace(/[‎‏]/g, "")
+      .split(/\{[12]\}/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+  for (const [dir, locale] of Object.entries({ ".": "en", ...GUIDES })) {
     const page = fs.readFileSync(path.join(SITE, dir, "index.md"), "utf8").replace(/\s+/g, " ");
-    const sentence = readCatalogue(locale).panelUsagePaid.message.replace(/<\/?b>/g, "");
-    // Placeholders aside, so the guide is free to quote it with figures in.
-    const [, tail] = sentence.split("{2}");
-    assert.ok(page.includes(tail.trim()), `docs/${dir}/index.md quotes an out-of-date usage note`);
+    for (const key of ["panelUsagePaid", "panelUsageFree"]) {
+      for (const part of quoted(locale, key)) {
+        // Placeholders aside, so the guide is free to quote it with figures in.
+        assert.ok(
+          page.replace(/[‎‏]/g, "").includes(part),
+          `docs/${dir}/index.md quotes an out-of-date ${key}: missing "${part}"`
+        );
+      }
+    }
   }
 });
 

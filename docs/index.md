@@ -221,10 +221,8 @@ The side panel keeps a meter of what the run has used so far, and starts again a
 you press Start. What it shows depends on **Options → Gemini API plan**, where you say whether your
 key is **Free** or **Paid**.
 
-- **Free** (the default): *12 min so far, 18 min of Gemini audio. Google charges nothing for this
-  on the free plan.* No price, because there is no price. The audio time is the number worth
-  watching: the free plan limits how much you can use at a time rather than charging for it, so
-  that is what gets used up.
+- **Free** (the default): *12 min so far, 18 min of total usage. Google charges nothing for this
+  on the free plan.*
 - **Paid**: *12 min so far, ~$0.31 of Gemini usage this run — an estimate, not your actual bill.*
 
 Set the plan when you paste the key. A key is paid once the Google account it belongs to has a

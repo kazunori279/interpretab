@@ -75,7 +75,7 @@
     "message": "<b>{1}</b> hasta ahora, <b>{2}</b> de uso de Gemini en esta ejecución: es una estimación, no tu factura real."
   },
   "panelUsageFree": {
-    "message": "<b>{1}</b> hasta ahora, <b>{2}</b> de audio de Gemini. En el plan gratuito no se cobra nada por ello."
+    "message": "<b>{1}</b> hasta ahora, <b>{2}</b> de uso total. En el plan gratuito no se cobra nada por ello."
   },
   "panelUsageTip": {
     "message": "Empezó hace {1}. Desde entonces ha enviado {2} de audio a Google y ha recibido {3}, y se cobran los dos."
