@@ -180,8 +180,9 @@ async function main() {
   }
 
   if (dry) return;
-  const total = Object.values(manifest).reduce((sum, m) => sum + (m.seconds || 0), 0);
-  console.log(`\n${spoken} recorded, ${Math.floor(total / 60)}m ${Math.round(total % 60)}s of narration`);
+  // Round first, or 359.9s prints as "5m 60s".
+  const total = Math.round(Object.values(manifest).reduce((sum, m) => sum + (m.seconds || 0), 0));
+  console.log(`\n${spoken} recorded, ${Math.floor(total / 60)}m ${total % 60}s of narration`);
 }
 
 await main();
