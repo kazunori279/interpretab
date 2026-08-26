@@ -187,6 +187,13 @@ svg a:hover text, svg a:hover tspan { text-decoration-color: var(--blue); }
                   color: var(--ink-2); margin-top: 5px; }
 .demo video { width: 872px; height: 490px; display: block; border-radius: 12px;
               border: 1px solid var(--hairline); background: var(--ink); }
+/* The clips are the English store video, so this copy of the deck carries a
+   Japanese subtitle track. Chrome sizes cues at 5% of the video height, which
+   is 24px here and larger than the slide's own body text; 19px sits under the
+   heading rather than competing with it. ::cue takes a short list of
+   properties, and font-family and size only through the `font` shorthand. */
+.demo video::cue { font: 500 19px/1.5 var(--font-text); color: #FFFFFF;
+                   background: rgba(32, 33, 36, .82); }
 
 /* ---------- break slide ---------- */
 .break { color: #fff; background: var(--blue); }
@@ -362,7 +369,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
       </div>
     </div>
     <video src="../video/demo-tab.mp4" poster="../video/demo-tab.jpg" preload="metadata" playsinline
-           aria-label="日本語の講演をタブで再生し、英語で読み上げながらページに字幕を出す。続けて同じ講演を中国語の字幕で表示する"></video>
+           aria-label="日本語の講演をタブで再生し、英語で読み上げながらページに字幕を出す。続けて同じ講演を中国語の字幕で表示する">
+      <track kind="subtitles" srclang="ja" label="日本語" src="../video/demo-tab.ja.vtt" default>
+    </video>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes silent">クリップは自動で流れる。まず字幕の行、次にパネルの全文、最後に中国語へ切り替わるところで言語メニューを指す。</div>
@@ -402,7 +411,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
       </div>
     </div>
     <video src="../video/demo-voice.mp4" poster="../video/demo-voice.jpg" preload="metadata" playsinline
-           aria-label="マイク方向のデモ。英語で話した文が日本語に通訳され、続いて双方向の会話モードで両方の言語が字幕になる"></video>
+           aria-label="マイク方向のデモ。英語で話した文が日本語に通訳され、続いて双方向の会話モードで両方の言語が字幕になる">
+      <track kind="subtitles" srclang="ja" label="日本語" src="../video/demo-voice.ja.vtt" default>
+    </video>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes silent">後半は双方向モード。1 つのパネルに 2 言語で、どちらの向きかは自分で判定している。</div>
@@ -442,7 +453,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
       </div>
     </div>
     <video src="../video/demo-cost.mp4" poster="../video/demo-cost.jpg" preload="metadata" playsinline
-           aria-label="ライブ翻訳モデルの Gemini API 料金ページ、続いて拡張機能の Chrome ウェブストアの掲載ページ"></video>
+           aria-label="ライブ翻訳モデルの Gemini API 料金ページ、続いて拡張機能の Chrome ウェブストアの掲載ページ">
+      <track kind="subtitles" srclang="ja" label="日本語" src="../video/demo-cost.ja.vtt" default>
+    </video>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes silent">価格は動く。だから拡張機能に同梱せず、ファイルから読む。それはスライド 11。</div>

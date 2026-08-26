@@ -1,0 +1,33 @@
+WEBVTT
+
+NOTE
+Japanese subtitles for the English voice-over, for docs/slides/ja/. The clip
+also carries the tab's own Japanese talk and, later, the same talk interpreted
+into English and then Chinese; those are the demo working rather than someone
+explaining it, so they get a line saying what you are hearing instead of a
+translation of it. Cue times are media time, so they survive the deck playing
+the clip at 1.15x.
+
+From 23s on, the extension is painting its own subtitles across the bottom of
+the tab, which is the thing the demo is showing; those two cues carry line:0 so
+they sit over the browser toolbar instead of covering it.
+
+1
+00:00:00.400 --> 00:00:04.400
+読めない言語で話されている動画を見ているとする
+
+2
+00:00:09.600 --> 00:00:12.600
+Interpretab を開いて、「タブ音声」をオンにするだけ
+
+3
+00:00:14.700 --> 00:00:17.400
+訳す先の言語を選んで、開始を押す
+
+4
+00:00:23.700 --> 00:00:33.600 line:0
+ここから聞こえる英語が、拡張機能の訳した声
+
+5
+00:00:38.300 --> 00:00:46.800 line:0
+同じ講演を、今度は中国語に

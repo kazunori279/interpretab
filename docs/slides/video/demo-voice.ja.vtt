@@ -1,0 +1,29 @@
+WEBVTT
+
+NOTE
+Japanese subtitles for the English voice-over, for docs/slides/ja/. The last
+two cues cover the two-way demo, where each speaker is followed by the
+extension answering in the other language; the cue says which direction is
+running rather than repeating both halves. They also carry line:0, because from
+24s the extension is painting its own subtitles across the bottom of the page
+and that is the thing the demo is showing.
+
+1
+00:00:00.000 --> 00:00:04.900
+Interpretab にはマイクモードもある。話すそばから通訳する
+
+2
+00:00:13.300 --> 00:00:17.400
+双方向の会話モードもある
+
+3
+00:00:17.600 --> 00:00:21.500
+2 つの言語を指定すれば、それぞれもう一方へ自動で訳される
+
+4
+00:00:24.300 --> 00:00:31.700 line:0
+ここからデモ。英語で話すと、日本語で返る
+
+5
+00:00:31.900 --> 00:00:38.900 line:0
+日本語で話すと、英語で返る
