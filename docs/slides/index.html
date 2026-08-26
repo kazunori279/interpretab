@@ -81,6 +81,21 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid #5F6368;
 .foot .pageno { min-width: 22px; text-align: right; }
 .slide.break .foot { color: rgba(255,255,255,.72); }
 
+/* ---------- narration control ----------
+   One button inside #frame rather than one per slide: it sits at the same
+   bottom-right corner on every slide, and there is only one audio element to
+   keep in step with it. */
+#vo { position: absolute; right: 64px; bottom: 58px; width: 44px; height: 44px; padding: 0;
+      border: 1px solid var(--hairline); border-radius: 50%; background: var(--white);
+      color: var(--blue); cursor: pointer; z-index: 20;
+      display: flex; align-items: center; justify-content: center; }
+#vo:hover  { background: var(--surface); }
+#vo:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+#vo.off    { color: var(--ink-3); cursor: default; }
+#vo .pausebars,
+#vo.playing .playtri { display: none; }
+#vo.playing .pausebars { display: inline; }
+
 .wordmark { font-family: var(--font); font-weight: 500; letter-spacing: -.5px; color: var(--ink); }
 .wordmark .m { color: var(--ink-2); font-weight: 400; }
 
@@ -183,7 +198,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
 @media print {
   @page { size: 1280px 720px; margin: 0; }
   html, body { background: #fff; overflow: visible; height: auto; }
-  #hud, #help, #notes { display: none !important; }
+  #hud, #help, #notes, #vo { display: none !important; }
   #stage { position: static; overflow: visible; }
   #frame { position: static; transform: none !important; width: 1280px; height: auto;
            box-shadow: none; }
@@ -218,9 +233,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <h1 class="disp">A live interpreter in a tab</h1>
   <div class="when">Interpretab &middot; a Chrome extension on the Gemini Live API</div>
   <div class="wordmark">Interpretab <span class="m">&middot; github.com/kazunori279/interpretab</span></div>
-  <div class="notes">Five minutes. A Chrome extension that interprets whatever a tab is playing, and
-  your microphone the other way. No server: the browser holds the socket and the user's own key. Most
-  of the talk is about what it took to keep that socket alive for an hour.</div>
+  <div class="notes">Interpretab is a Chrome extension that interprets whatever a tab is playing, and your
+  microphone the other way. No server in the middle: the browser holds the connection, and
+  your own API key. Most of this talk is about what it took to keep that connection alive for
+  an hour.</div>
 </section>
 
 <!-- ══════════════ 2 · WHAT IT DOES ══════════════ -->
@@ -275,8 +291,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="fn">The source language is detected, not declared. Naming one up front is a promise a tab
   cannot keep: a video cuts to a second speaker, a call hands over.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">The tab direction is fixed to the simultaneous model. The mic direction offers a
-  conversation model too, which waits for the end of a sentence and translates it better.</div>
+  <div class="notes">Two directions. Point it at a tab and it speaks the translation out loud, draws the sentence
+  on the page, and keeps a transcript. Point it at your microphone and the far end of a Meet
+  call hears your language instead of your voice. Either direction can be switched off, and
+  both can run at once.</div>
 </section>
 
 <!-- ══════════════ 3 · THE THREE MOVING PARTS ══════════════ -->
@@ -332,9 +350,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">The recorder worklet emits 128 samples at a time, 125 times a second. Wrapping each
-  of those in JSON would spend more bytes on the envelope than on the audio, so the session coalesces
-  to 32 ms frames — well under the model's own response time.</div>
+  <div class="notes">Three pieces, if they are new to you. Web Audio is the browser's audio graph; it captures the
+  sound and resamples it. A WebSocket is a connection that stays open, so either end can send
+  whenever it likes. And the Live API takes that stream of audio and answers with a spoken
+  one, before the sentence has finished.</div>
 </section>
 
 <!-- ══════════════ 4 · WHAT IT LOOKS LIKE ══════════════ -->
@@ -354,9 +373,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </div>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Subtitles live in a closed shadow root, so the page's own CSS cannot reach them. A
-  caption is capped at three wrapped rows and bottom-aligned, so a long sentence loses its already-read
-  head rather than its newest words.</div>
+  <div class="notes">Here is a Japanese talk playing in a tab, English coming out of the speakers, and the sentence
+  drawn on the page as it is spoken. The original drops to fifteen percent under a translated
+  voice. The side panel keeps the transcript and a meter: minutes elapsed, and what this run
+  has cost.</div>
 </section>
 
 <!-- ══════════════ 5 · TURNING IT ON ══════════════ -->
@@ -397,8 +417,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
   spending while the run goes. It is billed to the user's own account; none of the usage rolls up to
   this extension anywhere.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Demo point, if there is a live tab: start on a Japanese video, then open the panel
-  and show the transcript filling and the meter counting.</div>
+  <div class="notes">Three steps. Install it from the Web Store; the whole thing is two hundred and twenty
+  kilobytes. Paste your own Gemini key, which never leaves the browser. Then pick a target
+  language and press Start. Seventy-eight languages on the tab side.</div>
 </section>
 
 <!-- ══════════════ 6 · ONE SOCKET, NO SERVER ══════════════ -->
@@ -454,9 +475,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   need for any keepalive hack. It also gets <code>chrome.runtime</code> and nothing else: no
   <code>chrome.storage</code>, no <code>chrome.tabs</code>.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">The missing-namespace failure is worth the war story: chrome.storage.onChanged at
-  module scope throws a TypeError after the listeners above it are registered, so the extension keeps
-  working and only the settings that should apply mid-session quietly stop.</div>
+  <div class="notes">An offscreen document holds all of it. Chrome tears the service worker down after about thirty
+  seconds idle, and the side panel dies when you close it, so neither one can hold an audio
+  capture. The offscreen document outlives both, and owns every media stream, the audio graph,
+  and one socket per direction. No server anywhere in this picture.</div>
 </section>
 
 <!-- ══════════════ 7 · THREE AUDIOCONTEXTS ══════════════ -->
@@ -527,9 +549,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   on purpose: pushing 48 kHz through the 24 kHz player context resamples it down and audibly dulls
   anything musical.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Ducking asks "is a voice speaking right now", and model audio arrives far faster
-  than realtime, so the answer cannot be "did a frame just arrive". Each buffer extends a play-out
-  deadline by byteLength / 2 / 24000 seconds, and the gain reads that deadline plus 400 ms.</div>
+  <div class="notes">Chrome caps a document at around six AudioContexts, and a layout with one set per direction
+  needs five. So they are shared by sample rate instead: one at the tab's own rate for
+  pass-through, one at sixteen kilohertz for capture, one at twenty-four for playback. The
+  pass-through context stays native on purpose, because resampling it down audibly dulls
+  anything musical.</div>
 </section>
 
 <!-- ══════════════ 8 · THE TRANSLATED MICROPHONE ══════════════ -->
@@ -587,9 +611,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Both scripts go in under activeTab, so this adds no host permission and can only
-  reach the tab the run started on. Meet-only on purpose: the answer was measured against one device
-  picker and does not carry to Zoom or Teams without asking again.</div>
+  <div class="notes">An extension cannot register itself as a microphone with the operating system. A page is
+  another matter. A script injected into Meet's own JavaScript world adds a device called
+  Interpretab to the list, and hands back a synthetic track when Meet asks for one. It has to
+  run in the page, and a page script cannot reach the extension, so a second script relays the
+  audio across by postMessage.</div>
 </section>
 
 <!-- ══════════════ 9 · BREAK ══════════════ -->
@@ -602,8 +628,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <li><span>The model is a preview</span></li>
   </ul>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">None of these is about translation quality. All three are about keeping a long-lived
-  connection honest on someone else's schedule.</div>
+  <div class="notes">Three things fought back. None of them is about translation quality. All three are about
+  keeping a long-lived connection honest on someone else's schedule.</div>
 </section>
 
 <!-- ══════════════ 10 · SESSION EXPIRY ══════════════ -->
@@ -660,9 +686,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Measured through tests/live-smoke.mjs: the warning arrived at 9:00 carrying "50s",
-  the replacement was ready 0.3 s later, and the swap fired 49.2 s after the warning. Zero server
-  closes across twelve minutes; the longest silence in the translated audio was 3.6 s.</div>
+  <div class="notes">A Live session lasts about ten minutes. At nine, the server sends a warning with fifty seconds
+  of notice, and it means that literally. So the loop opens the replacement while the old
+  session is still talking, swaps on a finished turn or five seconds of silence, and replays
+  the audio nothing has answered yet. Six handovers an hour, and the longest gap in the
+  translated speech was three point six seconds.</div>
 </section>
 
 <!-- ══════════════ 11 · THE BLANK FAILURE ══════════════ -->
@@ -705,9 +733,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   crosses it in six seconds. Retrying for ever is a bug when the answer will not change. A spent
   quota comes back at midnight Pacific, not in four seconds.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">The verdict outlives the preflight: when the key checks out clean, a hint rides
-  into every session the run opens, so a later 1006 stops blaming the key — because it demonstrably is
-  not the key.</div>
+  <div class="notes">When a WebSocket upgrade is refused, the browser is never told why. A bad key, a spent quota
+  and a hotel captive portal all arrive as the same blank close, and that is deliberate:
+  telling the page apart would make it an oracle. So the extension asks the same question over
+  HTTP first, where the answer has a status code. Retrying a spent quota is pointless. It
+  comes back at midnight, not in four seconds.</div>
 </section>
 
 <!-- ══════════════ 12 · THE TWO FACTS THAT EXPIRE ══════════════ -->
@@ -764,9 +794,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">MV3 bans remotely hosted code and names a cached remote JSON config as a supported
-  pattern. The line is interpretation: a JSON document describing steps to perform is an interpreter
-  whatever its MIME type. Nothing here is executed, evaluated or rendered as markup.</div>
+  <div class="notes">Two facts this build cannot own: which Live models exist, and what they cost. A preview model
+  gets two weeks' notice, and a store review can take longer than that. So an hourly job asks
+  the API which models still answer, and a daily one goes looking for the successor. When one
+  is really gone, it rewrites a small JSON file on GitHub Pages, and every installed copy
+  picks the correction up within six hours. Data only, never logic.</div>
 </section>
 
 <!-- ══════════════ 13 · SOAKS ══════════════ -->
@@ -793,9 +825,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <code>tests/soak.mjs</code> speaks synthetic sentences through the real API for an hour and has a
   second model grade every translation; the full reports are in the repository.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">The 64% is ordinary wrong translations, not infrastructure: pass rate by ten-minute
-  block runs 68, 45, 62, 73, 65, 72 — noise, not decay. Japanese into English is harder for this model
-  than English into Japanese, and the input is synthetic speech with flat prosody.</div>
+  <div class="notes">Three hour-long soaks against the real API, with a second model grading every translation. The
+  session machinery reads the same on all three: seven sessions, six warnings, and not one
+  closed by the server. Quality tracks the language pair rather than the code path. The
+  sixty-four percent row is Japanese into English on synthetic speech, and the pass rate by
+  ten-minute block is flat, so that is ordinary wrong translations rather than decay.</div>
 </section>
 
 <!-- ══════════════ 14 · LEARNINGS ══════════════ -->
@@ -815,8 +849,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   detection, and it detects it in the audio you send. Stop sending when the speaker stops, and the
   model waits indefinitely.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">If there is time for one story, tell 04: a preview model gets two weeks' notice and
-  a store review takes up to several weeks, so the notice period is shorter than the fix.</div>
+  <div class="notes">Four things I would tell the next person. Open a real socket early; two of the three protocol
+  surprises here are in no document. Ask over HTTP when a close code gives you nothing. Retry
+  a flaky network, but not a verdict. And keep what belongs to someone else out of the build.
+  The one that cost the most: silence is input. End of turn is detected in the audio you send,
+  so if you stop sending when the speaker stops, the model waits for ever.</div>
 </section>
 
 <!-- ══════════════ 15 · THANK YOU ══════════════ -->
@@ -833,14 +870,20 @@ table.t .ok { color: var(--green); font-weight: 700; }
     speaker did not.</div>
   </div>
   <div class="wordmark">Interpretab</div>
-  <div class="notes">Open issues worth a mention if anyone asks: a local support log, and offering the
-  original language alongside the translation on the tab side.</div>
+  <div class="notes">It is on the Chrome Web Store, the guide is on GitHub Pages, and the code is Apache two point
+  zero. A personal project, not a Google product. Thank you.</div>
 </section>
 
+<button id="vo" type="button" aria-label="Play the narration for this slide" title="Play the narration (p)">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+    <path class="playtri" d="M8.5 5.5 18 12l-9.5 6.5z" fill="currentColor"/>
+    <path class="pausebars" d="M8 5.5h3v13H8zm5 0h3v13h-3z" fill="currentColor"/>
+  </svg>
+</button>
 </div></div>
 
 <div id="hud"></div>
-<div id="help"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> slides &nbsp; <kbd>f</kbd> fullscreen &nbsp; <kbd>n</kbd> notes &nbsp; <kbd>&#8984;P</kbd> PDF</div>
+<div id="help"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> slides &nbsp; <kbd>p</kbd> narration &nbsp; <kbd>f</kbd> fullscreen &nbsp; <kbd>n</kbd> notes &nbsp; <kbd>&#8984;P</kbd> PDF</div>
 <div id="notes"></div>
 
 <script>
@@ -849,7 +892,50 @@ table.t .ok { color: var(--green); font-weight: 700; }
   const hud = document.getElementById('hud');
   const frame = document.getElementById('frame');
   const notesEl = document.getElementById('notes');
+  const voBtn = document.getElementById('vo');
   let cur = Math.min(Math.max((parseInt(location.hash.slice(1), 10) || 1) - 1, 0), slides.length - 1);
+
+  // ----- narration -----
+  // One recording per slide, made from that slide's .notes by
+  // tools/slide-voice.mjs. `playing` is what the user asked for, not what the
+  // element is doing: it survives the gap between slides so the deck keeps
+  // reading itself, and it is what the button reflects.
+  const voice = new Audio();
+  voice.preload = 'none';                                    // no 404 storm before the first press
+  let playing = false;
+
+  function voLoad() {
+    voice.pause();
+    voice.src = 'audio/slide-' + String(cur + 1).padStart(2, '0') + '.mp3';
+    voBtn.classList.remove('off');
+  }
+
+  function voPlay() {
+    playing = true;
+    voice.play().then(() => voBtn.classList.add('playing')).catch(voMissing);
+  }
+
+  function voPause() {
+    playing = false;
+    voice.pause();
+    voBtn.classList.remove('playing');
+  }
+
+  // A slide with no recording yet, or a file:// URL Chrome will not fetch
+  // media from. Say so on the button and stay out of the way.
+  function voMissing() {
+    playing = false;
+    voBtn.classList.remove('playing');
+    voBtn.classList.add('off');
+    voBtn.title = 'No narration for this slide';
+  }
+
+  voice.addEventListener('error', voMissing);
+  voice.addEventListener('ended', () => {
+    if (cur < slides.length - 1) show(cur + 1);               // show() resumes it
+    else voPause();
+  });
+  voBtn.addEventListener('click', () => (playing ? voPause() : voPlay()));
 
   // Page numbers are assigned from document order, so reordering slides can't
   // leave a stale number behind.
@@ -865,6 +951,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
     history.replaceState(null, '', '#' + (cur + 1));
     const note = slides[cur].querySelector('.notes');
     notesEl.innerHTML = note ? note.innerHTML : '<i style="color:#9AA0A6">No notes for this slide.</i>';
+    voBtn.title = 'Play the narration (p)';
+    voLoad();
+    if (playing) voPlay();
   }
 
   function fit() {
@@ -881,12 +970,13 @@ table.t .ok { color: var(--green); font-weight: 700; }
     else if (e.key === 'Home') show(0);
     else if (e.key === 'End') show(slides.length - 1);
     else if (e.key === 'n') notesEl.classList.toggle('on');
+    else if (e.key === 'p') playing ? voPause() : voPlay();
     else if (e.key === 'f') document.fullscreenElement ? document.exitFullscreen()
                                                        : document.documentElement.requestFullscreen();
   });
 
   addEventListener('click', e => {
-    if (e.target.closest('a, #notes')) return;               // links own their clicks
+    if (e.target.closest('a, #notes, #vo')) return;          // links and the control own their clicks
     show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
   });
 
