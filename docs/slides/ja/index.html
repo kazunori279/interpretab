@@ -329,9 +329,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <a href="https://developer.chrome.com/docs/extensions" target="_blank" rel="noopener">Chrome 拡張機能</a></div>
   <div class="wordmark">Interpretab <span class="m">&middot;
     <a href="https://github.com/kazunori279/interpretab" target="_blank" rel="noopener">github.com/kazunori279/interpretab</a></span></div>
-  <div class="notes">Interpretab という Chrome 拡張機能です。タブが再生している音声をそのまま聞き取って、声に出して通訳します。
-  マイクなら向きが逆になります。あいだにサーバーはありません。接続も API キーも、ブラウザの中だけで完結します。
-  まずは見てもらったほうが早いです。</div>
+  <div class="notes">Interpretab という Chrome 拡張機能です。タブが再生している音声を聞き取って、声に出して通訳します。
+  逆に、自分の声を訳して相手に届けることもできます。あいだに第三者のサーバーは入りません。通信も API キーも、
+  ブラウザの中だけで完結します。まずは見てもらったほうが早いです。</div>
 </section>
 
 <!-- ══════════════ 2 · DEMO, TAB ══════════════ -->
@@ -356,7 +356,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
           <circle class="ripple" cx="29" cy="24" r="8" stroke="#34A853" stroke-width="2.5" fill="none" style="animation-delay:1.1s"/>
         </svg>
         <div class="ct">声で出る</div>
-        <div class="cb">通訳を音声で再生する。元の音声は 15% まで下げて、その下に流したまま。</div>
+        <div class="cb">通訳を音声で再生する。元の音声は音量を 15% まで下げて、後ろで鳴らしたまま。</div>
       </div>
       <div class="chip">
         <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -397,7 +397,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
           <path class="nudge" d="M40 32H12l6-6m-6 6 6 6" stroke="#34A853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/>
         </svg>
         <div class="ct">双方向</div>
-        <div class="cb">会話の両側が 1 つのパネルに、それぞれ相手の言語で並ぶ。</div>
+        <div class="cb">自分の発言も相手の発言も、訳された状態で 1 つのパネルに並ぶ。</div>
       </div>
       <div class="chip">
         <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -407,7 +407,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
         </svg>
         <div class="ct">通話の中へ</div>
         <div class="cb"><a href="https://meet.google.com/" target="_blank" rel="noopener">Meet</a>
-        がマイクとして一覧に出すので、相手には訳した声が届く。</div>
+        のマイク一覧に出るので、選べば相手には訳した声が届く。</div>
       </div>
     </div>
     <video src="../video/demo-voice.mp4" poster="../video/demo-voice.jpg" preload="metadata" playsinline
@@ -431,7 +431,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
         </svg>
         <div class="ct">自分の API キー</div>
         <div class="cb"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI
-        Studio</a> で取る。ブラウザの外は Google の API だけ。</div>
+        Studio</a> で取る。外に出る通信は Google の API だけ。</div>
       </div>
       <div class="chip">
         <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -440,7 +440,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
           <circle cx="24" cy="33" r="2.6" fill="#34A853"/>
         </svg>
         <div class="ct">使用量メーター</div>
-        <div class="cb">経過した分数と、その実行がここまでに使った金額が動きながら出る。</div>
+        <div class="cb">経過時間と、かかった金額が実行中ずっと出つづける。</div>
       </div>
       <div class="chip">
         <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -449,7 +449,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
           <circle class="pulse" cx="15" cy="15" r="3.2" fill="#FBBC05"/>
         </svg>
         <div class="ct">まず<a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">無料枠</a>で</div>
-        <div class="cb">有料のキーなら請求先は本人。作者側には何も上がってこない。</div>
+        <div class="cb">有料でも、料金は自分の Google アカウントに直接かかる。</div>
       </div>
     </div>
     <video src="../video/demo-cost.mp4" poster="../video/demo-cost.jpg" preload="metadata" playsinline
@@ -458,26 +458,30 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </video>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes silent">価格は動く。だから拡張機能に同梱せず、ファイルから読む。それはスライド 11。</div>
+  <div class="notes silent">Google が価格を変えることがあるので、金額は拡張機能に入れず、外の設定ファイルから読む。スライド 11 で説明する。</div>
 </section>
 
 <!-- ══════════════ 5 · ARCHITECTURE ══════════════ -->
 <section class="slide">
-  <div class="h">アーキテクチャ</div>
+  <div class="h">Interpretab のアーキテクチャ</div>
   <div class="diagram" style="margin-top:32px;">
-<svg viewBox="0 0 1152 448" width="100%" aria-label="Web Audio がタブとマイクを 1 つの offscreen document 内の 3 つの AudioContext に取り込み、方向ごとに 1 本の WebSocket が音声を Gemini Live API へ運び、訳された音声がスピーカー、字幕、通話へ戻ってくる">
+<svg viewBox="0 0 1152 448" width="100%" aria-label="Web Audio がタブとマイクを 1 つの offscreen document 内の 3 つの AudioContext に取り込み、その 3 つのまとまりからタブ用とマイク用の 2 本の WebSocket が分かれて Gemini Live API との間で音声を送受信し、訳された音声がスピーカー、字幕、通話へ戻ってくる">
   <defs>
     <marker id="s05-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
-    <marker id="s05-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <!-- auto-start-reverse so one marker serves both ends: each socket is a
+         single bidirectional line, not an uplink paired with a downlink. -->
+    <marker id="s05-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto-start-reverse">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
     </marker>
-    <marker id="s05-arwg" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
-      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#34A853"/>
-    </marker>
-    <path id="s05-out"  d="M492 240 H 848"/>
-    <path id="s05-back" d="M848 288 H 492"/>
+    <!-- Both sockets leave the amber block from one point on its edge and fork.
+         A line per inner box would say each socket belongs to one AudioContext,
+         which is wrong: both send what ctxUp captured and both feed ctxDown. -->
+    <path id="s05-tab"  d="M480 286 H 500 V 262 H 848"/>
+    <path id="s05-mic"  d="M480 286 H 500 V 310 H 848"/>
+    <path id="s05-tabr" d="M848 262 H 500 V 286 H 480"/>
+    <path id="s05-micr" d="M848 310 H 500 V 286 H 480"/>
   </defs>
 
   <!-- primer: the three things a reader may not have met -->
@@ -487,17 +491,17 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <a href="https://developer.mozilla.org/ja/docs/Web/API/Web_Audio_API" target="_blank" rel="noopener">
       <text x="38" y="12" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="700" fill="#B06000">Web Audio</text>
     </a>
-    <text x="38" y="34" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">ブラウザがメインスレッドの外で回すノードの</text>
-    <text x="38" y="54" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">グラフ。取得、変換、音量下げ、再生</text>
+    <text x="38" y="34" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">ブラウザ内蔵の音声処理。取り込み、レート変換、</text>
+    <text x="38" y="54" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">音量調整、再生をこれでやる</text>
   </g>
   <g>
-    <circle cx="410" cy="16" r="13" fill="#E8F0FE"/>
-    <path d="M404 12h9l-3-3m3 3-3 3M416 21h-9l3-3m-3 3 3 3" stroke="#174EA6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="490" cy="16" r="13" fill="#E8F0FE"/>
+    <path d="M484 12h9l-3-3m3 3-3 3M496 21h-9l3-3m-3 3 3 3" stroke="#174EA6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     <a href="https://developer.mozilla.org/ja/docs/Web/API/WebSockets_API" target="_blank" rel="noopener">
-      <text x="434" y="12" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="700" fill="#174EA6">WebSocket</text>
+      <text x="514" y="12" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="700" fill="#174EA6">WebSocket</text>
     </a>
-    <text x="434" y="34" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">開いたままの接続。どちらの端からでも</text>
-    <text x="434" y="54" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">好きなときに送れる</text>
+    <text x="514" y="34" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">開いたままの接続。どちらの端からでも</text>
+    <text x="514" y="54" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">好きなときに送れる</text>
   </g>
   <g>
     <circle cx="806" cy="16" r="13" fill="#E6F4EA"/>
@@ -508,83 +512,128 @@ table.t .ok { color: var(--green); font-weight: 700; }
   </g>
 
   <!-- the browser boundary -->
-  <text x="0" y="108" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#80868B">Chrome &middot; 1 つの <a href="https://developer.chrome.com/docs/extensions/reference/api/offscreen" target="_blank" rel="noopener"><tspan>offscreen document</tspan></a> がすべてのストリーム、すべてのコンテキスト、2 本のソケットを持つ</text>
+  <text x="0" y="108" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#80868B">Chrome &middot; 1 つの <a href="https://developer.chrome.com/docs/extensions/reference/api/offscreen" target="_blank" rel="noopener"><tspan>offscreen document</tspan></a>。画面を持たない裏方のページで、音声処理もソケットもすべてここに置く</text>
   <rect x="0" y="116" width="812" height="320" rx="12" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
 
-  <rect x="20" y="144" width="152" height="62" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="96" y="171" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">タブの音声</text>
-  <text x="96" y="191" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">48 kHz、取得したまま</text>
-
-  <rect x="20" y="220" width="152" height="62" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="96" y="247" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">マイク</text>
-  <text x="96" y="267" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">話している自分の声</text>
-
-  <rect x="20" y="330" width="152" height="86" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <g transform="translate(96 356)">
-    <rect class="bar" x="-21" y="-13" width="6" height="26" rx="3" fill="#34A853" style="animation-delay:0s"/>
-    <rect class="bar" x="-9"  y="-17" width="6" height="34" rx="3" fill="#0D652D" style="animation-delay:.18s"/>
-    <rect class="bar" x="3"   y="-15" width="6" height="30" rx="3" fill="#0D652D" style="animation-delay:.36s"/>
-    <rect class="bar" x="15"  y="-10" width="6" height="20" rx="3" fill="#34A853" style="animation-delay:.54s"/>
+  <!-- All three endpoints are the same size and carry the same kind of glyph, so the
+       eye pairs them before it reads them: a tab playing sound, a microphone, a
+       speaker. Grey, because the three colours belong to the primer above. -->
+  <rect x="20" y="132" width="152" height="86" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(96 155) scale(.85)">
+    <rect x="-19" y="-13" width="38" height="26" rx="3" fill="none" stroke="#5F6368" stroke-width="2.1"/>
+    <path d="M-19 -5 H 19" stroke="#5F6368" stroke-width="2.1" fill="none"/>
+    <circle cx="-14" cy="-9" r="1.7" fill="#5F6368"/>
+    <circle cx="-8.5" cy="-9" r="1.7" fill="#5F6368"/>
+    <path d="M-3 1 h-3 v6 h3 l4 3 v-12 z" fill="#5F6368"/>
+    <path d="M3 2.5 a3.6 3.6 0 0 1 0 5" fill="none" stroke="#5F6368" stroke-width="1.9" stroke-linecap="round"/>
   </g>
-  <text x="96" y="391" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#0D652D">スピーカー、</text>
-  <text x="96" y="409" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#0D652D">ページ、通話へ</text>
+  <text x="96" y="190" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">タブの音声</text>
+  <text x="96" y="210" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">48 kHz、変換せずそのまま</text>
 
-  <path d="M180 175 H 208" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
-  <path d="M180 251 H 208" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <rect x="20" y="235" width="152" height="86" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(96 258) scale(.85)" fill="none" stroke="#5F6368" stroke-width="2.1" stroke-linecap="round">
+    <rect x="-5.5" y="-13" width="11" height="17" rx="5.5"/>
+    <path d="M-9 0 a9 9 0 0 0 18 0"/>
+    <path d="M0 9 v4"/>
+    <path d="M-6 13 h12"/>
+  </g>
+  <text x="96" y="293" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">マイク</text>
+  <text x="96" y="313" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">話している自分の声</text>
+
+  <rect x="20" y="338" width="152" height="86" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(96 361) scale(.65)">
+    <rect class="bar" x="-21" y="-13" width="6" height="26" rx="3" fill="#9AA0A6" style="animation-delay:0s"/>
+    <rect class="bar" x="-9"  y="-17" width="6" height="34" rx="3" fill="#5F6368" style="animation-delay:.18s"/>
+    <rect class="bar" x="3"   y="-15" width="6" height="30" rx="3" fill="#5F6368" style="animation-delay:.36s"/>
+    <rect class="bar" x="15"  y="-10" width="6" height="20" rx="3" fill="#9AA0A6" style="animation-delay:.54s"/>
+  </g>
+  <text x="96" y="396" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#202124">スピーカー、</text>
+  <text x="96" y="414" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#202124">ページ、通話へ</text>
+
 
   <rect x="212" y="136" width="268" height="248" rx="12" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
   <text x="346" y="164" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#B06000">3 つの <a href="https://developer.mozilla.org/ja/docs/Web/API/AudioContext" target="_blank" rel="noopener"><tspan>AudioContext</tspan></a></text>
 
   <rect x="230" y="180" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
   <text x="346" y="203" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxPass &middot; タブと同じレート</text>
-  <text x="346" y="223" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">素通し。ただし 15% まで下げる</text>
+  <text x="346" y="223" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">そのまま流す。音量は 15% に下げる</text>
 
   <rect x="230" y="244" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
   <text x="346" y="267" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxUp &middot; 16 kHz</text>
-  <text x="346" y="287" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">録音 <a href="https://developer.mozilla.org/ja/docs/Web/API/AudioWorklet" target="_blank" rel="noopener"><tspan>worklet</tspan></a>、32 ms のフレーム</text>
+  <text x="346" y="287" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">録音 <a href="https://developer.mozilla.org/ja/docs/Web/API/AudioWorklet" target="_blank" rel="noopener"><tspan>worklet</tspan></a>。32 ms ずつ送る</text>
 
   <rect x="230" y="308" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
   <text x="346" y="331" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxDown &middot; 24 kHz</text>
-  <text x="346" y="351" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">再生 worklet、返ってくる音声</text>
+  <text x="346" y="351" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">再生 worklet。訳した音声を鳴らす</text>
 
-  <text x="500" y="362" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#B06000">サンプルレートで共有する。Chrome は 1 ドキュメントに</text>
-  <text x="500" y="384" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#B06000">約 6 個までしか許さず、片方向あたり 5 個いる。</text>
+  <!-- One colour, one meaning, and the three that matter are the three in the primer
+       above: amber is Web Audio, blue is the socket, green is the Live API. Audio
+       moving around inside the browser is grey, the same grey as the boxes it moves
+       between, so nothing on the left competes with those three.
 
-  <path d="M230 335 H 96 V 322" fill="none" stroke="#34A853" stroke-width="1.8" marker-end="url(#s05-arwg)"/>
+       Every box overlaps its context vertically, so these are straight lines rather
+       than routed ones. The tab is the exception: it feeds two contexts, so its line
+       forks at the dot. ctxPass and ctxDown both end at the speakers, and join before
+       they get there, which is what the output device does with them anyway. -->
+  <path d="M230 220 H 226 V 350" fill="none" stroke="#5F6368" stroke-width="1.8"/>
+  <circle cx="226" cy="350" r="3.2" fill="#5F6368"/>
 
-  <use href="#s05-out"  stroke="#4285F4" stroke-width="2" fill="none" marker-end="url(#s05-arwb)"/>
-  <use href="#s05-back" stroke="#34A853" stroke-width="2" fill="none" marker-end="url(#s05-arwg)"/>
-  <use href="#s05-out"  class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s05-out"/></animateMotion></circle>
-  <circle r="5" fill="#34A853"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s05-back"/></animateMotion></circle>
+  <!-- The passthrough runs down the box's inner margin and the two inbound arrows have
+       to get past it. Every head lands on the edge it points at, and the two that cross
+       the rail carry a short cut-out in the box's own fill so the rail breaks under
+       them: an arrowhead sitting on a line reads as pointing at the line. -->
+  <path d="M216 259 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
+  <path d="M216 283 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
 
-  <text x="670" y="222" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#174EA6">方向ごとに 1 本のソケット</text>
-  <text x="670" y="312" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#80868B">wss://、利用者自身のキーを載せて</text>
+  <path d="M176 195 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <path d="M186 195 V 259 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <path d="M176 283 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <circle cx="186" cy="195" r="3.2" fill="#5F6368"/>
 
-  <rect x="856" y="200" width="296" height="88" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="1004" y="236" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
+  <path d="M230 350 H 172" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s05-arw)"/>
+
+  <use href="#s05-tab" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
+  <use href="#s05-mic" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
+  <use href="#s05-tab" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <use href="#s05-mic" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s05-tab"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s05-tabr"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#s05-mic"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#s05-micr"/></animateMotion></circle>
+
+  <text x="655" y="246" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">ソケット 1 &middot; タブの音声</text>
+  <text x="655" y="294" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">ソケット 2 &middot; マイク</text>
+  <text x="655" y="342" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">1 本で送受信する。行きが元の音声、帰りが訳した音声</text>
+  <text x="655" y="362" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">送るのは ctxUp、受け取るのは ctxDown。2 本とも同じ</text>
+  <text x="655" y="384" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">モデルも言語も声も 1 本に 1 組だけ。だから 2 本ある</text>
+  <text x="655" y="408" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#80868B">利用者自身の API キーで直接つなぐ</text>
+
+  <rect x="856" y="244" width="296" height="88" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <text x="1004" y="280" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
   <a href="https://ai.google.dev/api/live" target="_blank" rel="noopener">
-    <text x="1004" y="262" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#0D652D">generativelanguage.googleapis.com</text>
+    <text x="1004" y="306" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#0D652D">generativelanguage.googleapis.com</text>
   </a>
 
-  <rect x="856" y="330" width="296" height="86" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <g transform="translate(890 373)">
+  <rect x="856" y="350" width="296" height="86" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(890 393)">
     <rect x="-14" y="-16" width="28" height="10" rx="2" stroke="#EA4335" stroke-width="2" fill="none"/>
     <rect x="-14" y="-5"  width="28" height="10" rx="2" stroke="#EA4335" stroke-width="2" fill="none"/>
     <path d="M-19 10 19-20" stroke="#EA4335" stroke-width="2.4" stroke-linecap="round"/>
   </g>
-  <text x="924" y="367" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="500" fill="#202124">こちら側のサーバーはない</text>
-  <text x="924" y="389" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">動かすものも払うものもなく、</text>
-  <text x="924" y="407" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">漏れるようなキーも持たない</text>
+  <text x="924" y="387" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="500" fill="#202124">第三者のサーバーを通らない</text>
+  <text x="924" y="409" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">作者側にサーバーがないので、</text>
+  <text x="924" y="427" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">キーを預かることもない</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">全体の形です。知らないかもしれない部品が 3 つあります。Web Audio はブラウザの音声グラフで、
-  取得とサンプルレート変換をやっています。WebSocket は開いたままの接続で、どちらの端からでも好きなときに
-  送れます。そして Live API は、音声を入れると文が終わる前に音声を返してきます。これが全部、1 つの
-  offscreen document の中にあります。Service Worker は 30 秒アイドルで止められるし、サイドパネルは
-  閉じれば死ぬからです。AudioContext は 3 つ、サンプルレートで共有しています。Chrome が 1 ドキュメントに
-  6 個くらいしかくれないので。</div>
+  <div class="notes">全体の構成です。知らないかもしれない部品が 3 つあります。Web Audio はブラウザ内蔵の音声処理で、
+  音の取り込みとサンプルレート変換をやります。WebSocket は開いたままの接続で、どちらの端からでも好きなときに
+  送れます。Live API は、音声を送ると、文が終わる前に訳した音声を返してきます。これが全部、offscreen document
+  という 1 枚の裏方のページに入っています。Service Worker は 30 秒使わないと止められ、サイドパネルは閉じると
+  消えてしまうからです。AudioContext はサンプルレートごとに 3 つ。Chrome が 1 ページに作らせてくれる数が
+  6 個ほどしかないので、使い回しています。ソケットは 2 本、タブの音声用とマイク用です。どちらも送るのは ctxUp が
+  録った音声で、返ってくる訳した音声は ctxDown が鳴らします。1 本で送受信できるのに 2 本あるのは、モデルも訳す先の
+  言語も声も、1 本につき 1 組しか指定できないからです。</div>
 </section>
 
 <!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
@@ -592,7 +641,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="h">2 つの Live モデル</div>
   <div class="diagram" style="margin-top:10px;">
 <svg viewBox="0 0 1152 474" width="100%" aria-label="この拡張機能が使う 2 つの Gemini Live モデルの比較。話者にかぶせて訳し system instruction を取らないライブ翻訳モデルと、ターンの終わりを待ち用語集を積める会話モデルを、計測したレイテンシ、合格率、音声の価格とともに並べる">
-  <text x="0" y="22" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="16" fill="#5F6368">向きがモデルを決める。タブの音声はつねに翻訳モデル、マイクは選んだモードのほうで動く。</text>
+  <text x="0" y="22" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="16" fill="#5F6368">違いは、話している最中から訳すか、話し終わるのを待つか。タブの音声はつねに同時通訳で、マイクは利用者が選ぶ。</text>
 
   <!-- ---------- simultaneous ---------- -->
   <rect x="0" y="44" width="560" height="276" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
@@ -605,18 +654,18 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <a href="https://ai.google.dev/gemini-api/docs/models#gemini-3.5-live-translate-preview" target="_blank" rel="noopener">
     <text x="88" y="110" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14.5" fill="#174EA6">gemini-3.5-live-translate-preview</text>
   </a>
-  <rect x="396" y="64" width="140" height="30" rx="15" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.2"/>
-  <text x="466" y="84" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="13.5" fill="#174EA6">$3.50 / $21</text>
+  <rect x="346" y="64" width="190" height="30" rx="15" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.2"/>
+  <text x="441" y="84" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="13.5" fill="#174EA6">入力 $3.50 / 出力 $21</text>
   <path d="M24 130 H 536" stroke="#8AB4F8" stroke-width="1.2"/>
 
   <circle cx="30" cy="153" r="2.6" fill="#4285F4"/>
   <text x="44" y="158" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">話している最中から訳す。ターンの終わりを待たない</text>
   <circle cx="30" cy="179" r="2.6" fill="#4285F4"/>
-  <text x="44" y="184" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">元の言語は自分で判別する。指定するのは訳す先だけ</text>
+  <text x="44" y="184" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">元の言語はモデルが判別する。指定するのは訳す先だけ</text>
   <circle cx="30" cy="205" r="2.6" fill="#4285F4"/>
-  <text x="44" y="210" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">70 以上の言語。ただし 1 セッションに訳す先は 1 つ</text>
+  <text x="44" y="210" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">70 以上の言語に対応。ただし 1 セッションで訳す先は 1 つ</text>
   <circle cx="30" cy="231" r="2.6" fill="#4285F4"/>
-  <text x="44" y="236" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">system instruction を取らない。だから用語集も効かない</text>
+  <text x="44" y="236" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#174EA6">モデルへの事前指示を受け付けない。用語集も渡せない</text>
 
   <rect x="24" y="250" width="512" height="56" rx="9" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.2"/>
   <text x="44" y="278" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">0.98 秒</text>
@@ -634,18 +683,16 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <a href="https://ai.google.dev/gemini-api/docs/models#gemini-3.1-flash-live-preview" target="_blank" rel="noopener">
     <text x="680" y="110" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14.5" fill="#0D652D">gemini-3.1-flash-live-preview</text>
   </a>
-  <rect x="988" y="64" width="140" height="30" rx="15" fill="#FFFFFF" stroke="#34A853" stroke-width="1.2"/>
-  <text x="1058" y="84" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="13.5" fill="#0D652D">$3 / $12</text>
+  <rect x="962" y="64" width="166" height="30" rx="15" fill="#FFFFFF" stroke="#34A853" stroke-width="1.2"/>
+  <text x="1045" y="84" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="13.5" fill="#0D652D">入力 $3 / 出力 $12</text>
   <path d="M616 130 H 1128" stroke="#34A853" stroke-width="1.2" opacity=".5"/>
 
   <circle cx="622" cy="153" r="2.6" fill="#34A853"/>
   <text x="636" y="158" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">ターンが終わるのを待ってから訳す</text>
   <circle cx="622" cy="179" r="2.6" fill="#34A853"/>
-  <text x="636" y="184" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">両方の言語を宣言する。各発話はもう一方の言語へ</text>
+  <text x="636" y="184" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">使う 2 言語を先に伝える。どちらで話しても、もう一方へ訳す</text>
   <circle cx="622" cy="205" r="2.6" fill="#34A853"/>
-  <text x="636" y="210" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">system instruction を取る。用語集はこれに乗る</text>
-  <circle cx="622" cy="231" r="2.6" fill="#34A853"/>
-  <text x="636" y="236" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">ターンの終わりは turnComplete ではなく <a href="https://ai.google.dev/api/live#bidigeneratecontentservercontent" target="_blank" rel="noopener"><tspan>generationComplete</tspan></a></text>
+  <text x="636" y="210" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15.5" fill="#0D652D">モデルへの事前指示を受け付ける。用語集はここに乗せる</text>
 
   <rect x="616" y="250" width="512" height="56" rx="9" fill="#FFFFFF" stroke="#34A853" stroke-width="1.2"/>
   <text x="636" y="278" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">1.60 秒</text>
@@ -655,26 +702,28 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
   <!-- ---------- what the difference is, on the wire ---------- -->
   <rect x="0" y="344" width="1152" height="130" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="24" y="372" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">ソケットは 1 本、<a href="https://ai.google.dev/api/live#bidigeneratecontentsetup" target="_blank" rel="noopener"><tspan>setup フレーム</tspan></a>も 1 つ。モードの違いは、そこに入れるフィールドの違い。</text>
+  <text x="24" y="372" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">どちらを使うにも、つなぎ方は同じ。ソケットを開いて <a href="https://ai.google.dev/api/live#bidigeneratecontentsetup" target="_blank" rel="noopener"><tspan>setup フレーム</tspan></a>を 1 つ送る。違うのは、その中身。</text>
   <rect x="24" y="393" width="9" height="9" rx="2" fill="#4285F4"/>
-  <text x="42" y="402" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"generationConfig"</tspan>: { ..., <tspan fill="#B06000">"translationConfig"</tspan>: { <tspan fill="#B06000">"targetLanguageCode"</tspan>: <tspan fill="#0D652D">"ja"</tspan>, <tspan fill="#B06000">"echoTargetLanguage"</tspan>: false } }</text>
+  <text x="42" y="402" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13.5" fill="#174EA6">同時通訳</text>
+  <text x="146" y="402" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"generationConfig"</tspan>: { ..., <tspan fill="#B06000">"translationConfig"</tspan>: { <tspan fill="#B06000">"targetLanguageCode"</tspan>: <tspan fill="#0D652D">"ja"</tspan>, <tspan fill="#B06000">"echoTargetLanguage"</tspan>: false } }</text>
   <rect x="24" y="419" width="9" height="9" rx="2" fill="#34A853"/>
-  <text x="42" y="428" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"systemInstruction"</tspan>: { <tspan fill="#B06000">"parts"</tspan>: [{ <tspan fill="#B06000">"text"</tspan>: <tspan fill="#0D652D">"Interpret between English and Japanese&hellip;"</tspan> }] }</text>
-  <text x="24" y="456" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">価格は音声トークン 100 万件あたりの入力 / 出力。レイテンシと合格率は 1 時間の soak の結果で、どちらもリポジトリにある。</text>
+  <text x="42" y="428" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13.5" fill="#0D652D">双方向の会話</text>
+  <text x="146" y="428" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"systemInstruction"</tspan>: { <tspan fill="#B06000">"parts"</tspan>: [{ <tspan fill="#B06000">"text"</tspan>: <tspan fill="#0D652D">"Interpret between English and Japanese&hellip;"</tspan> }] }</text>
+  <text x="24" y="456" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">価格は音声トークン 100 万件あたりの米ドル。同時通訳を 1 分間流すと、入力と出力あわせて約 $0.037。レイテンシと合格率は 1 時間の soak で計測した実測値。</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">モデルが 2 つあって、この先ずっと出てきます。タブの音声はいつでもライブ翻訳のほう。話している最中から
-  訳しはじめて、元の言語は自分で判別して、system instruction は受け取りません。マイクはそれか、会話モデルの
-  どちらか。会話モデルはターンが終わるのを待ちます。遅いぶん正確で、しかも安くて、用語集が届くのはこちらだけです。</div>
+  <div class="notes">モデルは 2 つあって、この先ずっと出てきます。タブの音声はつねに同時通訳のほう。話している最中から
+  訳しはじめ、元の言語はモデルが判別し、事前指示は受け付けません。マイクはどちらでも選べます。会話モデルのほうは
+  相手が話し終わるのを待ちます。そのぶん遅いですが、正確で、安くて、用語集を渡せるのはこちらだけです。</div>
 </section>
 
 <!-- ══════════════ 7 · MEET ══════════════ -->
 <section class="slide">
   <div class="h">Meet とどう組み合わさるか</div>
-  <div class="hsub">拡張機能が OS に音声入力を登録することはできない。ページなら話は別。</div>
+  <div class="hsub">拡張機能を OS のマイクとして登録することはできない。でも、ページの中でならできる。</div>
   <div class="diagram" style="margin-top:30px;">
-<svg viewBox="0 0 1152 374" width="100%" aria-label="Meet のページ自身の JavaScript ワールドに注入した shim が enumerateDevices にデバイスを足して合成トラックを返し、拡張機能の offscreen document から postMessage で音声を受け取る。実際の通話で口から相手の耳まで約 3 秒">
+<svg viewBox="0 0 1152 374" width="100%" aria-label="同じページの中にページ側と拡張機能側の 2 つの実行環境があり、ページ側に注入した mic-shim.js が enumerateDevices にデバイスを足してマイクの代わりに合成した音声を返す。訳した音声は拡張機能側から postMessage で渡される。実際の通話でエンドツーエンド約 3 秒">
   <defs>
     <marker id="s06-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
@@ -684,8 +733,13 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </marker>
   </defs>
 
-  <text x="0" y="16" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#80868B"><a href="https://meet.google.com/" target="_blank" rel="noopener"><tspan>meet.google.com</tspan></a>: ページ自身の JavaScript ワールド</text>
-  <rect x="0" y="24" width="552" height="284" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
+  <!-- Two dashed boxes, same size, one per world. The split is the whole point
+       of the slide, so it has to be a shape and not a sentence. -->
+  <text x="0" y="16" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#80868B">Meet ページ側の実行環境 &middot; <a href="https://meet.google.com/" target="_blank" rel="noopener"><tspan>meet.google.com</tspan></a> 自身のスクリプトが動く</text>
+  <rect x="0" y="24" width="552" height="144" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
+
+  <text x="600" y="16" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#80868B">拡張機能側の実行環境 &middot; Interpretab のスクリプトが動く</text>
+  <rect x="600" y="24" width="552" height="144" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
 
   <rect x="28" y="56" width="216" height="84" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <g transform="translate(58 98)">
@@ -711,54 +765,57 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <text x="428" y="116" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">world: MAIN</text>
   </a>
 
-  <text x="28" y="188" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">1&nbsp;&nbsp;<a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/enumerateDevices" target="_blank" rel="noopener"><tspan>enumerateDevices()</tspan></a> に <tspan font-weight="700" fill="#202124">Interpretab (translated)</tspan> を足す</text>
-  <text x="28" y="216" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">2&nbsp;&nbsp;Meet が自分の設定メニューから device id で選ぶ</text>
-  <text x="28" y="244" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">3&nbsp;&nbsp;<a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/getUserMedia" target="_blank" rel="noopener"><tspan>getUserMedia</tspan></a> が destination ノードのトラックを返す</text>
-  <text x="28" y="272" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">4&nbsp;&nbsp;訳した PCM をクロックの 120 ms 先に積んでいく</text>
+  <text x="28" y="200" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">1&nbsp;&nbsp;<a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/enumerateDevices" target="_blank" rel="noopener"><tspan>enumerateDevices()</tspan></a> に <tspan font-weight="700" fill="#202124">Interpretab (translated)</tspan> を足す</text>
+  <text x="28" y="228" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">2&nbsp;&nbsp;利用者が Meet のマイク設定でそれを選ぶ</text>
+  <text x="28" y="256" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">3&nbsp;&nbsp;<a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices/getUserMedia" target="_blank" rel="noopener"><tspan>getUserMedia</tspan></a> が、マイクではなく Web Audio で作った音声を返す</text>
+  <text x="28" y="284" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">4&nbsp;&nbsp;訳した音声は 120 ms のジッタバッファに通してから鳴らす</text>
 
-  <path d="M532 82 H 596" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
-  <path d="M596 114 H 532" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
+  <path d="M532 82 H 620" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
+  <path d="M620 114 H 532" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
   <a href="https://developer.mozilla.org/ja/docs/Web/API/Window/postMessage" target="_blank" rel="noopener">
-    <text x="564" y="146" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#80868B">postMessage</text>
+    <text x="576" y="148" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#80868B">postMessage</text>
   </a>
 
-  <rect x="604" y="56" width="248" height="84" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <rect x="628" y="56" width="224" height="84" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <a href="https://github.com/kazunori279/interpretab/blob/main/content/mic-bridge.js" target="_blank" rel="noopener">
-    <text x="728" y="92" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">mic-bridge.js</text>
+    <text x="740" y="92" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">mic-bridge.js</text>
   </a>
-  <text x="728" y="116" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">分離されたワールド</text>
+  <text x="740" y="116" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">音声を中継する</text>
 
-  <path d="M860 98 H 896" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
+  <path d="M860 98 H 892" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
 
-  <rect x="904" y="56" width="248" height="84" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <rect x="900" y="56" width="224" height="84" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
   <a href="https://github.com/kazunori279/interpretab/blob/main/offscreen.js" target="_blank" rel="noopener">
-    <text x="1028" y="92" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">offscreen.js</text>
+    <text x="1012" y="92" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">offscreen.js</text>
   </a>
-  <text x="1028" y="116" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">訳した音声</text>
+  <text x="1012" y="116" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">訳した音声</text>
 
-  <text x="604" y="196" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">content script の <a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">navigator.mediaDevices</tspan></a> は</text>
-  <text x="604" y="220" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">ページのものとは別のオブジェクトなので、こちらを</text>
-  <text x="604" y="244" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">包んでも誰も騙せない。shim はページの中で動く</text>
-  <text x="604" y="268" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">しかなく、そこからは拡張機能にまったく手が届かない。</text>
+  <text x="604" y="200" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">同じ 1 つのページに実行環境が 2 つあり、できることが違う。</text>
+  <text x="604" y="224" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">Meet ページ側には <tspan font-weight="700" fill="#202124">chrome.runtime</tspan> がなく、拡張機能と話せない。</text>
+  <text x="604" y="248" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">拡張機能側の <a href="https://developer.mozilla.org/ja/docs/Web/API/MediaDevices" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">navigator.mediaDevices</tspan></a> は Meet が使うものと別物で、</text>
+  <text x="604" y="272" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">書き換えても Meet には見えない。だから postMessage で橋渡しする。</text>
 
   <rect x="604" y="286" width="548" height="88" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="626" y="316" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">口から相手の耳まで、およそ 3 秒</text>
-  <text x="626" y="342" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">実際の通話で計測し、再現もできる。最初は 4 秒だった。そのうち</text>
-  <text x="626" y="362" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">1 秒は <a href="https://support.google.com/meet/answer/14441737" target="_blank" rel="noopener"><tspan>Studio Sound</tspan></a> で、パネルはこれを切るよう案内している。</text>
+  <text x="626" y="316" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">エンドツーエンドの翻訳時間は、およそ 3 秒</text>
+  <text x="626" y="342" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">実際の通話で計測した値。最初は 4 秒で、そのうち 1 秒は</text>
+  <text x="626" y="362" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D"><a href="https://support.google.com/meet/answer/14441737" target="_blank" rel="noopener"><tspan>Studio Sound</tspan></a> だった。パネルはこれを切るよう案内している。</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Meet です。拡張機能が OS にマイクとして登録されることはできません。でもページならできる。
-  そこで Meet 自身の JavaScript ワールドにスクリプトを注入して、Interpretab という名前のデバイスを
-  一覧に足します。Meet がマイクを要求すると、合成したトラックが返ります。厄介なのは、ページのスクリプトからは
-  拡張機能に手が届かないこと。だからもう 1 本のスクリプトが postMessage で音声を運びます。実際の通話で
-  端から端まで、口から相手の耳までおよそ 3 秒。もとは 4 秒で、そのうち 1 秒は Meet の Studio Sound でした。</div>
+  <div class="notes">次は、これを Meet につないで双方向の通訳にする話です。拡張機能を OS のマイクとして
+  登録することはできません。でもページの中でならできる。Meet 自身のスクリプトが動く実行環境に、こちらの
+  スクリプトを注入して、Interpretab という名前のマイクをデバイス一覧に足します。利用者が Meet の設定で
+  それを選ぶと、Meet が要求したマイクの代わりに、訳した音声が返ります。厄介なのは、同じ 1 つのページの中に
+  実行環境が 2 つあって、できることが違うこと。Meet ページ側からは拡張機能に手が届かず、拡張機能側から
+  デバイス一覧をいじっても Meet には見えません。そこで両側にスクリプトを 1 つずつ置いて、postMessage で
+  橋渡しします。実際の通話で計った
+  エンドツーエンドの翻訳時間は、およそ 3 秒。もとは 4 秒で、そのうち 1 秒は Meet の Studio Sound でした。</div>
 </section>
 
 <!-- ══════════════ 8 · BREAK ══════════════ -->
 <section class="slide break">
-  <div class="n">手強かったところ</div>
-  <div class="name">抵抗してきた 3 つ</div>
+  <div class="n">手強かったところは</div>
+  <div class="name">この 3 つ</div>
   <ul class="rows">
     <li>
       <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -773,28 +830,29 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <path d="M12 12.5a4 4 0 1 1 4 4.5v1.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
         <circle cx="16" cy="22.5" r="1.6" fill="#FFFFFF"/>
       </svg>
-      <span>失敗は理由なしで届く</span>
+      <span>接続が切れても理由がわからない</span>
     </li>
     <li>
       <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <path d="M16 4v6m0 12v6M4 16h6m12 0h6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
         <rect x="10" y="10" width="12" height="12" rx="3" stroke="#FFFFFF" stroke-width="2.2"/>
       </svg>
-      <span>モデルは preview</span>
+      <span>新しいモデルをどう見つけ、どう乗り換えるか</span>
     </li>
   </ul>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">さて、本当に抵抗してきたのは 3 つです。どれも翻訳の品質の話ではありません。3 つとも、
-  他人の都合で動く長い接続を、まっとうに保ちつづける話です。</div>
+  <div class="notes">手強かったのはこの 3 つです。どれも翻訳の品質の話ではありません。接続が切れるのも、
+  理由がわからないのも、モデルが入れ替わるのも、決めているのは全部サーバー側です。こちらは、それでも
+  途切れずに動きつづけるようにするしかない。</div>
 </section>
 
 <!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
-  <div class="h">セッションのライフサイクル</div>
-  <div class="hsub">Live API のソケットは約 10 分が上限。ここで驚かれることが多い。サーバーは 9 分で警告し、猶予は
-  50 秒、そして期限は文字どおり守る。</div>
+  <div class="h">ソケットを途切れずに切り替える</div>
+  <div class="hsub">Live API のソケットは約 10 分で必ず切断される。切断の 50 秒前にサーバーから goAway
+  が届くので、その間に次のソケットへ切り替えておく必要がある。</div>
   <div class="diagram" style="margin-top:8px;">
-<svg viewBox="0 0 1152 390" width="100%" aria-label="1 本目のソケットは 9 分で警告を受け、2 本目がその隣で開いて期限が来る前に引き継ぐ。下の音声はその切り替えを通して途切れず、境目にかかった文は新しいソケットで送り直される">
+<svg viewBox="0 0 1152 366" width="100%" aria-label="1 本目のソケットは 9 分で警告を受け、2 本目がその隣で開いて期限が来る前に引き継ぐ。下の音声はその切り替えを通して途切れず、境目にかかった文は新しいソケットで送り直される">
   <defs>
     <marker id="s08-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#34A853"/>
@@ -808,14 +866,14 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <g class="hand-a">
     <rect x="0" y="34" width="720" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
     <text x="24" y="60" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">ソケット 1</text>
-    <text x="24" y="80" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">約 10 分。過ぎればサーバーは、こちらが何をしていようと切る</text>
+    <text x="24" y="80" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">約 10 分。時間が来ると、こちらの状態に関係なくサーバーが切る</text>
   </g>
 
   <!-- the replacement, opened while the old one is still talking -->
   <g class="hand-b">
     <rect x="640" y="106" width="512" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
     <text x="664" y="132" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">ソケット 2</text>
-    <text x="664" y="152" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">200 ms ほど早く開き、必要になる前に温めておく</text>
+    <text x="664" y="152" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">切り替えの 200 ms ほど前に開き、すぐ使える状態にしておく</text>
   </g>
 
   <circle class="alarm" cx="600" cy="62" r="20" fill="#4285F4"/>
@@ -837,31 +895,29 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <rect x="936" y="209" width="70"  height="14" rx="7" fill="#34A853"/>
   <rect x="1040" y="209" width="88" height="14" rx="7" fill="#34A853"/>
   <circle class="travel" cx="24" cy="216" r="7" fill="#0D652D" style="--run: 1104px"/>
-  <text x="715" y="272" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="700" fill="#0D652D">これは捨てずに送り直す</text>
-  <text x="0" y="272" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#0D652D">あなたの音声は、行きも帰りも途切れない 1 本の流れ。切り替えはその下で起きる。</text>
+  <text x="715" y="272" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="700" fill="#0D652D">返事が来なかったぶんは新しいソケットへ送り直す</text>
 
   <path d="M300 186 V 96" stroke="#34A853" stroke-width="1.8" marker-end="url(#s08-arw)" marker-start="url(#s08-arw)"/>
   <path d="M940 186 V 168" stroke="#34A853" stroke-width="1.8" marker-end="url(#s08-arw)" marker-start="url(#s08-arw)"/>
 
-  <text x="0" y="304" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">切り替えは、ターンが終わるか、5 秒の無音か、期限の 1 秒前か、いちばん早く来たものを待つ。</text>
-  <text x="0" y="330" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">古いソケットが答えなかったぶんは新しいほうへ送り直し、置き去りになった字幕は合成した <a href="https://ai.google.dev/api/live#bidigeneratecontentservercontent" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">turnComplete</tspan></a> で閉じる。</text>
-  <text x="0" y="356" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">API 自身にも同じ再送のしくみがある。<a href="https://ai.google.dev/gemini-api/docs/live-api/session-management#session-resumption" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">sessionResumption</tspan></a> は数秒ごとにトークンを配り、それを持って繋ぎ直すと会話が復元される。</text>
-  <text x="0" y="378" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">試した。ただしモデルがすでに話し終えた最後の 1 文まで言い直すので、聞くほうは同じ文を 2 回聞く。だから上のバッファのほうを出した。</text>
+  <text x="0" y="304" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">切り替えは、ターンが終わったとき、5 秒の無音が続いたとき、期限の 1 秒前。いずれかのタイミングで実行する。</text>
+  <text x="0" y="330" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">API 自身にも <a href="https://ai.google.dev/gemini-api/docs/live-api/session-management#session-resumption" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">sessionResumption</tspan></a> がある。数秒ごとに配られるトークンを持って繋ぎ直すと、会話が復元される。</text>
+  <text x="0" y="356" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">試したうえで使っていない。復元に一拍かかるうえ、モデルが直前の 1 文をもう一度読み上げてしまい、聞くほうには不具合に聞こえるため。</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">これはあまり知られていないやつです。Live API のソケットは 10 分くらいしかもちません。9 分で
-  サーバーが goAway を送ってきて、猶予は 50 秒、そして本当に切ります。だからループは、古いソケットがまだ
-  話しているうちに次を開いて、ターンが終わるか 5 秒の無音で切り替えます。古いほうが答えられなかったぶんは、
-  新しいほうへ送り直します。1 時間で 6 回の引き継ぎ、訳した声が途切れた最悪の間隔は 3 秒 6 でした。
-  API 自身にもこのための仕組みがあります、session resumption です。試しました。トークンを持って繋ぎ直すと、
-  モデルが最後の 1 文をもう一度、声に出して言い直します。なので自前のバッファのままにしました。</div>
+  <div class="notes">Live API のソケットは 10 分くらいしかもちません。9 分でサーバーが goAway を送ってきて、
+  そこから 50 秒で本当に切ります。だからループは、古いソケットがまだ話しているうちに次を開いて、ターンが
+  終わるか 5 秒の無音で切り替えます。古いほうが答えられなかったぶんは、新しいほうへ送り直します。1 時間で
+  6 回の引き継ぎ、訳した声が途切れた最悪の間隔は 3.6 秒でした。API 自身にも session resumption という
+  仕組みがありますが、使っていません。繋ぎ直すのに一拍かかるうえ、モデルが最後の 1 文をもう一度、声に出して
+  言い直すので、聞くほうには不具合に聞こえます。</div>
 </section>
 
 <!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
 <section class="slide">
   <div class="h">エラーの扱い</div>
-  <div class="hsub">WebSocket の upgrade がなぜ拒否されたのか、ブラウザには決して知らされない。しかもそれは意図的なもの。</div>
+  <div class="hsub">WebSocket が切れると、ブラウザに届くのは close コードという番号だけ。理由は付いてこない。</div>
   <div class="grid c3" style="margin-top:40px;">
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -870,9 +926,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <path d="M19 19.5a5 5 0 1 1 5 5.5v2.5" stroke="#EA4335" stroke-width="2.5" stroke-linecap="round"/>
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
       </svg></div>
-      <div class="ct"><a href="https://developer.mozilla.org/ja/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">1006</a>、理由なし</div><div class="cr"></div>
-      <div class="cb">キーの誤り、使い切った quota、キャプティブポータル。どれも同じ閉じかた。区別できると、
-      どのページもエラーからよそのサーバを覗けてしまう。</div>
+      <div class="ct"><a href="https://developer.mozilla.org/ja/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">close 1006</a> &middot; 理由なし</div><div class="cr"></div>
+      <div class="cb">キーの誤り、使い切った quota、ホテルの Wi-Fi。どれも同じ空っぽの close で、区別する手がかりがない。</div>
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -883,8 +938,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <path d="M32.5 35l2 2 3.5-3.5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg></div>
       <div class="ct">なら先に HTTP で訊く</div><div class="cr"></div>
-      <div class="cb">同じキーで <a href="https://ai.google.dev/api/models#method:-models.list" target="_blank" rel="noopener"><code>GET /v1beta/models</code></a> を 1 回、キャプチャの許可を求める前に。
-      <b>400</b> はキーが拒否された。<b>401</b> はキーの形として読むことすら断られた。</div>
+      <div class="cb">ソケットを開く前に、同じキーで <a href="https://ai.google.dev/api/models#method:-models.list" target="_blank" rel="noopener"><code>GET /v1beta/models</code></a> を 1 回。<b>400</b> はキーが受け付けられなかった。<b>401</b> はキーの形式が違う。</div>
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -895,28 +949,28 @@ table.t .ok { color: var(--green); font-weight: 700; }
               stroke-linejoin="round" style="transform-box: view-box; transform-origin: 24px 27px"/>
         <path d="M18 5h12" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round"/>
       </svg></div>
-      <div class="ct">1011、セッションの途中で</div><div class="cr"></div>
-      <div class="cb">実行の<i>最中に</i> quota を越えると、きれいに閉じたうえで、URL の途中で切れた 123 バイトの
-      英文を持ってくる。10 回リトライすれば 10 回とも繋がって 10 回とも死ぬ。</div>
+      <div class="ct">close 1011 &middot; 途中で切れる</div><div class="cr"></div>
+      <div class="cb">実行の<i>最中に</i> quota を越えたときだけは、理由の文が付いてくる。ただし
+      close フレームに入るのは 123 バイトまでで、末尾は切れる。判定は文の先頭で。</div>
     </div>
   </div>
-  <div class="fn">どちらの形も、考えて出したものではなく実際の API に当てて出たもの。
-  <a href="https://github.com/kazunori279/interpretab/blob/main/tests/quota-close.mjs" target="_blank" rel="noopener"><code>tests/quota-close.mjs</code></a> は無料枠の上限を 100 トークンまで下げるので、1 セッションが
-  6 秒で越える。答えが変わらないのにリトライしつづけるのはバグ。使い切った quota が戻るのは太平洋時間の
-  深夜であって、4 秒後ではない。</div>
+  <div class="fn">どちらも、実際の API 呼び出しで観測した振る舞い。quota 切れのほうは <a href="https://github.com/kazunori279/interpretab/blob/main/tests/quota-close.mjs" target="_blank" rel="noopener"><code>tests/quota-close.mjs</code></a> で無料枠の上限を
+  100 トークンまで下げて再現した。使い切っていてもソケット自体は開くので、10 回リトライすれば 10 回とも繋がって
+  10 回とも死ぬ。quota が戻るのは太平洋時間の深夜なので、リトライは続けないほうがよい。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">WebSocket の upgrade が断られたとき、その理由はブラウザには知らされません。キーが違う、
-  quota を使い切った、ホテルの Wi-Fi。全部おなじ空っぽの close です。しかもこれは意図的で、理由まで返してしまうと、
-  どのページからでも社内のサーバに接続を試して、返ってきたエラーの違いから何が動いているか分かってしまう。
-  だから同じことを先に HTTP で訊きます。あちらならステータスコードが返ってくる。
-  それと、判定はリトライしない。使い切った quota が戻るのは深夜であって、4 秒後ではありません。</div>
+  <div class="notes">WebSocket が切れたとき、ブラウザに届くのは close コードという番号だけで、理由は付いてきません。キーが違う、
+  quota を使い切った、ホテルの Wi-Fi のログイン画面。全部おなじ空っぽの close です。
+  だから同じことを、ソケットを開く前に HTTP で訊いておきます。あちらならステータスコードが返ってくる。
+  セッションの最中に quota を越えたときだけは理由の文が付いてきますが、close フレームは 123 バイトしか運べないので、
+  末尾は切れています。それと、この判定はリトライしません。使い切った quota が戻るのは太平洋時間の深夜であって、
+  4 秒後ではありません。</div>
 </section>
 
 <!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
 <section class="slide">
   <div class="h">新しい Live モデルへ自動で移行する</div>
   <div class="diagram" style="margin-top:10px;">
-<svg viewBox="0 0 1152 474" width="100%" aria-label="毎時の GitHub Actions が Live モデルがまだ答えるか、後継が出ていないかを調べ、その答えを Pages 上の設定ファイルにコミットする。インストール済みのすべてのコピーが新しいモデル名を取得し、次のセッション引き継ぎで乗り換える">
+<svg viewBox="0 0 1152 474" width="100%" aria-label="時系列の図。毎時、GitHub Actions が Gemini Live API に使用中のモデルを問い合わせ、一覧にあるかと本番と同じ設定でセッションが開くかを確かめる。毎日と引退の検知時には新しいモデルを探す。モデルが入れ替わるときだけ docs/config.json にコミットし、全クライアントが起動時と 6 時間ごとに読み、次のソケット切り替えで乗り換える">
   <defs>
     <marker id="s10-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
@@ -926,63 +980,65 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </marker>
   </defs>
 
-  <rect x="0" y="0" width="1152" height="100" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>
-  <g transform="translate(40 50)">
-    <path d="M0-15 15 11H-15z" fill="none" stroke="#A50E0E" stroke-width="2.4" stroke-linejoin="round"/>
-    <path d="M0-6v8" stroke="#A50E0E" stroke-width="2.4" stroke-linecap="round"/>
-    <circle cx="0" cy="6" r="1.6" fill="#A50E0E"/>
+  <!-- Framed as the problem to solve, not as an alert. A red triangle here reads
+       as a warning aimed at the reader; the flag just marks what the rest of the
+       slide is answering. -->
+  <rect x="0" y="0" width="1152" height="78" rx="12" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(40 39)" fill="none" stroke="#5F6368" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-9-14V14"/>
+    <path d="M-9-12H11l-4.5 6 4.5 6H-9z"/>
   </g>
-  <text x="76" y="36" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="16" font-weight="700" fill="#A50E0E">問題</text>
-  <text x="76" y="62" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#A50E0E">preview のモデルは 2 週間の予告で引退する。ストアの審査はそれより長くかかることがある。</text>
-  <text x="76" y="84" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#A50E0E">出荷したビルドに焼き込んだモデル名は、日付の決まった障害と同じ。</text>
+  <text x="76" y="34" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368"><tspan font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-weight="700" fill="#202124">課題</tspan>&nbsp;&nbsp;preview のモデルは 2 週間の予告で引退する。Chrome Web Store の審査はそれより長くかかることがある。</text>
+  <text x="76" y="60" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="15" fill="#5F6368">モデル名をビルドに焼き込むと、いつかは必ず動かなくなる。</text>
 
-  <rect x="0" y="128" width="264" height="152" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <!-- The class goes on the inner group: a CSS transform replaces the transform
-       attribute outright, and the placement would go with it. -->
-  <g transform="translate(228 158)"><g class="spin">
-    <path d="M0-12a12 12 0 1 1-10 5.5" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M-14 0-10 5.5-4.5 3" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  </g></g>
-  <text x="22" y="164" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="18" font-weight="500" fill="#174EA6">毎時</text>
-  <text x="22" y="194" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6"><a href="https://docs.github.com/ja/actions" target="_blank" rel="noopener"><tspan>GitHub Actions</tspan></a> が ListModels を</text>
-  <text x="22" y="214" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">呼び、さらに拡張機能が送るのと</text>
-  <text x="22" y="234" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">同じ setup フレームを載せて</text>
-  <text x="22" y="254" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">実際にソケットを開く。</text>
+  <!-- A sequence diagram rather than four boxes in a row: every step here has a
+       trigger, and the triggers are what the reader has to carry away. They go
+       in the gutter on the left, the participants across the top. -->
+  <rect x="200" y="90" width="210" height="36" rx="8" fill="#E6F4EA" stroke="#34A853" stroke-width="1.6"/>
+  <text x="305" y="113" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#0D652D">Gemini Live API</text>
+  <path d="M305 126 V 358" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="4 4"/>
 
-  <rect x="296" y="128" width="264" height="152" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="318" y="164" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">消えたのか、後継が出たのか</text>
-  <text x="318" y="194" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">1 回の失敗はネットワークの揺れ。</text>
-  <text x="318" y="214" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">はっきりした拒否が繰り返されたとき</text>
-  <text x="318" y="234" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">だけ引退と見なす。後継は毎日の</text>
-  <text x="318" y="254" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">実行が探しに行く。</text>
-
-  <rect x="592" y="128" width="264" height="152" rx="12" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
-  <a href="https://kazunori279.github.io/interpretab/config.json" target="_blank" rel="noopener">
-    <text x="614" y="164" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="17" font-weight="500" fill="#B06000">docs/config.json</text>
+  <rect x="447" y="90" width="210" height="36" rx="8" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.6"/>
+  <a href="https://docs.github.com/ja/actions" target="_blank" rel="noopener">
+    <text x="552" y="113" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#174EA6">GitHub Actions</text>
   </a>
-  <text x="614" y="194" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#B06000">ワークフローが新しい名前を</text>
-  <text x="614" y="214" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#B06000"><a href="https://pages.github.com/" target="_blank" rel="noopener"><tspan>Pages</tspan></a> にコミットする。ロジックは</text>
-  <text x="614" y="234" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#B06000">入れず、データだけ。名前、価格、</text>
-  <text x="614" y="254" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#B06000">リンクを決まった形に照らして検査。</text>
+  <path d="M552 126 V 358" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="4 4"/>
 
-  <rect x="888" y="128" width="264" height="152" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <!-- Below the copy rather than beside the heading: the Japanese heading runs
-       the width of the box. -->
-  <circle class="ripple" cx="1120" cy="250" r="14" fill="#34A853"/>
-  <text x="910" y="164" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#0D652D">インストール済みの全コピー</text>
-  <text x="910" y="194" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">起動時と 6 時間ごとに取得する。</text>
-  <text x="910" y="214" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">新しいモデルは次の引き継ぎで、</text>
-  <text x="910" y="234" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">実行の途中から入る。誰も更新</text>
-  <text x="910" y="254" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#0D652D">作業をしない。</text>
+  <rect x="694" y="90" width="210" height="36" rx="8" fill="#FEF7E0" stroke="#FBBC05" stroke-width="1.6"/>
+  <a href="https://kazunori279.github.io/interpretab/config.json" target="_blank" rel="noopener">
+    <text x="799" y="113" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="14" font-weight="500" fill="#B06000">docs/config.json</text>
+  </a>
+  <path d="M799 126 V 358" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="4 4"/>
 
-  <path d="M24 314 H 1128" stroke="#DADCE0" stroke-width="2"/>
-  <path d="M272 309 l9 5 -9 5z" fill="#5F6368"/>
-  <path d="M568 309 l9 5 -9 5z" fill="#5F6368"/>
-  <path d="M864 309 l9 5 -9 5z" fill="#5F6368"/>
-  <circle class="travel" cx="24" cy="314" r="7" fill="#34A853" style="--run: 1104px"/>
+  <rect x="940" y="90" width="210" height="36" rx="8" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.6"/>
+  <text x="1045" y="113" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="15" font-weight="500" fill="#202124">全クライアント</text>
+  <path d="M1045 126 V 316" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="4 4"/>
 
-  <path class="dashflow" d="M1128 314 V 352 H 24 V 288" fill="none" stroke="#8AB4F8" stroke-width="2" marker-end="url(#s10-arwb)"/>
-  <text x="576" y="342" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#5F6368">何か変わったかどうかに関わらず毎時。ビルドは訊きかたを知っているだけで、答えは持っていない。</text>
+  <path d="M186 142 H 178 V 198 H 186" fill="none" stroke="#9AA0A6" stroke-width="1.4"/>
+  <text x="170" y="176" text-anchor="end" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="13.5" font-weight="500" fill="#202124">毎時</text>
+  <path d="M544 154 H 313" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <text x="428" y="146" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">一覧にまだあるか</text>
+  <path d="M544 188 H 313" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <text x="428" y="180" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">本番と同じ設定で開くか</text>
+
+  <text x="170" y="226" text-anchor="end" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="13.5" font-weight="500" fill="#202124">毎日 / 引退の検知時</text>
+  <path d="M544 222 H 313" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <text x="428" y="214" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">新しいモデルを探す</text>
+  <text x="428" y="236" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="12" fill="#80868B">セッションが開けたものだけ候補にする</text>
+
+  <text x="170" y="260" text-anchor="end" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="13.5" font-weight="500" fill="#202124">モデルが入れ替わるとき</text>
+  <path d="M560 256 H 791" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <text x="675" y="248" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">新しいモデル名をコミット</text>
+  <text x="675" y="272" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="12" fill="#80868B">close コードで引退と判別できたときだけ</text>
+
+  <text x="170" y="304" text-anchor="end" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="13.5" font-weight="500" fill="#202124">起動時と 6 時間ごと</text>
+  <path d="M1037 300 H 807" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <text x="922" y="292" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">設定ファイルを読む</text>
+
+  <text x="170" y="342" text-anchor="end" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="13.5" font-weight="500" fill="#202124">次のソケット切り替えで</text>
+  <rect x="940" y="318" width="210" height="40" rx="8" fill="#E6F4EA" stroke="#34A853" stroke-width="1.6"/>
+  <text x="1045" y="336" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#0D652D">実行の途中で乗り換える</text>
+  <text x="1045" y="352" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="12" fill="#0D652D">ストアの再審査は要らない</text>
 
   <!-- The whole file, near enough: the parts left out are one more rate line
        and the two fields the boxes above already name. -->
@@ -995,26 +1051,25 @@ table.t .ok { color: var(--green); font-weight: 700; }
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes">どの Live モデルが存在するかは、このビルドが決めていい話ではありません。preview は 2 週間の
-  予告で引退するし、ストアの審査はそれより長くかかることもある。モデル名を焼き込むのは、日付の決まった
-  障害を出荷するようなものです。かわりに、毎時 GitHub Actions が API にまだ答えるかを訊いて、毎日もう 1 本が
-  後継を探します。本当に消えていたら、スライド下のファイルに新しい名前をコミットします。中身はこれだけ、
-  名前と価格とリンク。インストール済みのコピーが全部これを取りに来て、次のセッション引き継ぎで、実行の
-  途中から乗り換えます。誰も更新作業をしません。</div>
+  予告で引退するし、Chrome Web Store の審査はそれより長くかかることもある。モデル名をビルドに焼き込むと、
+  いつかは必ず動かなくなります。かわりに、毎時 GitHub Actions が、使っているモデルを 1 つずつ実際に呼びます。
+  一覧にまだあるか、本番と同じ設定でセッションが開くか。毎日、そして引退を検知したときには、新しいモデルを
+  探します。候補として残るのは、実際にセッションが開けたものだけ。それをスライド下の設定ファイルにコミットすると、
+  全クライアントが起動時と 6 時間ごとに読みに来て、次のソケット切り替えで、実行の途中から乗り換えます。
+  ストアの再審査は要りません。</div>
 </section>
 
 <!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
 <section class="slide">
-  <div class="h">テスト結果</div>
+  <div class="h">エンドツーエンドの長時間 soak テスト</div>
   <div class="rail" style="margin-top:44px;">
     <div>
       <div class="eyebrow">実 API に対する soak</div>
-      <div class="body small mut"><a href="https://github.com/kazunori279/interpretab/blob/main/tests/soak.mjs" target="_blank" rel="noopener"><code>tests/soak.mjs</code></a> は合成した文をライブセッションに流しつづけ、
-      放っておいたぶんだけ走る。訳文は 1 つずつ別のモデルが採点する。</div>
-      <div class="body small mut" style="margin-top:22px;">セッション周りの挙動は 3 つの経路すべてで同じだった。
-      7 セッション、6 回の警告、ずれなし、サーバーに切られたセッションはゼロ。</div>
+      <div class="body small mut"><a href="https://github.com/kazunori279/interpretab/blob/main/tests/soak.mjs" target="_blank" rel="noopener"><code>tests/soak.mjs</code></a> は合成した文をライブセッションに流しつづける。止めるまで走り、訳文は 1 文ずつ別のモデルが採点する。</div>
+      <div class="body small mut" style="margin-top:22px;">3 つのユースケースとも同じ挙動だった。1 時間で goAway が 6 回。そのつど引き継いで 7 セッションをつなぎ、サーバーに切られたものはゼロ。文の途中で引き継いだ回も訳文は採点に通った。</div>
     </div>
     <table class="t a">
-      <thead><tr><th>実行</th><th>長さ</th><th>文数</th><th>合格</th><th>ターン完了</th></tr></thead>
+      <thead><tr><th>ユースケース</th><th>長さ</th><th>文数</th><th>合格</th><th>ターン完了</th></tr></thead>
       <tbody>
         <tr><td>マイク、会話モデル、en&nbsp;&rarr;&nbsp;ja</td><td>60 分</td><td>281</td><td class="ok">99.3%</td><td>1.60 秒</td></tr>
         <tr><td>マイク、同時通訳、en&nbsp;&rarr;&nbsp;ja</td><td>60 分</td><td>198</td><td class="ok">92.4%</td><td>0.98 秒</td></tr>
@@ -1022,14 +1077,12 @@ table.t .ok { color: var(--green); font-weight: 700; }
       </tbody>
     </table>
   </div>
-  <div class="fn">レイテンシは経路ではなくモードで決まる。会話モデルはターンを待ち、同時通訳は待たない。品質は
-  言語ペアで決まる。同じタブ側のコードで ja&nbsp;&rarr;&nbsp;en を 1 時間走らせた結果はここに並ぶ数字よりかなり低く、
-  相手は平板な合成日本語だった。レポートはすべてリポジトリにある。</div>
+  <div class="fn">同じタブ側のコードで ja&nbsp;&rarr;&nbsp;en を 1 時間走らせると、数字はこれよりかなり低くなる。入力が平板な合成音声の日本語だったため。レポートはすべてリポジトリにある。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">実際の API に当てた soak です。長いものは 1 時間ずつ、訳文は別のモデルが 1 つずつ
-  採点しています。セッション周りは毎回同じ読みで、7 セッション、6 回の警告、サーバーに切られたものはゼロ。
-  レイテンシは選んだモードで決まって、品質はコードの経路より言語ペアで決まります。レポートは全部
-  リポジトリにあります。</div>
+  <div class="notes">実際の API に当てた soak です。長いものは 1 時間ずつ流して、訳文は別のモデルが 1 文ずつ
+  採点しています。3 つのユースケースとも同じでした。1 時間のあいだに goAway が 6 回来て、そのつど引き継いで
+  7 セッションをつなぎ、サーバーに切られたものはゼロ。文の途中で引き継いだ回も、訳文は採点に通っています。
+  レポートは全部リポジトリにあります。</div>
 </section>
 
 <!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
@@ -1041,26 +1094,26 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <path class="nudge" d="M8 18h24l-7-7m7 7-7 7" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         <path class="nudge" d="M40 34H16l7-7m-7 7 7 7" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/>
       </svg></div>
-      <div class="n">01</div><p>早いうちに本物のソケットを開く。ここで出たプロトコルの驚き 3 つのうち
-      2 つは、どの文書にも載っていない。</p>
+      <div class="n">01</div><p>まず API を実際に叩いてみる。今回ぶつかったプロトコル上の想定外 3 つのうち 2 つは、どのドキュメントにも書かれていなかった。</p>
     </div>
     <div>
       <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
         <rect x="7" y="12" width="34" height="24" rx="4" stroke="#4285F4" stroke-width="2.5"/>
         <text x="24" y="31" text-anchor="middle" font-family="Google Sans Code, Noto Sans JP, monospace" font-size="13" font-weight="500" fill="#4285F4">400</text>
       </svg></div>
-      <div class="n">02</div><p>同じことを HTTP でも訊く。close コードは理由を運ばないが、
-      ステータスコードは運ぶ。</p>
+      <div class="n">02</div><p>WebSocket はただ切れるだけで、理由を教えてくれない。同じことを HTTP で訊けば、ステータスコードが理由を教えてくれる。</p>
     </div>
     <div>
+      <!-- A waveform with a flat line at each end: the silence is part of what
+           gets sent, which is the whole lesson. -->
       <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <g class="spin" style="transform-box: view-box; transform-origin: 24px 24px">
-          <path d="M24 10a14 14 0 1 1-12 7" stroke="#4285F4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M9 20l3 5 6-3" stroke="#4285F4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
+        <path d="M6 24h6" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M16 17v14" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M23 11v26" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M30 17v14" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M36 24h6" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
       </svg></div>
-      <div class="n">03</div><p>揺れるネットワークはリトライしていい。判定はだめ。使い切った quota が
-      戻るのは深夜であって、4 秒後ではない。</p>
+      <div class="n">03</div><p>Live API は届いた音声から発話の終わりを判定する (VAD)。話し手が黙っている間も、無音を音声として送りつづける必要がある。</p>
     </div>
     <div>
       <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -1068,17 +1121,18 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <path d="M7 8h34v6H7z" stroke="#4285F4" stroke-width="2.5" stroke-linejoin="round"/>
         <path class="nudge" d="M19 24h10" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
       </svg></div>
-      <div class="n">04</div><p>他人のものはビルドから出す。モデル名も価格も、向こうの都合で動く。</p>
+      <div class="n">04</div><p>変わるものをビルドに焼き込まない。モデル名も価格も Google 側の都合で変わるので、外の設定ファイルから読む。</p>
     </div>
   </div>
-  <div class="fn">いちばん高くついたもの: 無音も入力のうち。ターンの終わりはサーバー自身の音声検出が決めていて、
-  それはこちらが送った音声の中から検出される。話し手が止まったところで送るのをやめると、モデルはいつまでも待つ。</div>
+  <div class="fn">リトライしていいのは通信の不調だけ。quota 切れやキーのエラーは、何秒待ってやり直しても同じ答えが返ってくる。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">次の人に伝えたいことが 4 つ。早いうちに本物のソケットを開くこと。ここで出たプロトコルの
-  驚き 3 つのうち 2 つは、どの文書にも載っていません。close コードが何も教えてくれないなら、同じことを
-  HTTP で訊く。リトライしていいのは揺れるネットワークで、判定ではない。そして他人の事実は自分のビルドに
-  入れない。いちばん高くついたのは、無音も入力だということ。ターンの終わりは、こちらが送った音声の中から
-  検出されます。話し手が止まったところで送信をやめると、モデルは永遠に待ちます。</div>
+  <div class="notes">次の人に伝えたいことが 4 つ。まず、API を実際に叩いてみること。今回ぶつかった
+  プロトコル上の想定外 3 つのうち 2 つは、どのドキュメントにも書かれていませんでした。WebSocket はただ
+  切れるだけで理由を教えてくれないので、同じことを HTTP で訊きます。3 つめがいちばん高くついた勘違いです。
+  Live API は届いた音声から発話の終わりを判定するので、話し手が黙っている間も、無音を音声として送りつづける
+  必要がありました。止めるとモデルは終わりに気づけず待ちつづけます。最後に、変わるものをビルドに焼き込まない。
+  モデル名も価格も Google 側の都合で変わります。リトライしていいのは通信の不調だけで、quota 切れやキーの
+  エラーは、何秒待ってやり直しても同じ答えが返ってきます。</div>
 </section>
 
 <!-- ══════════════ 14 · THANK YOU ══════════════ -->
@@ -1091,12 +1145,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
       <b>コード</b> &nbsp;<a href="https://github.com/kazunori279/interpretab" target="_blank" rel="noopener">github.com/kazunori279/interpretab</a> &middot;
       <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">Apache 2.0</a>
     </div>
-    <div class="cap" style="margin-top:36px;max-width:760px;">個人プロジェクト。Google が作ったものでも、
-    サポートや推奨をしているものでもない。機械翻訳なので、聞き間違えるし、話し手が言っていないことを
-    言うこともある。</div>
+    <div class="cap" style="margin-top:36px;max-width:760px;">個人プロジェクト。Google が作ったものでも、サポートや推奨をしているものでもない。機械翻訳なので、聞き間違えることも、話し手が言っていないことを言うこともある。</div>
   </div>
   <div class="wordmark">Interpretab</div>
-  <div class="notes">Web ストアに出ています。ガイドは GitHub Pages、コードは Apache 2.0 です。
+  <div class="notes">Chrome Web Store に出ています。ガイドは GitHub Pages、コードは Apache 2.0 です。
   個人プロジェクトで、Google の製品ではありません。ありがとうございました。</div>
 </section>
 
@@ -1264,7 +1316,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
   /**
    * `resume` is set only when the deck advanced itself, at the end of a
-   * narration or a clip. Every other caller — the arrow keys, a click, a swipe,
+   * narration or a clip. Every other caller — the arrow keys, a swipe,
    * the hash — is the presenter navigating, and nothing starts talking until
    * they press the button.
    */
@@ -1299,11 +1351,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
                                                        : document.documentElement.requestFullscreen();
   });
 
-  addEventListener('click', e => {
-    if (e.target.closest('a, #notes, #vo, video')) return;   // links, the control and the clip own their clicks
-    show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
-  });
-
+  // No click-to-advance. A deck full of links, a narration button and video
+  // clips has too much to click on for a stray click to mean "next".
   let tx = null, ty = null;
   addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
   addEventListener('touchend', e => {

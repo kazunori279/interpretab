@@ -1920,8 +1920,34 @@ for the same reason every other script here reads one.
 
 The API has no speaking-rate parameter, and asking the model in prose for a faster read gets a
 different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the three demo
-clips are played back at the same ratio. That is the whole of the pacing: 3m37s of narration and
-1m27s of video, five minutes and four seconds against a five-minute slot.
+clips are played back at the same ratio. That is the whole of the pacing: 4m23s of narration and
+1m27s of video, five minutes and fifty-one seconds against a five-minute slot. The Japanese deck
+runs 6m42s. Both need a cut before they are presented to a clock.
+
+**`tools/slide-video.mjs` — the deck as a file you can send someone.**
+
+```bash
+node tools/slide-video.mjs                                   # docs/slides -> deck-en.mp4
+node tools/slide-video.mjs --deck docs/slides/ja/index.html  # -> deck-ja.mp4
+node tools/slide-video.mjs --only 2,10                       # re-cut two slides, keep the parts
+```
+
+Nothing plays in real time. Filming the deck through a screen recorder gives you whatever frame
+rate the machine felt like producing that minute, so instead every slide is stepped: its CSS
+animations are paused and their `currentTime` set by hand, its clip is seeked, and one screenshot
+comes out per output frame. That buys exact timing, and it buys parallelism — the slides have no
+dependency on each other, so four tabs capture four of them at once and a five-minute deck records
+in about four minutes. The audio is not captured either. Headless Chrome has no speakers worth
+recording, and it does not need any: each slide already owns a sound, `audio/slide-NN.mp3` or the
+clip's own track, and those are stretched by the same 1.15× and laid on the same timeline the
+frames were counted against, so picture and sound cannot drift.
+
+Two things the browser does that a video must not. `fit()` scales the deck to 96% of the viewport
+so a window has a margin around it, which in a file is just a white border; the transform is
+overwritten with `scale(1)`, and the play pill, the slide counter and the keyboard bar are hidden
+with it. And the deck is served over loopback rather than opened off disk, because a `file://` page
+has an opaque origin and a browser silently refuses to load a `<track>` across one — the Japanese
+deck recorded that way comes out with no subtitles on the demos and no complaint about it.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is

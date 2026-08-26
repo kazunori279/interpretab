@@ -2,3 +2,7 @@ node_modules/
 *.zip
 .DS_Store
 *.jsonl
+
+# The whole-deck recordings from tools/slide-video.mjs. Ten megabytes each,
+# regenerated in about four minutes, and shared from Drive rather than here.
+docs/slides/video/deck-*.mp4
