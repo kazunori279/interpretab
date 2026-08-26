@@ -7,6 +7,12 @@
  *     node tools/slide-voice.mjs <key-file> --only 7,10  # just these slides
  *     node tools/slide-voice.mjs <key-file> --dry        # print the scripts, call nothing
  *     node tools/slide-voice.mjs <key-file> --rate 1     # at the model's own pace
+ *     node tools/slide-voice.mjs <key-file> --deck docs/slides/ja/index.html
+ *
+ * `--deck` points at a translation of the deck. The recordings always land in
+ * an `audio/` directory beside the file they were read from, which is also
+ * where that copy's own player looks for them, so the two languages cannot end
+ * up sharing a manifest.
  *
  * **The deck is the script.** Each slide's `<div class="notes">` is both what
  * the presenter reads on the `n` panel and what this file sends to the model,
@@ -44,8 +50,8 @@ import { apiKeyFrom } from "../tests/model-check.mjs";
 import { argOf, hasFlag } from "../tests/live-harness.mjs";
 
 const ROOT = path.join(import.meta.dirname, "..");
-const DECK = path.join(ROOT, "docs", "slides", "index.html");
-const OUT = path.join(ROOT, "docs", "slides", "audio");
+const DECK = path.resolve(ROOT, argOf("--deck", path.join("docs", "slides", "index.html")));
+const OUT = path.join(path.dirname(DECK), "audio");
 const MANIFEST = path.join(OUT, "manifest.json");
 
 const REST = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -69,7 +75,8 @@ if (!(RATE >= 0.5 && RATE <= 2)) throw new Error(`--rate must be between 0.5 and
  * over-specifying flattens the performance.
  */
 const DIRECTION = [
-  "Synthesize speech for the transcript below. Read only the transcript.",
+  "Synthesize speech for the transcript below. Read only the transcript,",
+  "in whatever language it is written in.",
   "",
   "Style: an engineer showing other engineers a side project they enjoyed building.",
   "Casual, quick, friendly. Talking, not presenting. No announcer polish, no sell.",

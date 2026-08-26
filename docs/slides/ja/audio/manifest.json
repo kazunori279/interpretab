@@ -1,0 +1,90 @@
+{
+  "slide-01.mp3": {
+    "hash": "b2c8a732d2aedf74",
+    "words": 8,
+    "seconds": 14.2,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-05.mp3": {
+    "hash": "f7336d3cf2bc42ad",
+    "words": 28,
+    "seconds": 29.2,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-06.mp3": {
+    "hash": "4bfb5c009fd6a0da",
+    "words": 7,
+    "seconds": 19.1,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-07.mp3": {
+    "hash": "30e9246aa0cc822a",
+    "words": 29,
+    "seconds": 30.1,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-08.mp3": {
+    "hash": "4c0ffde0660a4c1e",
+    "words": 5,
+    "seconds": 10.4,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-09.mp3": {
+    "hash": "2e2eb7cd658a115f",
+    "words": 29,
+    "seconds": 37.4,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-10.mp3": {
+    "hash": "816bca517eb5e717",
+    "words": 17,
+    "seconds": 25.1,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-11.mp3": {
+    "hash": "b36f94d775e7439d",
+    "words": 18,
+    "seconds": 33.5,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-12.mp3": {
+    "hash": "02a5ad5eb48e80ff",
+    "words": 14,
+    "seconds": 18.1,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-13.mp3": {
+    "hash": "8acff12ae284a435",
+    "words": 13,
+    "seconds": 28.6,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  },
+  "slide-14.mp3": {
+    "hash": "c660abf5ebc2f16a",
+    "words": 9,
+    "seconds": 8,
+    "voice": "Puck",
+    "rate": 1.15,
+    "model": "gemini-3.1-flash-tts-preview"
+  }
+}
