@@ -16,9 +16,9 @@
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-06.mp3": {
-    "hash": "6c4b9dcc368763e0",
-    "words": 69,
-    "seconds": 19.5,
+    "hash": "516d9bed702b7792",
+    "words": 101,
+    "seconds": 24.6,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
@@ -32,9 +32,9 @@
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-08.mp3": {
-    "hash": "4ab94e9952fe88a5",
-    "words": 86,
-    "seconds": 21.2,
+    "hash": "99bb5413e0903661",
+    "words": 133,
+    "seconds": 33.8,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
@@ -48,9 +48,9 @@
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-10.mp3": {
-    "hash": "db0bf23ad2d7265b",
-    "words": 98,
-    "seconds": 24.1,
+    "hash": "499fee073a02a0d9",
+    "words": 111,
+    "seconds": 27.3,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"

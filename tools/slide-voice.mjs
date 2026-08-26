@@ -90,6 +90,7 @@ export function scriptsFrom(html) {
           .replace(/<[^>]+>/g, "")
           .replace(/&mdash;/g, "—")
           .replace(/&middot;/g, "·")
+          .replace(/&rsquo;/g, "'")
           .replace(/&nbsp;/g, " ")
           .replace(/&amp;/g, "&")
           .replace(/\s+/g, " ")
