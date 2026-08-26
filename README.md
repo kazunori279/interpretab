@@ -695,7 +695,8 @@ Three more things it turned up, none of them in the docs:
   it in the audio you send. Stop sending when the speaker stops and the model waits indefinitely
   — a microphone that streams its pauses is not padding, it is the signal.
 - **`sessionResumptionUpdate` arrives unasked.** The server volunteers resumption handles every
-  few seconds without `sessionResumption` in the setup frame.
+  few seconds without `sessionResumption` in the setup frame. Reconnecting with one is a
+  different matter — see [session expiry](#session-expiry) for what it does to the audio.
 
 Uplink audio is base64 inside JSON, not the raw binary a socket of one's own would take:
 
@@ -851,12 +852,13 @@ preroll replay covers the common case. The Python implementation is in
 [`app/main.py`](https://github.com/kazunori279/live-translator/blob/main/app/main.py) if you
 want it back.
 
-Session resumption would be the better mechanism still, and is not used in v1.0 — though the
-argument against it got weaker once a real session was watched: the server sends
-`sessionResumptionUpdate` handles unprompted, so they cost nothing to collect and the only
-untested part is whether reconnecting with one actually restores the conversation. That is a
-worthwhile v1.1. It would not remove `session-loop.js`, which also has to cover the case where
-the socket dies without warning.
+**Session resumption is not used, and that is a result rather than a gap.** The handles cost
+nothing to collect — the server sends `sessionResumptionUpdate` unprompted — but reconnecting
+with one makes the model deliver its last reply again: a sentence the listener has already heard,
+spoken a second time. Preroll replays audio the model never answered; resumption replays the
+answer. For an interpreter that is worse than the seam it closes, so the ten-second ring is what
+ships. It would not have removed `session-loop.js` in any case, which also has to cover a socket
+that dies without warning.
 
 ### What a run costs
 
@@ -1918,8 +1920,8 @@ for the same reason every other script here reads one.
 
 The API has no speaking-rate parameter, and asking the model in prose for a faster read gets a
 different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the three demo
-clips are played back at the same ratio. That is the whole of the pacing: 3m38s of narration and
-1m27s of video, five minutes and five seconds against a five-minute slot.
+clips are played back at the same ratio. That is the whole of the pacing: 3m37s of narration and
+1m27s of video, five minutes and four seconds against a five-minute slot.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is

@@ -772,7 +772,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="hsub">A Live API socket is capped at about ten minutes. That surprises most people. The server
   warns you at nine, gives you fifty seconds, and means the deadline literally.</div>
   <div class="diagram" style="margin-top:8px;">
-<svg viewBox="0 0 1152 402" width="100%" aria-label="The first socket is warned at nine minutes; the second opens alongside it and takes over before the first expires, while the audio below runs unbroken through the swap and the sentence crossing it is replayed on the new socket">
+<svg viewBox="0 0 1152 390" width="100%" aria-label="The first socket is warned at nine minutes; the second opens alongside it and takes over before the first expires, while the audio below runs unbroken through the swap and the sentence crossing it is replayed on the new socket">
   <defs>
     <marker id="s08-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#34A853"/>
@@ -823,9 +823,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
   <text x="0" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">The swap waits for a finished turn, or five seconds of quiet, or one second before the deadline, whichever comes first.</text>
   <text x="0" y="330" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">Whatever the old socket never answered is sent again on the new one, and a synthetic <a href="https://ai.google.dev/api/live#bidigeneratecontentservercontent" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">turnComplete</tspan></a> closes the caption it abandoned.</text>
-  <text x="0" y="356" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">The API has its own version of that replay: <a href="https://ai.google.dev/gemini-api/docs/live-api/session-management#session-resumption" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">sessionResumption</tspan></a> hands out a resumption token every few seconds, and reconnecting with one</text>
-  <text x="0" y="376" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">restores the conversation. Transparent mode also names the last client frame the server consumed, which is exactly the set to send again.</text>
-  <text x="0" y="396" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">v1.0 does not use it &mdash; a ten-second buffer of its own covers the same ground &mdash; and the handles arrive unasked, so it is a cheap v1.1.</text>
+  <text x="0" y="356" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">The API has its own version of that replay: <a href="https://ai.google.dev/gemini-api/docs/live-api/session-management#session-resumption" target="_blank" rel="noopener"><tspan font-weight="700" fill="#202124">sessionResumption</tspan></a> hands out a token every few seconds, and reconnecting with one restores the conversation.</text>
+  <text x="0" y="378" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">We tried it. It also replays the last sentence the model had already spoken, so the listener hears it twice, and the buffer above is what shipped instead.</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
@@ -834,9 +833,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
   socket while the old one is still talking, and swaps on a finished turn or five seconds of
   quiet. Anything the old socket never answered gets sent again on the new one. Six handovers
   an hour, and the worst gap in the translated voice was three point six seconds. The API has
-  its own mechanism for this, session resumption: a token every few seconds, and reconnecting
-  with one brings the conversation across. Version one does not use it, and the tokens arrive
-  whether you ask or not, so that is the cheap thing to add next.</div>
+  its own mechanism for this, session resumption. We tried it: reconnect with a token and the
+  model says its last sentence over again, out loud. So we kept our own buffer.</div>
 </section>
 
 <!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
