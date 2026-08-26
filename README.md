@@ -1918,8 +1918,8 @@ for the same reason every other script here reads one.
 
 The API has no speaking-rate parameter, and asking the model in prose for a faster read gets a
 different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the three demo
-clips are played back at the same ratio. That is the whole of the pacing: 3m21s of narration and
-1m27s of video, against a five-minute slot.
+clips are played back at the same ratio. That is the whole of the pacing: 3m38s of narration and
+1m27s of video, five minutes and five seconds against a five-minute slot.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is

@@ -432,7 +432,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes silent">Prices move; the extension reads them from a file rather than shipping them. That is
-  slide ten.</div>
+  slide eleven.</div>
 </section>
 
 <!-- ══════════════ 5 · ARCHITECTURE ══════════════ -->
@@ -562,7 +562,91 @@ table.t .ok { color: var(--green); font-weight: 700; }
   six.</div>
 </section>
 
-<!-- ══════════════ 6 · MEET ══════════════ -->
+<!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
+<section class="slide">
+  <div class="h">The two Live models</div>
+  <div class="diagram" style="margin-top:10px;">
+<svg viewBox="0 0 1152 474" width="100%" aria-label="The two Gemini Live models this extension runs, side by side: the live translation model, which speaks over the source and takes no system instruction, and the conversational model, which waits for a turn and can carry a glossary, with their measured latency, pass rate and audio prices">
+  <text x="0" y="22" font-family="Google Sans Text, Arial, sans-serif" font-size="16" fill="#5F6368">The direction picks the model: tab audio always runs the translation model, the microphone runs the mode you choose.</text>
+
+  <!-- ---------- simultaneous ---------- -->
+  <rect x="0" y="44" width="560" height="276" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+  <g transform="translate(50 88) scale(.78) translate(-24 -24)">
+    <path d="M9 19h7l9-7v24l-9-7H9z" stroke="#174EA6" stroke-width="2.6" fill="none" stroke-linejoin="round"/>
+    <circle class="ripple" cx="31" cy="24" r="8" stroke="#4285F4" stroke-width="2.4" fill="none"/>
+    <circle class="ripple" cx="31" cy="24" r="8" stroke="#4285F4" stroke-width="2.4" fill="none" style="animation-delay:1.1s"/>
+  </g>
+  <text x="88" y="84" font-family="Google Sans, Arial, sans-serif" font-size="25" font-weight="500" fill="#174EA6">Simultaneous</text>
+  <a href="https://ai.google.dev/gemini-api/docs/models#gemini-3.5-live-translate-preview" target="_blank" rel="noopener">
+    <text x="88" y="110" font-family="Google Sans Code, monospace" font-size="14.5" fill="#174EA6">gemini-3.5-live-translate-preview</text>
+  </a>
+  <rect x="396" y="64" width="140" height="30" rx="15" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.2"/>
+  <text x="466" y="84" text-anchor="middle" font-family="Google Sans Code, monospace" font-size="13.5" fill="#174EA6">$3.50 / $21</text>
+  <path d="M24 130 H 536" stroke="#8AB4F8" stroke-width="1.2"/>
+
+  <circle cx="30" cy="153" r="2.6" fill="#4285F4"/>
+  <text x="44" y="158" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#174EA6">Speaks while the source speaks; it never waits for a turn</text>
+  <circle cx="30" cy="179" r="2.6" fill="#4285F4"/>
+  <text x="44" y="184" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#174EA6">Detects the source itself, so you set only the target</text>
+  <circle cx="30" cy="205" r="2.6" fill="#4285F4"/>
+  <text x="44" y="210" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#174EA6">70+ languages, one target language per session</text>
+  <circle cx="30" cy="231" r="2.6" fill="#4285F4"/>
+  <text x="44" y="236" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#174EA6">No system instruction, and so no glossary</text>
+
+  <rect x="24" y="250" width="512" height="56" rx="9" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.2"/>
+  <text x="44" y="278" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">0.98 s</text>
+  <text x="44" y="296" font-family="Google Sans Text, Arial, sans-serif" font-size="12.5" fill="#5F6368">speech end to full translation</text>
+  <text x="290" y="278" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">92.4%</text>
+  <text x="290" y="296" font-family="Google Sans Text, Arial, sans-serif" font-size="12.5" fill="#5F6368">of 198 graded sentences passed</text>
+
+  <!-- ---------- two-way conversation ---------- -->
+  <rect x="592" y="44" width="560" height="276" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <g transform="translate(642 88) scale(.78) translate(-24 -24)">
+    <path class="nudge" d="M8 18h28l-6-6m6 6-6 6" stroke="#0D652D" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="nudge" d="M40 32H12l6-6m-6 6 6 6" stroke="#0D652D" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/>
+  </g>
+  <text x="680" y="84" font-family="Google Sans, Arial, sans-serif" font-size="25" font-weight="500" fill="#0D652D">Two-way conversation</text>
+  <a href="https://ai.google.dev/gemini-api/docs/models#gemini-3.1-flash-live-preview" target="_blank" rel="noopener">
+    <text x="680" y="110" font-family="Google Sans Code, monospace" font-size="14.5" fill="#0D652D">gemini-3.1-flash-live-preview</text>
+  </a>
+  <rect x="988" y="64" width="140" height="30" rx="15" fill="#FFFFFF" stroke="#34A853" stroke-width="1.2"/>
+  <text x="1058" y="84" text-anchor="middle" font-family="Google Sans Code, monospace" font-size="13.5" fill="#0D652D">$3 / $12</text>
+  <path d="M616 130 H 1128" stroke="#34A853" stroke-width="1.2" opacity=".5"/>
+
+  <circle cx="622" cy="153" r="2.6" fill="#34A853"/>
+  <text x="636" y="158" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#0D652D">Waits for the turn to end, then interprets it</text>
+  <circle cx="622" cy="179" r="2.6" fill="#34A853"/>
+  <text x="636" y="184" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#0D652D">Both languages declared; each utterance goes to the other</text>
+  <circle cx="622" cy="205" r="2.6" fill="#34A853"/>
+  <text x="636" y="210" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#0D652D">Takes a system instruction, which is what a glossary rides on</text>
+  <circle cx="622" cy="231" r="2.6" fill="#34A853"/>
+  <text x="636" y="236" font-family="Google Sans Text, Arial, sans-serif" font-size="15.5" fill="#0D652D">Ends a turn with <a href="https://ai.google.dev/api/live#bidigeneratecontentservercontent" target="_blank" rel="noopener"><tspan>generationComplete</tspan></a>, not turnComplete</text>
+
+  <rect x="616" y="250" width="512" height="56" rx="9" fill="#FFFFFF" stroke="#34A853" stroke-width="1.2"/>
+  <text x="636" y="278" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">1.60 s</text>
+  <text x="636" y="296" font-family="Google Sans Text, Arial, sans-serif" font-size="12.5" fill="#5F6368">speech end to full translation</text>
+  <text x="882" y="278" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">99.3%</text>
+  <text x="882" y="296" font-family="Google Sans Text, Arial, sans-serif" font-size="12.5" fill="#5F6368">of 281 graded sentences passed</text>
+
+  <!-- ---------- what the difference is, on the wire ---------- -->
+  <rect x="0" y="344" width="1152" height="130" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4"/>
+  <text x="24" y="372" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">One socket, one <a href="https://ai.google.dev/api/live#bidigeneratecontentsetup" target="_blank" rel="noopener"><tspan>setup frame</tspan></a>. The mode is the field you put in it.</text>
+  <rect x="24" y="393" width="9" height="9" rx="2" fill="#4285F4"/>
+  <text x="42" y="402" font-family="Google Sans Code, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"generationConfig"</tspan>: { ..., <tspan fill="#B06000">"translationConfig"</tspan>: { <tspan fill="#B06000">"targetLanguageCode"</tspan>: <tspan fill="#0D652D">"ja"</tspan>, <tspan fill="#B06000">"echoTargetLanguage"</tspan>: false } }</text>
+  <rect x="24" y="419" width="9" height="9" rx="2" fill="#34A853"/>
+  <text x="42" y="428" font-family="Google Sans Code, monospace" font-size="14" fill="#5F6368"><tspan fill="#B06000">"systemInstruction"</tspan>: { <tspan fill="#B06000">"parts"</tspan>: [{ <tspan fill="#B06000">"text"</tspan>: <tspan fill="#0D652D">"Interpret between English and Japanese&hellip;"</tspan> }] }</text>
+  <text x="24" y="456" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">Prices are per 1M audio tokens, in / out. Latency and pass rate are the hour-long soaks, both in the repository.</text>
+</svg>
+  </div>
+  <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
+  <div class="notes">Two models, and the rest of the deck keeps mentioning them. Tab audio always runs the live
+  translation one: it speaks while you are still talking, works out the source language itself,
+  and takes no system instruction. The microphone can run that, or the conversation model, which
+  waits for your turn to end. Slower, more accurate, cheaper, and the only one a glossary
+  reaches.</div>
+</section>
+
+<!-- ══════════════ 7 · MEET ══════════════ -->
 <section class="slide">
   <div class="h">How it integrates with Meet</div>
   <div class="hsub">No extension can register an audio input with the system. One page is another matter.</div>
@@ -649,7 +733,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   mouth to their ear. It was four until we found that one of them was Meet's Studio Sound.</div>
 </section>
 
-<!-- ══════════════ 7 · BREAK ══════════════ -->
+<!-- ══════════════ 8 · BREAK ══════════════ -->
 <section class="slide break">
   <div class="n">The hard parts</div>
   <div class="name">Three things that fought back</div>
@@ -682,7 +766,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   All three are about keeping a long connection honest on somebody else's schedule.</div>
 </section>
 
-<!-- ══════════════ 8 · SESSION LIFECYCLE ══════════════ -->
+<!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
   <div class="h">Session lifecycle</div>
   <div class="hsub">A Live API socket is capped at about ten minutes. That surprises most people. The server
@@ -755,7 +839,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   whether you ask or not, so that is the cheap thing to add next.</div>
 </section>
 
-<!-- ══════════════ 9 · ERROR HANDLING ══════════════ -->
+<!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
 <section class="slide">
   <div class="h">Error handling</div>
   <div class="hsub">A browser is never told why a WebSocket upgrade was refused. That is deliberate.</div>
@@ -808,7 +892,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   And do not retry a verdict. A spent quota comes back at midnight, not in four seconds.</div>
 </section>
 
-<!-- ══════════════ 10 · MODEL MIGRATION ══════════════ -->
+<!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
 <section class="slide">
   <div class="h">Automatic migration to new Live models</div>
   <div class="diagram" style="margin-top:10px;">
@@ -897,7 +981,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   handover, mid-run, with nobody updating anything.</div>
 </section>
 
-<!-- ══════════════ 11 · TEST RESULTS ══════════════ -->
+<!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
 <section class="slide">
   <div class="h">Test results</div>
   <div class="rail" style="margin-top:44px;">
@@ -928,7 +1012,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   tracks the language pair rather than the code path. All the reports are in the repo.</div>
 </section>
 
-<!-- ══════════════ 12 · LESSONS LEARNED ══════════════ -->
+<!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
 <section class="slide">
   <div class="h">Lessons learned</div>
   <div class="grid c4 numbers" style="margin-top:44px;">
@@ -979,7 +1063,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   audio you send. Stop sending when the speaker stops, and the model waits for ever.</div>
 </section>
 
-<!-- ══════════════ 13 · THANK YOU ══════════════ -->
+<!-- ══════════════ 14 · THANK YOU ══════════════ -->
 <section class="slide flex thanks">
   <div class="inner">
     <h1>Thank you</h1>
