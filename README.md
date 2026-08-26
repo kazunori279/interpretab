@@ -13,6 +13,12 @@ User guide — what it does, what it costs, and how to turn it on:
 **[العربية](https://kazunori279.github.io/interpretab/ar/)**. What follows is the engineering side
 of the same thing.
 
+The same engineering as a five-minute talk, with the demos in it:
+**[slides](https://kazunori279.github.io/interpretab/slides/)**. It reads itself aloud; press **Play
+narration**, or `p`. The three problems it spends its second half on are
+[session expiry](#session-expiry), [the blank close](#one-http-request-in-front-of-the-sockets) and
+[the facts that expire](#the-two-facts-that-expire), each of which has a section here.
+
 A Chrome extension that interprets **whatever a tab is playing** — a video, a webinar, the
 remote side of a Meet call — into your language, spoken out loud and subtitled on the page. It
 also works the other way: your microphone, into theirs.
@@ -1891,6 +1897,29 @@ than Primer from a CDN. The theme's `.markdown-body` rules are half of what the 
 out against — one of them is more specific than a single class — and Primer on its own leaves its
 colours unset, so links came out the colour of body text and the preview was lying about the one
 thing it is there to show.
+
+**`tools/slide-voice.mjs` — the talk, and the voice reading it.**
+
+```bash
+node tools/slide-voice.mjs /tmp/key.txt            # only the slides whose text changed
+node tools/slide-voice.mjs /tmp/key.txt --dry      # print the scripts, call nothing
+node tools/slide-voice.mjs /tmp/key.txt --only 8   # one slide again
+```
+
+The deck is `docs/slides/index.html` — one file, no build step, published with the guide at
+[/slides/](https://kazunori279.github.io/interpretab/slides/) and openable straight off disk. Each
+slide's `<div class="notes">` is both the presenter's note on the `n` panel and the script this
+sends to `gemini-3.1-flash-tts-preview`, so the two cannot drift apart: edit a note, re-run this,
+and that slide alone is re-recorded. `docs/slides/audio/manifest.json` carries a hash of the text
+each MP3 was made from, which is what stops a stale recording from surviving a rewrite unnoticed,
+and its length, which is what the play button counts down. The key goes in `x-goog-api-key` rather
+than the URL — `generateContent` accepts a header, unlike the Live API — and it is read from a file
+for the same reason every other script here reads one.
+
+The API has no speaking-rate parameter, and asking the model in prose for a faster read gets a
+different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the three demo
+clips are played back at the same ratio. That is the whole of the pacing: 3m21s of narration and
+1m27s of video, against a five-minute slot.
 
 **Two tabs, by hand.** One thing `npm test` cannot reach: two live side panels. The suite checks
 the invariants in the source — Start refuses before it captures, every control in the markup is
