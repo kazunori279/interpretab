@@ -57,10 +57,11 @@ const MODEL = argOf("--model", "gemini-3.1-flash-tts-preview");
 const VOICE = argOf("--voice", "Puck");
 
 /**
- * Playback speed applied after synthesis. 1.3 fits the deck into the slot and
- * still reads as a person talking; much past 1.4 and the consonants smear.
+ * Playback speed applied after synthesis. 1.15 fits the deck into the slot and
+ * still sounds unhurried; past about 1.3 it reads as someone racing the clock.
+ * The deck plays its demo clips at the same ratio, so change both together.
  */
-const RATE = Number(argOf("--rate", "1.3"));
+const RATE = Number(argOf("--rate", "1.15"));
 if (!(RATE >= 0.5 && RATE <= 2)) throw new Error(`--rate must be between 0.5 and 2, got ${RATE}`);
 
 /**

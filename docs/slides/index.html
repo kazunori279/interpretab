@@ -85,13 +85,23 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid #5F6368;
    One button inside #frame rather than one per slide: it sits at the same
    bottom-right corner on every slide, and there is only one control to keep in
    step with whichever element is speaking, the narration or a demo clip. */
-#vo { position: absolute; right: 64px; bottom: 58px; width: 44px; height: 44px; padding: 0;
-      border: 1px solid var(--hairline); border-radius: 50%; background: var(--white);
-      color: var(--blue); cursor: pointer; z-index: 20;
-      display: flex; align-items: center; justify-content: center; }
-#vo:hover  { background: var(--surface); }
-#vo:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
-#vo.off    { color: var(--ink-3); cursor: default; }
+#vo { position: absolute; right: 64px; bottom: 52px; height: 48px; padding: 0 8px 0 18px;
+      border: 0; border-radius: 24px; background: var(--blue-700); color: var(--white);
+      cursor: pointer; z-index: 20;
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--font-text); font-size: 16px; font-weight: 500;
+      /* The white ring does nothing on the light slides and separates the pill
+         from the dark background on the break slide. */
+      box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 2px 8px rgba(60,64,67,.28); }
+#vo:hover  { background: var(--blue-800); }
+#vo:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+/* Monospaced and tabular, or the pill twitches every second as the digits change. */
+#vo .time  { font-family: var(--mono); font-size: 13px; color: var(--white);
+             font-variant-numeric: tabular-nums; background: rgba(255,255,255,.22);
+             border-radius: 16px; padding: 5px 10px; min-width: 84px; text-align: center; }
+#vo.off    { background: var(--surface); color: var(--ink-3); cursor: default;
+             box-shadow: 0 0 0 1px var(--hairline); }
+#vo.off .time { color: var(--ink-3); background: var(--white); }
 #vo .pausebars,
 #vo.playing .playtri { display: none; }
 #vo.playing .pausebars { display: inline; }
@@ -205,6 +215,15 @@ table.t .ok { color: var(--green); font-weight: 700; }
 @keyframes deck-ripple { 0% { transform: scale(.35); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
 @keyframes deck-spin   { to { transform: rotate(360deg); } }
 @keyframes deck-slide  { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+/* One 7 s clock for the handover story on the session slide. Every part of it
+   uses this duration, so the alarm, the two sockets and the travelling dot
+   stay in step: percentages here are positions along the same timeline. */
+@keyframes deck-travel { from { transform: translateX(0); } to { transform: translateX(var(--run)); } }
+@keyframes deck-hand-a { 0%, 58%   { opacity: 1; }  63%, 100% { opacity: .22; } }
+@keyframes deck-hand-b { 0%, 50%   { opacity: .12; } 55% { opacity: .5; } 60%, 100% { opacity: 1; } }
+@keyframes deck-alarm  { 0%, 46%   { opacity: 0; transform: scale(.4); }
+                         50%       { opacity: .9; transform: scale(1); }
+                         62%, 100% { opacity: 0; transform: scale(1.8); } }
 .slide.active .dashflow { stroke-dasharray: 6 6; animation: deck-dash 1.1s linear infinite; }
 .slide.active .pulse    { animation: deck-pulse 1.8s ease-in-out infinite; }
 /* transform-box defaults to view-box in SVG, which would scale each shape about
@@ -212,14 +231,22 @@ table.t .ok { color: var(--green); font-weight: 700; }
 .slide.active .bar,
 .slide.active .ripple,
 .slide.active .spin,
+.slide.active .alarm,
+.slide.active .travel,
 .slide.active .nudge    { transform-box: fill-box; transform-origin: center; }
 .slide.active .bar      { animation: deck-bar 1s ease-in-out infinite; }
 .slide.active .ripple   { animation: deck-ripple 2.2s ease-out infinite; }
 .slide.active .spin     { animation: deck-spin 7s linear infinite; }
 .slide.active .nudge    { animation: deck-slide 1.6s ease-in-out infinite; }
+.slide.active .travel   { animation: deck-travel 7s linear infinite; }
+.slide.active .hand-a   { animation: deck-hand-a 7s linear infinite; }
+.slide.active .hand-b   { animation: deck-hand-b 7s linear infinite; }
+.slide.active .alarm    { animation: deck-alarm  7s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .slide.active .dashflow, .slide.active .pulse, .slide.active .bar,
-  .slide.active .ripple, .slide.active .spin, .slide.active .nudge { animation: none; }
+  .slide.active .ripple, .slide.active .spin, .slide.active .nudge,
+  .slide.active .travel, .slide.active .hand-a, .slide.active .hand-b,
+  .slide.active .alarm { animation: none; }
 }
 
 /* ---------- print / PDF export (Cmd-P → Save as PDF) ---------- */
@@ -616,68 +643,68 @@ table.t .ok { color: var(--green); font-weight: 700; }
 <!-- ══════════════ 8 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
   <div class="h">Session lifecycle</div>
-  <div class="hsub">A Live session lasts ten minutes. The server warns you at nine, and it means the deadline literally.</div>
-  <div class="diagram" style="margin-top:26px;">
-<svg viewBox="0 0 1152 330" width="100%" aria-label="Six goAway warnings across an hour, and the four steps the loop takes on each one: the warning, opening the replacement, the swap, and replaying the tail">
+  <div class="hsub">A Live API socket is capped at about ten minutes. That surprises most people. The server
+  warns you at nine, gives you fifty seconds, and means the deadline literally.</div>
+  <div class="diagram" style="margin-top:24px;">
+<svg viewBox="0 0 1152 342" width="100%" aria-label="The first socket is warned at nine minutes; the second opens alongside it and takes over before the first expires, while the audio below runs unbroken through the swap and the sentence crossing it is replayed on the new socket">
   <defs>
     <marker id="s08-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
-      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
+      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#34A853"/>
     </marker>
   </defs>
 
-  <text x="166" y="32" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#4285F4">goAway</text>
-  <path d="M0 64 H 1128" stroke="#5F6368" stroke-width="1.4" marker-end="url(#s08-arw)"/>
-  <circle class="ripple" cx="166" cy="64" r="11" fill="#4285F4"/>
-  <circle class="ripple" cx="331" cy="64" r="11" fill="#4285F4" style="animation-delay:.36s"/>
-  <circle class="ripple" cx="497" cy="64" r="11" fill="#4285F4" style="animation-delay:.72s"/>
-  <circle class="ripple" cx="662" cy="64" r="11" fill="#4285F4" style="animation-delay:1.08s"/>
-  <circle class="ripple" cx="828" cy="64" r="11" fill="#4285F4" style="animation-delay:1.44s"/>
-  <circle class="ripple" cx="994" cy="64" r="11" fill="#4285F4" style="animation-delay:1.8s"/>
-  <circle cx="166" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <circle cx="331" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <circle cx="497" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <circle cx="662" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <circle cx="828" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <circle cx="994" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="0" y="96" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">0 min</text>
-  <text x="1128" y="96" text-anchor="end" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">60 min</text>
-  <text x="576" y="96" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">9:00 &middot; 18:00 &middot; 27:00 &middot; 36:00 &middot; 45:00 &middot; 54:00. Six warnings an hour, no drift</text>
+  <text x="596" y="16" text-anchor="end" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#4285F4">goAway at 9:00</text>
+  <text x="712" y="16" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#202124">swap</text>
 
-  <rect x="0" y="150" width="240" height="124" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="120" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">goAway</text>
-  <text x="120" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">the server gives fifty</text>
-  <text x="120" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">seconds' notice</text>
+  <!-- the old socket, going quiet after the swap -->
+  <g class="hand-a">
+    <rect x="0" y="34" width="720" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+    <text x="24" y="60" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">Socket 1</text>
+    <text x="24" y="80" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">about ten minutes, then the server hangs up whatever you are doing</text>
+  </g>
 
-  <path d="M248 212 H 280" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
+  <!-- the replacement, opened while the old one is still talking -->
+  <g class="hand-b">
+    <rect x="640" y="106" width="512" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+    <text x="664" y="132" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">Socket 2</text>
+    <text x="664" y="152" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">opened about 200 ms early, warm before it is needed</text>
+  </g>
 
-  <rect x="288" y="150" width="240" height="124" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="408" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Open the next one</text>
-  <text x="408" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">warm in about 200 ms,</text>
-  <text x="408" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">while the old one talks</text>
+  <circle class="alarm" cx="600" cy="62" r="20" fill="#4285F4"/>
+  <circle cx="600" cy="62" r="7" fill="#FFFFFF" stroke="#4285F4" stroke-width="2.5"/>
+  <path d="M600 24 V 30" stroke="#4285F4" stroke-width="2"/>
 
-  <path d="M536 212 H 568" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
+  <!-- the audio, drawn after the lane so it paints over the swap line -->
+  <rect x="0" y="186" width="1152" height="60" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <path d="M700 22 V 258" stroke="#5F6368" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <path d="M24 216 H 1128" stroke="#34A853" stroke-width="2"/>
+  <rect x="40"  y="209" width="90"  height="14" rx="7" fill="#34A853"/>
+  <rect x="168" y="209" width="70"  height="14" rx="7" fill="#34A853"/>
+  <rect x="272" y="209" width="110" height="14" rx="7" fill="#34A853"/>
+  <rect x="414" y="209" width="80"  height="14" rx="7" fill="#34A853"/>
+  <rect x="524" y="209" width="60"  height="14" rx="7" fill="#34A853"/>
+  <circle class="ripple" cx="715" cy="216" r="22" fill="none" stroke="#0D652D" stroke-width="2"/>
+  <rect x="660" y="207" width="110" height="18" rx="9" fill="#0D652D"/>
+  <rect x="812" y="209" width="90"  height="14" rx="7" fill="#34A853"/>
+  <rect x="936" y="209" width="70"  height="14" rx="7" fill="#34A853"/>
+  <rect x="1040" y="209" width="88" height="14" rx="7" fill="#34A853"/>
+  <circle class="travel" cx="24" cy="216" r="7" fill="#0D652D" style="--run: 1104px"/>
+  <text x="715" y="272" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" font-weight="700" fill="#0D652D">this one is replayed, not dropped</text>
+  <text x="0" y="272" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#0D652D">Your audio, in and out: one unbroken stream, and the swap happens underneath it.</text>
 
-  <rect x="576" y="150" width="240" height="124" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="696" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Swap</text>
-  <text x="696" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">on turnComplete, on 5 s of</text>
-  <text x="696" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">silence, or one second early</text>
+  <path d="M300 186 V 96" stroke="#34A853" stroke-width="1.8" marker-end="url(#s08-arw)" marker-start="url(#s08-arw)"/>
+  <path d="M940 186 V 168" stroke="#34A853" stroke-width="1.8" marker-end="url(#s08-arw)" marker-start="url(#s08-arw)"/>
 
-  <path d="M824 212 H 856" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
-
-  <rect x="864" y="150" width="240" height="124" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="984" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Replay the tail</text>
-  <text x="984" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">the PCM nothing has</text>
-  <text x="984" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">answered yet</text>
-
-  <text x="0" y="312" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">A turn that was cut off never reports itself complete, so the loop emits a synthetic <tspan font-weight="700" fill="#202124">turnComplete</tspan> and closes the abandoned caption.</text>
+  <text x="0" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">The swap waits for a finished turn, or five seconds of quiet, or one second before the deadline, whichever comes first.</text>
+  <text x="0" y="330" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">Whatever the old socket never answered is sent again on the new one, and a synthetic <tspan font-weight="700" fill="#202124">turnComplete</tspan> closes the caption it abandoned.</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">A Live session lasts about ten minutes. At nine minutes the server warns you, it gives you
-  fifty seconds, and it means it. So the loop opens the next session while the old one is
-  still talking, swaps over on a finished turn or five seconds of quiet, and replays the audio
-  nothing has answered yet. Six handovers an hour. Worst gap in the translated voice was three
-  point six seconds.</div>
+  <div class="notes">Here is one most people do not know: a Live API socket only lasts about ten minutes. At nine
+  the server sends goAway, you get fifty seconds, and it means it. So the loop opens the next
+  socket while the old one is still talking, and swaps on a finished turn or five seconds of
+  quiet. Anything the old socket never answered gets sent again on the new one. Six handovers
+  an hour, and the worst gap in the translated voice was three point six seconds.</div>
 </section>
 
 <!-- ══════════════ 9 · ERROR HANDLING ══════════════ -->
@@ -733,72 +760,82 @@ table.t .ok { color: var(--green); font-weight: 700; }
   And do not retry a verdict. A spent quota comes back at midnight, not in four seconds.</div>
 </section>
 
-<!-- ══════════════ 10 · REMOTE CONFIGURATION ══════════════ -->
+<!-- ══════════════ 10 · MODEL MIGRATION ══════════════ -->
 <section class="slide">
-  <div class="h">Remote configuration</div>
-  <div class="hsub">Two facts this build cannot own: which Live models exist, and what they cost. A preview gets two weeks' notice.</div>
-  <div class="diagram" style="margin-top:22px;">
-<svg viewBox="0 0 1152 336" width="100%" aria-label="An hourly workflow asks the API which models still answer, rewrites the config file when one is gone, and GitHub Pages carries the correction to every installed copy within six hours">
+  <div class="h">Automatic migration to new Live models</div>
+  <div class="diagram" style="margin-top:30px;">
+<svg viewBox="0 0 1152 402" width="100%" aria-label="An hourly GitHub Actions run checks whether the Live model still answers and whether a successor has appeared, commits the answer to a config file on Pages, and every installed copy picks the new model up and moves to it at its next session handover">
   <defs>
     <marker id="s10-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
+    <marker id="s10-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
+    </marker>
   </defs>
 
-  <rect x="0" y="16" width="328" height="104" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+  <rect x="0" y="0" width="1152" height="100" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>
+  <g transform="translate(40 50)">
+    <path d="M0-15 15 11H-15z" fill="none" stroke="#A50E0E" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M0-6v8" stroke="#A50E0E" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="0" cy="6" r="1.6" fill="#A50E0E"/>
+  </g>
+  <text x="76" y="36" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="700" fill="#A50E0E">The problem</text>
+  <text x="76" y="62" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#A50E0E">A preview model retires on two weeks&rsquo; notice, and a store review can take longer than that.</text>
+  <text x="76" y="84" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#A50E0E">A model name baked into a shipped build is an outage with a date on it.</text>
+
+  <rect x="0" y="128" width="264" height="152" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
   <!-- The class goes on the inner group: a CSS transform replaces the transform
        attribute outright, and the placement would go with it. -->
-  <g transform="translate(292 46)"><g class="spin">
-    <path d="M0-13a13 13 0 1 1-11 6" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M-15 0-11 6-5 3" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(228 158)"><g class="spin">
+    <path d="M0-12a12 12 0 1 1-10 5.5" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M-14 0-10 5.5-4.5 3" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
   </g></g>
-  <text x="24" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">model-health.yml</text>
-  <text x="24" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">hourly, on GitHub Actions, plus a daily</text>
-  <text x="24" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">run that goes looking for the successor</text>
+  <text x="22" y="164" font-family="Google Sans, Arial, sans-serif" font-size="18" font-weight="500" fill="#174EA6">Every hour</text>
+  <text x="22" y="194" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">GitHub Actions calls ListModels,</text>
+  <text x="22" y="214" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">then opens a real socket carrying</text>
+  <text x="22" y="234" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">the very setup frame the extension</text>
+  <text x="22" y="254" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">sends.</text>
 
-  <path d="M336 68 H 404" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <rect x="296" y="128" width="264" height="152" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <text x="318" y="164" font-family="Google Sans, Arial, sans-serif" font-size="18" font-weight="500" fill="#202124">Gone, or something new?</text>
+  <text x="318" y="194" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">One failure is a network blip. Only</text>
+  <text x="318" y="214" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a repeated, unambiguous refusal</text>
+  <text x="318" y="234" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">counts as retired. A daily run goes</text>
+  <text x="318" y="254" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">looking for the successor.</text>
 
-  <rect x="412" y="16" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="436" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Two questions</text>
-  <text x="436" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">ListModels, then a real socket carrying</text>
-  <text x="436" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the very setup frame the extension sends</text>
+  <rect x="592" y="128" width="264" height="152" rx="12" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
+  <text x="614" y="164" font-family="Google Sans Code, monospace" font-size="17" font-weight="500" fill="#B06000">docs/config.json</text>
+  <text x="614" y="194" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">The workflow commits the new</text>
+  <text x="614" y="214" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">name to Pages. Data, never logic:</text>
+  <text x="614" y="234" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">names, prices and links, each</text>
+  <text x="614" y="254" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">checked against a fixed shape.</text>
 
-  <path d="M748 68 H 816" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <rect x="888" y="128" width="264" height="152" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <circle class="ripple" cx="1120" cy="158" r="14" fill="#34A853"/>
+  <text x="910" y="164" font-family="Google Sans, Arial, sans-serif" font-size="18" font-weight="500" fill="#0D652D">Every installed copy</text>
+  <text x="910" y="194" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">Fetched at startup and every six</text>
+  <text x="910" y="214" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">hours. The new model comes in at</text>
+  <text x="910" y="234" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">the next handover, mid-run, with</text>
+  <text x="910" y="254" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">nobody updating anything.</text>
 
-  <rect x="824" y="16" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="848" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Only &ldquo;gone&rdquo; counts</text>
-  <text x="848" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a network blip at 03:00 must not read</text>
-  <text x="848" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">as Google retiring a preview</text>
+  <path d="M24 314 H 1128" stroke="#DADCE0" stroke-width="2"/>
+  <path d="M272 309 l9 5 -9 5z" fill="#5F6368"/>
+  <path d="M568 309 l9 5 -9 5z" fill="#5F6368"/>
+  <path d="M864 309 l9 5 -9 5z" fill="#5F6368"/>
+  <circle class="travel" cx="24" cy="314" r="7" fill="#34A853" style="--run: 1104px"/>
 
-  <path d="M988 128 V 200" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
-
-  <rect x="824" y="216" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="848" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">docs/config.json</text>
-  <text x="848" y="282" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a commit to main, live in a minute, on</text>
-  <text x="848" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the same Pages site as the user guide</text>
-
-  <path d="M816 268 H 748" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
-
-  <rect x="412" y="216" width="328" height="104" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <circle class="ripple" cx="704" cy="248" r="16" fill="#34A853"/>
-  <text x="436" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Every installed copy</text>
-  <text x="436" y="282" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">picks the correction up within six hours,</text>
-  <text x="436" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">with nobody updating anything</text>
-
-  <path d="M404 268 H 336" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
-
-  <rect x="0" y="216" width="328" height="104" rx="10" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
-  <text x="24" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#B06000">Data, never logic</text>
-  <text x="24" y="282" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">model names, prices, versions and links,</text>
-  <text x="24" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">each checked against a fixed shape</text>
+  <path class="dashflow" d="M1128 314 V 358 H 24 V 288" fill="none" stroke="#8AB4F8" stroke-width="2" marker-end="url(#s10-arwb)"/>
+  <text x="576" y="388" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">Every hour, whether or not anything has changed. The build knows how to ask; it does not know the answer.</text>
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Two facts this build does not own: which Live models exist, and what they cost. A preview
-  gets two weeks' notice, and a store review can take longer than that. So an hourly job asks
-  the API which models still answer, and a daily one hunts for the replacement. When one is
-  really gone it rewrites a small JSON file on Pages, and every installed copy picks it up
-  within six hours. Data, never logic.</div>
+  <div class="notes">Which Live models exist is not something this build gets to own. A preview retires on two
+  weeks&rsquo; notice, and a store review can take longer than that, so a hard-coded model name is an
+  outage with a date on it. Instead: every hour a GitHub Action asks the API whether the model
+  still answers, and a daily one goes looking for the successor. When one is really gone it
+  commits the new name to a JSON file on Pages. Every installed copy fetches that, and moves
+  across at its next session handover, mid-run, with nobody updating anything.</div>
 </section>
 
 <!-- ══════════════ 11 · TEST RESULTS ══════════════ -->
@@ -906,6 +943,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <path class="playtri" d="M8.5 5.5 18 12l-9.5 6.5z" fill="currentColor"/>
     <path class="pausebars" d="M8 5.5h3v13H8zm5 0h3v13h-3z" fill="currentColor"/>
   </svg>
+  <span class="lbl">Play narration</span>
+  <span class="time">0:00 / 0:00</span>
 </button>
 </div></div>
 
@@ -933,9 +972,37 @@ table.t .ok { color: var(--green); font-weight: 700; }
   const voice = new Audio();
   voice.preload = 'none';                                    // no 404 storm before the first press
   const clips = [...document.querySelectorAll('.slide video')];
+  const voLbl = voBtn.querySelector('.lbl');
+  const voTime = voBtn.querySelector('.time');
   let playing = false;
 
+  // The MP3s are recorded at this speed already (tools/slide-voice.mjs --rate);
+  // the clips are not, and they carry a voice of their own. Speeding them up to
+  // match keeps one pace across the deck instead of two.
+  const RATE = 1.15;
+  clips.forEach(v => { v.defaultPlaybackRate = RATE; v.playbackRate = RATE; });
+
   const media = () => slides[cur].querySelector('video') || voice;
+
+  const mmss = t => (Number.isFinite(t) && t > 0
+    ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0')
+    : '0:00');
+
+  /** Seconds of wall clock, not of media: a clip run at 1.15x is over sooner. */
+  function voClock() {
+    const m = media(), rate = m.playbackRate || 1;
+    voTime.textContent = mmss(m.currentTime / rate) + ' / ' + mmss(m.duration / rate);
+  }
+
+  /** The button says what pressing it will do, and to what. */
+  function voLabel() {
+    if (voBtn.classList.contains('off')) { voLbl.textContent = 'No narration'; return; }
+    const what = slides[cur].querySelector('video') ? 'demo' : 'narration';
+    const verb = playing ? 'Pause' : 'Play';
+    voLbl.textContent = verb + ' ' + what;
+    voBtn.setAttribute('aria-label', verb + ' the ' + what + ' for this slide');
+    voBtn.title = verb + ' the ' + what + ' (p)';
+  }
 
   function voLoad() {
     voice.pause();
@@ -944,15 +1011,20 @@ table.t .ok { color: var(--green); font-weight: 700; }
     if (clip) clip.currentTime = 0;                          // re-entering a slide replays it
     else voice.src = 'audio/slide-' + String(cur + 1).padStart(2, '0') + '.mp3';
     voBtn.classList.remove('off');
+    voClock();
+    voLabel();
   }
 
   function voPlay() {
     playing = true;
-    media().play().then(() => voBtn.classList.add('playing')).catch(() => {
+    voBtn.classList.add('playing');
+    voLabel();
+    media().play().catch(() => {
       // Autoplay is refused until the page has had a click or a keypress. The
       // media is fine; leave the button ready rather than claiming otherwise.
       playing = false;
       voBtn.classList.remove('playing');
+      voLabel();
     });
   }
 
@@ -960,6 +1032,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
     playing = false;
     media().pause();
     voBtn.classList.remove('playing');
+    voLabel();
   }
 
   // No recording for this slide yet, or a file:// URL Chrome will not fetch
@@ -969,6 +1042,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
     voBtn.classList.remove('playing');
     voBtn.classList.add('off');
     voBtn.title = 'No narration for this slide';
+    voBtn.setAttribute('aria-label', 'No narration for this slide');
+    voTime.textContent = '0:00 / 0:00';
+    voLabel();
   }
 
   function voEnded() {
@@ -979,6 +1055,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   voice.addEventListener('error', voMissing);
   voice.addEventListener('ended', voEnded);
   clips.forEach(v => v.addEventListener('ended', voEnded));
+  for (const ev of ['timeupdate', 'loadedmetadata', 'durationchange']) {
+    voice.addEventListener(ev, voClock);
+    clips.forEach(v => v.addEventListener(ev, voClock));
+  }
   voBtn.addEventListener('click', () => (playing ? voPause() : voPlay()));
 
   // Page numbers are assigned from document order, so reordering slides can't
@@ -995,7 +1075,6 @@ table.t .ok { color: var(--green); font-weight: 700; }
     history.replaceState(null, '', '#' + (cur + 1));
     const note = slides[cur].querySelector('.notes');
     notesEl.innerHTML = note ? note.innerHTML : '<i style="color:#9AA0A6">No notes for this slide.</i>';
-    voBtn.title = 'Play the narration (p)';
     voLoad();
     // A demo slide starts itself: arriving on one is the cue to run the demo,
     // whether or not the narration was running when you got here.
