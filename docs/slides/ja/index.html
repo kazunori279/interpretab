@@ -871,8 +871,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
       </svg></div>
       <div class="ct"><a href="https://developer.mozilla.org/ja/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">1006</a>、理由なし</div><div class="cr"></div>
-      <div class="cb">キーの誤り、使い切った quota、キャプティブポータル。どれも同じ閉じかたをする。区別できたら、
-      ページがクロスオリジンの oracle になってしまう。</div>
+      <div class="cb">キーの誤り、使い切った quota、キャプティブポータル。どれも同じ閉じかた。区別できると、
+      どのページもエラーからよそのサーバを覗けてしまう。</div>
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -906,8 +906,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
   深夜であって、4 秒後ではない。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes">WebSocket の upgrade が断られたとき、その理由はブラウザには知らされません。キーが違う、
-  quota を使い切った、ホテルの Wi-Fi。全部おなじ空っぽの close です。しかもこれは意図的で、でないとページが
-  oracle になってしまう。だから同じことを先に HTTP で訊きます。あちらならステータスコードが返ってくる。
+  quota を使い切った、ホテルの Wi-Fi。全部おなじ空っぽの close です。しかもこれは意図的で、理由まで返してしまうと、
+  どのページからでも社内のサーバに接続を試して、返ってきたエラーの違いから何が動いているか分かってしまう。
+  だから同じことを先に HTTP で訊きます。あちらならステータスコードが返ってくる。
   それと、判定はリトライしない。使い切った quota が戻るのは深夜であって、4 秒後ではありません。</div>
 </section>
 

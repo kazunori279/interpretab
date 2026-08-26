@@ -40,9 +40,9 @@
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-10.mp3": {
-    "hash": "8b52058c4dae19b2",
-    "words": 67,
-    "seconds": 19.9,
+    "hash": "d1e64d7d4c72f401",
+    "words": 90,
+    "seconds": 24.2,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"

@@ -859,8 +859,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
       </svg></div>
       <div class="ct"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">1006</a>, no reason</div><div class="cr"></div>
-      <div class="cb">A bad key, a spent quota and a captive portal all close the same way. Telling the
-      page apart would make it a cross-origin oracle.</div>
+      <div class="cb">A bad key, a spent quota and a captive portal all close the same way. If the browser
+      said which, any page could probe your network and read the answer off the error.</div>
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -894,8 +894,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   quota comes back at midnight Pacific, not in four seconds.</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
   <div class="notes">When a WebSocket upgrade gets refused, the browser is never told why. Bad key, spent quota,
-  hotel wifi: all the same blank close. And that is on purpose, because otherwise the page
-  becomes an oracle. So we ask the same question over HTTP first, where you get a status code.
+  hotel wifi: all the same blank close. And that is on purpose. If the browser explained the
+  failure, any page could try connecting to your router, or to your company intranet, and work
+  out what is running there from the error alone. So we ask the same question over HTTP first,
+  where you get a status code.
   And do not retry a verdict. A spent quota comes back at midnight, not in four seconds.</div>
 </section>
 
