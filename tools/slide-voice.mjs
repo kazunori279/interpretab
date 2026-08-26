@@ -6,6 +6,7 @@
  *     node tools/slide-voice.mjs <key-file> --force      # all of them again
  *     node tools/slide-voice.mjs <key-file> --only 7,10  # just these slides
  *     node tools/slide-voice.mjs <key-file> --dry        # print the scripts, call nothing
+ *     node tools/slide-voice.mjs <key-file> --rate 1     # at the model's own pace
  *
  * **The deck is the script.** Each slide's `<div class="notes">` is both what
  * the presenter reads on the `n` panel and what this file sends to the model,
@@ -13,6 +14,10 @@
  * slide is re-recorded. `audio/manifest.json` keeps a hash of the text each
  * MP3 was made from, which is also what stops a stale recording from surviving
  * a rewrite unnoticed.
+ *
+ * A slide whose note is `class="notes silent"` gets no recording: the demo
+ * slides play a video that already talks. They still take up their slide
+ * number, so slide seven is always `slide-07.mp3`.
  *
  * **The key goes in a header, not the URL.** Unlike the Live API, which takes
  * it as a query parameter, `generateContent` accepts `x-goog-api-key`. Nothing
@@ -25,7 +30,10 @@
  *
  * The model returns headerless 16-bit PCM at 24 kHz. `ffmpeg` turns that into
  * an MP3 because the alternative is about twenty megabytes of WAV in a
- * repository that otherwise ships a 220 KB extension.
+ * repository that otherwise ships a 220 KB extension. `ffmpeg` also does the
+ * final speed-up: the API has no speaking-rate parameter, and asking the model
+ * in prose for a faster read gets you a different performance every time
+ * rather than a fixed ratio.
  */
 
 import fs from "node:fs";
@@ -45,22 +53,26 @@ const REST = "https://generativelanguage.googleapis.com/v1beta/models";
 /** Newest TTS preview at the time of writing; `--model` overrides it. */
 const MODEL = argOf("--model", "gemini-3.1-flash-tts-preview");
 
-/**
- * "Charon — Informative". A conference talk wants someone explaining a thing
- * they built, not a trailer voice, and the upbeat voices oversell it.
- */
-const VOICE = argOf("--voice", "Charon");
+/** "Puck — Upbeat". A five-minute slot wants someone who sounds glad to be there. */
+const VOICE = argOf("--voice", "Puck");
 
 /**
- * How the delivery is steered. Kept short: the same guidance warns that
+ * Playback speed applied after synthesis. 1.3 fits the deck into the slot and
+ * still reads as a person talking; much past 1.4 and the consonants smear.
+ */
+const RATE = Number(argOf("--rate", "1.3"));
+if (!(RATE >= 0.5 && RATE <= 2)) throw new Error(`--rate must be between 0.5 and 2, got ${RATE}`);
+
+/**
+ * How the delivery is steered. Kept short: Google's guidance warns that
  * over-specifying flattens the performance.
  */
 const DIRECTION = [
   "Synthesize speech for the transcript below. Read only the transcript.",
   "",
-  "Style: an engineer presenting a side project to other engineers at a meetup.",
-  "Warm, unhurried, matter-of-fact, faintly amused. No announcer polish, no sell.",
-  "Pace: conversational. Land the full stops. Let numbers breathe.",
+  "Style: an engineer showing other engineers a side project they enjoyed building.",
+  "Casual, quick, friendly. Talking, not presenting. No announcer polish, no sell.",
+  "Pace: brisk, the way you talk when you have five minutes and like the topic.",
   "",
   "TRANSCRIPT:",
 ].join("\n");
@@ -68,23 +80,26 @@ const DIRECTION = [
 /** The model drops an audio token every so often and the request 500s. */
 const ATTEMPTS = 4;
 
-/** Slide narration, in document order. */
+/** Slide narration, in document order. `null` where the slide speaks for itself. */
 export function scriptsFrom(html) {
-  return [...html.matchAll(/<div class="notes">([\s\S]*?)<\/div>/g)].map(([, body]) =>
-    body
-      .replace(/<[^>]+>/g, "")
-      .replace(/&mdash;/g, "—")
-      .replace(/&middot;/g, "·")
-      .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
-      .replace(/\s+/g, " ")
-      .trim(),
+  return [...html.matchAll(/<div class="notes( silent)?">([\s\S]*?)<\/div>/g)].map(([, silent, body]) =>
+    silent
+      ? null
+      : body
+          .replace(/<[^>]+>/g, "")
+          .replace(/&mdash;/g, "—")
+          .replace(/&middot;/g, "·")
+          .replace(/&nbsp;/g, " ")
+          .replace(/&amp;/g, "&")
+          .replace(/\s+/g, " ")
+          .trim(),
   );
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const digest = (text) => createHash("sha256").update(`${MODEL}\n${VOICE}\n${text}`).digest("hex").slice(0, 16);
+const digest = (text) =>
+  createHash("sha256").update(`${MODEL}\n${VOICE}\n${RATE}\n${text}`).digest("hex").slice(0, 16);
 
 /** One `generateContent` call. Returns the PCM and the rate the model tagged it with. */
 async function speak(key, text) {
@@ -114,17 +129,23 @@ async function speak(key, text) {
   return { pcm: Buffer.from(part.inlineData.data, "base64"), rate };
 }
 
-/** Headerless PCM in, MP3 on disk. 64 kbps mono is transparent enough for speech. */
+/**
+ * Headerless PCM in, MP3 on disk. 64 kbps mono is transparent enough for
+ * speech. `atempo` changes the speed without moving the pitch, so the voice
+ * still sounds like the same person; it only accepts 0.5 to 2, which is well
+ * outside anything worth listening to anyway.
+ */
 function encode(pcm, rate, file) {
+  const filter = RATE === 1 ? [] : ["-filter:a", `atempo=${RATE}`];
   execFileSync(
     "ffmpeg",
     ["-hide_banner", "-loglevel", "error", "-y", "-f", "s16le", "-ar", String(rate), "-ac", "1",
-     "-i", "pipe:0", "-codec:a", "libmp3lame", "-b:a", "64k", file],
+     "-i", "pipe:0", ...filter, "-codec:a", "libmp3lame", "-b:a", "64k", file],
     { input: pcm },
   );
 }
 
-const seconds = (pcm, rate) => pcm.length / 2 / rate;
+const seconds = (pcm, rate) => pcm.length / 2 / rate / RATE;
 
 async function main() {
   const scripts = scriptsFrom(fs.readFileSync(DECK, "utf8"));
@@ -141,15 +162,32 @@ async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   const manifest = fs.existsSync(MANIFEST) ? JSON.parse(fs.readFileSync(MANIFEST, "utf8")) : {};
 
+  // A slide that used to talk and now does not would otherwise keep its old
+  // recording, and the deck would happily play it over the new one.
+  const live = new Set(scripts.map((text, i) => (text === null ? null : `slide-${String(i + 1).padStart(2, "0")}.mp3`)));
+  if (!dry) {
+    for (const name of Object.keys(manifest)) {
+      if (live.has(name)) continue;
+      fs.rmSync(path.join(OUT, name), { force: true });
+      delete manifest[name];
+      console.log(`   ${name} removed`);
+    }
+  }
+
   let spoken = 0;
   for (const [i, text] of scripts.entries()) {
     const n = i + 1;
     const name = `slide-${String(n).padStart(2, "0")}.mp3`;
     const file = path.join(OUT, name);
+
+    if (wanted && !wanted.has(n)) continue;
+    if (text === null) {
+      console.log(`${String(n).padStart(2)}  silent, the slide plays a clip`);
+      continue;
+    }
     const hash = digest(text);
     const words = text.split(/\s+/).length;
 
-    if (wanted && !wanted.has(n)) continue;
     if (dry) {
       console.log(`${String(n).padStart(2)}  ${words} words  ${text}`);
       continue;
@@ -172,7 +210,7 @@ async function main() {
     }
     encode(audio.pcm, audio.rate, file);
     const secs = seconds(audio.pcm, audio.rate);
-    manifest[name] = { hash, words, seconds: Number(secs.toFixed(1)), voice: VOICE, model: MODEL };
+    manifest[name] = { hash, words, seconds: Number(secs.toFixed(1)), voice: VOICE, rate: RATE, model: MODEL };
     fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
     console.log(`${String(n).padStart(2)}  ${words} words  ${secs.toFixed(1)}s  ${name}`);
     spoken++;
@@ -180,6 +218,7 @@ async function main() {
   }
 
   if (dry) return;
+  fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
   // Round first, or 359.9s prints as "5m 60s".
   const total = Math.round(Object.values(manifest).reduce((sum, m) => sum + (m.seconds || 0), 0));
   console.log(`\n${spoken} recorded, ${Math.floor(total / 60)}m ${total % 60}s of narration`);

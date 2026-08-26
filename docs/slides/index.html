@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interpretab — a live interpreter in a tab</title>
+<title>Interpretab: a live interpreter in a tab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Google+Sans+Text:ital,wght@0,400;0,500;0,700;1,400&family=Google+Sans+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -83,8 +83,8 @@ kbd { font-family: var(--mono); font-size: 11px; border: 1px solid #5F6368;
 
 /* ---------- narration control ----------
    One button inside #frame rather than one per slide: it sits at the same
-   bottom-right corner on every slide, and there is only one audio element to
-   keep in step with it. */
+   bottom-right corner on every slide, and there is only one control to keep in
+   step with whichever element is speaking, the narration or a demo clip. */
 #vo { position: absolute; right: 64px; bottom: 58px; width: 44px; height: 44px; padding: 0;
       border: 1px solid var(--hairline); border-radius: 50%; background: var(--white);
       color: var(--blue); cursor: pointer; z-index: 20;
@@ -132,13 +132,30 @@ code, .code { font-family: var(--mono); font-size: .88em; background: var(--surf
 .cover .wordmark { position: absolute; left: 64px; bottom: 56px; font-size: 30px; }
 .cover .art { position: absolute; right: 24px; bottom: 36px; width: 528px; height: 528px; }
 
+/* ---------- demo slides ----------
+   The clip is the slide, so the title runs at 40px rather than the deck's 53
+   to buy back the height. 240 + 40 + 872 is exactly the 1152 content width,
+   and the clip stops 9px above the narration button. */
+.demo { padding: 56px 64px 56px; }
+.demo .h { font-size: 40px; }
+.demo .split { display: grid; grid-template-columns: 240px 872px; column-gap: 40px;
+               margin-top: 20px; align-items: start; }
+.demo .chips { display: flex; flex-direction: column; gap: 16px; }
+.demo .chip  { border: 1px solid var(--hairline); border-radius: 14px; padding: 13px 16px 14px; }
+.demo .chip .ct { font-size: 18px; font-weight: 500; margin-top: 8px; }
+.demo .chip .cb { font-family: var(--font-text); font-size: 13px; line-height: 1.5;
+                  color: var(--ink-2); margin-top: 5px; }
+.demo video { width: 872px; height: 490px; display: block; border-radius: 12px;
+              border: 1px solid var(--hairline); background: var(--ink); }
+
 /* ---------- break slide ---------- */
 .break { color: #fff; background: var(--blue); }
 .break .n    { font-size: 53px; font-weight: 500; }
 .break .name { margin-top: 56px; font-size: 53px; font-weight: 500; line-height: 1.08; max-width: 440px; }
 .break .rows { position: absolute; left: 596px; right: 64px; top: 190px; }
 .break .rows li { list-style: none; font-family: var(--font-text); font-size: 22px; font-weight: 700;
-                  padding: 18px 4px; border-bottom: 1px solid rgba(255,255,255,.55); }
+                  padding: 18px 4px; border-bottom: 1px solid rgba(255,255,255,.55);
+                  display: flex; align-items: center; gap: 18px; }
 .break .rows li:first-child { border-top: 1px solid rgba(255,255,255,.55); }
 
 /* ---------- cards ---------- */
@@ -154,7 +171,8 @@ code, .code { font-family: var(--mono); font-size: .88em; background: var(--surf
 .figure img { max-width: 100%; max-height: 100%; display: block; border-radius: 4px; }
 
 /* ---------- numbered items ---------- */
-.numbers .n  { font-size: 53px; font-weight: 500; color: var(--blue); line-height: 1; margin-bottom: 18px; }
+.numbers .n  { font-size: 53px; font-weight: 500; color: var(--blue); line-height: 1; margin-bottom: 6px; }
+.numbers .ni { height: 44px; display: flex; align-items: center; margin-bottom: 10px; }
 .numbers p   { font-family: var(--font-text); font-size: 20px; line-height: 1.55; }
 
 /* ---------- tables ---------- */
@@ -180,18 +198,28 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
 /* ---------- motion ----------
    Only the visible slide animates, so a deck left open on a laptop is not
-   spinning fifteen hidden diagrams at once. */
-@keyframes deck-dash  { to { stroke-dashoffset: -24; } }
-@keyframes deck-pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
-@keyframes deck-bar   { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+   spinning a dozen hidden diagrams at once. */
+@keyframes deck-dash   { to { stroke-dashoffset: -24; } }
+@keyframes deck-pulse  { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes deck-bar    { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+@keyframes deck-ripple { 0% { transform: scale(.35); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes deck-spin   { to { transform: rotate(360deg); } }
+@keyframes deck-slide  { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
 .slide.active .dashflow { stroke-dasharray: 6 6; animation: deck-dash 1.1s linear infinite; }
 .slide.active .pulse    { animation: deck-pulse 1.8s ease-in-out infinite; }
-/* transform-box defaults to view-box in SVG, which would scale each bar about
-   the middle of the whole diagram. fill-box pins it to the bar itself. */
-.slide.active .bar      { transform-box: fill-box; transform-origin: center;
-                          animation: deck-bar 1s ease-in-out infinite; }
+/* transform-box defaults to view-box in SVG, which would scale each shape about
+   the middle of the whole diagram. fill-box pins it to the shape itself. */
+.slide.active .bar,
+.slide.active .ripple,
+.slide.active .spin,
+.slide.active .nudge    { transform-box: fill-box; transform-origin: center; }
+.slide.active .bar      { animation: deck-bar 1s ease-in-out infinite; }
+.slide.active .ripple   { animation: deck-ripple 2.2s ease-out infinite; }
+.slide.active .spin     { animation: deck-spin 7s linear infinite; }
+.slide.active .nudge    { animation: deck-slide 1.6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .slide.active .dashflow, .slide.active .pulse, .slide.active .bar { animation: none; }
+  .slide.active .dashflow, .slide.active .pulse, .slide.active .bar,
+  .slide.active .ripple, .slide.active .spin, .slide.active .nudge { animation: none; }
 }
 
 /* ---------- print / PDF export (Cmd-P → Save as PDF) ---------- */
@@ -233,340 +261,265 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <h1 class="disp">A live interpreter in a tab</h1>
   <div class="when">Interpretab &middot; a Chrome extension on the Gemini Live API</div>
   <div class="wordmark">Interpretab <span class="m">&middot; github.com/kazunori279/interpretab</span></div>
-  <div class="notes">Interpretab is a Chrome extension that interprets whatever a tab is playing, and your
-  microphone the other way. No server in the middle: the browser holds the connection, and
-  your own API key. Most of this talk is about what it took to keep that connection alive for
-  an hour.</div>
+  <div class="notes">Hi. This is Interpretab, a Chrome extension. It listens to whatever a tab is playing and
+  interprets it out loud, and it does your microphone the other way round. There is no server in
+  the middle: the browser holds the connection, and your own API key. Let me just show you.</div>
 </section>
 
-<!-- ══════════════ 2 · WHAT IT DOES ══════════════ -->
+<!-- ══════════════ 2 · DEMO, TAB ══════════════ -->
+<section class="slide demo">
+  <div class="h">Demo: translating a tab</div>
+  <div class="split">
+    <div class="chips">
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="4" y="9" width="40" height="30" rx="4" stroke="#4285F4" stroke-width="2.5"/>
+          <path d="M4 17h40" stroke="#4285F4" stroke-width="2.5"/>
+          <circle cx="9.5" cy="13" r="1.4" fill="#4285F4"/><circle cx="14.5" cy="13" r="1.4" fill="#4285F4"/>
+          <path class="pulse" d="M20 22.5 32 28.5 20 34.5z" fill="#4285F4"/>
+        </svg>
+        <div class="ct">Any tab</div>
+        <div class="cb">A video, a webinar, a podcast. The source language is detected, not declared.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M9 19h7l9-7v24l-9-7H9z" stroke="#34A853" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle class="ripple" cx="29" cy="24" r="8" stroke="#34A853" stroke-width="2.5" fill="none"/>
+          <circle class="ripple" cx="29" cy="24" r="8" stroke="#34A853" stroke-width="2.5" fill="none" style="animation-delay:1.1s"/>
+        </svg>
+        <div class="ct">Spoken</div>
+        <div class="cb">The translation out loud, with the original ducked to 15% underneath it.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="4" y="10" width="40" height="28" rx="4" stroke="#FBBC05" stroke-width="2.5"/>
+          <path class="nudge" d="M11 22h16" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round"/>
+          <path class="nudge" d="M11 29h26" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round" style="animation-delay:.5s"/>
+        </svg>
+        <div class="ct">Subtitled</div>
+        <div class="cb">Three rolling lines on the page itself, plus a transcript in the side panel.</div>
+      </div>
+    </div>
+    <video src="video/demo-tab.mp4" poster="video/demo-tab.jpg" preload="none" playsinline
+           aria-label="A Japanese conference talk playing in a tab, spoken in English and subtitled on the page, then the same talk subtitled in Chinese"></video>
+  </div>
+  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
+  <div class="notes silent">The clip runs itself. Point at the subtitle line first, then at the transcript in the
+  panel, then at the language picker when it switches to Chinese.</div>
+</section>
+
+<!-- ══════════════ 3 · DEMO, VOICE ══════════════ -->
+<section class="slide demo">
+  <div class="h">Demo: translating your voice</div>
+  <div class="split">
+    <div class="chips">
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="18" y="6" width="12" height="21" rx="6" stroke="#4285F4" stroke-width="2.5"/>
+          <path d="M12 22a12 12 0 0 0 24 0M24 34v8m-6 0h12" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+          <circle class="ripple" cx="24" cy="16" r="14" stroke="#4285F4" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="ct">Your voice</div>
+        <div class="cb">Picked up as you speak, and interpreted while the sentence is still going.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path class="nudge" d="M8 18h28l-6-6m6 6-6 6" stroke="#34A853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="nudge" d="M40 32H12l6-6m-6 6 6 6" stroke="#34A853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/>
+        </svg>
+        <div class="ct">Two-way</div>
+        <div class="cb">Both halves of a conversation in one panel, each in the other person's language.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="4" y="13" width="27" height="22" rx="4" stroke="#FBBC05" stroke-width="2.5"/>
+          <path d="M31 22l11-6v16l-11-6z" stroke="#FBBC05" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle class="pulse" cx="17.5" cy="24" r="4.5" fill="#FBBC05"/>
+        </svg>
+        <div class="ct">Into the call</div>
+        <div class="cb">Meet lists Interpretab as a microphone, so the far end hears your language.</div>
+      </div>
+    </div>
+    <video src="video/demo-voice.mp4" poster="video/demo-voice.jpg" preload="none" playsinline
+           aria-label="The microphone direction: a sentence spoken in English, interpreted into Japanese, then the two-way conversation mode with both languages subtitled"></video>
+  </div>
+  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
+  <div class="notes silent">Second half is the two-way mode: one panel, two languages, and it works out which
+  direction each sentence is going.</div>
+</section>
+
+<!-- ══════════════ 4 · DEMO, COST ══════════════ -->
+<section class="slide demo">
+  <div class="h">Demo: what it costs</div>
+  <div class="split">
+    <div class="chips">
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="15" cy="24" r="9" stroke="#4285F4" stroke-width="2.5"/>
+          <path class="nudge" d="M24 24h19m-4 0v7m-6-7v5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div class="ct">Your own key</div>
+        <div class="cb">From AI Studio. It stays in the browser and goes nowhere but Google's API.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M7 33a18 18 0 1 1 34 0" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
+          <path class="nudge" d="M24 33 34 20" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="33" r="2.6" fill="#34A853"/>
+        </svg>
+        <div class="ct">A meter, live</div>
+        <div class="cb">Minutes elapsed and what the run has spent, updating while it runs.</div>
+      </div>
+      <div class="chip">
+        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M25 6H9a3 3 0 0 0-3 3v16l17 17a3 3 0 0 0 4.2 0l12.8-12.8a3 3 0 0 0 0-4.2z"
+                stroke="#FBBC05" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle class="pulse" cx="15" cy="15" r="3.2" fill="#FBBC05"/>
+        </svg>
+        <div class="ct">Free tier first</div>
+        <div class="cb">And a paid key is billed to the person using it. None of it rolls up to me.</div>
+      </div>
+    </div>
+    <video src="video/demo-cost.mp4" poster="video/demo-cost.jpg" preload="none" playsinline
+           aria-label="The Gemini API pricing page for the live translation model, then the extension's Chrome Web Store listing"></video>
+  </div>
+  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
+  <div class="notes silent">Prices move; the extension reads them from a file rather than shipping them. That is
+  slide ten.</div>
+</section>
+
+<!-- ══════════════ 5 · ARCHITECTURE ══════════════ -->
 <section class="slide">
-  <div class="h">What it does</div>
-  <div class="hsub">Two directions. Either can be switched off, and both can run at once.</div>
-  <div class="diagram" style="margin-top:36px;">
-<svg viewBox="0 0 1152 344" width="100%" aria-label="Tab audio and microphone audio both enter Interpretab, which speaks the translation, draws subtitles on the page, and can feed a Meet call">
+  <div class="h">Architecture</div>
+  <div class="diagram" style="margin-top:32px;">
+<svg viewBox="0 0 1152 448" width="100%" aria-label="Web Audio captures the tab and the microphone into three AudioContexts inside one offscreen document, one WebSocket per direction carries the audio to the Gemini Live API, and the translated speech comes back to the speakers, the subtitles and the call">
   <defs>
-    <marker id="s02-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s05-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
-    <path id="s02-in1" d="M256 64 H 332"/>
-    <path id="s02-in2" d="M256 280 H 332"/>
-  </defs>
-
-  <rect x="0" y="16" width="248" height="96" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="124" y="56" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">A tab, playing</text>
-  <text x="124" y="80" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a video, a webinar, a call</text>
-
-  <rect x="0" y="232" width="248" height="96" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="124" y="272" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Your microphone</text>
-  <text x="124" y="296" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">you, as you speak</text>
-
-  <use href="#s02-in1" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s02-arw)"/>
-  <use href="#s02-in2" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s02-arw)"/>
-  <circle r="4.5" fill="#4285F4"><animateMotion dur="2.2s" repeatCount="indefinite"><mpath href="#s02-in1"/></animateMotion></circle>
-  <circle r="4.5" fill="#4285F4"><animateMotion dur="2.2s" begin="1.1s" repeatCount="indefinite"><mpath href="#s02-in2"/></animateMotion></circle>
-
-  <rect x="344" y="88" width="264" height="168" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="476" y="152" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">Interpretab</text>
-  <text x="476" y="180" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">two directions, two sockets</text>
-  <text x="476" y="202" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">straight to Gemini, no server</text>
-
-  <path d="M616 132 H 656 V 44 H 692" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s02-arw)"/>
-  <path d="M616 158 H 668 V 148 H 692" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s02-arw)"/>
-  <path d="M616 212 H 656 V 284 H 692" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s02-arw)"/>
-
-  <rect x="700" y="0" width="452" height="88" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="926" y="36" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Your speakers</text>
-  <text x="926" y="60" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">the translation, out loud</text>
-
-  <rect x="700" y="104" width="452" height="88" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="926" y="140" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Subtitles on the page</text>
-  <text x="926" y="164" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">and a transcript in the panel</text>
-
-  <rect x="700" y="240" width="452" height="88" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="926" y="276" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">The Meet call</text>
-  <text x="926" y="300" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">the far end hears your language</text>
-</svg>
-  </div>
-  <div class="fn">The source language is detected, not declared. Naming one up front is a promise a tab
-  cannot keep: a video cuts to a second speaker, a call hands over.</div>
-  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Two directions. Point it at a tab and it speaks the translation out loud, draws the sentence
-  on the page, and keeps a transcript. Point it at your microphone and the far end of a Meet
-  call hears your language instead of your voice. Either direction can be switched off, and
-  both can run at once.</div>
-</section>
-
-<!-- ══════════════ 3 · THE THREE MOVING PARTS ══════════════ -->
-<section class="slide">
-  <div class="h">The three moving parts</div>
-  <div class="hsub">If Web Audio, WebSockets and the Live API are new to you, this is all of it.</div>
-  <div class="diagram" style="margin-top:30px;">
-<svg viewBox="0 0 1152 356" width="100%" aria-label="Web Audio captures sound into PCM frames, one WebSocket carries them to the Gemini Live API, and speech comes back over the same socket to the speakers and subtitles">
-  <defs>
-    <marker id="s03-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
-      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
+    <marker id="s05-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
     </marker>
-    <path id="s03-p1" d="M244 152 H 312"/>
-    <path id="s03-back" d="M1062 208 V 300 H 248"/>
-  </defs>
-
-  <text x="0" y="30" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368"><tspan font-weight="700" fill="#B06000">Web Audio</tspan> is a graph of nodes the browser runs off the main thread: capture, resample, duck, play.</text>
-  <text x="0" y="56" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368"><tspan font-weight="700" fill="#174EA6">A WebSocket</tspan> stays open and either end sends whenever it likes; no request sits there waiting for a response.</text>
-  <text x="0" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368"><tspan font-weight="700" fill="#0D652D">The Live API</tspan> takes that stream of audio and answers with a spoken one, plus a transcript of both sides.</text>
-
-  <rect x="0" y="104" width="236" height="96" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="118" y="144" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Tab or microphone</text>
-  <text x="118" y="168" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">whatever is making sound</text>
-
-  <use href="#s03-p1" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s03-arw)"/>
-  <circle r="4.5" fill="#FBBC05"><animateMotion dur="1.8s" repeatCount="indefinite"><mpath href="#s03-p1"/></animateMotion></circle>
-  <text x="278" y="134" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#B06000">Web Audio</text>
-
-  <rect x="320" y="104" width="236" height="96" rx="10" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
-  <text x="438" y="144" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#B06000">PCM frames</text>
-  <text x="438" y="168" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">16 kHz &middot; 32 ms each</text>
-
-  <path d="M564 152 H 636" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s03-arw)"/>
-  <text x="600" y="134" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">WebSocket</text>
-
-  <rect x="644" y="104" width="236" height="96" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="762" y="144" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">One open socket</text>
-  <text x="762" y="168" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">either end talks any time</text>
-
-  <path d="M888 152 H 960" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s03-arw)"/>
-
-  <rect x="968" y="104" width="184" height="96" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="1060" y="144" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live</text>
-  <text x="1060" y="168" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">translates as you speak</text>
-
-  <use href="#s03-back" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s03-arw)"/>
-  <circle r="4.5" fill="#34A853"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#s03-back"/></animateMotion></circle>
-  <text x="700" y="286" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">speech back, before the sentence has ended</text>
-
-  <rect x="0" y="252" width="236" height="96" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="118" y="292" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Speakers, subtitles</text>
-  <text x="118" y="316" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">and, on a call, the far end</text>
-</svg>
-  </div>
-  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Three pieces, if they are new to you. Web Audio is the browser's audio graph; it captures the
-  sound and resamples it. A WebSocket is a connection that stays open, so either end can send
-  whenever it likes. And the Live API takes that stream of audio and answers with a spoken
-  one, before the sentence has finished.</div>
-</section>
-
-<!-- ══════════════ 4 · WHAT IT LOOKS LIKE ══════════════ -->
-<section class="slide">
-  <div class="h">What it looks like</div>
-  <div class="rail" style="margin-top:36px;grid-template-columns:372px 1fr;">
-    <div class="body small">
-      <p>A Japanese talk in the tab, English out of the speakers, and the sentence on the page as it
-      is spoken.</p>
-      <p>The original drops to 15% under a translated voice, so the one you hear is the one you
-      understand.</p>
-      <p>The side panel keeps the transcript and a meter: minutes elapsed, and an estimate of what
-      this run has spent on your key.</p>
-    </div>
-    <div class="figure" style="height:412px;">
-      <img src="../assets/hero-tab-ja-en.png" alt="A Japanese video with an English subtitle overlaid on the page, and the Interpretab side panel showing the running transcript">
-    </div>
-  </div>
-  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Here is a Japanese talk playing in a tab, English coming out of the speakers, and the sentence
-  drawn on the page as it is spoken. The original drops to fifteen percent under a translated
-  voice. The side panel keeps the transcript and a meter: minutes elapsed, and what this run
-  has cost.</div>
-</section>
-
-<!-- ══════════════ 5 · TURNING IT ON ══════════════ -->
-<section class="slide">
-  <div class="h">Turning it on</div>
-  <div class="hsub">Three steps, and one of them is picking a language.</div>
-  <div class="grid c3" style="margin-top:44px;">
-    <div class="card">
-      <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <rect x="5" y="8" width="38" height="32" rx="4" stroke="#4285F4" stroke-width="2.5"/>
-        <path d="M5 17h38" stroke="#4285F4" stroke-width="2.5"/>
-        <path d="M24 22v11m0 0 4.5-4.5M24 33l-4.5-4.5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg></div>
-      <div class="ct">Add to Chrome</div><div class="cr"></div>
-      <div class="cb">One click from the Web Store. <b>220 KB zipped</b>, no dependencies, no build
-      step, no account to create.</div>
-    </div>
-    <div class="card">
-      <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <circle cx="15" cy="24" r="9" stroke="#FBBC05" stroke-width="2.5"/>
-        <path d="M24 24h19m-4 0v7m-6-7v5" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round"/>
-      </svg></div>
-      <div class="ct">Paste an API key</div><div class="cr"></div>
-      <div class="cb">Your own Gemini key, from AI Studio. It stays in the browser and is used
-      <b>nowhere but Google's API</b>.</div>
-    </div>
-    <div class="card">
-      <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <circle cx="24" cy="24" r="17" stroke="#34A853" stroke-width="2.5"/>
-        <path d="M20 17.5 32 24l-12 6.5z" stroke="#34A853" stroke-width="2.5" stroke-linejoin="round"/>
-      </svg></div>
-      <div class="ct">Pick a language, Start</div><div class="cr"></div>
-      <div class="cb">Click the toolbar icon on the tab you want, choose the target language, press
-      <b>Start</b>. 78 of them on the tab side.</div>
-    </div>
-  </div>
-  <div class="fn">The free tier covers a good deal of listening, and the meter says what a paid key is
-  spending while the run goes. It is billed to the user's own account; none of the usage rolls up to
-  this extension anywhere.</div>
-  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Three steps. Install it from the Web Store; the whole thing is two hundred and twenty
-  kilobytes. Paste your own Gemini key, which never leaves the browser. Then pick a target
-  language and press Start. Seventy-eight languages on the tab side.</div>
-</section>
-
-<!-- ══════════════ 6 · ONE SOCKET, NO SERVER ══════════════ -->
-<section class="slide">
-  <div class="h">One socket, no server</div>
-  <div class="diagram" style="margin-top:40px;">
-<svg viewBox="0 0 1152 380" width="100%" aria-label="Inside Chrome the service worker, side panel and content script all talk to the offscreen document, which holds one WebSocket per direction to the Gemini Live API">
-  <defs>
-    <marker id="s06-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
-      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
+    <marker id="s05-arwg" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#34A853"/>
     </marker>
+    <path id="s05-out"  d="M492 240 H 848"/>
+    <path id="s05-back" d="M848 288 H 492"/>
   </defs>
 
-  <text x="0" y="16" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">The user's browser</text>
-  <rect x="0" y="24" width="768" height="332" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
-
-  <rect x="28" y="56" width="316" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="48" y="88" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">service-worker.js</text>
-  <text x="48" y="112" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">switchboard: no audio, no socket</text>
-
-  <rect x="28" y="148" width="316" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="48" y="180" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">sidepanel.js</text>
-  <text x="48" y="204" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">controls, transcript, the cost meter</text>
-
-  <rect x="28" y="240" width="316" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="48" y="272" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">content/captions.js</text>
-  <text x="48" y="296" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">subtitles, in a closed shadow root</text>
-
-  <path d="M352 94 H 392" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
-  <path d="M352 186 H 392" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
-  <path d="M352 278 H 392" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
-
-  <rect x="400" y="56" width="336" height="260" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="568" y="106" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">offscreen.js, the engine</text>
-  <text x="568" y="150" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">every MediaStream</text>
-  <text x="568" y="176" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">three AudioContexts</text>
-  <text x="568" y="202" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">one WebSocket per direction</text>
-  <text x="568" y="228" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">the last 200 transcript lines</text>
-  <text x="568" y="274" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#174EA6">a lifetime of its own</text>
-
-  <path d="M744 186 H 852" stroke="#4285F4" stroke-width="2.4" marker-end="url(#s06-arw)"/>
-  <circle cx="798" cy="162" r="5" fill="#34A853" class="pulse"/>
-  <text x="798" y="148" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#80868B">wss://</text>
-  <text x="798" y="212" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#80868B">the user's key</text>
-
-  <rect x="864" y="136" width="288" height="100" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="1008" y="178" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
-  <text x="1008" y="202" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">generativelanguage.googleapis.com</text>
-</svg>
-  </div>
-  <div class="fn">An MV3 service worker is torn down after about 30 seconds idle, and a side panel dies
-  when it closes; neither can hold a capture. An offscreen document outlives both, which removes the
-  need for any keepalive hack. It also gets <code>chrome.runtime</code> and nothing else: no
-  <code>chrome.storage</code>, no <code>chrome.tabs</code>.</div>
-  <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">An offscreen document holds all of it. Chrome tears the service worker down after about thirty
-  seconds idle, and the side panel dies when you close it, so neither one can hold an audio
-  capture. The offscreen document outlives both, and owns every media stream, the audio graph,
-  and one socket per direction. No server anywhere in this picture.</div>
-</section>
-
-<!-- ══════════════ 7 · THREE AUDIOCONTEXTS ══════════════ -->
-<section class="slide">
-  <div class="h">Three AudioContexts, shared by rate</div>
-  <div class="diagram" style="margin-top:36px;">
-<svg viewBox="0 0 1152 360" width="100%" aria-label="Tab audio passes through ctxPass and a ducking gain to the speakers and is also downsampled by ctxUp for the two sessions; the returning speech goes through ctxDown to the speakers">
-  <defs>
-    <marker id="s07-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
-      <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
-    </marker>
-  </defs>
-
-  <rect x="0" y="32" width="180" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="90" y="64" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Tab audio</text>
-  <text x="90" y="88" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">48 kHz, as captured</text>
-
-  <rect x="0" y="264" width="180" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="90" y="296" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Microphone</text>
-  <text x="90" y="320" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">you, as you speak</text>
-
-  <path d="M188 70 H 244" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-  <path d="M90 108 V 184 H 244" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-  <path d="M188 302 H 212 V 214 H 244" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-
-  <rect x="252" y="32" width="192" height="76" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="348" y="64" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">ctxPass</text>
-  <text x="348" y="88" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the tab's own rate</text>
-
-  <path d="M452 70 H 488" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-
-  <rect x="496" y="32" width="192" height="76" rx="10" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
-  <text x="592" y="64" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#B06000">duckGain</text>
-  <text x="592" y="88" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#B06000">15% under a voice</text>
-
-  <rect x="252" y="152" width="192" height="88" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="348" y="188" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">ctxUp &middot; 16 kHz</text>
-  <text x="348" y="212" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">recorder worklet</text>
-
-  <path d="M452 196 H 488" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-
-  <rect x="496" y="152" width="192" height="88" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
-  <text x="592" y="188" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Two sessions</text>
-  <text x="592" y="212" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">one per direction</text>
-
-  <path d="M696 196 H 732" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-
-  <rect x="740" y="152" width="192" height="88" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="836" y="188" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">ctxDown &middot; 24 kHz</text>
-  <text x="836" y="212" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">player worklet</text>
-
-  <path d="M696 70 H 1064 V 92" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-  <path d="M940 196 H 972" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s07-arw)"/>
-
-  <rect x="980" y="100" width="172" height="148" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <g transform="translate(1066 152)">
-    <rect class="bar" x="-24" y="-18" width="7" height="36" rx="3.5" fill="#8AB4F8" style="animation-delay:0s"/>
-    <rect class="bar" x="-11" y="-24" width="7" height="48" rx="3.5" fill="#4285F4" style="animation-delay:.18s"/>
-    <rect class="bar" x="2"   y="-20" width="7" height="40" rx="3.5" fill="#4285F4" style="animation-delay:.36s"/>
-    <rect class="bar" x="15"  y="-14" width="7" height="28" rx="3.5" fill="#8AB4F8" style="animation-delay:.54s"/>
+  <!-- primer: the three things a reader may not have met -->
+  <g>
+    <circle cx="14" cy="16" r="13" fill="#FEF7E0"/>
+    <path d="M8 16h4l3-4 3 8 3-4h3" stroke="#B06000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(-1 0)"/>
+    <text x="38" y="12" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="700" fill="#B06000">Web Audio</text>
+    <text x="38" y="34" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a graph of nodes the browser runs off the</text>
+    <text x="38" y="54" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">main thread: capture, resample, duck, play</text>
   </g>
-  <text x="1066" y="208" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Speakers</text>
-  <text x="1066" y="232" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">or a virtual cable</text>
+  <g>
+    <circle cx="410" cy="16" r="13" fill="#E8F0FE"/>
+    <path d="M404 12h9l-3-3m3 3-3 3M416 21h-9l3-3m-3 3 3 3" stroke="#174EA6" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="434" y="12" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="700" fill="#174EA6">WebSocket</text>
+    <text x="434" y="34" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">one connection that stays open, and either</text>
+    <text x="434" y="54" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">end sends whenever it likes</text>
+  </g>
+  <g>
+    <circle cx="806" cy="16" r="13" fill="#E6F4EA"/>
+    <path d="M800 20v-8m4 11V9m4 14V13m4 7v-6" stroke="#0D652D" stroke-width="2" stroke-linecap="round"/>
+    <text x="830" y="12" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="700" fill="#0D652D">Gemini Live API</text>
+    <text x="830" y="34" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">audio in, translated speech out, before the</text>
+    <text x="830" y="54" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">sentence being spoken has finished</text>
+  </g>
+
+  <!-- the browser boundary -->
+  <text x="0" y="108" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#80868B">Chrome &middot; one offscreen document owns every stream, every context and both sockets</text>
+  <rect x="0" y="116" width="812" height="320" rx="12" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
+
+  <rect x="20" y="144" width="152" height="62" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <text x="96" y="171" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">Tab audio</text>
+  <text x="96" y="191" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">48 kHz, as captured</text>
+
+  <rect x="20" y="220" width="152" height="62" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <text x="96" y="247" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#202124">Microphone</text>
+  <text x="96" y="267" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">you, as you speak</text>
+
+  <rect x="20" y="330" width="152" height="86" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <g transform="translate(96 356)">
+    <rect class="bar" x="-21" y="-13" width="6" height="26" rx="3" fill="#34A853" style="animation-delay:0s"/>
+    <rect class="bar" x="-9"  y="-17" width="6" height="34" rx="3" fill="#0D652D" style="animation-delay:.18s"/>
+    <rect class="bar" x="3"   y="-15" width="6" height="30" rx="3" fill="#0D652D" style="animation-delay:.36s"/>
+    <rect class="bar" x="15"  y="-10" width="6" height="20" rx="3" fill="#34A853" style="animation-delay:.54s"/>
+  </g>
+  <text x="96" y="391" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#0D652D">Speakers, page,</text>
+  <text x="96" y="409" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#0D652D">and the call</text>
+
+  <path d="M180 175 H 208" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <path d="M180 251 H 208" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+
+  <rect x="212" y="136" width="268" height="248" rx="12" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
+  <text x="346" y="164" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#B06000">Three AudioContexts</text>
+
+  <rect x="230" y="180" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
+  <text x="346" y="203" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxPass &middot; the tab's own rate</text>
+  <text x="346" y="223" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">straight through, ducked to 15%</text>
+
+  <rect x="230" y="244" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
+  <text x="346" y="267" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxUp &middot; 16 kHz</text>
+  <text x="346" y="287" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">recorder worklet, 32 ms frames</text>
+
+  <rect x="230" y="308" width="232" height="54" rx="9" fill="#FFFFFF" stroke="#FBBC05" stroke-width="1.4"/>
+  <text x="346" y="331" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="500" fill="#B06000">ctxDown &middot; 24 kHz</text>
+  <text x="346" y="351" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">player worklet, the voice coming back</text>
+
+  <text x="500" y="362" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#B06000">Shared by sample rate: Chrome caps a document at</text>
+  <text x="500" y="384" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#B06000">about six contexts, and one set per direction needs five.</text>
+
+  <path d="M230 335 H 96 V 322" fill="none" stroke="#34A853" stroke-width="1.8" marker-end="url(#s05-arwg)"/>
+
+  <use href="#s05-out"  stroke="#4285F4" stroke-width="2" fill="none" marker-end="url(#s05-arwb)"/>
+  <use href="#s05-back" stroke="#34A853" stroke-width="2" fill="none" marker-end="url(#s05-arwg)"/>
+  <use href="#s05-out"  class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s05-out"/></animateMotion></circle>
+  <circle r="5" fill="#34A853"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s05-back"/></animateMotion></circle>
+
+  <text x="670" y="222" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="15" font-weight="500" fill="#174EA6">One socket per direction</text>
+  <text x="670" y="312" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#80868B">wss://, carrying the user's own key</text>
+
+  <rect x="856" y="200" width="296" height="88" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <text x="1004" y="236" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
+  <text x="1004" y="262" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#0D652D">generativelanguage.googleapis.com</text>
+
+  <rect x="856" y="330" width="296" height="86" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
+  <g transform="translate(890 373)">
+    <rect x="-14" y="-16" width="28" height="10" rx="2" stroke="#EA4335" stroke-width="2" fill="none"/>
+    <rect x="-14" y="-5"  width="28" height="10" rx="2" stroke="#EA4335" stroke-width="2" fill="none"/>
+    <path d="M-19 10 19-20" stroke="#EA4335" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+  <text x="924" y="367" font-family="Google Sans, Arial, sans-serif" font-size="16" font-weight="500" fill="#202124">No server of mine</text>
+  <text x="924" y="389" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">nothing to run, nothing to pay for,</text>
+  <text x="924" y="407" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">and no key of mine to leak</text>
 </svg>
   </div>
-  <div class="fn">Chrome caps a document at around six AudioContexts and a per-direction layout needs
-  five, so they are shared by sample rate instead. <code>ctxPass</code> stays at the tab's native rate
-  on purpose: pushing 48 kHz through the 24 kHz player context resamples it down and audibly dulls
-  anything musical.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Chrome caps a document at around six AudioContexts, and a layout with one set per direction
-  needs five. So they are shared by sample rate instead: one at the tab's own rate for
-  pass-through, one at sixteen kilohertz for capture, one at twenty-four for playback. The
-  pass-through context stays native on purpose, because resampling it down audibly dulls
-  anything musical.</div>
+  <div class="notes">Okay, the shape of it. Three pieces you might not have met. Web Audio is the browser's audio
+  graph; it does the capture and the resampling. A WebSocket is a connection that stays open, so
+  either end talks whenever it likes. And the Live API takes audio in and gives you speech back
+  before the sentence has even finished. All of that lives in one offscreen document, because
+  Chrome kills the service worker after thirty seconds idle and the side panel dies when you
+  close it. Three audio contexts, shared by sample rate, because Chrome only gives you about
+  six.</div>
 </section>
 
-<!-- ══════════════ 8 · THE TRANSLATED MICROPHONE ══════════════ -->
+<!-- ══════════════ 6 · MEET ══════════════ -->
 <section class="slide">
-  <div class="h">An extension that shows up as a mic</div>
+  <div class="h">How it integrates with Meet</div>
   <div class="hsub">No extension can register an audio input with the system. One page is another matter.</div>
   <div class="diagram" style="margin-top:30px;">
 <svg viewBox="0 0 1152 332" width="100%" aria-label="A shim injected into the Meet page's own JavaScript world adds a device to enumerateDevices and returns a synthetic track, fed over postMessage from the extension's offscreen document">
   <defs>
-    <marker id="s08-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s06-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
-    <marker id="s08-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s06-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
     </marker>
   </defs>
@@ -575,30 +528,39 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <rect x="0" y="24" width="552" height="284" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4" stroke-dasharray="6 5"/>
 
   <rect x="28" y="56" width="216" height="84" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
-  <text x="136" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Meet</text>
-  <text x="136" y="116" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">asks for a microphone</text>
+  <g transform="translate(58 98)">
+    <rect x="-14" y="-11" width="20" height="22" rx="3" stroke="#5F6368" stroke-width="2" fill="none"/>
+    <path d="M6 0 16-6v12z" stroke="#5F6368" stroke-width="2" fill="none" stroke-linejoin="round"/>
+  </g>
+  <text x="150" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Meet</text>
+  <text x="150" y="116" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">asks for a microphone</text>
 
-  <path d="M252 82 H 292" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
-  <path d="M292 114 H 252" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
+  <path d="M252 82 H 292" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
+  <path d="M292 114 H 252" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
 
   <rect x="300" y="56" width="224" height="84" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-  <text x="412" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">mic-shim.js</text>
-  <text x="412" y="116" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">world: MAIN</text>
+  <g transform="translate(330 98)">
+    <rect x="-6" y="-13" width="12" height="16" rx="6" stroke="#174EA6" stroke-width="2" fill="none"/>
+    <path d="M-11 -3a11 11 0 0 0 22 0M0 8v6" stroke="#174EA6" stroke-width="2" stroke-linecap="round"/>
+    <circle class="ripple" cx="0" cy="-5" r="15" stroke="#4285F4" stroke-width="1.6" fill="none"/>
+  </g>
+  <text x="428" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">mic-shim.js</text>
+  <text x="428" y="116" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">world: MAIN</text>
 
   <text x="28" y="188" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">1&nbsp;&nbsp;adds <tspan font-weight="700" fill="#202124">Interpretab (translated)</tspan> to enumerateDevices()</text>
   <text x="28" y="216" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">2&nbsp;&nbsp;Meet picks it in its own settings menu, by device id</text>
   <text x="28" y="244" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">3&nbsp;&nbsp;getUserMedia hands back a destination node's track</text>
   <text x="28" y="272" font-family="Google Sans Text, Arial, sans-serif" font-size="15" fill="#5F6368">4&nbsp;&nbsp;translated PCM is scheduled 120 ms ahead of the clock</text>
 
-  <path d="M532 82 H 596" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s08-arwb)"/>
-  <path d="M596 114 H 532" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s08-arwb)"/>
+  <path d="M532 82 H 596" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
+  <path d="M596 114 H 532" stroke="#4285F4" stroke-width="1.8" marker-end="url(#s06-arwb)"/>
   <text x="564" y="146" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#80868B">postMessage</text>
 
   <rect x="604" y="56" width="248" height="84" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="728" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">mic-bridge.js</text>
   <text x="728" y="116" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the isolated world</text>
 
-  <path d="M860 98 H 896" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
+  <path d="M860 98 H 896" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s06-arw)"/>
 
   <rect x="904" y="56" width="248" height="84" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
   <text x="1028" y="92" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">offscreen.js</text>
@@ -611,41 +573,66 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">An extension cannot register itself as a microphone with the operating system. A page is
-  another matter. A script injected into Meet's own JavaScript world adds a device called
-  Interpretab to the list, and hands back a synthetic track when Meet asks for one. It has to
-  run in the page, and a page script cannot reach the extension, so a second script relays the
-  audio across by postMessage.</div>
+  <div class="notes">Meet. An extension cannot register itself as a microphone with the operating system. A page
+  can, though. So we inject a script into Meet's own JavaScript world, and it adds a device
+  called Interpretab to the list. When Meet asks for a mic, it gets a synthetic track. The
+  catch is that a page script cannot reach the extension, so a second script ferries the audio
+  across with postMessage.</div>
 </section>
 
-<!-- ══════════════ 9 · BREAK ══════════════ -->
+<!-- ══════════════ 7 · BREAK ══════════════ -->
 <section class="slide break">
   <div class="n">The hard parts</div>
   <div class="name">Three things that fought back</div>
   <ul class="rows">
-    <li><span>A session lasts about ten minutes</span></li>
-    <li><span>The failure arrives blank</span></li>
-    <li><span>The model is a preview</span></li>
+    <li>
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="17" r="12" stroke="#FFFFFF" stroke-width="2.2"/>
+        <path d="M16 10v7l5 3M12 2h8" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      <span>A session lasts about ten minutes</span>
+    </li>
+    <li>
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="12" stroke="#FFFFFF" stroke-width="2.2"/>
+        <path d="M12 12.5a4 4 0 1 1 4 4.5v1.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="16" cy="22.5" r="1.6" fill="#FFFFFF"/>
+      </svg>
+      <span>The failure arrives blank</span>
+    </li>
+    <li>
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 4v6m0 12v6M4 16h6m12 0h6" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+        <rect x="10" y="10" width="12" height="12" rx="3" stroke="#FFFFFF" stroke-width="2.2"/>
+      </svg>
+      <span>The model is a preview</span>
+    </li>
   </ul>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Three things fought back. None of them is about translation quality. All three are about
-  keeping a long-lived connection honest on someone else's schedule.</div>
+  <div class="notes">Right. Three things that actually fought back. None of them is about translation quality.
+  All three are about keeping a long connection honest on somebody else's schedule.</div>
 </section>
 
-<!-- ══════════════ 10 · SESSION EXPIRY ══════════════ -->
+<!-- ══════════════ 8 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
-  <div class="h">A Live session lasts ten minutes</div>
-  <div class="hsub">The server warns you at nine, and it means the deadline literally.</div>
+  <div class="h">Session lifecycle</div>
+  <div class="hsub">A Live session lasts ten minutes. The server warns you at nine, and it means the deadline literally.</div>
   <div class="diagram" style="margin-top:26px;">
 <svg viewBox="0 0 1152 330" width="100%" aria-label="Six goAway warnings across an hour, and the four steps the loop takes on each one: the warning, opening the replacement, the swap, and replaying the tail">
   <defs>
-    <marker id="s10-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s08-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
   </defs>
 
   <text x="166" y="32" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#4285F4">goAway</text>
-  <path d="M0 64 H 1128" stroke="#5F6368" stroke-width="1.4" marker-end="url(#s10-arw)"/>
+  <path d="M0 64 H 1128" stroke="#5F6368" stroke-width="1.4" marker-end="url(#s08-arw)"/>
+  <circle class="ripple" cx="166" cy="64" r="11" fill="#4285F4"/>
+  <circle class="ripple" cx="331" cy="64" r="11" fill="#4285F4" style="animation-delay:.36s"/>
+  <circle class="ripple" cx="497" cy="64" r="11" fill="#4285F4" style="animation-delay:.72s"/>
+  <circle class="ripple" cx="662" cy="64" r="11" fill="#4285F4" style="animation-delay:1.08s"/>
+  <circle class="ripple" cx="828" cy="64" r="11" fill="#4285F4" style="animation-delay:1.44s"/>
+  <circle class="ripple" cx="994" cy="64" r="11" fill="#4285F4" style="animation-delay:1.8s"/>
   <circle cx="166" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
   <circle cx="331" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
   <circle cx="497" cy="64" r="6.5" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
@@ -661,21 +648,21 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <text x="120" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">the server gives fifty</text>
   <text x="120" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">seconds' notice</text>
 
-  <path d="M248 212 H 280" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <path d="M248 212 H 280" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
 
   <rect x="288" y="150" width="240" height="124" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="408" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Open the next one</text>
   <text x="408" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">warm in about 200 ms,</text>
   <text x="408" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">while the old one talks</text>
 
-  <path d="M536 212 H 568" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <path d="M536 212 H 568" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
 
   <rect x="576" y="150" width="240" height="124" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="696" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Swap</text>
   <text x="696" y="218" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">on turnComplete, on 5 s of</text>
   <text x="696" y="240" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">silence, or one second early</text>
 
-  <path d="M824 212 H 856" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
+  <path d="M824 212 H 856" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s08-arw)"/>
 
   <rect x="864" y="150" width="240" height="124" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
   <text x="984" y="190" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Replay the tail</text>
@@ -686,20 +673,21 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">A Live session lasts about ten minutes. At nine, the server sends a warning with fifty seconds
-  of notice, and it means that literally. So the loop opens the replacement while the old
-  session is still talking, swaps on a finished turn or five seconds of silence, and replays
-  the audio nothing has answered yet. Six handovers an hour, and the longest gap in the
-  translated speech was three point six seconds.</div>
+  <div class="notes">A Live session lasts about ten minutes. At nine minutes the server warns you, it gives you
+  fifty seconds, and it means it. So the loop opens the next session while the old one is
+  still talking, swaps over on a finished turn or five seconds of quiet, and replays the audio
+  nothing has answered yet. Six handovers an hour. Worst gap in the translated voice was three
+  point six seconds.</div>
 </section>
 
-<!-- ══════════════ 11 · THE BLANK FAILURE ══════════════ -->
+<!-- ══════════════ 9 · ERROR HANDLING ══════════════ -->
 <section class="slide">
-  <div class="h">The failure arrives blank</div>
+  <div class="h">Error handling</div>
   <div class="hsub">A browser is never told why a WebSocket upgrade was refused. That is deliberate.</div>
   <div class="grid c3" style="margin-top:40px;">
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle class="ripple" cx="24" cy="24" r="21" fill="#FCE8E6"/>
         <circle cx="24" cy="24" r="17" stroke="#EA4335" stroke-width="2.5"/>
         <path d="M19 19.5a5 5 0 1 1 5 5.5v2.5" stroke="#EA4335" stroke-width="2.5" stroke-linecap="round"/>
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
@@ -710,7 +698,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <path d="M8 12h32M8 23h32M8 34h19" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path class="nudge" d="M8 12h32" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+        <path class="nudge" d="M8 23h32" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" style="animation-delay:.4s"/>
+        <path class="nudge" d="M8 34h19" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" style="animation-delay:.8s"/>
         <circle cx="35" cy="35" r="7" stroke="#4285F4" stroke-width="2.5"/>
         <path d="M32.5 35l2 2 3.5-3.5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg></div>
@@ -721,7 +711,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
         <circle cx="24" cy="27" r="15" stroke="#FBBC05" stroke-width="2.5"/>
-        <path d="M24 18v9l6 4M18 5h12" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- The hand turns about the dial, not about its own bounding box, so
+             transform-origin is named in user units rather than left to .spin. -->
+        <path class="spin" d="M24 18v9l6 4" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" style="transform-box: view-box; transform-origin: 24px 27px"/>
+        <path d="M18 5h12" stroke="#FBBC05" stroke-width="2.5" stroke-linecap="round"/>
       </svg></div>
       <div class="ct">1011, mid-session</div><div class="cr"></div>
       <div class="cb">A quota crossed <i>during</i> a run closes cleanly, carrying 123 bytes of English
@@ -733,59 +727,65 @@ table.t .ok { color: var(--green); font-weight: 700; }
   crosses it in six seconds. Retrying for ever is a bug when the answer will not change. A spent
   quota comes back at midnight Pacific, not in four seconds.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">When a WebSocket upgrade is refused, the browser is never told why. A bad key, a spent quota
-  and a hotel captive portal all arrive as the same blank close, and that is deliberate:
-  telling the page apart would make it an oracle. So the extension asks the same question over
-  HTTP first, where the answer has a status code. Retrying a spent quota is pointless. It
-  comes back at midnight, not in four seconds.</div>
+  <div class="notes">When a WebSocket upgrade gets refused, the browser is never told why. Bad key, spent quota,
+  hotel wifi: all the same blank close. And that is on purpose, because otherwise the page
+  becomes an oracle. So we ask the same question over HTTP first, where you get a status code.
+  And do not retry a verdict. A spent quota comes back at midnight, not in four seconds.</div>
 </section>
 
-<!-- ══════════════ 12 · THE TWO FACTS THAT EXPIRE ══════════════ -->
+<!-- ══════════════ 10 · REMOTE CONFIGURATION ══════════════ -->
 <section class="slide">
-  <div class="h">Two facts this build cannot own</div>
-  <div class="hsub">Which Live models exist, and what they cost. A preview gets two weeks' notice; a store review takes longer than that.</div>
+  <div class="h">Remote configuration</div>
+  <div class="hsub">Two facts this build cannot own: which Live models exist, and what they cost. A preview gets two weeks' notice.</div>
   <div class="diagram" style="margin-top:22px;">
 <svg viewBox="0 0 1152 336" width="100%" aria-label="An hourly workflow asks the API which models still answer, rewrites the config file when one is gone, and GitHub Pages carries the correction to every installed copy within six hours">
   <defs>
-    <marker id="s12-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s10-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
   </defs>
 
   <rect x="0" y="16" width="328" height="104" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+  <!-- The class goes on the inner group: a CSS transform replaces the transform
+       attribute outright, and the placement would go with it. -->
+  <g transform="translate(292 46)"><g class="spin">
+    <path d="M0-13a13 13 0 1 1-11 6" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M-15 0-11 6-5 3" stroke="#4285F4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g></g>
   <text x="24" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#174EA6">model-health.yml</text>
   <text x="24" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">hourly, on GitHub Actions, plus a daily</text>
   <text x="24" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">run that goes looking for the successor</text>
 
-  <path d="M336 68 H 404" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s12-arw)"/>
+  <path d="M336 68 H 404" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
 
   <rect x="412" y="16" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="436" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Two questions</text>
   <text x="436" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">ListModels, then a real socket carrying</text>
   <text x="436" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the very setup frame the extension sends</text>
 
-  <path d="M748 68 H 816" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s12-arw)"/>
+  <path d="M748 68 H 816" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
 
   <rect x="824" y="16" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="848" y="56" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Only &ldquo;gone&rdquo; counts</text>
   <text x="848" y="82" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a network blip at 03:00 must not read</text>
   <text x="848" y="104" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">as Google retiring a preview</text>
 
-  <path d="M988 128 V 200" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s12-arw)"/>
+  <path d="M988 128 V 200" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
 
   <rect x="824" y="216" width="328" height="104" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.4"/>
   <text x="848" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">docs/config.json</text>
   <text x="848" y="282" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">a commit to main, live in a minute, on</text>
   <text x="848" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#5F6368">the same Pages site as the user guide</text>
 
-  <path d="M816 268 H 748" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s12-arw)"/>
+  <path d="M816 268 H 748" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
 
   <rect x="412" y="216" width="328" height="104" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+  <circle class="ripple" cx="704" cy="248" r="16" fill="#34A853"/>
   <text x="436" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Every installed copy</text>
   <text x="436" y="282" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">picks the correction up within six hours,</text>
   <text x="436" y="304" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#0D652D">with nobody updating anything</text>
 
-  <path d="M404 268 H 336" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s12-arw)"/>
+  <path d="M404 268 H 336" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s10-arw)"/>
 
   <rect x="0" y="216" width="328" height="104" rx="10" fill="#FEF7E0" stroke="#FBBC05" stroke-width="2"/>
   <text x="24" y="256" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#B06000">Data, never logic</text>
@@ -794,69 +794,96 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Two facts this build cannot own: which Live models exist, and what they cost. A preview model
+  <div class="notes">Two facts this build does not own: which Live models exist, and what they cost. A preview
   gets two weeks' notice, and a store review can take longer than that. So an hourly job asks
-  the API which models still answer, and a daily one goes looking for the successor. When one
-  is really gone, it rewrites a small JSON file on GitHub Pages, and every installed copy
-  picks the correction up within six hours. Data only, never logic.</div>
+  the API which models still answer, and a daily one hunts for the replacement. When one is
+  really gone it rewrites a small JSON file on Pages, and every installed copy picks it up
+  within six hours. Data, never logic.</div>
 </section>
 
-<!-- ══════════════ 13 · SOAKS ══════════════ -->
+<!-- ══════════════ 11 · TEST RESULTS ══════════════ -->
 <section class="slide">
-  <div class="h">An hour of real audio, three times</div>
+  <div class="h">Test results</div>
   <div class="rail" style="margin-top:44px;">
     <div>
-      <div class="eyebrow">Three hour-long soaks</div>
-      <div class="body small mut">The session machinery reads the same on all three paths: seven
-      sessions, six warnings, no drift, and not one session closed by the server.</div>
-      <div class="body small mut" style="margin-top:22px;">Quality tracks the language pair. The same
-      tab path with the pair reversed scored 92.2% over fifteen minutes.</div>
+      <div class="eyebrow">Soaks against the real API</div>
+      <div class="body small mut"><code>tests/soak.mjs</code> speaks synthetic sentences through a live
+      session for as long as you leave it, and has a second model grade every translation.</div>
+      <div class="body small mut" style="margin-top:22px;">The session machinery reads the same on all
+      three paths: seven sessions, six warnings, no drift, and not one session closed by the
+      server.</div>
     </div>
     <table class="t a">
-      <thead><tr><th>Run</th><th>Sentences</th><th>Passed</th><th>Turn complete</th><th>Sessions</th></tr></thead>
+      <thead><tr><th>Run</th><th>Length</th><th>Sentences</th><th>Passed</th><th>Turn complete</th></tr></thead>
       <tbody>
-        <tr><td>Mic, conversation model, en&nbsp;&rarr;&nbsp;ja</td><td>281</td><td class="ok">99.3%</td><td>1.60 s</td><td>7 / 6 / 0</td></tr>
-        <tr><td>Mic, simultaneous, en&nbsp;&rarr;&nbsp;ja</td><td>198</td><td class="ok">92.4%</td><td>0.98 s</td><td>7 / 6 / 0</td></tr>
-        <tr><td>Tab audio, ja&nbsp;&rarr;&nbsp;en</td><td>200</td><td>64.0%</td><td>0.23 s</td><td>7 / 6 / 0</td></tr>
+        <tr><td>Mic, conversation model, en&nbsp;&rarr;&nbsp;ja</td><td>60 min</td><td>281</td><td class="ok">99.3%</td><td>1.60 s</td></tr>
+        <tr><td>Mic, simultaneous, en&nbsp;&rarr;&nbsp;ja</td><td>60 min</td><td>198</td><td class="ok">92.4%</td><td>0.98 s</td></tr>
+        <tr><td>Tab audio, en&nbsp;&rarr;&nbsp;ja</td><td>15 min</td><td>51</td><td class="ok">92.2%</td><td>0.23 s</td></tr>
       </tbody>
     </table>
   </div>
-  <div class="fn">Sessions: opened / <code>goAway</code> warnings / closed by the server.
-  <code>tests/soak.mjs</code> speaks synthetic sentences through the real API for an hour and has a
-  second model grade every translation; the full reports are in the repository.</div>
+  <div class="fn">Latency is the mode, not the path: the conversation model waits for a turn, the
+  simultaneous one does not. Quality is the language pair. A ja&nbsp;&rarr;&nbsp;en hour on the same tab
+  code scored well below these, on flat synthetic Japanese; every report is in the repository.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Three hour-long soaks against the real API, with a second model grading every translation. The
-  session machinery reads the same on all three: seven sessions, six warnings, and not one
-  closed by the server. Quality tracks the language pair rather than the code path. The
-  sixty-four percent row is Japanese into English on synthetic speech, and the pass rate by
-  ten-minute block is flat, so that is ordinary wrong translations rather than decay.</div>
+  <div class="notes">Soaks against the real API, the long ones an hour each, with a second model grading
+  every translation. The session machinery reads the same every time: seven sessions, six
+  warnings, nothing closed by the server. Latency depends on which mode you pick, and quality
+  tracks the language pair rather than the code path. All the reports are in the repo.</div>
 </section>
 
-<!-- ══════════════ 14 · LEARNINGS ══════════════ -->
+<!-- ══════════════ 12 · LESSONS LEARNED ══════════════ -->
 <section class="slide">
-  <div class="h">What I would tell the next person</div>
-  <div class="grid c4 numbers" style="margin-top:56px;">
-    <div><div class="n">01</div><p>Open a real socket early. Two of the three protocol surprises here
-      are in no document.</p></div>
-    <div><div class="n">02</div><p>Ask the same question over HTTP. A close code carries no reason;
-      a status code does.</p></div>
-    <div><div class="n">03</div><p>Retry a flaky network, not a verdict. A spent quota comes back at
-      midnight, not in four seconds.</p></div>
-    <div><div class="n">04</div><p>Keep what belongs to someone else out of the build. Model names and
-      prices move on their schedule.</p></div>
+  <div class="h">Lessons learned</div>
+  <div class="grid c4 numbers" style="margin-top:44px;">
+    <div>
+      <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path class="nudge" d="M8 18h24l-7-7m7 7-7 7" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="nudge" d="M40 34H16l7-7m-7 7 7 7" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/>
+      </svg></div>
+      <div class="n">01</div><p>Open a real socket early. Two of the three protocol surprises here
+      are in no document.</p>
+    </div>
+    <div>
+      <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="7" y="12" width="34" height="24" rx="4" stroke="#4285F4" stroke-width="2.5"/>
+        <text x="24" y="31" text-anchor="middle" font-family="Google Sans Code, monospace" font-size="13" font-weight="500" fill="#4285F4">400</text>
+      </svg></div>
+      <div class="n">02</div><p>Ask the same question over HTTP. A close code carries no reason;
+      a status code does.</p>
+    </div>
+    <div>
+      <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <g class="spin" style="transform-box: view-box; transform-origin: 24px 24px">
+          <path d="M24 10a14 14 0 1 1-12 7" stroke="#4285F4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M9 20l3 5 6-3" stroke="#4285F4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg></div>
+      <div class="n">03</div><p>Retry a flaky network, not a verdict. A spent quota comes back at
+      midnight, not in four seconds.</p>
+    </div>
+    <div>
+      <div class="ni"><svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M10 14h28v22a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2z" stroke="#4285F4" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M7 8h34v6H7z" stroke="#4285F4" stroke-width="2.5" stroke-linejoin="round"/>
+        <path class="nudge" d="M19 24h10" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
+      </svg></div>
+      <div class="n">04</div><p>Keep what belongs to someone else out of the build. Model names and
+      prices move on their schedule.</p>
+    </div>
   </div>
   <div class="fn">The one that cost the most: silence is input. End-of-turn is the server's own voice
   detection, and it detects it in the audio you send. Stop sending when the speaker stops, and the
   model waits indefinitely.</div>
   <div class="foot"><span class="gc">Interpretab &middot; a personal project</span><span class="pageno"></span></div>
-  <div class="notes">Four things I would tell the next person. Open a real socket early; two of the three protocol
-  surprises here are in no document. Ask over HTTP when a close code gives you nothing. Retry
-  a flaky network, but not a verdict. And keep what belongs to someone else out of the build.
-  The one that cost the most: silence is input. End of turn is detected in the audio you send,
-  so if you stop sending when the speaker stops, the model waits for ever.</div>
+  <div class="notes">Four things I would tell the next person. Open a real socket early; two of the three
+  protocol surprises here are in no document. When a close code tells you nothing, ask the same
+  thing over HTTP. Retry a flaky network, not a verdict. And keep other people's facts out of
+  your build. The one that cost me the most: silence is input. End of turn is detected in the
+  audio you send. Stop sending when the speaker stops, and the model waits for ever.</div>
 </section>
 
-<!-- ══════════════ 15 · THANK YOU ══════════════ -->
+<!-- ══════════════ 13 · THANK YOU ══════════════ -->
 <section class="slide flex thanks">
   <div class="inner">
     <h1>Thank you</h1>
@@ -870,8 +897,8 @@ table.t .ok { color: var(--green); font-weight: 700; }
     speaker did not.</div>
   </div>
   <div class="wordmark">Interpretab</div>
-  <div class="notes">It is on the Chrome Web Store, the guide is on GitHub Pages, and the code is Apache two point
-  zero. A personal project, not a Google product. Thank you.</div>
+  <div class="notes">It is on the Web Store, the guide is on GitHub Pages, and the code is Apache two point
+  oh. Personal project, not a Google product. Thanks very much.</div>
 </section>
 
 <button id="vo" type="button" aria-label="Play the narration for this slide" title="Play the narration (p)">
@@ -896,32 +923,46 @@ table.t .ok { color: var(--green); font-weight: 700; }
   let cur = Math.min(Math.max((parseInt(location.hash.slice(1), 10) || 1) - 1, 0), slides.length - 1);
 
   // ----- narration -----
-  // One recording per slide, made from that slide's .notes by
-  // tools/slide-voice.mjs. `playing` is what the user asked for, not what the
-  // element is doing: it survives the gap between slides so the deck keeps
-  // reading itself, and it is what the button reflects.
+  // Every slide has a voice. A demo slide's is the clip itself, which already
+  // carries its own commentary; every other slide has an MP3 recorded from its
+  // .notes by tools/slide-voice.mjs. One control drives whichever it is.
+  //
+  // `playing` is what the presenter asked for, not what an element is doing: it
+  // survives the gap between slides, so the deck keeps reading itself all the
+  // way to the end, and it is what the button reflects.
   const voice = new Audio();
   voice.preload = 'none';                                    // no 404 storm before the first press
+  const clips = [...document.querySelectorAll('.slide video')];
   let playing = false;
+
+  const media = () => slides[cur].querySelector('video') || voice;
 
   function voLoad() {
     voice.pause();
-    voice.src = 'audio/slide-' + String(cur + 1).padStart(2, '0') + '.mp3';
+    clips.forEach(v => v.pause());
+    const clip = slides[cur].querySelector('video');
+    if (clip) clip.currentTime = 0;                          // re-entering a slide replays it
+    else voice.src = 'audio/slide-' + String(cur + 1).padStart(2, '0') + '.mp3';
     voBtn.classList.remove('off');
   }
 
   function voPlay() {
     playing = true;
-    voice.play().then(() => voBtn.classList.add('playing')).catch(voMissing);
+    media().play().then(() => voBtn.classList.add('playing')).catch(() => {
+      // Autoplay is refused until the page has had a click or a keypress. The
+      // media is fine; leave the button ready rather than claiming otherwise.
+      playing = false;
+      voBtn.classList.remove('playing');
+    });
   }
 
   function voPause() {
     playing = false;
-    voice.pause();
+    media().pause();
     voBtn.classList.remove('playing');
   }
 
-  // A slide with no recording yet, or a file:// URL Chrome will not fetch
+  // No recording for this slide yet, or a file:// URL Chrome will not fetch
   // media from. Say so on the button and stay out of the way.
   function voMissing() {
     playing = false;
@@ -930,11 +971,14 @@ table.t .ok { color: var(--green); font-weight: 700; }
     voBtn.title = 'No narration for this slide';
   }
 
-  voice.addEventListener('error', voMissing);
-  voice.addEventListener('ended', () => {
+  function voEnded() {
     if (cur < slides.length - 1) show(cur + 1);               // show() resumes it
     else voPause();
-  });
+  }
+
+  voice.addEventListener('error', voMissing);
+  voice.addEventListener('ended', voEnded);
+  clips.forEach(v => v.addEventListener('ended', voEnded));
   voBtn.addEventListener('click', () => (playing ? voPause() : voPlay()));
 
   // Page numbers are assigned from document order, so reordering slides can't
@@ -953,7 +997,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
     notesEl.innerHTML = note ? note.innerHTML : '<i style="color:#9AA0A6">No notes for this slide.</i>';
     voBtn.title = 'Play the narration (p)';
     voLoad();
-    if (playing) voPlay();
+    // A demo slide starts itself: arriving on one is the cue to run the demo,
+    // whether or not the narration was running when you got here.
+    if (playing || slides[cur].querySelector('video')) voPlay();
   }
 
   function fit() {
@@ -976,7 +1022,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   });
 
   addEventListener('click', e => {
-    if (e.target.closest('a, #notes, #vo')) return;          // links and the control own their clicks
+    if (e.target.closest('a, #notes, #vo, video')) return;   // links, the control and the clip own their clicks
     show(e.clientX > innerWidth / 2 ? cur + 1 : cur - 1);
   });
 
