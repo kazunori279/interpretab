@@ -331,7 +331,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
     <a href="https://github.com/kazunori279/interpretab" target="_blank" rel="noopener">github.com/kazunori279/interpretab</a></span></div>
   <div class="notes">Interpretab という Chrome 拡張機能です。タブが再生している音声を聞き取って、声に出して通訳します。
   逆に、自分の声を訳して相手に届けることもできます。あいだに第三者のサーバーは入りません。通信も API キーも、
-  ブラウザの中だけで完結します。まずは見てもらったほうが早いです。</div>
+  ブラウザの中だけで完結します。まずはデモをご覧ください。</div>
 </section>
 
 <!-- ══════════════ 2 · DEMO, TAB ══════════════ -->
@@ -626,14 +626,12 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">全体の構成です。知らないかもしれない部品が 3 つあります。Web Audio はブラウザ内蔵の音声処理で、
-  音の取り込みとサンプルレート変換をやります。WebSocket は開いたままの接続で、どちらの端からでも好きなときに
-  送れます。Live API は、音声を送ると、文が終わる前に訳した音声を返してきます。これが全部、offscreen document
-  という 1 枚の裏方のページに入っています。Service Worker は 30 秒使わないと止められ、サイドパネルは閉じると
-  消えてしまうからです。AudioContext はサンプルレートごとに 3 つ。Chrome が 1 ページに作らせてくれる数が
-  6 個ほどしかないので、使い回しています。ソケットは 2 本、タブの音声用とマイク用です。どちらも送るのは ctxUp が
-  録った音声で、返ってくる訳した音声は ctxDown が鳴らします。1 本で送受信できるのに 2 本あるのは、モデルも訳す先の
-  言語も声も、1 本につき 1 組しか指定できないからです。</div>
+  <div class="notes">全体の構成です。主なコンポーネントは 2 つあります。Web Audio はブラウザ内蔵の音声処理 API で、
+  音の取り込みとサンプルレート変換をやります。
+  Gemini Live API は、音声を送ると、モデルからの応答を WebSocket を介してリアルタイムに返します。
+  アプリケーション全体は、offscreen document
+  という 1 枚の見えないページに入っています。AudioContext はサンプルレートごとに 3 つ。WebSocket は、タブの音声用と
+  マイク用のそれぞれに 1 本ずつ使います。</div>
 </section>
 
 <!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
@@ -713,9 +711,9 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">モデルは 2 つあって、この先ずっと出てきます。タブの音声はつねに同時通訳のほう。話している最中から
-  訳しはじめ、元の言語はモデルが判別し、事前指示は受け付けません。マイクはどちらでも選べます。会話モデルのほうは
-  相手が話し終わるのを待ちます。そのぶん遅いですが、正確で、安くて、用語集を渡せるのはこちらだけです。</div>
+  <div class="notes">Interpretab では 2 つの Live API モデルを使います。同時通訳モデルは話している最中から
+  訳しはじめ、事前のインストラクションは受け付けません。会話モデルのほうは
+  相手が話し終わるのを待ちます。そのぶん翻訳は遅くなりますが、品質が高く、コストも安くて、また用語登録機能を持たせられます。</div>
 </section>
 
 <!-- ══════════════ 7 · MEET ══════════════ -->
@@ -802,14 +800,13 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">次は、これを Meet につないで双方向の通訳にする話です。拡張機能を OS のマイクとして
-  登録することはできません。でもページの中でならできる。Meet 自身のスクリプトが動く実行環境に、こちらの
-  スクリプトを注入して、Interpretab という名前のマイクをデバイス一覧に足します。利用者が Meet の設定で
-  それを選ぶと、Meet が要求したマイクの代わりに、訳した音声が返ります。厄介なのは、同じ 1 つのページの中に
-  実行環境が 2 つあって、できることが違うこと。Meet ページ側からは拡張機能に手が届かず、拡張機能側から
-  デバイス一覧をいじっても Meet には見えません。そこで両側にスクリプトを 1 つずつ置いて、postMessage で
-  橋渡しします。実際の通話で計った
-  エンドツーエンドの翻訳時間は、およそ 3 秒。もとは 4 秒で、そのうち 1 秒は Meet の Studio Sound でした。</div>
+  <div class="notes">次は、これを Meet につないで双方向の通訳にする話です。Chrome 拡張の音声出力を OS のマイクとして
+  登録することはできません。でも Meet のページの中でなら可能です。Meet のスクリプトが動く実行環境に、こちらの
+  スクリプトを追加して、Interpretab という名前のマイクをデバイス一覧に足します。利用者が Meet の設定画面で
+  それを選ぶと、翻訳した音声が相手に届きます。ただし、同じ 1 枚のページでも Meet 側と拡張機能側は別々の実行環境で動いていて、
+  拡張機能側からマイクの一覧を書き換えても Meet からは見えません。そこで両側にスクリプトを 1 つずつ置いて、
+  postMessage で橋渡しします。実際の通話で計った
+  エンドツーエンドの遅延は、およそ 3 秒です。</div>
 </section>
 
 <!-- ══════════════ 8 · BREAK ══════════════ -->
@@ -841,9 +838,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </li>
   </ul>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">手強かったのはこの 3 つです。どれも翻訳の品質の話ではありません。接続が切れるのも、
-  理由がわからないのも、モデルが入れ替わるのも、決めているのは全部サーバー側です。こちらは、それでも
-  途切れずに動きつづけるようにするしかない。</div>
+  <div class="notes">開発中に出てきた課題はこの 3 つです。それぞれ簡単に説明します。</div>
 </section>
 
 <!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
@@ -871,9 +866,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
   <!-- the replacement, opened while the old one is still talking -->
   <g class="hand-b">
-    <rect x="640" y="106" width="512" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-    <text x="664" y="132" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">ソケット 2</text>
-    <text x="664" y="152" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">切り替えの 200 ms ほど前に開き、すぐ使える状態にしておく</text>
+    <!-- Left edge on the goAway marker, not short of it: the loop opens the
+         replacement the moment the warning lands, not just before the swap. -->
+    <rect x="600" y="106" width="552" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+    <text x="624" y="132" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">ソケット 2</text>
+    <text x="624" y="152" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="14" fill="#174EA6">goAway が届いたらすぐ開く。約 200 ms で使える状態になる</text>
   </g>
 
   <circle class="alarm" cx="600" cy="62" r="20" fill="#4285F4"/>
@@ -906,12 +903,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Live API のソケットは 10 分くらいしかもちません。9 分でサーバーが goAway を送ってきて、
-  そこから 50 秒で本当に切ります。だからループは、古いソケットがまだ話しているうちに次を開いて、ターンが
-  終わるか 5 秒の無音で切り替えます。古いほうが答えられなかったぶんは、新しいほうへ送り直します。1 時間で
-  6 回の引き継ぎ、訳した声が途切れた最悪の間隔は 3.6 秒でした。API 自身にも session resumption という
-  仕組みがありますが、使っていません。繋ぎ直すのに一拍かかるうえ、モデルが最後の 1 文をもう一度、声に出して
-  言い直すので、聞くほうには不具合に聞こえます。</div>
+  <div class="notes">Live API の WebSocket は約 10 分で切断されます。9 分を過ぎるとサーバーが
+  goAway メッセージを送ってきて、その 50 秒後に切ります。そこで Interpretab では、goAway が届いた時点で新しい
+  Live API セッションを開き、会話のターンが終わったとき、5 秒の無音が続いたとき、期限の 1 秒前、
+  このいずれか早いタイミングで切り替えます。古いセッションで翻訳が終わらなかった音声データは、新しいほうへ送り直します。
+  API 自身の sessionResumption は、試したうえで使っていません。モデルが直前の 1 文をもう一度読み上げてしまうためです。</div>
 </section>
 
 <!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
@@ -958,12 +954,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   100 トークンまで下げて再現した。使い切っていてもソケット自体は開くので、10 回リトライすれば 10 回とも繋がって
   10 回とも死ぬ。quota が戻るのは太平洋時間の深夜なので、リトライは続けないほうがよい。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">WebSocket が切れたとき、ブラウザに届くのは close コードという番号だけで、理由は付いてきません。キーが違う、
-  quota を使い切った、ホテルの Wi-Fi のログイン画面。全部おなじ空っぽの close です。
-  だから同じことを、ソケットを開く前に HTTP で訊いておきます。あちらならステータスコードが返ってくる。
-  セッションの最中に quota を越えたときだけは理由の文が付いてきますが、close フレームは 123 バイトしか運べないので、
-  末尾は切れています。それと、この判定はリトライしません。使い切った quota が戻るのは太平洋時間の深夜であって、
-  4 秒後ではありません。</div>
+  <div class="notes">何らかの理由により WebSocket が切れたとき、ブラウザに届くのは close コードという番号だけで、理由は付いてきません。キーの間違いや、
+  quota の不足、ネットワークの不具合、いずれも同じ close コードしか届きません。
+  そこで事前に、キーが使えるかどうかを HTTP でリクエストし、そのステータスコードを確認します。
+  セッションの途中で quota を越えたときだけは理由の文が付きますが、123 バイトで切れています。どちらもリトライはしません。</div>
 </section>
 
 <!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
@@ -1050,13 +1044,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">どの Live モデルが存在するかは、このビルドが決めていい話ではありません。preview は 2 週間の
-  予告で引退するし、Chrome Web Store の審査はそれより長くかかることもある。モデル名をビルドに焼き込むと、
-  いつかは必ず動かなくなります。かわりに、毎時 GitHub Actions が、使っているモデルを 1 つずつ実際に呼びます。
-  一覧にまだあるか、本番と同じ設定でセッションが開くか。毎日、そして引退を検知したときには、新しいモデルを
-  探します。候補として残るのは、実際にセッションが開けたものだけ。それをスライド下の設定ファイルにコミットすると、
-  全クライアントが起動時と 6 時間ごとに読みに来て、次のソケット切り替えで、実行の途中から乗り換えます。
-  ストアの再審査は要りません。</div>
+  <div class="notes">Live API のモデルは速いペースで入れ替わります。モデル名をビルドにハードコードすると、
+  いつかは必ず動かなくなります。そこで、1 時間に一度、GitHub Actions が現在利用しているモデルを 1 つずつ実際に呼びます。
+  一覧にまだあるか、本番と同じ設定でセッションが開くか。引退を検知したときと、あとは 1 日に一度、新しいモデルを探します。
+  候補として残るのは、実際にセッションが開けたものだけです。それを設定ファイルにコミットすると、全クライアントが
+  起動時と 6 時間ごとに読みに来て、次のソケット切り替えで実行の途中から乗り換えます。ストアの再審査は要りません。</div>
 </section>
 
 <!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
@@ -1079,10 +1071,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   </div>
   <div class="fn">同じタブ側のコードで ja&nbsp;&rarr;&nbsp;en を 1 時間走らせると、数字はこれよりかなり低くなる。入力が平板な合成音声の日本語だったため。レポートはすべてリポジトリにある。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">実際の API に当てた soak です。長いものは 1 時間ずつ流して、訳文は別のモデルが 1 文ずつ
-  採点しています。3 つのユースケースとも同じでした。1 時間のあいだに goAway が 6 回来て、そのつど引き継いで
-  7 セッションをつなぎ、サーバーに切られたものはゼロ。文の途中で引き継いだ回も、訳文は採点に通っています。
-  レポートは全部リポジトリにあります。</div>
+  <div class="notes">実際のアプリケーションに対して、エンドツーエンドの soak テストを実施しました。3 つのユースケースについて、
+  音声データを 1 文ずつ送り、Live API が返す文字起こしを別のモデルが 1 文ずつ採点しています。1 時間のあいだに
+  goAway が 6 回。そのつど引き継いで 7 セッションをつなぎ、サーバーに切られたものはゼロでした。
+  文の途中で引き継いだ回も、訳文は採点に通っています。</div>
 </section>
 
 <!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
@@ -1126,13 +1118,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   </div>
   <div class="fn">リトライしていいのは通信の不調だけ。quota 切れやキーのエラーは、何秒待ってやり直しても同じ答えが返ってくる。</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">次の人に伝えたいことが 4 つ。まず、API を実際に叩いてみること。今回ぶつかった
-  プロトコル上の想定外 3 つのうち 2 つは、どのドキュメントにも書かれていませんでした。WebSocket はただ
-  切れるだけで理由を教えてくれないので、同じことを HTTP で訊きます。3 つめがいちばん高くついた勘違いです。
-  Live API は届いた音声から発話の終わりを判定するので、話し手が黙っている間も、無音を音声として送りつづける
-  必要がありました。止めるとモデルは終わりに気づけず待ちつづけます。最後に、変わるものをビルドに焼き込まない。
-  モデル名も価格も Google 側の都合で変わります。リトライしていいのは通信の不調だけで、quota 切れやキーの
-  エラーは、何秒待ってやり直しても同じ答えが返ってきます。</div>
+  <div class="notes">今回の開発での学びが 4 つ。まず、API を実際に叩いてみること。API の想定外のふるまいは、
+  多くの場合ドキュメントに書かれていません。続いて、WebSocket だけでわからないことは HTTP で確認する。3 つめは、
+  Live API によるターンの終わりの自動検出のふるまいです。音声データの送信をすぐに止めてしまわず、無音のデータを
+  送り続けないとモデルはずっと待ち続けてしまいます。最後に、変わるものをビルドに焼き込まない。
+  モデル名も価格も頻繁に変わります。</div>
 </section>
 
 <!-- ══════════════ 14 · THANK YOU ══════════════ -->

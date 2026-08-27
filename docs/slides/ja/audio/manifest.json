@@ -1,80 +1,80 @@
 {
   "slide-01.mp3": {
-    "hash": "8a12c7a18f093763",
+    "hash": "36df6f5e6363f6bc",
     "words": 8,
-    "seconds": 17,
+    "seconds": 16.3,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-05.mp3": {
-    "hash": "b3c48ee1e0c741b0",
-    "words": 41,
-    "seconds": 50.9,
+    "hash": "1298a099490f8e57",
+    "words": 26,
+    "seconds": 26.4,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-06.mp3": {
-    "hash": "29b5bdeb2db2e8ff",
-    "words": 5,
-    "seconds": 20.8,
+    "hash": "1f1700fcee54c4bd",
+    "words": 9,
+    "seconds": 15.8,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-07.mp3": {
-    "hash": "d9f28d85c7322501",
-    "words": 38,
-    "seconds": 44.6,
+    "hash": "fa77c0568f941163",
+    "words": 29,
+    "seconds": 38.8,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-08.mp3": {
-    "hash": "fad9ec061951f1a4",
-    "words": 5,
-    "seconds": 13.9,
+    "hash": "215d7067d31f8ef0",
+    "words": 3,
+    "seconds": 4.1,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-09.mp3": {
-    "hash": "addef8ec974b67ae",
-    "words": 27,
-    "seconds": 33.8,
+    "hash": "f8871583f16f37f2",
+    "words": 28,
+    "seconds": 28.5,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-10.mp3": {
-    "hash": "2da4d30291f93172",
-    "words": 24,
-    "seconds": 30.4,
+    "hash": "6cb25655f7e8479c",
+    "words": 16,
+    "seconds": 23.3,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-11.mp3": {
-    "hash": "15208846f89f1b2d",
-    "words": 22,
-    "seconds": 37,
+    "hash": "e40ee6894b1041ba",
+    "words": 16,
+    "seconds": 30.9,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-12.mp3": {
-    "hash": "4a97e35646ec3b03",
+    "hash": "0d8780e727b9da01",
     "words": 19,
-    "seconds": 19.5,
+    "seconds": 21.8,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
   "slide-13.mp3": {
-    "hash": "1d3be37a5bca3c3e",
-    "words": 23,
-    "seconds": 39.7,
+    "hash": "92ed2bd24fdbd173",
+    "words": 15,
+    "seconds": 26.9,
     "voice": "Puck",
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"

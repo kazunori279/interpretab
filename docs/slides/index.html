@@ -318,7 +318,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="notes">This is Interpretab, a Chrome extension. It listens to whatever a tab is playing and interprets
   it out loud. It also works the other way round: your own voice, translated, and sent to the
   person you are talking to. No third-party server sits in the middle. The connection and the API
-  key both stay inside the browser. Easier to show you than to describe.</div>
+  key both stay inside the browser. Let me show you the demo first.</div>
 </section>
 
 <!-- ══════════════ 2 · DEMO, TAB ══════════════ -->
@@ -609,16 +609,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Okay, the shape of it. Three pieces you might not have met. Web Audio is the browser's audio
-  graph; it does the capture and the resampling. A WebSocket is a connection that stays open, so
-  either end talks whenever it likes. And the Live API takes audio in and gives you speech back
-  before the sentence has even finished. All of that lives in one offscreen document, because
-  Chrome kills the service worker after thirty seconds idle and the side panel dies when you
-  close it. Three audio contexts, shared by sample rate, because Chrome only gives you about
-  six. Two sockets, one for the tab and one for the microphone. Both of them send what ctxUp
-  recorded, and the translated voice that comes back is played by ctxDown. A single socket
-  carries both directions, so the reason there are two is that the model, the target language
-  and the voice are fixed one set per socket.</div>
+  <div class="notes">Okay, the shape of it. Two main components. Web Audio is the browser's built-in audio
+  processing; it does the capture and the resampling. The Gemini Live API takes audio in and
+  streams the model's answer back over a WebSocket, in real time. The whole application lives in
+  one offscreen document, a page you never see. Three audio contexts, one per sample rate. And
+  two WebSockets, one for the tab audio and one for the microphone.</div>
 </section>
 
 <!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
@@ -698,11 +693,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Two models, and the rest of the deck keeps mentioning them. Tab audio always runs the live
-  translation one: it speaks while you are still talking, works out the source language itself,
-  and takes no system instruction. The microphone can run that, or the conversation model, which
-  waits for your turn to end. Slower, more accurate, cheaper, and the only one a glossary
-  reaches.</div>
+  <div class="notes">Interpretab uses two Live API models. The simultaneous one starts translating while you are
+  still speaking, and takes no instruction up front. The conversation one waits for the speaker
+  to finish. That makes it slower, but the quality is higher, it costs less, and it is the one
+  that can take a glossary.</div>
 </section>
 
 <!-- ══════════════ 7 · MEET ══════════════ -->
@@ -789,15 +783,14 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Next, hooking this into Meet to interpret both ways. An extension cannot register itself as a
-  microphone with the operating system. Inside a page it can. So we inject a script into the
-  world where Meet's own scripts run, and it adds a microphone called Interpretab to the device
-  list. Pick it in Meet's settings and, instead of the microphone Meet asked for, it gets the
-  translated audio. The awkward part is that one page holds two worlds and they can do different
-  things. Meet's world cannot reach the extension, and the extension cannot change the device
-  list Meet sees. So there is one script on each side, bridged with postMessage. Measured on a
-  real call, the whole path is about three seconds. It was four until we found that one of them
-  was Meet's Studio Sound.</div>
+  <div class="notes">Next, hooking this into Meet to interpret both ways. A Chrome extension cannot register its
+  audio output as a microphone with the operating system. Inside the Meet page it can. We add a
+  script to the world where Meet's own scripts run, and it puts a microphone called Interpretab
+  in the device list. The user picks it in Meet's settings, and the translated audio reaches the
+  far end. One catch: even inside the same page, Meet's side and the extension's side run in
+  separate worlds, and a device list changed from the extension's side is not the one Meet sees.
+  So there is one script on each side, bridged with postMessage. Measured on a real call, the
+  end-to-end delay is about three seconds.</div>
 </section>
 
 <!-- ══════════════ 8 · BREAK ══════════════ -->
@@ -829,8 +822,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
     </li>
   </ul>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Right. Three things that actually fought back. None of them is about translation quality.
-  All three are about keeping a long connection honest on somebody else's schedule.</div>
+  <div class="notes">Three problems that came up while building this. I will go through them one at a time.</div>
 </section>
 
 <!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
@@ -858,9 +850,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
 
   <!-- the replacement, opened while the old one is still talking -->
   <g class="hand-b">
-    <rect x="640" y="106" width="512" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-    <text x="664" y="132" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">Socket 2</text>
-    <text x="664" y="152" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">opened about 200 ms early, warm before it is needed</text>
+    <!-- Left edge on the goAway marker, not short of it: the loop opens the
+         replacement the moment the warning lands, not just before the swap. -->
+    <rect x="600" y="106" width="552" height="56" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+    <text x="624" y="132" font-family="Google Sans, Arial, sans-serif" font-size="17" font-weight="500" fill="#174EA6">Socket 2</text>
+    <text x="624" y="152" font-family="Google Sans Text, Arial, sans-serif" font-size="14" fill="#174EA6">opened the moment goAway arrives, warm in about 200 ms</text>
   </g>
 
   <circle class="alarm" cx="600" cy="62" r="20" fill="#4285F4"/>
@@ -895,13 +889,12 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Here is one most people do not know: a Live API socket only lasts about ten minutes. At nine
-  the server sends goAway, you get fifty seconds, and it means it. So the loop opens the next
-  socket while the old one is still talking, and swaps on a finished turn or five seconds of
-  quiet. Anything the old socket never answered gets sent again on the new one. Six handovers
-  an hour, and the worst gap in the translated voice was three point six seconds. The API has
-  its own mechanism for this, session resumption. We tried it: reconnect with a token and the
-  model says its last sentence over again, out loud. So we kept our own buffer.</div>
+  <div class="notes">A Live API WebSocket closes after about ten minutes. Past nine minutes the server sends goAway,
+  and it cuts fifty seconds later. So Interpretab opens a new Live API session the moment goAway
+  arrives, and swaps at whichever comes first: the turn finishing, five seconds of quiet, or one
+  second before the deadline. Whatever the old session never finished translating is sent again
+  on the new one. The API has its own sessionResumption. We tried it and do not use it: the
+  model reads its last sentence out again.</div>
 </section>
 
 <!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
@@ -951,12 +944,11 @@ table.t .ok { color: var(--green); font-weight: 700; }
   A spent quota still lets the socket open, so ten retries all connect and all die. It comes back
   at midnight Pacific, which is a good reason to stop retrying.</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">When a WebSocket closes, all the browser gets is a number, a close code, and no reason with it.
-  Wrong key, spent quota, a hotel wifi login page: all the same empty close. So we ask the same
-  question over HTTP before the socket opens, where a status code comes back. Cross the quota
-  in the middle of a session and a reason does arrive, but a close frame only carries a hundred
-  and twenty-three bytes, so the end of it is missing. And do not retry that verdict. A spent
-  quota comes back at midnight Pacific, not in four seconds.</div>
+  <div class="notes">When a WebSocket closes for whatever reason, all the browser gets is a number, a close code,
+  with no reason attached. A wrong key, not enough quota, a network problem: the same close code
+  for all of them. So before the socket opens we ask over HTTP whether the key works, and read
+  the status code. Cross the quota in the middle of a session and a reason does arrive, but it
+  is cut off at a hundred and twenty-three bytes. Neither one is worth retrying.</div>
 </section>
 
 <!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
@@ -1043,14 +1035,13 @@ table.t .ok { color: var(--green); font-weight: 700; }
 </svg>
   </div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Which Live models exist is not something this build gets to decide. A preview retires on two
-  weeks&rsquo; notice, and a Chrome Web Store review can take longer than that, so a model name baked
-  into the build will stop working one day. Instead, every hour a GitHub Action calls each model
-  we use, for real. Is it still in the list, and does a session still open with the production
-  setup? Daily, and whenever a retirement is detected, it goes looking for a new model. Only the
-  ones that actually opened a session stay in the running. That gets committed to the config file
-  at the bottom of the slide, every client reads it at startup and every six hours, and the switch
-  happens at the next socket handover, in the middle of a run. No store re-review.</div>
+  <div class="notes">Live API models turn over quickly. Hard-code a model name into the build and one day it stops
+  working. So once an hour a GitHub Action calls each model we use, for real. Is it still in the
+  list, and does a session still open with the production setup? When a retirement is detected,
+  and otherwise once a day, it goes looking for a new model. Only the ones that actually opened a
+  session stay in the running. That gets committed to the config file, every client reads it at
+  startup and every six hours, and the switch happens at the next socket handover, in the middle
+  of a run. No store re-review.</div>
 </section>
 
 <!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
@@ -1077,11 +1068,10 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="fn">An hour of ja&nbsp;&rarr;&nbsp;en on the same tab-side code scores well below these, because
   the input was flat synthetic Japanese. Every report is in the repository.</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Soaks against the real API, the long ones an hour each, with a second model grading every
-  translation one sentence at a time. All three use cases behaved the same. Six goAways in the
-  hour, a handover each time, seven sessions chained end to end, and nothing closed by the
-  server. Even the ones that handed over mid-sentence still passed grading. All the reports are
-  in the repo.</div>
+  <div class="notes">We ran end-to-end soaks against the real application. Three use cases, sentences sent one at a
+  time, and a second model grading the transcription the Live API returns, one sentence at a
+  time. Six goAways in the hour, a handover each time, seven sessions chained end to end, and
+  nothing closed by the server. Even the ones that handed over mid-sentence passed grading.</div>
 </section>
 
 <!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
@@ -1130,14 +1120,12 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="fn">Retry a flaky network, and nothing else. A spent quota or a bad key gives you the same
   answer however many seconds you wait.</div>
   <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes">Four things I would tell the next person. First, call the real API. Two of the three protocol
-  surprises we hit here were in no document anywhere. A WebSocket just closes and never says why,
-  so ask the same thing over HTTP. The third one cost the most. The Live API hears the end of a
-  turn in the audio it receives, so we had to keep sending silence while the speaker was quiet.
-  Stop, and the model never notices the turn ended and waits. Last, do not bake anything that
-  changes into the build. Model names and prices move on Google's schedule. And retry a flaky
-  network, nothing else: a spent quota or a bad key gives the same answer however long you
-  wait.</div>
+  <div class="notes">Four things I learned building this. First, call the real API. What it actually does when
+  something unexpected happens is usually in no document anywhere. Second, when a WebSocket
+  alone will not tell you, ask the same thing over HTTP. Third, how the Live API detects the end
+  of a turn. Do not stop sending audio when the speaker goes quiet. Keep sending silence, or the
+  model waits forever. Last, do not bake anything that changes into the build. Model names
+  and prices move often.</div>
 </section>
 
 <!-- ══════════════ 14 · THANK YOU ══════════════ -->
