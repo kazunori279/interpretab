@@ -1924,6 +1924,18 @@ clips are played back at the same ratio. That is the whole of the pacing: 3m33s 
 1m16s of video, 4m49s against a five-minute slot. The Japanese deck runs 5m16s, because the same
 content takes longer to say in Japanese.
 
+**The spotlight.** Most slides point the narration at the thing it is talking about. A
+`<span data-hl="x">` around a run of a note names the elements carrying `data-hl="x"` on the same
+slide, and while that run is read everything else tagged on that slide drops to 30% opacity. No
+table of timestamps has to be kept in step with a re-recording: a cue's position is its share of
+the script's characters, scaled to the length of the MP3 this made from that same script, so
+editing a note and re-running it moves the spotlight with it. A model reads at a fairly even pace,
+and being a syllable out is invisible on something this soft. The dimming is a set of Web
+Animations that are never played, only scrubbed from the narration's own `currentTime`, which is
+what makes it survive a pause, a re-entry and a seek — and what makes it come out in the video
+below, whose recorder already pauses every animation on the page and sets its `currentTime` by
+hand. Since the markup is stripped before the script is hashed, adding a cue costs no recording.
+
 **`tools/slide-video.mjs` — the deck as a file you can send someone.**
 
 ```bash
