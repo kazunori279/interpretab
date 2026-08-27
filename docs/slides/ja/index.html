@@ -419,69 +419,27 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="notes silent">後半は双方向モード。1 つのパネルに 2 言語で、どちらの向きかは自分で判定している。</div>
 </section>
 
-<!-- ══════════════ 4 · DEMO, COST ══════════════ -->
-<section class="slide demo">
-  <div class="h">デモ: いくらかかるか</div>
-  <div class="split">
-    <div class="chips">
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <circle cx="15" cy="24" r="9" stroke="#4285F4" stroke-width="2.5"/>
-          <path class="nudge" d="M24 24h19m-4 0v7m-6-7v5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <div class="ct">自分の API キー</div>
-        <div class="cb"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI
-        Studio</a> で取る。外に出る通信は Google の API だけ。</div>
-      </div>
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <path d="M7 33a18 18 0 1 1 34 0" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="nudge" d="M24 33 34 20" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="24" cy="33" r="2.6" fill="#34A853"/>
-        </svg>
-        <div class="ct">使用量メーター</div>
-        <div class="cb">経過時間と、かかった金額が実行中ずっと出つづける。</div>
-      </div>
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <path d="M25 6H9a3 3 0 0 0-3 3v16l17 17a3 3 0 0 0 4.2 0l12.8-12.8a3 3 0 0 0 0-4.2z"
-                stroke="#FBBC05" stroke-width="2.5" stroke-linejoin="round"/>
-          <circle class="pulse" cx="15" cy="15" r="3.2" fill="#FBBC05"/>
-        </svg>
-        <div class="ct">まず<a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">無料枠</a>で</div>
-        <div class="cb">有料でも、料金は自分の Google アカウントに直接かかる。</div>
-      </div>
-    </div>
-    <video src="../video/demo-cost.mp4" poster="../video/demo-cost.jpg" preload="metadata" playsinline
-           aria-label="ライブ翻訳モデルの Gemini API 料金ページ、続いて拡張機能の Chrome ウェブストアの掲載ページ">
-      <track kind="subtitles" srclang="ja" label="日本語" src="../video/demo-cost.ja.vtt" default>
-    </video>
-  </div>
-  <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes silent">Google が価格を変えることがあるので、金額は拡張機能に入れず、外の設定ファイルから読む。スライド 11 で説明する。</div>
-</section>
-
-<!-- ══════════════ 5 · ARCHITECTURE ══════════════ -->
+<!-- ══════════════ 4 · ARCHITECTURE ══════════════ -->
 <section class="slide">
   <div class="h">Interpretab のアーキテクチャ</div>
   <div class="diagram" style="margin-top:32px;">
 <svg viewBox="0 0 1152 448" width="100%" aria-label="Web Audio がタブとマイクを 1 つの offscreen document 内の 3 つの AudioContext に取り込み、その 3 つのまとまりからタブ用とマイク用の 2 本の WebSocket が分かれて Gemini Live API との間で音声を送受信し、訳された音声がスピーカー、字幕、通話へ戻ってくる">
   <defs>
-    <marker id="s05-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s04-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
     <!-- auto-start-reverse so one marker serves both ends: each socket is a
          single bidirectional line, not an uplink paired with a downlink. -->
-    <marker id="s05-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto-start-reverse">
+    <marker id="s04-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto-start-reverse">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
     </marker>
     <!-- Both sockets leave the amber block from one point on its edge and fork.
          A line per inner box would say each socket belongs to one AudioContext,
          which is wrong: both send what ctxUp captured and both feed ctxDown. -->
-    <path id="s05-tab"  d="M480 286 H 500 V 262 H 848"/>
-    <path id="s05-mic"  d="M480 286 H 500 V 310 H 848"/>
-    <path id="s05-tabr" d="M848 262 H 500 V 286 H 480"/>
-    <path id="s05-micr" d="M848 310 H 500 V 286 H 480"/>
+    <path id="s04-tab"  d="M480 286 H 500 V 262 H 848"/>
+    <path id="s04-mic"  d="M480 286 H 500 V 310 H 848"/>
+    <path id="s04-tabr" d="M848 262 H 500 V 286 H 480"/>
+    <path id="s04-micr" d="M848 310 H 500 V 286 H 480"/>
   </defs>
 
   <!-- primer: the three things a reader may not have met -->
@@ -585,28 +543,26 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <path d="M216 259 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
   <path d="M216 283 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
 
-  <path d="M176 195 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
-  <path d="M186 195 V 259 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
-  <path d="M176 283 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <path d="M176 195 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
+  <path d="M186 195 V 259 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
+  <path d="M176 283 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
   <circle cx="186" cy="195" r="3.2" fill="#5F6368"/>
 
-  <path d="M230 350 H 172" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s05-arw)"/>
+  <path d="M230 350 H 172" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s04-arw)"/>
 
-  <use href="#s05-tab" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
-  <use href="#s05-mic" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
-  <use href="#s05-tab" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
-  <use href="#s05-mic" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s05-tab"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s05-tabr"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#s05-mic"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#s05-micr"/></animateMotion></circle>
+  <use href="#s04-tab" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s04-arwb)" marker-end="url(#s04-arwb)"/>
+  <use href="#s04-mic" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s04-arwb)" marker-end="url(#s04-arwb)"/>
+  <use href="#s04-tab" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <use href="#s04-mic" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s04-tab"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s04-tabr"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#s04-mic"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#s04-micr"/></animateMotion></circle>
 
   <text x="655" y="246" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">ソケット 1 &middot; タブの音声</text>
   <text x="655" y="294" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">ソケット 2 &middot; マイク</text>
   <text x="655" y="342" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">1 本で送受信する。行きが元の音声、帰りが訳した音声</text>
-  <text x="655" y="362" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">送るのは ctxUp、受け取るのは ctxDown。2 本とも同じ</text>
-  <text x="655" y="384" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">モデルも言語も声も 1 本に 1 組だけ。だから 2 本ある</text>
-  <text x="655" y="408" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#80868B">利用者自身の API キーで直接つなぐ</text>
+  <text x="655" y="362" text-anchor="middle" font-family="Google Sans Text, Noto Sans JP, Arial, sans-serif" font-size="13" fill="#5F6368">送るのは ctxUp、受け取るのは ctxDown</text>
 
   <rect x="856" y="244" width="296" height="88" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
   <text x="1004" y="280" text-anchor="middle" font-family="Google Sans, Noto Sans JP, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
@@ -634,7 +590,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   マイク用のそれぞれに 1 本ずつ使います。</div>
 </section>
 
-<!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
+<!-- ══════════════ 5 · THE TWO MODELS ══════════════ -->
 <section class="slide">
   <div class="h">2 つの Live モデル</div>
   <div class="diagram" style="margin-top:10px;">
@@ -716,7 +672,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   相手が話し終わるのを待ちます。そのぶん翻訳は遅くなりますが、品質が高く、コストも安くて、また用語登録機能を持たせられます。</div>
 </section>
 
-<!-- ══════════════ 7 · MEET ══════════════ -->
+<!-- ══════════════ 6 · MEET ══════════════ -->
 <section class="slide">
   <div class="h">Meet とどう組み合わさるか</div>
   <div class="hsub">拡張機能を OS のマイクとして登録することはできない。でも、ページの中でならできる。</div>
@@ -809,7 +765,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   エンドツーエンドの遅延は、およそ 3 秒です。</div>
 </section>
 
-<!-- ══════════════ 8 · BREAK ══════════════ -->
+<!-- ══════════════ 7 · BREAK ══════════════ -->
 <section class="slide break">
   <div class="n">手強かったところは</div>
   <div class="name">この 3 つ</div>
@@ -841,7 +797,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="notes">開発中に出てきた課題はこの 3 つです。それぞれ簡単に説明します。</div>
 </section>
 
-<!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
+<!-- ══════════════ 8 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
   <div class="h">ソケットを途切れずに切り替える</div>
   <div class="hsub">Live API のソケットは約 10 分で必ず切断される。切断の 50 秒前にサーバーから goAway
@@ -910,7 +866,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   API 自身の sessionResumption は、試したうえで使っていません。モデルが直前の 1 文をもう一度読み上げてしまうためです。</div>
 </section>
 
-<!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
+<!-- ══════════════ 9 · ERROR HANDLING ══════════════ -->
 <section class="slide">
   <div class="h">エラーの扱い</div>
   <div class="hsub">WebSocket が切れると、ブラウザに届くのは close コードという番号だけ。理由は付いてこない。</div>
@@ -923,7 +879,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
       </svg></div>
       <div class="ct"><a href="https://developer.mozilla.org/ja/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">close 1006</a> &middot; 理由なし</div><div class="cr"></div>
-      <div class="cb">キーの誤り、使い切った quota、ホテルの Wi-Fi。どれも同じ空っぽの close で、区別する手がかりがない。</div>
+      <div class="cb">キーの誤り、使い切った quota、ネットワークの不具合。どれも同じ空っぽの close で、区別する手がかりがない。</div>
     </div>
     <div class="card">
       <div class="ico"><svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -960,7 +916,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   セッションの途中で quota を越えたときだけは理由の文が付きますが、123 バイトで切れています。どちらもリトライはしません。</div>
 </section>
 
-<!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
+<!-- ══════════════ 10 · MODEL MIGRATION ══════════════ -->
 <section class="slide">
   <div class="h">新しい Live モデルへ自動で移行する</div>
   <div class="diagram" style="margin-top:10px;">
@@ -1051,7 +1007,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   起動時と 6 時間ごとに読みに来て、次のソケット切り替えで実行の途中から乗り換えます。ストアの再審査は要りません。</div>
 </section>
 
-<!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
+<!-- ══════════════ 11 · TEST RESULTS ══════════════ -->
 <section class="slide">
   <div class="h">エンドツーエンドの長時間 soak テスト</div>
   <div class="rail" style="margin-top:44px;">
@@ -1077,7 +1033,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   文の途中で引き継いだ回も、訳文は採点に通っています。</div>
 </section>
 
-<!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
+<!-- ══════════════ 12 · LESSONS LEARNED ══════════════ -->
 <section class="slide">
   <div class="h">学んだこと</div>
   <div class="grid c4 numbers" style="margin-top:44px;">
@@ -1125,7 +1081,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   モデル名も価格も頻繁に変わります。</div>
 </section>
 
-<!-- ══════════════ 14 · THANK YOU ══════════════ -->
+<!-- ══════════════ 13 · THANK YOU ══════════════ -->
 <section class="slide flex thanks">
   <div class="inner">
     <h1>ありがとうございました</h1>

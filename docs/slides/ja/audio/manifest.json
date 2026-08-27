@@ -7,7 +7,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-05.mp3": {
+  "slide-04.mp3": {
     "hash": "1298a099490f8e57",
     "words": 26,
     "seconds": 26.4,
@@ -15,7 +15,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-06.mp3": {
+  "slide-05.mp3": {
     "hash": "1f1700fcee54c4bd",
     "words": 9,
     "seconds": 15.8,
@@ -23,7 +23,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-07.mp3": {
+  "slide-06.mp3": {
     "hash": "fa77c0568f941163",
     "words": 29,
     "seconds": 38.8,
@@ -31,7 +31,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-08.mp3": {
+  "slide-07.mp3": {
     "hash": "215d7067d31f8ef0",
     "words": 3,
     "seconds": 4.1,
@@ -39,7 +39,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-09.mp3": {
+  "slide-08.mp3": {
     "hash": "f8871583f16f37f2",
     "words": 28,
     "seconds": 28.5,
@@ -47,7 +47,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-10.mp3": {
+  "slide-09.mp3": {
     "hash": "6cb25655f7e8479c",
     "words": 16,
     "seconds": 23.3,
@@ -55,7 +55,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-11.mp3": {
+  "slide-10.mp3": {
     "hash": "e40ee6894b1041ba",
     "words": 16,
     "seconds": 30.9,
@@ -63,7 +63,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-12.mp3": {
+  "slide-11.mp3": {
     "hash": "0d8780e727b9da01",
     "words": 19,
     "seconds": 21.8,
@@ -71,7 +71,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-13.mp3": {
+  "slide-12.mp3": {
     "hash": "92ed2bd24fdbd173",
     "words": 15,
     "seconds": 26.9,
@@ -79,7 +79,7 @@
     "rate": 1.15,
     "model": "gemini-3.1-flash-tts-preview"
   },
-  "slide-14.mp3": {
+  "slide-13.mp3": {
     "hash": "4c56c2483578406c",
     "words": 11,
     "seconds": 7.4,

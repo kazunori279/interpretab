@@ -1919,10 +1919,10 @@ than the URL — `generateContent` accepts a header, unlike the Live API — and
 for the same reason every other script here reads one.
 
 The API has no speaking-rate parameter, and asking the model in prose for a faster read gets a
-different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the three demo
+different performance every time, so `ffmpeg`'s `atempo` does the final 1.15× and the two demo
 clips are played back at the same ratio. That is the whole of the pacing: 3m33s of narration and
-1m27s of video, five minutes exactly against a five-minute slot. The Japanese deck runs 5m28s,
-because the same content takes longer to say in Japanese.
+1m16s of video, 4m49s against a five-minute slot. The Japanese deck runs 5m16s, because the same
+content takes longer to say in Japanese.
 
 **`tools/slide-video.mjs` — the deck as a file you can send someone.**
 

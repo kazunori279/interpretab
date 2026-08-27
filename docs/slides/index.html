@@ -404,68 +404,27 @@ table.t .ok { color: var(--green); font-weight: 700; }
   direction each sentence is going.</div>
 </section>
 
-<!-- ══════════════ 4 · DEMO, COST ══════════════ -->
-<section class="slide demo">
-  <div class="h">Demo: what it costs</div>
-  <div class="split">
-    <div class="chips">
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <circle cx="15" cy="24" r="9" stroke="#4285F4" stroke-width="2.5"/>
-          <path class="nudge" d="M24 24h19m-4 0v7m-6-7v5" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <div class="ct">Your own key</div>
-        <div class="cb">From <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">AI
-        Studio</a>. It stays in the browser and goes nowhere but Google's API.</div>
-      </div>
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <path d="M7 33a18 18 0 1 1 34 0" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="nudge" d="M24 33 34 20" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="24" cy="33" r="2.6" fill="#34A853"/>
-        </svg>
-        <div class="ct">A meter, live</div>
-        <div class="cb">Minutes elapsed and what the run has spent, updating while it runs.</div>
-      </div>
-      <div class="chip">
-        <svg width="40" height="40" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <path d="M25 6H9a3 3 0 0 0-3 3v16l17 17a3 3 0 0 0 4.2 0l12.8-12.8a3 3 0 0 0 0-4.2z"
-                stroke="#FBBC05" stroke-width="2.5" stroke-linejoin="round"/>
-          <circle class="pulse" cx="15" cy="15" r="3.2" fill="#FBBC05"/>
-        </svg>
-        <div class="ct"><a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Free tier</a> first</div>
-        <div class="cb">And a paid key is billed to the person using it. None of it rolls up to me.</div>
-      </div>
-    </div>
-    <video src="video/demo-cost.mp4" poster="video/demo-cost.jpg" preload="metadata" playsinline
-           aria-label="The Gemini API pricing page for the live translation model, then the extension's Chrome Web Store listing"></video>
-  </div>
-  <div class="foot"><span class="gc">Interpretab</span><span class="pageno"></span></div>
-  <div class="notes silent">Prices move; the extension reads them from a file rather than shipping them. That is
-  slide eleven.</div>
-</section>
-
-<!-- ══════════════ 5 · ARCHITECTURE ══════════════ -->
+<!-- ══════════════ 4 · ARCHITECTURE ══════════════ -->
 <section class="slide">
   <div class="h">Interpretab architecture</div>
   <div class="diagram" style="margin-top:32px;">
 <svg viewBox="0 0 1152 448" width="100%" aria-label="Web Audio captures the tab and the microphone into three AudioContexts inside one offscreen document, two WebSockets fork out of those three and carry audio both ways to the Gemini Live API, and the translated speech comes back to the speakers, the subtitles and the call">
   <defs>
-    <marker id="s05-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
+    <marker id="s04-arw" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#5F6368"/>
     </marker>
     <!-- auto-start-reverse so one marker serves both ends: each socket is a
          single bidirectional line, not an uplink paired with a downlink. -->
-    <marker id="s05-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto-start-reverse">
+    <marker id="s04-arwb" markerWidth="9" markerHeight="9" refX="7.2" refY="3.2" orient="auto-start-reverse">
       <path d="M0 0 L7.2 3.2 L0 6.4 z" fill="#4285F4"/>
     </marker>
     <!-- Both sockets leave the amber block from one point on its edge and fork.
          A line per inner box would say each socket belongs to one AudioContext,
          which is wrong: both send what ctxUp captured and both feed ctxDown. -->
-    <path id="s05-tab"  d="M480 286 H 500 V 262 H 848"/>
-    <path id="s05-mic"  d="M480 286 H 500 V 310 H 848"/>
-    <path id="s05-tabr" d="M848 262 H 500 V 286 H 480"/>
-    <path id="s05-micr" d="M848 310 H 500 V 286 H 480"/>
+    <path id="s04-tab"  d="M480 286 H 500 V 262 H 848"/>
+    <path id="s04-mic"  d="M480 286 H 500 V 310 H 848"/>
+    <path id="s04-tabr" d="M848 262 H 500 V 286 H 480"/>
+    <path id="s04-micr" d="M848 310 H 500 V 286 H 480"/>
   </defs>
 
   <!-- primer: the three things a reader may not have met -->
@@ -568,28 +527,26 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <path d="M216 259 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
   <path d="M216 283 H 228" stroke="#FEF7E0" stroke-width="6" fill="none"/>
 
-  <path d="M176 195 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
-  <path d="M186 195 V 259 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
-  <path d="M176 283 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s05-arw)"/>
+  <path d="M176 195 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
+  <path d="M186 195 V 259 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
+  <path d="M176 283 H 230" stroke="#5F6368" stroke-width="1.8" fill="none" marker-end="url(#s04-arw)"/>
   <circle cx="186" cy="195" r="3.2" fill="#5F6368"/>
 
-  <path d="M230 350 H 172" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s05-arw)"/>
+  <path d="M230 350 H 172" fill="none" stroke="#5F6368" stroke-width="1.8" marker-end="url(#s04-arw)"/>
 
-  <use href="#s05-tab" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
-  <use href="#s05-mic" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s05-arwb)" marker-end="url(#s05-arwb)"/>
-  <use href="#s05-tab" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
-  <use href="#s05-mic" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s05-tab"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s05-tabr"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#s05-mic"/></animateMotion></circle>
-  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#s05-micr"/></animateMotion></circle>
+  <use href="#s04-tab" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s04-arwb)" marker-end="url(#s04-arwb)"/>
+  <use href="#s04-mic" stroke="#4285F4" stroke-width="2" fill="none" marker-start="url(#s04-arwb)" marker-end="url(#s04-arwb)"/>
+  <use href="#s04-tab" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <use href="#s04-mic" class="dashflow" stroke="#8AB4F8" stroke-width="2" fill="none"/>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#s04-tab"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#s04-tabr"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#s04-mic"/></animateMotion></circle>
+  <circle r="5" fill="#4285F4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#s04-micr"/></animateMotion></circle>
 
   <text x="655" y="246" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">Socket 1 &middot; tab audio</text>
   <text x="655" y="294" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="14" font-weight="500" fill="#174EA6">Socket 2 &middot; microphone</text>
   <text x="655" y="342" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">One socket, both ways: audio out, translation back</text>
-  <text x="655" y="362" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">Out of ctxUp, back into ctxDown. Both the same</text>
-  <text x="655" y="384" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">One set of model, language and voice each, so two</text>
-  <text x="655" y="408" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#80868B">wss://, carrying the user's own key</text>
+  <text x="655" y="362" text-anchor="middle" font-family="Google Sans Text, Arial, sans-serif" font-size="13" fill="#5F6368">Out of ctxUp, back into ctxDown</text>
 
   <rect x="856" y="244" width="296" height="88" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
   <text x="1004" y="280" text-anchor="middle" font-family="Google Sans, Arial, sans-serif" font-size="19" font-weight="500" fill="#0D652D">Gemini Live API</text>
@@ -616,7 +573,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   two WebSockets, one for the tab audio and one for the microphone.</div>
 </section>
 
-<!-- ══════════════ 6 · THE TWO MODELS ══════════════ -->
+<!-- ══════════════ 5 · THE TWO MODELS ══════════════ -->
 <section class="slide">
   <div class="h">The two Live models</div>
   <div class="diagram" style="margin-top:10px;">
@@ -699,7 +656,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   that can take a glossary.</div>
 </section>
 
-<!-- ══════════════ 7 · MEET ══════════════ -->
+<!-- ══════════════ 6 · MEET ══════════════ -->
 <section class="slide">
   <div class="h">How it integrates with Meet</div>
   <div class="hsub">No extension can register an audio input with the system. One page is another matter.</div>
@@ -793,7 +750,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   end-to-end delay is about three seconds.</div>
 </section>
 
-<!-- ══════════════ 8 · BREAK ══════════════ -->
+<!-- ══════════════ 7 · BREAK ══════════════ -->
 <section class="slide break">
   <div class="n">The hard parts</div>
   <div class="name">Three things that fought back</div>
@@ -825,7 +782,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   <div class="notes">Three problems that came up while building this. I will go through them one at a time.</div>
 </section>
 
-<!-- ══════════════ 9 · SESSION LIFECYCLE ══════════════ -->
+<!-- ══════════════ 8 · SESSION LIFECYCLE ══════════════ -->
 <section class="slide">
   <div class="h">Session lifecycle</div>
   <div class="hsub">A Live API socket is capped at about ten minutes. That surprises most people. The server
@@ -897,7 +854,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   model reads its last sentence out again.</div>
 </section>
 
-<!-- ══════════════ 10 · ERROR HANDLING ══════════════ -->
+<!-- ══════════════ 9 · ERROR HANDLING ══════════════ -->
 <section class="slide">
   <div class="h">Error handling</div>
   <div class="hsub">When a WebSocket closes, all the browser gets is a close code. No reason comes with it.</div>
@@ -910,7 +867,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
         <circle cx="24" cy="32.5" r="1.9" fill="#EA4335"/>
       </svg></div>
       <div class="ct"><a href="https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code" target="_blank" rel="noopener">close 1006</a> &middot; no reason</div><div class="cr"></div>
-      <div class="cb">A bad key, a spent quota, a hotel Wi-Fi login page. All the same empty close, with
+      <div class="cb">A bad key, a spent quota, a network fault. All the same empty close, with
       nothing in it to tell them apart.</div>
     </div>
     <div class="card">
@@ -951,7 +908,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   is cut off at a hundred and twenty-three bytes. Neither one is worth retrying.</div>
 </section>
 
-<!-- ══════════════ 11 · MODEL MIGRATION ══════════════ -->
+<!-- ══════════════ 10 · MODEL MIGRATION ══════════════ -->
 <section class="slide">
   <div class="h">Automatic migration to new Live models</div>
   <div class="diagram" style="margin-top:10px;">
@@ -1044,7 +1001,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   of a run. No store re-review.</div>
 </section>
 
-<!-- ══════════════ 12 · TEST RESULTS ══════════════ -->
+<!-- ══════════════ 11 · TEST RESULTS ══════════════ -->
 <section class="slide">
   <div class="h">Long-running end-to-end soak testing</div>
   <div class="rail" style="margin-top:44px;">
@@ -1074,7 +1031,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   nothing closed by the server. Even the ones that handed over mid-sentence passed grading.</div>
 </section>
 
-<!-- ══════════════ 13 · LESSONS LEARNED ══════════════ -->
+<!-- ══════════════ 12 · LESSONS LEARNED ══════════════ -->
 <section class="slide">
   <div class="h">Lessons learned</div>
   <div class="grid c4 numbers" style="margin-top:44px;">
@@ -1128,7 +1085,7 @@ table.t .ok { color: var(--green); font-weight: 700; }
   and prices move often.</div>
 </section>
 
-<!-- ══════════════ 14 · THANK YOU ══════════════ -->
+<!-- ══════════════ 13 · THANK YOU ══════════════ -->
 <section class="slide flex thanks">
   <div class="inner">
     <h1>Thank you</h1>
