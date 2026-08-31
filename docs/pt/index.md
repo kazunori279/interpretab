@@ -136,23 +136,42 @@ por qual a tradução dele é falada. Para parar de traduzir por um momento, ou 
 barulhento a ponto de entrarem vozes que você não queria traduzir, o botão de desligar o microfone
 corta a entrada a qualquer momento.
 
+### 📽️ Legendar uma apresentação de slides
+
+O Interpretab consegue pôr **a tradução da sua própria voz sobre os slides, numa reunião online,
+numa transmissão ao vivo ou diante de uma plateia.**
+
+{% include slide-steps.html %}
+
 ### 👥 Usando em reuniões online
+
+O Interpretab também serve para **traduzir uma reunião online**, desde que ela rode no navegador:
+aplicativos de desktop e clientes nativos estão fora de alcance.
 
 **Ouvir o outro lado é o que esta ferramenta faz de fábrica.** Abra a reunião em uma aba, ligue o
 áudio da aba, escolha o seu idioma e aperte Start. O que disserem chega no seu idioma, falado e
 legendado.
 
-#### 🤝 Usar com o Google Meet
+**Para mostrar a eles a sua própria voz legendada**, vale o mesmo método da seção dos slides,
+acima. Sem nada para apresentar, compartilhe qualquer página (google.com serve) e deixe as legendas
+do microfone aparecerem nela.
 
-**Para que eles ouçam a sua voz traduzida no Google Meet, não há nada a instalar.**
+#### Dublar a sua própria voz numa reunião online
+
+Na maioria das conversas esses dois caminhos bastam. Se quiser a sua voz dublada, e não só
+legendada, o mais simples é que o outro lado instale o Interpretab também.
+
+O Interpretab também dubla a sua própria voz, em caráter experimental. A configuração está abaixo;
+a voz traduzida leva uns três segundos para chegar até eles.
+
+**No Google Meet**
 
 {% include meet-steps.html %}
 
-#### 🔌 Qualquer outro serviço de reunião
+**Em qualquer outro lugar**
 
-A voz traduzida precisa chegar ao aplicativo da reunião como entrada de microfone, e isso pede um
-dispositivo de áudio virtual. O mais simples continua sendo que eles instalem o Interpretab
-também; se não puderem:
+A voz dublada precisa chegar ao aplicativo da reunião como entrada de microfone, e isso pede um
+dispositivo de áudio virtual.
 
 1. Instale um dispositivo de áudio virtual: [BlackHole](https://existential.audio/blackhole/) no macOS, [VB-Cable](https://vb-audio.com/Cable/) no Windows.
 2. Ligue os fones, como acima.
@@ -160,16 +179,6 @@ também; se não puderem:
    do **Microfone**; a do **Áudio da aba** chega nos seus fones.
 4. Na configuração de entrada de microfone do aplicativo da reunião, escolha o dispositivo virtual.
 5. Ligue o áudio da aba e o microfone, ajuste os dois idiomas e aperte Start.
-
-Como isto é uma extensão do Chrome, tudo isso só funciona com as versões web desses serviços —
-aplicativos de desktop e clientes nativos estão fora de alcance.
-
-### 📽️ Legendar uma apresentação de slides
-
-**Numa reunião online, numa transmissão ao vivo ou diante de uma plateia, a tradução da sua própria
-voz pode aparecer sobre os slides.**
-
-{% include slide-steps.html %}
 
 ### 🤖 Os modelos por trás da tradução, e a qualidade dela
 

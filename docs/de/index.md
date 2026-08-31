@@ -136,23 +136,43 @@ seine Übersetzung gesprochen wird. Wenn Sie kurz nicht übersetzen wollen oder 
 Raum ist, dass ungewollte Stimmen mit übersetzt werden, schaltet die Mikrofon-Aus-Taste den Eingang
 jederzeit ab.
 
+### 📽️ Eine Präsentation untertiteln
+
+Interpretab kann **die Übersetzung Ihrer eigenen Stimme auf die Folien setzen, in einer
+Onlinebesprechung, in einem Livestream oder vor einem Saal.**
+
+{% include slide-steps.html %}
+
 ### 👥 Einsatz in Online-Meetings
+
+Interpretab taugt auch zum **Übersetzen eines Online-Meetings**, solange es im Browser läuft:
+Desktop-Apps und native Clients sind außer Reichweite.
 
 **Die Gegenseite zu hören ist das, was dieses Werkzeug von Haus aus tut.** Öffnen Sie das Meeting in
 einem Tab, schalten Sie Tab-Audio ein, wählen Sie Ihre Sprache und drücken Sie Start. Was gesagt
 wird, kommt in Ihrer Sprache an, gesprochen und untertitelt.
 
-#### 🤝 Mit Google Meet nutzen
+**Damit die anderen Ihre eigene Stimme untertitelt sehen**, geht es genauso wie im Folienabschnitt
+oben. Haben Sie nichts zu zeigen, teilen Sie irgendeine Seite (google.com genügt) und lassen die
+Untertitel des Mikrofons darauf laufen.
 
-**Damit die anderen Ihre übersetzte Stimme hören, ist auf Google Meet nichts zu installieren.**
+#### Ihre Stimme im Online-Meeting übersetzt sprechen lassen
+
+Für die meisten Gespräche reichen diese beiden Wege. Soll Ihre Stimme nicht nur untertitelt,
+sondern übersetzt gesprochen werden, ist es am einfachsten, wenn die anderen Interpretab ebenfalls
+installieren.
+
+Interpretab kann Ihre Stimme auch selbst übersetzt sprechen, versuchsweise. Die Einrichtung steht
+unten; die übersetzte Stimme braucht etwa drei Sekunden bis zur Gegenseite.
+
+**Auf Google Meet**
 
 {% include meet-steps.html %}
 
-#### 🔌 Jeder andere Meeting-Dienst
+**Anderswo**
 
 Die übersetzte Stimme muss als Mikrofoneingang in die Meeting-App gelangen, und dafür braucht es
-ein virtuelles Audiogerät. Am einfachsten ist es nach wie vor, wenn die anderen Interpretab
-ebenfalls installieren; geht das nicht:
+ein virtuelles Audiogerät.
 
 1. Ein virtuelles Audiogerät installieren: [BlackHole](https://existential.audio/blackhole/) unter macOS, [VB-Cable](https://vb-audio.com/Cable/) unter Windows.
 2. Kopfhörer anschließen, wie oben.
@@ -160,16 +180,6 @@ ebenfalls installieren; geht das nicht:
    von **Mikrofon**; die von **Tab-Audio** kommt in Ihren Kopfhörern an.
 4. In der Mikrofoneingangs-Einstellung der Meeting-App das virtuelle Gerät auswählen.
 5. Tab-Audio und Mikrofon einschalten, beide Sprachen einstellen und Start drücken.
-
-Weil dies eine Chrome-Erweiterung ist, funktioniert all das nur mit den Browser-Versionen dieser
-Dienste — Desktop-Apps und native Clients sind außer Reichweite.
-
-### 📽️ Eine Präsentation untertiteln
-
-**In einer Onlinebesprechung, in einem Livestream oder vor einem Saal kann die Übersetzung Ihrer
-eigenen Stimme auf den Folien stehen.**
-
-{% include slide-steps.html %}
 
 ### 🤖 Die Modelle hinter der Übersetzung, und ihre Qualität
 

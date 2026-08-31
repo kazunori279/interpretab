@@ -138,23 +138,42 @@ cuál se habla su traducción. Para dejar de traducir un momento, o cuando el si
 es tan ruidoso que se cuelan voces que no querías traducir, el botón de apagar el micrófono corta
 la entrada en cualquier momento.
 
+### 📽️ Subtitular una presentación de diapositivas
+
+Interpretab puede poner **la traducción de tu propia voz sobre las diapositivas, en una reunión en
+línea, en una retransmisión o ante una sala.**
+
+{% include slide-steps.html %}
+
 ### 👥 Usarlo en reuniones en línea
+
+Interpretab también sirve para **traducir una reunión en línea**, siempre que la reunión ocurra en
+el navegador: las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.
 
 **Oír a la otra parte es lo que esta herramienta hace de fábrica.** Abre la reunión en una pestaña,
 enciende el audio de la pestaña, elige tu idioma y pulsa Start. Lo que digan llega en tu idioma,
 hablado y subtitulado.
 
-#### 🤝 Usarlo con Google Meet
+**Para enseñarles tu propia voz subtitulada**, sirve el mismo método de la sección de las
+diapositivas, arriba. Si no tienes nada que presentar, comparte cualquier página (google.com vale)
+y pon ahí los subtítulos del micrófono.
 
-**Para que ellos oigan tu voz traducida en Google Meet, no hay nada que instalar.**
+#### Doblar tu propia voz en una reunión en línea
+
+Con esas dos formas basta casi siempre. Si además de subtítulos quieres que tu voz salga doblada,
+lo más sencillo es que la otra parte instale Interpretab también.
+
+Interpretab también dobla tu propia voz, de forma experimental. La configuración es la de abajo; la
+voz traducida tarda unos tres segundos en llegarles.
+
+**En Google Meet**
 
 {% include meet-steps.html %}
 
-#### 🔌 Cualquier otro servicio de reuniones
+**En cualquier otro sitio**
 
-La voz traducida tiene que llegar a la aplicación de la reunión como entrada de micrófono, y eso
-pide un dispositivo de audio virtual. Lo más sencillo sigue siendo que instalen Interpretab también
-y traduzcan tu voz en su lado; si no pueden:
+La voz doblada tiene que llegar a la aplicación de la reunión como entrada de micrófono, y eso pide
+un dispositivo de audio virtual.
 
 1. Instala un dispositivo de audio virtual: [BlackHole](https://existential.audio/blackhole/) en macOS, [VB-Cable](https://vb-audio.com/Cable/) en Windows.
 2. Conecta auriculares, como arriba.
@@ -163,16 +182,6 @@ y traduzcan tu voz en su lado; si no pueden:
 4. En el ajuste de entrada de micrófono de la aplicación de la reunión, elige el dispositivo
    virtual.
 5. Enciende el audio de la pestaña y el micrófono, pon los dos idiomas y pulsa Start.
-
-Como esto es una extensión de Chrome, todo lo anterior solo funciona con las versiones web de estos
-servicios; las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.
-
-### 📽️ Subtitular una presentación de diapositivas
-
-**En una reunión en línea, en una retransmisión o ante una sala, la traducción de tu propia voz
-puede salir sobre las diapositivas.**
-
-{% include slide-steps.html %}
 
 ### 🤖 Los modelos detrás de la traducción, y su calidad
 

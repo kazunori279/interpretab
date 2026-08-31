@@ -135,23 +135,42 @@ translation is spoken out of. To stop translating for a moment, or when the room
 enough that voices you did not mean to translate are getting through, the microphone-off button
 turns the input off at any time.
 
+### 📽️ Subtitling a slide presentation
+
+Interpretab can put **the translation of your own voice on the slides, in an online meeting, a
+live stream, or a room in person.**
+
+{% include slide-steps.html %}
+
 ### 👥 Using it in online meetings
+
+Interpretab is also good at **translating an online meeting**, as long as the meeting runs in the
+browser: desktop apps and native clients are out of reach.
 
 **Hearing the other side is what this tool does out of the box.** Open the meeting in a tab, turn
 tab audio on, pick your language and press Start. What they say arrives in your language, spoken
 and subtitled.
 
-#### 🤝 Using with Google Meet
+**To show the other side your own voice subtitled**, use the same method as the slide section
+above. With no deck to show, share any page (google.com will do) and put the microphone's
+subtitles on it.
 
-**On Google Meet, for them to hear your voice translated too, there is nothing to install.**
+#### Dubbing your own voice in an online meeting
+
+Those two are enough for most conversations. If you want your voice dubbed rather than only
+subtitled, the simplest answer is for the other side to install Interpretab too.
+
+Interpretab also dubs your own voice, as an experiment. The setup is below; the translated voice
+takes about three seconds to reach them.
+
+**On Google Meet**
 
 {% include meet-steps.html %}
 
-#### 🔌 Any other meeting service
+**Anywhere else**
 
-The translated voice has to reach the meeting app as a microphone input, and that needs a virtual
-audio device. The simplest answer is still that the other side installs Interpretab too and
-translates your voice on their end; failing that:
+The dubbed voice has to reach the meeting app as a microphone input, and that needs a virtual audio
+device.
 
 1. Install a virtual audio device: [BlackHole](https://existential.audio/blackhole/) on macOS,
    [VB-Cable](https://vb-audio.com/Cable/) on Windows.
@@ -160,16 +179,6 @@ translates your voice on their end; failing that:
    goes there; the one from **Tab audio** arrives in your headphones.
 4. In the meeting app's microphone input setting, choose the virtual device.
 5. Turn on tab audio and the microphone, set both languages, and press Start.
-
-Because this is a Chrome extension, all of this only works with the browser versions of these
-services — desktop apps and native clients are out of reach.
-
-### 📽️ Subtitling a slide presentation
-
-**In an online meeting, a live stream, or a room in person, the translation of your own voice can go
-on the slides.**
-
-{% include slide-steps.html %}
 
 ### 🤖 The models behind the translation, and its quality
 

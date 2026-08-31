@@ -139,23 +139,42 @@ lequel sa traduction est prononcée. Pour arrêter la traduction un instant, ou 
 est assez bruyante pour que des voix non voulues passent, le bouton d'extinction du microphone
 coupe l'entrée à tout moment.
 
+### 📽️ Sous-titrer une présentation
+
+Interpretab peut afficher **la traduction de votre propre voix sur les diapositives, en réunion en
+ligne, en direct ou devant une salle.**
+
+{% include slide-steps.html %}
+
 ### 👥 L'utiliser en réunion en ligne
+
+Interpretab sert aussi à **traduire une réunion en ligne**, du moment qu'elle se tient dans le
+navigateur : les applications de bureau et les clients natifs sont hors de portée.
 
 **Entendre l'autre partie est ce que fait cet outil d'origine.** Ouvrez la réunion dans un onglet,
 activez l'audio de l'onglet, choisissez votre langue et appuyez sur Start. Ce qu'ils disent arrive
 dans votre langue, parlé et sous-titré.
 
-#### 🤝 L'utiliser avec Google Meet
+**Pour leur montrer votre propre voix sous-titrée**, la méthode est celle de la section sur les
+diapositives, ci-dessus. Sans rien à présenter, partagez n'importe quelle page (google.com fera
+l'affaire) et laissez les sous-titres du microphone s'y afficher.
 
-**Pour qu'ils entendent votre voix traduite sur Google Meet, il n'y a rien à installer.**
+#### Doubler votre propre voix en réunion en ligne
+
+Ces deux méthodes suffisent la plupart du temps. Si vous voulez que votre voix soit doublée et pas
+seulement sous-titrée, le plus simple est que l'autre partie installe Interpretab de son côté.
+
+Interpretab double aussi votre propre voix, à titre expérimental. Le réglage est ci-dessous ; la
+voix traduite met environ trois secondes à leur parvenir.
+
+**Sur Google Meet**
 
 {% include meet-steps.html %}
 
-#### 🔌 Tout autre service de réunion
+**Ailleurs**
 
-La voix traduite doit parvenir à l'application de réunion comme entrée microphone, et cela demande
-un périphérique audio virtuel. Le plus simple reste qu'ils installent Interpretab de leur côté ;
-s'ils ne peuvent pas :
+La voix doublée doit parvenir à l'application de réunion comme entrée microphone, et cela demande
+un périphérique audio virtuel.
 
 1. Installez un périphérique audio virtuel : [BlackHole](https://existential.audio/blackhole/) sur macOS, [VB-Cable](https://vb-audio.com/Cable/) sur Windows.
 2. Branchez un casque, comme ci-dessus.
@@ -164,16 +183,6 @@ s'ils ne peuvent pas :
 4. Dans le réglage d'entrée microphone de l'application de réunion, choisissez le périphérique
    virtuel.
 5. Activez l'audio de l'onglet et le microphone, réglez les deux langues et appuyez sur Start.
-
-Comme il s'agit d'une extension Chrome, tout ceci ne marche qu'avec les versions web de ces
-services : les applications de bureau et les clients natifs sont hors de portée.
-
-### 📽️ Sous-titrer une présentation
-
-**En réunion en ligne, en direct ou devant une salle, la traduction de votre propre voix peut
-s'afficher sur les diapositives.**
-
-{% include slide-steps.html %}
 
 ### 🤖 Les modèles derrière la traduction, et sa qualité
 
