@@ -1,0 +1,115 @@
+{%- comment -%}
+  The slide-presentation slideshow, under "Subtitling a slide presentation".
+  Same shape as `install-steps.html` and `meet-steps.html` and the same CSS —
+  one step showing at a time, a picture and a marker on the one thing the step
+  asks for — with its own words in `_data/slides.yml` and its own radio group,
+  so a reader can be on a different step of each of the three.
+
+  The tab strip is in two rows, one per phase, the way the Meet one is: setting
+  up with nobody watching, then the two steps taken in front of an audience.
+
+  `figures` is positional. Two are photographs taken per language by
+  `tests/guide-shots.mjs` — the microphone card and the subtitle-size slider,
+  both the extension's own UI, and a reader in Korean is looking at a Korean
+  one. The fourth is `meetstart`, the same photograph of the same button row the
+  Meet section uses: it is one panel with one Start in it, and a second
+  photograph of it would be one more picture to re-take every time the row
+  changes. The two drawings are a deck in a tab and a deck presenting, and
+  neither has a word in it — a slide with lettering on it would be a slide in
+  one language sitting under a sentence in another.
+{%- endcomment -%}
+{%- assign copy = site.data.slides[page.lang] | default: site.data.slides.en -%}
+{%- assign steps = copy.steps -%}
+{%- assign figures = "deck,slidemic,slidesize,meetstart,present" | split: "," -%}
+<div class="install meet">
+  {%- for step in steps %}
+  <input class="install-pick" type="radio" name="slide-step" id="slide-step-{{ forloop.index }}"{% if forloop.first %} checked{% endif %}>
+  {%- endfor %}
+
+  <div class="install-tabs">
+    {%- for step in steps %}
+    {%- if step.phase %}
+    <span class="meet-phase">{{ step.phase }}</span>
+    {%- endif %}
+    <label class="install-tab slide-tab--{{ forloop.index }}" for="slide-step-{{ forloop.index }}"><span class="install-n">{{ forloop.index }}</span>{{ step.tab }}</label>
+    {%- endfor %}
+  </div>
+
+  <div class="install-panes">
+    {%- for step in steps %}
+    {%- assign figure = figures[forloop.index0] -%}
+    {%- assign shot = site.data.shots[figure][page.lang] | default: site.data.shots[figure].en -%}
+    <div class="install-pane slide-pane--{{ forloop.index }}">
+      <div class="install-shot">
+        <p class="install-say">{{ step.body | replace: '<a href=', '<a target="_blank" rel="noopener" href=' }}</p>
+        {%- if shot -%}
+        {%- comment -%}
+          A photograph of the extension, with the ring where `shots.yml` says the
+          control is. Both were measured on the live page when the picture was
+          taken, so re-taking it moves the ring with the control.
+        {%- endcomment -%}
+        <div class="install-figure" style="--wpx: {{ shot.width }}; --hpx: {{ shot.height }}">
+          <img src="{{ "/assets/" | append: shot.file | relative_url }}" alt="{{ step.tab }}" width="{{ shot.width }}" height="{{ shot.height }}">
+          <span class="install-mark install-mark--{{ shot.side }}" aria-hidden="true"
+                style="--x: {{ shot.mark.x }}%; --y: {{ shot.mark.y }}%; --w: {{ shot.mark.width }}%; --h: {{ shot.mark.height }}%">
+            <svg class="install-arrow" viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12h22m-8-8 8 8-8 8" stroke="#3f51b5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        {%- elsif figure == "present" -%}
+        {%- comment -%}
+          The last step, and the only drawing here with no browser around it:
+          that is the point of it. A slide filling the screen, and the subtitles
+          along the bottom of the slide rather than along the bottom of a window
+          — which is where they end up, because the overlay re-parents itself
+          into whatever went fullscreen.
+        {%- endcomment -%}
+        <div class="deck-stage" aria-hidden="true">
+          <span class="install-line install-line--head"></span>
+          <span class="install-line"></span>
+          <span class="install-line deck-line--short"></span>
+          <div class="deck-subs">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        {%- else -%}
+        {%- comment -%}
+          The deck as it starts: a page like any other, in a tab like any other.
+          Drawn the way the install slideshow draws Chrome, with everything but
+          the slide reduced to a grey shape.
+        {%- endcomment -%}
+        <div class="install-browser" aria-hidden="true">
+          <div class="install-tabstrip"><span class="install-tabchip"></span></div>
+          <div class="install-omni">
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            <span class="install-nav"></span>
+            <span class="install-url install-url--page">docs.google.com/presentation</span>
+            <span class="install-ext"></span>
+            <span class="install-ext"></span>
+            <span class="install-avatar"></span>
+          </div>
+          <div class="install-viewport install-viewport--deck">
+            <div class="deck-card">
+              <span class="install-line install-line--head"></span>
+              <span class="install-line"></span>
+              <span class="install-line deck-line--short"></span>
+            </div>
+          </div>
+        </div>
+        {%- endif %}
+        {%- unless forloop.last %}
+        <label class="install-next" for="slide-step-{{ forloop.index | plus: 1 }}">{{ copy.next | default: site.data.slides.en.next }}
+          <svg viewBox="0 0 32 24" width="32" height="24" fill="none" aria-hidden="true">
+            <path d="M3 12h22m-8-8 8 8-8 8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </label>
+        {%- endunless %}
+      </div>
+    </div>
+    {%- endfor %}
+  </div>
+</div>

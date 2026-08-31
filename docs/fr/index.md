@@ -168,6 +168,13 @@ s'ils ne peuvent pas :
 Comme il s'agit d'une extension Chrome, tout ceci ne marche qu'avec les versions web de ces
 services : les applications de bureau et les clients natifs sont hors de portée.
 
+### 📽️ Sous-titrer une présentation
+
+**En réunion en ligne, en direct ou devant une salle, la traduction de votre propre voix peut
+s'afficher sur les diapositives.**
+
+{% include slide-steps.html %}
+
 ### 🤖 Les modèles derrière la traduction, et sa qualité
 
 L'audio de l'onglet et le mode Simultaneous du microphone tournent sur le modèle

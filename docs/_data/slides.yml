@@ -1,0 +1,277 @@
+# The slide-presentation steps, in the ten languages the guide is written in.
+#
+# Sibling of `install.yml` and `meet.yml`, and the same arrangement for the same
+# reason: `_includes/slide-steps.html` is the markup once, this is the words ten
+# times. The three slideshows share their CSS and differ in their radio names, so
+# a reader can be on a different step of each.
+#
+# Two phases, and the line between them is the moment there is an audience.
+# Everything before it is the panel and the Options page, and can be got wrong
+# and fixed; everything after it happens with the room watching.
+#
+# The order is the one constraint. The subtitle size is set on the Options page,
+# which is a different tab — so it comes before Start rather than after it, when
+# leaving the deck would mean leaving the run. Start comes before the slideshow
+# because the side panel has to be out of the way before the deck goes up, and
+# the run carries on without it.
+#
+# `Simultaneous` is left in English in every language because that is what the
+# panel's own menu says everywhere — see `panelMicModeSimul` in each `_locales`.
+#
+# `body` is HTML, `tab` is the short label on the step's button, and links are
+# written with no `target` — all three the same as `install.yml`, and for the
+# reasons written there.
+
+en:
+  next: Next
+  steps:
+    - tab: Open your deck
+      phase: Before you present
+      body: >-
+        Open the deck in a Chrome tab. Google Slides, Microsoft PowerPoint for the web, and most
+        other things that display inside a tab all work; a deck exported to PDF does not.
+    - tab: Your voice, their language
+      body: >-
+        Open Interpretab's side panel on that tab. Turn <b>Microphone</b> on, leave it on
+        <b>Simultaneous</b>, and set it to the language the room reads. If the sound of a video or a
+        demo on a slide should be translated too, turn <b>Tab audio</b> on as well and set it to the
+        same language.
+    - tab: Set the size
+      body: >-
+        Open <b>Options → Subtitle size</b> and set it to a size that suits the room.
+    - tab: Press Start
+      phase: With an audience
+      body: >-
+        Press <b>Start</b>, then close the side panel with the <b>×</b> at its top corner. Closing
+        it does not stop the translation.
+    - tab: Present
+      body: >-
+        Start the slideshow. Once it is running, keep talking for a moment and check that the
+        subtitles come up (on Google Slides the first sentence is not translated, which is how it
+        behaves). When the talk is over, close the tab, or open Interpretab's side panel and press
+        <b>Stop</b>, and the translation stops.
+
+# Chinese, Japanese and Korean below are one line per `body`, as in `install.yml`:
+# a folded scalar joins its lines with a space, and a space between two kanji is
+# a space a reader sees.
+ja:
+  next: 次へ
+  steps:
+    - tab: スライドをタブで開く
+      phase: 発表の前に
+      body: スライドを Chrome のタブで開きます。Google スライドや、Microsoft PowerPoint for the web など、タブ内で表示できるものはほとんど動作します（ただし PDF スライドには対応していません）。
+    - tab: 自分の声を相手の言語へ
+      body: そのタブで Interpretab のサイドパネルを開きます。<b>マイク音声翻訳</b>をオンにし、<b>Simultaneous</b> のまま、翻訳先を<b>聞き手が読む言語</b>にします。スライドの中の動画やデモの音声も翻訳したい場合は、<b>タブ音声翻訳</b>もオンにして同じ言語を設定してください。
+    - tab: 字幕の大きさを調整
+      body: <b>オプション → 字幕の大きさ</b>を開いて適切な大きさに設定します。
+    - tab: Start を押す
+      phase: 聞き手の前で
+      body: <b>Start</b> を押し、サイドパネルを右上の <b>×</b> で閉じます。サイドパネルを閉じても翻訳はストップしません。
+    - tab: 発表する
+      body: スライドショーを開始します。スライドショーの開始後に、少し続けて話してみて、字幕が出ることを確認します（Google スライドで利用する場合は、仕様により最初の一言が翻訳されません）。スライドショーが終わったら、タブを閉じるか、Interpretab のサイドパネルで <b>Stop</b> を押すと翻訳がストップします。
+
+zh:
+  next: 下一步
+  steps:
+    - tab: 在标签页里打开幻灯片
+      phase: 上台之前
+      body: 用 Chrome 的标签页打开幻灯片。Google 幻灯片、Microsoft PowerPoint for the web，以及几乎所有能在标签页里显示的东西都可以（导出成 PDF 的幻灯片除外）。
+    - tab: 你说的话，他们的语言
+      body: 在那个标签页上打开 Interpretab 的侧边栏。把<b>麦克风</b>打开，保持 <b>Simultaneous</b>，译为<b>台下读的语言</b>。如果幻灯片里的视频或演示的声音也要翻译，就把<b>标签页音频</b>也打开，设成同一种语言。
+    - tab: 调整字幕大小
+      body: 打开<b>选项 → 字幕大小</b>，调到合适的大小。
+    - tab: 按 Start
+      phase: 台下有人时
+      body: 按 <b>Start</b>，再用右上角的 <b>×</b> 关掉侧边栏。关掉之后翻译不会停。
+    - tab: 开始演示
+      body: 开始放映幻灯片。放映开始之后再多说几句，确认字幕出得来（用 Google 幻灯片时，因为它的机制，第一句话不会被翻译）。讲完之后关掉这个标签页，或者在 Interpretab 的侧边栏按 <b>Stop</b>，翻译就停下来。
+
+es:
+  next: Siguiente
+  steps:
+    - tab: Abre la presentación
+      phase: Antes de presentar
+      body: >-
+        Abre la presentación en una pestaña de Chrome. Google Slides, Microsoft PowerPoint para la
+        web y casi cualquier cosa que se vea dentro de una pestaña funcionan; una presentación
+        exportada a PDF, no.
+    - tab: Tu voz, su idioma
+      body: >-
+        Abre ahí el panel lateral de Interpretab. Activa <b>Micrófono</b>, déjalo en
+        <b>Simultaneous</b> y ponlo en el idioma que lee la sala. Si también hay que traducir el
+        sonido de un vídeo o de una demo de la presentación, activa <b>Audio de la pestaña</b> y
+        ponlo en ese mismo idioma.
+    - tab: Ajusta el tamaño
+      body: >-
+        Abre <b>Opciones → Tamaño de los subtítulos</b> y ponlo en un tamaño que le sirva a la sala.
+    - tab: Pulsa Start
+      phase: Con público
+      body: >-
+        Pulsa <b>Start</b> y cierra el panel lateral con la <b>×</b> de su esquina superior.
+        Cerrarlo no detiene la traducción.
+    - tab: Presenta
+      body: >-
+        Arranca la presentación. Cuando ya esté en marcha, sigue hablando un momento y comprueba
+        que salen los subtítulos (con Google Slides la primera frase no se traduce; así funciona).
+        Al terminar, cierra la pestaña, o abre el panel lateral de Interpretab y pulsa <b>Stop</b>
+        para detener la traducción.
+
+fr:
+  next: Suivant
+  steps:
+    - tab: Ouvrez votre présentation
+      phase: Avant de présenter
+      body: >-
+        Ouvrez la présentation dans un onglet Chrome. Google Slides, Microsoft PowerPoint pour le
+        web et à peu près tout ce qui s'affiche dans un onglet fonctionnent ; une présentation
+        exportée en PDF, non.
+    - tab: Votre voix, leur langue
+      body: >-
+        Ouvrez le panneau latéral d'Interpretab sur cet onglet. Activez <b>Microphone</b>,
+        laissez-le sur <b>Simultaneous</b> et mettez-le dans la langue que lit la salle. S'il faut
+        aussi traduire le son d'une vidéo ou d'une démo de la présentation, activez <b>Audio de
+        l'onglet</b> dans cette même langue.
+    - tab: Réglez la taille
+      body: >-
+        Ouvrez <b>Options → Taille des sous-titres</b> et réglez-la à une taille qui convient à la
+        salle.
+    - tab: Appuyez sur Start
+      phase: Devant la salle
+      body: >-
+        Appuyez sur <b>Start</b>, puis fermez le panneau latéral avec le <b>×</b> en haut. Le fermer
+        n'arrête pas la traduction.
+    - tab: Présentez
+      body: >-
+        Lancez le diaporama. Une fois qu'il tourne, continuez à parler un moment et vérifiez que
+        les sous-titres arrivent (avec Google Slides la première phrase n'est pas traduite, c'est
+        ainsi qu'il se comporte). À la fin, fermez l'onglet, ou ouvrez le panneau latéral
+        d'Interpretab et appuyez sur <b>Stop</b> pour arrêter la traduction.
+
+de:
+  next: Weiter
+  steps:
+    - tab: Foliensatz öffnen
+      phase: Vor dem Vortrag
+      body: >-
+        Öffnen Sie den Foliensatz in einem Chrome-Tab. Google Slides, Microsoft PowerPoint für das
+        Web und fast alles, was sich in einem Tab anzeigen lässt, funktionieren; ein als PDF
+        exportierter Foliensatz nicht.
+    - tab: Ihre Stimme, deren Sprache
+      body: >-
+        Öffnen Sie auf diesem Tab Interpretabs Seitenleiste. Schalten Sie <b>Mikrofon</b> ein,
+        lassen Sie es auf <b>Simultaneous</b> und stellen Sie es auf die Sprache, die der Saal
+        liest. Soll auch der Ton eines Videos oder einer Demo auf einer Folie übersetzt werden,
+        schalten Sie <b>Tab-Audio</b> in derselben Sprache dazu.
+    - tab: Größe einstellen
+      body: >-
+        Öffnen Sie <b>Optionen → Untertitelgröße</b> und stellen Sie eine Größe ein, die im Saal
+        passt.
+    - tab: Start drücken
+      phase: Vor Publikum
+      body: >-
+        Drücken Sie <b>Start</b> und schließen Sie die Seitenleiste mit dem <b>×</b> oben. Das
+        Schließen beendet die Übersetzung nicht.
+    - tab: Vortragen
+      body: >-
+        Starten Sie die Präsentation. Sprechen Sie danach noch einen Moment weiter und prüfen Sie,
+        dass die Untertitel kommen (bei Google Slides wird der erste Satz nicht übersetzt, so
+        verhält es sich dort). Ist der Vortrag vorbei, schließen Sie den Tab, oder öffnen Sie
+        Interpretabs Seitenleiste und drücken Sie <b>Stop</b>; dann hört die Übersetzung auf.
+
+pt:
+  next: Próximo
+  steps:
+    - tab: Abra os slides
+      phase: Antes de apresentar
+      body: >-
+        Abra os slides numa aba do Chrome. Google Apresentações, Microsoft PowerPoint para a web e
+        quase tudo que aparece dentro de uma aba funcionam; slides exportados em PDF, não.
+    - tab: Sua voz, o idioma deles
+      body: >-
+        Abra o painel lateral do Interpretab nessa aba. Ligue <b>Microfone</b>, deixe em
+        <b>Simultaneous</b> e ponha no idioma que a plateia lê. Se o som de um vídeo ou de uma demo
+        do slide também precisar de tradução, ligue o <b>Áudio da aba</b> nesse mesmo idioma.
+    - tab: Ajuste o tamanho
+      body: >-
+        Abra <b>Opções → Tamanho das legendas</b> e escolha um tamanho que sirva para a sala.
+    - tab: Aperte Start
+      phase: Com plateia
+      body: >-
+        Aperte <b>Start</b> e feche o painel lateral no <b>×</b> do canto de cima. Fechar não para
+        a tradução.
+    - tab: Apresente
+      body: >-
+        Comece a apresentação. Com ela em andamento, fale mais um pouco e confira se as legendas
+        aparecem (no Google Apresentações a primeira frase não é traduzida, é assim que ele se
+        comporta). Quando acabar, feche a aba, ou abra o painel lateral do Interpretab e aperte
+        <b>Stop</b> para parar a tradução.
+
+ko:
+  next: 다음
+  steps:
+    - tab: 슬라이드를 탭에서 열기
+      phase: 발표 전에
+      body: 슬라이드를 Chrome 탭에서 엽니다. Google 슬라이드, Microsoft PowerPoint for the web 등 탭 안에 표시되는 것이라면 대부분 동작합니다(PDF로 내보낸 슬라이드는 제외).
+    - tab: 내 말, 상대의 언어
+      body: 그 탭에서 Interpretab 사이드 패널을 엽니다. <b>마이크</b>를 켜고 <b>Simultaneous</b> 그대로 둔 다음, 번역할 언어를 <b>청중이 읽는 언어</b>로 맞춥니다. 슬라이드 안의 영상이나 데모 소리도 번역하려면 <b>탭 오디오</b>도 켜고 같은 언어로 맞추세요.
+    - tab: 자막 크기 조정
+      body: <b>옵션 → 자막 크기</b>를 열고 발표장에 맞는 크기로 설정합니다.
+    - tab: Start 누르기
+      phase: 청중 앞에서
+      body: <b>Start</b> 를 누르고, 사이드 패널을 오른쪽 위 <b>×</b> 로 닫습니다. 닫아도 번역은 멈추지 않습니다.
+    - tab: 발표하기
+      body: 슬라이드쇼를 시작합니다. 시작한 뒤에 조금 더 말해 보고 자막이 뜨는지 확인합니다(Google 슬라이드에서는 동작 방식상 첫 문장이 번역되지 않습니다). 발표가 끝나면 탭을 닫거나, Interpretab 사이드 패널에서 <b>Stop</b> 을 누르면 번역이 멈춥니다.
+
+hi:
+  next: आगे
+  steps:
+    - tab: स्लाइड टैब में खोलें
+      phase: प्रस्तुति से पहले
+      body: >-
+        स्लाइड को Chrome के किसी टैब में खोलें। Google Slides, Microsoft PowerPoint for the web, और टैब के
+        अंदर दिखने वाली लगभग हर चीज़ चलती है; PDF में निर्यात की गई स्लाइड नहीं चलती।
+    - tab: आपकी बात, उनकी भाषा में
+      body: >-
+        उसी टैब पर Interpretab का साइड पैनल खोलें। <b>माइक्रोफ़ोन</b> चालू करें, उसे <b>Simultaneous</b> पर
+        ही रहने दें, और उस भाषा पर रखें जो सामने बैठे लोग पढ़ते हैं। स्लाइड में चल रहे किसी वीडियो या डेमो की
+        आवाज़ का भी अनुवाद चाहिए तो <b>टैब का ऑडियो</b> भी उसी भाषा पर चालू कर दें।
+    - tab: आकार सेट करें
+      body: >-
+        <b>विकल्प → सबटाइटल का आकार</b> खोलें और कमरे के हिसाब से आकार सेट करें।
+    - tab: Start दबाएँ
+      phase: दर्शकों के सामने
+      body: >-
+        <b>Start</b> दबाएँ, फिर साइड पैनल को उसके ऊपरी कोने के <b>×</b> से बंद कर दें। बंद करने से अनुवाद रुकता
+        नहीं।
+    - tab: प्रस्तुत करें
+      body: >-
+        स्लाइडशो शुरू करें। शुरू होने के बाद थोड़ी देर और बोलकर देख लें कि सबटाइटल आ रहे हैं (Google Slides पर
+        उसके काम करने के तरीके की वजह से पहला वाक्य अनुवाद नहीं होता)। बात खत्म होने पर टैब बंद कर दें, या
+        Interpretab का साइड पैनल खोलकर <b>Stop</b> दबा दें, अनुवाद रुक जाएगा।
+
+ar:
+  next: التالي
+  steps:
+    - tab: افتح شرائحك في علامة تبويب
+      phase: قبل العرض
+      body: >-
+        افتح الشرائح في علامة تبويب في Chrome. تعمل Google Slides و Microsoft PowerPoint للويب وأغلب
+        ما يمكن عرضه داخل علامة تبويب؛ أما الشرائح المصدَّرة إلى PDF فلا.
+    - tab: صوتك بلغتهم
+      body: >-
+        افتح لوحة Interpretab الجانبية في العلامة نفسها. شغِّل <b>الميكروفون</b>، واتركه على
+        <b>Simultaneous</b>، واضبطه على اللغة التي تقرأها القاعة. وإن كنت تريد ترجمة صوت مقطع أو
+        عرض داخل الشرائح أيضًا، فشغِّل <b>صوت علامة التبويب</b> على اللغة نفسها.
+    - tab: اضبط الحجم
+      body: >-
+        افتح <b>الخيارات ← حجم الترجمة النصية</b> واضبطه على حجم يناسب القاعة.
+    - tab: اضغط Start
+      phase: أمام الحضور
+      body: >-
+        اضغط <b>Start</b>، ثم أغلِق اللوحة الجانبية من <b>×</b> في أعلاها. وإغلاقها لا يوقف
+        الترجمة.
+    - tab: اعرض
+      body: >-
+        ابدأ عرض الشرائح. وبعد أن يبدأ، تابع الكلام قليلًا وتأكّد من ظهور الترجمة (ومع Google Slides
+        لا تُترجَم الجملة الأولى، فتلك طريقة عمله). وحين ينتهي العرض أغلِق علامة التبويب، أو افتح
+        لوحة Interpretab الجانبية واضغط <b>Stop</b> فتتوقف الترجمة.

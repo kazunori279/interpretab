@@ -164,6 +164,13 @@ ebenfalls installieren; geht das nicht:
 Weil dies eine Chrome-Erweiterung ist, funktioniert all das nur mit den Browser-Versionen dieser
 Dienste — Desktop-Apps und native Clients sind außer Reichweite.
 
+### 📽️ Eine Präsentation untertiteln
+
+**In einer Onlinebesprechung, in einem Livestream oder vor einem Saal kann die Übersetzung Ihrer
+eigenen Stimme auf den Folien stehen.**
+
+{% include slide-steps.html %}
+
 ### 🤖 Die Modelle hinter der Übersetzung, und ihre Qualität
 
 Tab-Audio und der Modus Simultaneous des Mikrofons laufen auf dem Modell

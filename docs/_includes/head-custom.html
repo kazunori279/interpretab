@@ -68,7 +68,7 @@
         border: 1px solid #d0d7de; border-radius: 6px;
       }
       /* Whatever height the sentence leaves, the picture takes the middle of. */
-      .install-figure, .install-browser, .meet-badge { margin-block: auto; }
+      .install-figure, .install-browser, .meet-badge, .deck-stage { margin-block: auto; }
       /* `object-fit` would fit the picture and leave the box it is in the size
          of the frame, and the ring is positioned in percentages of that box. So
          the box is given the picture's own ratio and made exactly as wide as it
@@ -399,6 +399,46 @@
       }
       .meet-device .install-line { width: 8rem; max-width: 100%; }
 
+      /* The slide slideshow — `_includes/slide-steps.html`. Two drawings, and
+         they are the same slide twice: once as a page in a tab, once filling
+         the screen with the subtitles under it. No lettering in either, because
+         a slide with English on it under a Japanese sentence is the one thing
+         the eighty photographs exist to avoid. */
+      .install-viewport--deck { display: grid; place-items: center; padding: 0.9rem; }
+      .deck-card {
+        display: flex; flex-direction: column; gap: 0.55rem;
+        width: min(16rem, 94%); aspect-ratio: 16 / 9; padding: 0.9rem 1.1rem;
+        background: #fff; border: 1px solid #d7dadd; border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(31, 35, 40, 0.1);
+      }
+      /* Fullscreen, so there is no window around it: the slide is the frame.
+         The subtitles are dark bars rather than lettering, at roughly the share
+         of the slide 64 px takes on a projector. */
+      .deck-stage {
+        position: relative; display: flex; flex-direction: column; gap: 0.7rem;
+        justify-content: center;
+        /* As wide as it can be without standing taller than the photographs
+           beside it in the other steps — the same sum `.install-figure` does,
+           with the slide's ratio in place of the picture's. */
+        width: min(
+          100%,
+          calc((var(--stage) - var(--pad) * 2 - var(--say) - var(--gap)) * 16 / 9)
+        );
+        aspect-ratio: 16 / 9; padding: 1.5rem 1.8rem 3.4rem;
+        background: #fff; border: 1px solid #d0d7de; border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(31, 35, 40, 0.12); overflow: hidden;
+      }
+      .deck-line--short { width: 46%; }
+      .deck-subs {
+        position: absolute; inset-inline: 0; bottom: 0.85rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      }
+      .deck-subs span {
+        height: 0.8rem; border-radius: 0.25rem; background: rgba(16, 18, 20, 0.82);
+      }
+      .deck-subs span:first-child { width: 62%; }
+      .deck-subs span:last-child { width: 44%; }
+
       @keyframes install-pulse {
         0% { transform: scale(0.8); opacity: 1; }
         70% { transform: scale(1.3); opacity: 0; }
@@ -470,6 +510,25 @@
         outline: 2px solid #0969da; outline-offset: 2px;
       }
       #meet-step-{{ i }}:checked ~ .install-panes .meet-pane--{{ i }} { display: block; }
+      {%- endfor %}
+
+      {%- comment -%}
+        And the same again for the slide slideshow, which has a phase heading in
+        its strip for the same reason and so needs the index classes for the
+        same reason.
+      {%- endcomment -%}
+      {%- assign slide_count = site.data.slides.en.steps | size -%}
+      {%- for i in (1..slide_count) %}
+      #slide-step-{{ i }}:checked ~ .install-tabs .slide-tab--{{ i }} {
+        background: #0969da; border-color: #0969da; color: #fff;
+      }
+      #slide-step-{{ i }}:checked ~ .install-tabs .slide-tab--{{ i }} .install-n {
+        background: rgba(255, 255, 255, 0.25); color: #fff;
+      }
+      #slide-step-{{ i }}:focus-visible ~ .install-tabs .slide-tab--{{ i }} {
+        outline: 2px solid #0969da; outline-offset: 2px;
+      }
+      #slide-step-{{ i }}:checked ~ .install-panes .slide-pane--{{ i }} { display: block; }
       {%- endfor %}
     </style>
     <script>

@@ -164,6 +164,13 @@ também; se não puderem:
 Como isto é uma extensão do Chrome, tudo isso só funciona com as versões web desses serviços —
 aplicativos de desktop e clientes nativos estão fora de alcance.
 
+### 📽️ Legendar uma apresentação de slides
+
+**Numa reunião online, numa transmissão ao vivo ou diante de uma plateia, a tradução da sua própria
+voz pode aparecer sobre os slides.**
+
+{% include slide-steps.html %}
+
 ### 🤖 Os modelos por trás da tradução, e a qualidade dela
 
 O áudio da aba e o modo Simultaneous do microfone rodam no modelo

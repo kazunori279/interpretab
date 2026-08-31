@@ -167,6 +167,13 @@ y traduzcan tu voz en su lado; si no pueden:
 Como esto es una extensión de Chrome, todo lo anterior solo funciona con las versiones web de estos
 servicios; las aplicaciones de escritorio y los clientes nativos quedan fuera de alcance.
 
+### 📽️ Subtitular una presentación de diapositivas
+
+**En una reunión en línea, en una retransmisión o ante una sala, la traducción de tu propia voz
+puede salir sobre las diapositivas.**
+
+{% include slide-steps.html %}
+
 ### 🤖 Los modelos detrás de la traducción, y su calidad
 
 El audio de la pestaña y el modo Simultaneous del micrófono funcionan sobre el modelo

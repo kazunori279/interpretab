@@ -164,6 +164,13 @@ translates your voice on their end; failing that:
 Because this is a Chrome extension, all of this only works with the browser versions of these
 services — desktop apps and native clients are out of reach.
 
+### 📽️ Subtitling a slide presentation
+
+**In an online meeting, a live stream, or a room in person, the translation of your own voice can go
+on the slides.**
+
+{% include slide-steps.html %}
+
 ### 🤖 The models behind the translation, and its quality
 
 Tab audio and the microphone's Simultaneous mode run on the Gemini Live API's

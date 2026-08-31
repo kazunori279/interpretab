@@ -894,9 +894,9 @@ test("the install slideshow has its pictures, its steps and its ten translations
   // a step with no picture in it.
   const shots = fs.readFileSync(path.join(SITE, "_data", "shots.yml"), "utf8");
   const figures = include.match(/assign figures = "([^"]+)"/)[1].split(",");
-  // `shots.yml` is written wholesale by `guide-shots.mjs` and read by both
+  // `shots.yml` is written wholesale by `guide-shots.mjs` and read by all three
   // slideshows, so a name in it has to belong to one of them, not to this one.
-  const named = ["install-steps.html", "meet-steps.html"].flatMap((file) =>
+  const named = ["install-steps.html", "meet-steps.html", "slide-steps.html"].flatMap((file) =>
     fs
       .readFileSync(path.join(SITE, "_includes", file), "utf8")
       .match(/assign figures = "([^"]+)"/)[1]
@@ -906,7 +906,7 @@ test("the install slideshow has its pictures, its steps and its ten translations
   for (const name of photographed) {
     assert.ok(
       named.includes(name),
-      `docs/_data/shots.yml has a picture called ${name} that no step in either slideshow uses`
+      `docs/_data/shots.yml has a picture called ${name} that no step in any slideshow uses`
     );
     // Each is a picture of something localized — Google's store
     // listing, or the extension's own UI out of `_locales` — so each is taken
@@ -1222,6 +1222,84 @@ test("the Google Meet slideshow has its steps, its two phases and its ten transl
       fs.readFileSync(path.join(SITE, file), "utf8"),
       /\{%\s*include meet-steps\.html\s*%\}/,
       `docs/${file} does not include the Google Meet slideshow`
+    );
+  }
+});
+
+test("the slide-presentation slideshow has its steps, its two phases and its ten translations", () => {
+  // The third of the three, and the same four files with the same silent
+  // failures. What is particular to it is that one of its pictures belongs to
+  // another section: the button row is `meetstart`, because the panel has one
+  // Start in it and photographing it twice would be two pictures to re-take
+  // every time the row changes. The install test's orphan check is what makes
+  // that safe in the other direction.
+  const include = fs.readFileSync(path.join(SITE, "_includes", "slide-steps.html"), "utf8");
+  const figures = include.match(/assign figures = "([^"]+)"/)[1].split(",");
+  const yaml = fs.readFileSync(path.join(SITE, "_data", "slides.yml"), "utf8");
+  const languages = yaml.split(/^(?=[a-z]{2}:$)/m).slice(1);
+  const translated = languages.map((block) => block.split(":")[0]);
+  assert.deepEqual(
+    translated.slice().sort(),
+    ["en", ...guideDirs()].sort(),
+    "docs/_data/slides.yml and the guide pages on disk disagree"
+  );
+
+  assert.match(
+    include,
+    /replace: '<a href=', '<a target="_blank" rel="noopener" href='/,
+    "slide-steps.html no longer opens the steps' links in a new tab"
+  );
+  for (const anchor of yaml.match(/<a [^>]*>/g) || []) {
+    assert.match(anchor, /^<a href="https:/, `slides.yml writes a link the include cannot retarget: ${anchor}`);
+  }
+
+  const english = languages[translated.indexOf("en")];
+  const count = [...english.matchAll(/^ {4}- tab: \S/gm)].length;
+  assert.ok(count >= 4, `slides.yml: English is down to ${count} steps`);
+  for (const [i, block] of languages.entries()) {
+    const steps = [...block.matchAll(/^ {4}- tab: \S/gm)].length;
+    const bodies = [...block.matchAll(/^ {6}body: \S/gm)].length;
+    const phases = [...block.matchAll(/^ {6}phase: \S/gm)].length;
+    assert.equal(steps, count, `slides.yml: ${translated[i]} has ${steps} steps, not ${count}`);
+    assert.equal(bodies, count, `slides.yml: ${translated[i]} has ${bodies} of its ${count} sentences`);
+    assert.equal(phases, 2, `slides.yml: ${translated[i]} splits the steps into ${phases} phases, not two`);
+    assert.match(block, /^ {2}next: \S/m, `slides.yml: ${translated[i]} has no word for Next`);
+  }
+  assert.equal(
+    figures.length,
+    count,
+    `slide-steps.html names ${figures.length} pictures for ${count} steps`
+  );
+
+  // Two photographs of its own and one borrowed. Renaming any of them in
+  // `guide-shots.mjs` and not here draws a step with no picture in it.
+  for (const name of ["slidemic", "slidesize", "meetstart"]) {
+    assert.ok(figures.includes(name), `slide-steps.html no longer uses the ${name} photograph`);
+  }
+  // The two drawings, which are the same slide twice and carry no words — a
+  // slide with English lettering under a Japanese sentence is what the
+  // photographs exist to avoid, and a drawing can make the same mistake.
+  assert.match(include, /class="deck-card"/, "slide-steps.html no longer draws the deck in a tab");
+  assert.match(include, /class="deck-stage"/, "slide-steps.html no longer draws the deck presenting");
+  assert.match(include, /class="deck-subs"/, "the presenting drawing has lost the subtitles it is about");
+
+  assert.match(include, /class="install-tab slide-tab--\{\{ forloop\.index \}\}"/);
+  assert.match(include, /class="install-pane slide-pane--\{\{ forloop\.index \}\}"/);
+  const css = fs.readFileSync(path.join(SITE, "_includes", "head-custom.html"), "utf8");
+  assert.match(css, /assign slide_count = site\.data\.slides\.en\.steps \| size/);
+  assert.match(css, /for i in \(1\.\.slide_count\)/);
+  assert.match(css, /#slide-step-\{\{ i \}\}:checked ~ \.install-panes \.slide-pane--\{\{ i \}\}/);
+  for (const name of ["deck-card", "deck-stage", "deck-subs"]) {
+    assert.ok(css.includes(`.${name}`), `head-custom.html has no CSS for .${name}`);
+  }
+  assert.match(include, /name="slide-step"/);
+
+  for (const code of ["en", ...guideDirs()]) {
+    const file = code === "en" ? "index.md" : path.join(code, "index.md");
+    assert.match(
+      fs.readFileSync(path.join(SITE, file), "utf8"),
+      /\{%\s*include slide-steps\.html\s*%\}/,
+      `docs/${file} does not include the slide-presentation slideshow`
     );
   }
 });

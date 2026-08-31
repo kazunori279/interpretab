@@ -123,6 +123,12 @@ Interpretab には **タブ音声**（タブ音声翻訳）と **マイク**（�
 
 なお、このツールは Chrome ブラウザのみ対応しているため、デスクトップアプリやネイティブクライアントには対応していません。
 
+### 📽️ スライド発表に字幕をつける
+
+**オンラインのミーティングや配信、現地でのプレゼンで、自分の声の翻訳をスライド画面の上に出せます。**
+
+{% include slide-steps.html %}
+
 ### 🤖 翻訳モデルと翻訳品質について
 
 タブ音声翻訳、およびマイク音声翻訳の Simultaneous（同時翻訳モード）には、Gemini Live API の [Live Translate](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview) モデルが使用されています。またマイク音声翻訳の Two-way conversation（2 言語間翻訳モード）には、[Gemini Live モデル](https://aistudio.google.com/docs/live-api)が使用されています。後者は同時翻訳には対応しておらず、話し終わるのを待ってから翻訳する使い方になりますが、翻訳品質は Live Translate モデルよりも高くなります。また下記の用語登録機能も利用可能です。

@@ -1,6 +1,6 @@
 /**
- * The guide's two slideshows — the install steps and the Google Meet steps —
- * in a browser, in all ten languages.
+ * The guide's three slideshows — the install steps, the Google Meet steps and
+ * the slide-presentation steps — in a browser, in all ten languages.
  *
  *     node tests/guide-preview.mjs [en|ja|ar|…] [--no-open]
  *
@@ -44,7 +44,7 @@ const OUT = path.join(os.tmpdir(), "interpretab-guide-preview");
 /** The guide's own stylesheet, off the published site — see the note above. */
 const THEME = "https://kazunori279.github.io/interpretab/assets/css/style.css";
 
-/** Every Liquid tag and filter the two templates are allowed to use. */
+/** Every Liquid tag and filter the three templates are allowed to use. */
 const SUPPORTED = {
   tags: [
     "comment", "assign", "if", "elsif", "else", "unless", "for",
@@ -60,11 +60,12 @@ const wanted = args.find((a) => /^[a-z]{2}$/.test(a)) || "en";
 const data = {
   install: readData("install.yml"),
   meet: readData("meet.yml"),
+  slides: readData("slides.yml"),
   shots: readData("shots.yml"),
   languages: readData("languages.yml"),
 };
-/** Both slideshows, one after the other, the way the guide page has them. */
-const markup = ["install-steps.html", "meet-steps.html"].map((file) =>
+/** All three slideshows, one after the other, the way the guide page has them. */
+const markup = ["install-steps.html", "meet-steps.html", "slide-steps.html"].map((file) =>
   fs.readFileSync(path.join(SITE, "_includes", file), "utf8")
 );
 const style = readStyle();

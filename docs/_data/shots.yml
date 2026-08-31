@@ -1,16 +1,17 @@
-# Where each photographed picture in the guide's two slideshows is, and where the
+# Where each photographed picture in the guide's three slideshows is, and where the
 # one thing it is about sits inside it — for every language the guide is written in.
 #
 # Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not
 # this: the next run overwrites the file.
 #
-# A picture per language because all six are localized: the store listing is
+# A picture per language because all eight are localized: the store listing is
 # Google's, the rest are the extension's own UI. The numbers differ with the
 # words — a button called `Hinzufügen` is not where a button called `Add to
 # Chrome` is — which is why none of this is typed in by hand.
 #
 # `mark` is a rectangle in percentages of the picture, and it is what lets
-# `_includes/install-steps.html` and `meet-steps.html` put a ring and an arrow on the right button
+# `_includes/install-steps.html`, `meet-steps.html` and `slide-steps.html` put a ring
+# and an arrow on the right button
 # without anybody measuring a screenshot by hand. Re-take a picture and the
 # ring moves with the button. `side` is where the arrow stands, which is
 # wherever it fits — see `arrowSide()`. `width` and `height` are the picture's own, and
@@ -25,7 +26,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 80
+      x: 65.5
       y: 29
       width: 11.3
       height: 16.1
@@ -35,7 +36,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 80.1
+      x: 65.6
       y: 29
       width: 11.2
       height: 16.1
@@ -45,7 +46,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 80.1
+      x: 65.6
       y: 29
       width: 11.2
       height: 16.1
@@ -55,7 +56,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 79.1
+      x: 64.6
       y: 29
       width: 12.2
       height: 16.1
@@ -65,7 +66,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 74.8
+      x: 60.3
       y: 29
       width: 16.5
       height: 16.1
@@ -75,7 +76,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 81.8
+      x: 66.8
       y: 29
       width: 9.5
       height: 16.1
@@ -85,7 +86,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 79.5
+      x: 63.7
       y: 29
       width: 11.9
       height: 16.1
@@ -95,7 +96,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 80.6
+      x: 66.1
       y: 29
       width: 10.8
       height: 16.1
@@ -105,7 +106,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 80.5
+      x: 66
       y: 29
       width: 10.8
       height: 16.1
@@ -115,7 +116,7 @@ store:
     height: 248
     side: left
     mark:
-      x: 8.6
+      x: 23.1
       y: 29
       width: 12
       height: 16.1
@@ -128,7 +129,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 48.9
+      y: 49
       width: 90.1
       height: 13.9
   ja:
@@ -148,7 +149,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 45.1
+      y: 44.9
       width: 90.1
       height: 14.6
   es:
@@ -158,7 +159,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 48.9
+      y: 49
       width: 90.1
       height: 13.9
   fr:
@@ -168,7 +169,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 48.9
+      y: 49
       width: 90.1
       height: 13.9
   de:
@@ -178,7 +179,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 48.9
+      y: 49
       width: 90.1
       height: 13.9
   pt:
@@ -188,7 +189,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 48.9
+      y: 49
       width: 90.1
       height: 13.9
   ko:
@@ -198,7 +199,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 45
+      y: 44.8
       width: 90.1
       height: 14.9
   hi:
@@ -208,7 +209,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 45.4
+      y: 45.2
       width: 90.1
       height: 14.4
   ar:
@@ -218,7 +219,7 @@ key:
     side: left
     mark:
       x: 4.9
-      y: 44.9
+      y: 44.7
       width: 90.1
       height: 15
 
@@ -226,103 +227,103 @@ start:
   en:
     file: install-4-start-en.png
     width: 672
-    height: 798
+    height: 715
     side: above
     mark:
       x: 2.9
-      y: 90.7
+      y: 89.5
       width: 15.9
-      height: 6.5
+      height: 7.2
   ja:
     file: install-4-start-ja.png
     width: 672
-    height: 845
+    height: 789
     side: above
     mark:
       x: 2.9
-      y: 90.8
+      y: 90.2
       width: 15.9
-      height: 6.1
+      height: 6.6
   zh:
     file: install-4-start-zh.png
     width: 672
-    height: 746
+    height: 690
     side: above
     mark:
       x: 2.9
-      y: 89.8
+      y: 89.1
       width: 15.9
-      height: 6.9
+      height: 7.5
   es:
     file: install-4-start-es.png
     width: 672
-    height: 798
+    height: 715
     side: above
     mark:
       x: 2.9
-      y: 90.7
+      y: 89.5
       width: 15.9
-      height: 6.5
+      height: 7.2
   fr:
     file: install-4-start-fr.png
     width: 672
-    height: 798
+    height: 715
     side: above
     mark:
       x: 2.9
-      y: 90.7
+      y: 89.5
       width: 15.9
-      height: 6.5
+      height: 7.2
   de:
     file: install-4-start-de.png
     width: 672
-    height: 790
+    height: 678
     side: above
     mark:
       x: 2.9
-      y: 90.6
+      y: 89.1
       width: 15.9
-      height: 6.6
+      height: 7.6
   pt:
     file: install-4-start-pt.png
     width: 672
-    height: 762
+    height: 678
     side: above
     mark:
       x: 2.9
-      y: 90.3
+      y: 89.1
       width: 15.9
-      height: 6.8
+      height: 7.6
   ko:
     file: install-4-start-ko.png
     width: 672
-    height: 739
+    height: 685
     side: above
     mark:
       x: 2.9
-      y: 90
+      y: 89
       width: 15.9
-      height: 7
+      height: 7.6
   hi:
     file: install-4-start-hi.png
     width: 672
-    height: 763
+    height: 707
     side: above
     mark:
       x: 2.9
-      y: 89.9
+      y: 89.1
       width: 15.9
-      height: 6.8
+      height: 7.3
   ar:
     file: install-4-start-ar.png
     width: 672
-    height: 635
+    height: 606
     side: above
     mark:
       x: 81.2
-      y: 88.3
+      y: 87.9
       width: 15.9
-      height: 8.2
+      height: 8.5
 
 meettab:
   en:
@@ -536,7 +537,7 @@ meetstart:
     side: left
     mark:
       x: 4.4
-      y: 12.5
+      y: 13.1
       width: 24.7
       height: 73.6
   ja:
@@ -546,7 +547,7 @@ meetstart:
     side: left
     mark:
       x: 4.2
-      y: 16.1
+      y: 17
       width: 23.3
       height: 67.4
   zh:
@@ -556,7 +557,7 @@ meetstart:
     side: left
     mark:
       x: 4.8
-      y: 15.1
+      y: 16
       width: 26.9
       height: 70.4
   es:
@@ -566,7 +567,7 @@ meetstart:
     side: left
     mark:
       x: 4.3
-      y: 12.5
+      y: 14
       width: 23.9
       height: 73.6
   fr:
@@ -576,7 +577,7 @@ meetstart:
     side: left
     mark:
       x: 4.4
-      y: 12.5
+      y: 14
       width: 24.7
       height: 73.6
   de:
@@ -586,7 +587,7 @@ meetstart:
     side: left
     mark:
       x: 4.3
-      y: 12.5
+      y: 13.1
       width: 24
       height: 73.6
   pt:
@@ -596,7 +597,7 @@ meetstart:
     side: left
     mark:
       x: 4.5
-      y: 13.9
+      y: 13.1
       width: 24.8
       height: 73.6
   ko:
@@ -606,7 +607,7 @@ meetstart:
     side: left
     mark:
       x: 4.9
-      y: 15.4
+      y: 14.2
       width: 27.3
       height: 71.9
   hi:
@@ -626,6 +627,210 @@ meetstart:
     side: right
     mark:
       x: 67.5
-      y: 13.1
+      y: 12.7
       width: 25
       height: 73.6
+
+slidemic:
+  en:
+    file: slide-1-mic-en.png
+    width: 816
+    height: 434
+    side: right
+    mark:
+      x: 16.1
+      y: 44.1
+      width: 43.1
+      height: 12.2
+  ja:
+    file: slide-1-mic-ja.png
+    width: 816
+    height: 452
+    side: right
+    mark:
+      x: 20.1
+      y: 43.8
+      width: 43.1
+      height: 11.7
+  zh:
+    file: slide-1-mic-zh.png
+    width: 816
+    height: 358
+    side: right
+    mark:
+      x: 16.9
+      y: 40.9
+      width: 43.1
+      height: 14.7
+  es:
+    file: slide-1-mic-es.png
+    width: 816
+    height: 434
+    side: right
+    mark:
+      x: 12.3
+      y: 44.1
+      width: 43.1
+      height: 12.2
+  fr:
+    file: slide-1-mic-fr.png
+    width: 816
+    height: 434
+    side: right
+    mark:
+      x: 16.8
+      y: 44.1
+      width: 43.1
+      height: 12.2
+  de:
+    file: slide-1-mic-de.png
+    width: 816
+    height: 388
+    side: right
+    mark:
+      x: 17.7
+      y: 37.8
+      width: 43.1
+      height: 13.6
+  pt:
+    file: slide-1-mic-pt.png
+    width: 816
+    height: 388
+    side: right
+    mark:
+      x: 17.1
+      y: 37.8
+      width: 43.1
+      height: 13.6
+  ko:
+    file: slide-1-mic-ko.png
+    width: 816
+    height: 390
+    side: right
+    mark:
+      x: 25.2
+      y: 37.3
+      width: 43.1
+      height: 13.5
+  hi:
+    file: slide-1-mic-hi.png
+    width: 816
+    height: 366
+    side: right
+    mark:
+      x: 23.9
+      y: 40.6
+      width: 43.1
+      height: 14.4
+  ar:
+    file: slide-1-mic-ar.png
+    width: 816
+    height: 310
+    side: left
+    mark:
+      x: 43.1
+      y: 47
+      width: 43.1
+      height: 17
+
+slidesize:
+  en:
+    file: slide-2-size-en.png
+    width: 1165
+    height: 467
+    side: left
+    mark:
+      x: 5.2
+      y: 25.3
+      width: 83.4
+      height: 5.5
+  ja:
+    file: slide-2-size-ja.png
+    width: 1165
+    height: 477
+    side: left
+    mark:
+      x: 5.2
+      y: 26.7
+      width: 83.4
+      height: 5.4
+  zh:
+    file: slide-2-size-zh.png
+    width: 1165
+    height: 474
+    side: left
+    mark:
+      x: 5.2
+      y: 26.4
+      width: 83.4
+      height: 5.4
+  es:
+    file: slide-2-size-es.png
+    width: 1165
+    height: 467
+    side: left
+    mark:
+      x: 5.2
+      y: 25.1
+      width: 83.4
+      height: 5.5
+  fr:
+    file: slide-2-size-fr.png
+    width: 1165
+    height: 467
+    side: left
+    mark:
+      x: 5.2
+      y: 25.3
+      width: 83.4
+      height: 5.5
+  de:
+    file: slide-2-size-de.png
+    width: 1165
+    height: 574
+    side: left
+    mark:
+      x: 5.2
+      y: 20.6
+      width: 83.4
+      height: 4.5
+  pt:
+    file: slide-2-size-pt.png
+    width: 1165
+    height: 467
+    side: left
+    mark:
+      x: 5.2
+      y: 25.3
+      width: 83.4
+      height: 5.5
+  ko:
+    file: slide-2-size-ko.png
+    width: 1165
+    height: 470
+    side: left
+    mark:
+      x: 5.2
+      y: 25.9
+      width: 83.4
+      height: 5.4
+  hi:
+    file: slide-2-size-hi.png
+    width: 1165
+    height: 477
+    side: left
+    mark:
+      x: 5.2
+      y: 26.9
+      width: 83.4
+      height: 5.4
+  ar:
+    file: slide-2-size-ar.png
+    width: 1165
+    height: 469
+    side: right
+    mark:
+      x: 11.4
+      y: 25.6
+      width: 83.4
+      height: 5.5

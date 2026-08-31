@@ -8,34 +8,37 @@
  * store listing with its Add to Chrome button, the Options page with a key in
  * it, and the side panel with its language picker and Start. `meet-1-tab`,
  * `-2-mic` and `-3-start` are the three in the Google Meet section: the two
- * direction cards set up for a call, and the button row. The steps either
- * section does not photograph are AI Studio, which is behind a Google sign-in,
- * Chrome's own toolbar, which no page can photograph, and Meet itself, whose
- * labels are not ours to translate; all of them are drawn in CSS inside the two
- * includes and there is nothing here to take.
+ * direction cards set up for a call, and the button row. `slide-1-mic` and
+ * `-2-size` are the two in the slide-presentation section: the microphone card
+ * translating the presenter, and the subtitle size wound up for a room. The
+ * steps none of the three sections photographs are AI Studio, which is behind a
+ * Google sign-in, Chrome's own toolbar, which no page can photograph, Meet
+ * itself, whose labels are not ours to translate, and a slide deck, which is
+ * somebody else's page; all of them are drawn in CSS inside the includes and
+ * there is nothing here to take.
  *
  * `panel-<lang>.png` and `glossary-<lang>.png` are the other two, and they are
  * not in a slideshow: they are the pictures the prose sits beside under
  * "Choosing what to translate" and "Teaching it your words". Both used to be the
  * store's own uploads, copied into `docs/assets/` and shown to all ten
  * languages — an English panel over a Japanese sentence about タブ音声, which is
- * the one thing the other sixty pictures exist to avoid. They are taken on the
+ * the one thing the other eighty pictures exist to avoid. They are taken on the
  * store's stage rather than cropped, so they still look like the pictures the
  * guide has always had; only their words change.
  *
- * Sixty pictures rather than six because all six are localized and none of them
- * is ours to translate. The store listing is Google's page and says
+ * Eighty pictures rather than eight because all eight are localized and none of
+ * them is ours to translate. The store listing is Google's page and says
  * `Chrome に追加` to a reader whose Chrome is Japanese; the rest are the
  * extension's own UI coming out of `_locales`. A guide that walks a reader
  * through a screen and shows them a different screen is the failure this
  * repository keeps finding, and the fix is the same each time: take the picture
  * the reader is actually looking at. So Chrome is launched once per language —
  * which is what decides both the store's language and the catalogue the
- * extension loads — and the same six crops come out ten times.
+ * extension loads — and the same eight crops come out ten times.
  *
  * Sibling of `tests/store-shots.mjs`, and deliberately not part of it. Those
  * three are 1280×800 because the store demands it, and are composed to be
- * looked at full size; these three are crops, sized to be legible in a 980px
+ * looked at full size; these are crops, sized to be legible in a 980px
  * column, and one of them is not an extension page at all. What they share is
  * the reason for existing: a screenshot that has to be re-taken by hand is a
  * screenshot that goes quietly out of date the next time a label changes.
@@ -79,8 +82,8 @@ const OUT = path.join(ROOT, "docs", "assets");
 const headed = process.argv.includes("--headed");
 const keepOpen = process.argv.includes("--keep");
 
-/** The five steps below, in the order the loop runs them. */
-const STEPS = ["store", "key", "start", "meet", "pages"];
+/** The six steps below, in the order the loop runs them. */
+const STEPS = ["store", "key", "start", "meet", "slides", "pages"];
 
 /** `--only key,pages` — everything, unless the run asked for less. */
 const asked = process.argv.indexOf("--only");
@@ -161,6 +164,27 @@ const callState = (lang) => ({
 });
 
 /**
+ * The one state the slide-presentation section is about: the microphone on and
+ * simultaneous, translating the presenter out of the language the guide is
+ * written in, with tab audio off — a deck makes no sound to translate, and a
+ * second direction running is a second bill for nothing.
+ *
+ * `soundMuted` is stored on because that is what the panel does the moment the
+ * microphone goes on in this mode, and it is the sentence the picture is
+ * carrying: a room full of people should hear the presenter, not a laptop
+ * speaking over them.
+ */
+const presentState = (lang) => ({
+  ...panelState(lang),
+  tabEnabled: false,
+  micEnabled: true,
+  micTarget: lang === "en" ? "ja" : "en",
+  micCaptions: true,
+  soundMuted: true,
+  captionSize: 48,
+});
+
+/**
  * The state the two page pictures are of: both directions on and the microphone
  * in conversation mode, which is the only arrangement where one frame holds the
  * two-way pair, the second mode, the ducking slider and the cost note at once.
@@ -188,6 +212,8 @@ const FILES = {
   meettab: "meet-1-tab",
   meetmic: "meet-2-mic",
   meetstart: "meet-3-start",
+  slidemic: "slide-1-mic",
+  slidesize: "slide-2-size",
 };
 
 /** Filled in by `capture()`, written out as `docs/_data/shots.yml` at the end. */
@@ -216,6 +242,7 @@ for (const [lang, ui] of Object.entries(LANGUAGES)) {
     if (wanted("key")) await key(chrome, origin, lang);
     if (wanted("start")) await start(chrome, origin, lang);
     if (wanted("meet")) await meet(chrome, origin, lang);
+    if (wanted("slides")) await slides(chrome, origin, lang);
     if (wanted("pages")) await pages(chrome, origin, lang);
   } finally {
     await chrome.close({ keepOpen });
@@ -224,7 +251,7 @@ for (const [lang, ui] of Object.entries(LANGUAGES)) {
 // `shots.yml` is written whole or not at all: a partial run knows about the
 // figures it took and nothing about the ones it skipped, and writing what it
 // knows would delete the rest.
-if (["store", "key", "start", "meet"].every(wanted)) writeShots();
+if (["store", "key", "start", "meet", "slides"].every(wanted)) writeShots();
 else console.log(`\n   --   docs/_data/shots.yml left alone: ${only.join(", ")} is not every figure`);
 
 /**
@@ -464,6 +491,72 @@ async function meet(chrome, origin, lang) {
 }
 
 /**
+ * The two pictures the slide-presentation section is about.
+ *
+ * The microphone card set up to translate the presenter, and the Options page's
+ * subtitle size wound up to where the back row can read it. The other three
+ * steps in that section have nothing here to take: the deck is somebody else's
+ * page, the slideshow is that page in fullscreen, and Start is `meet-3-start` —
+ * the same buttons in the same panel, and a second photograph of them would be
+ * one more picture to re-take every time the row changes.
+ *
+ * The size is a whole page rather than a crop of the panel, so it is taken at
+ * the Options page's own width the way `key()` is, and both are rasterized
+ * above 1× for the same reason: the guide's column is wider than either page is
+ * drawn.
+ */
+async function slides(chrome, origin, lang) {
+  const panel = await chrome.newPage(`${origin}/sidepanel.html`, { width: 420, height: 900 });
+  await panel.eval(`chrome.storage.local.set(${JSON.stringify(presentState(lang))})`);
+  await panel.reload();
+  const ok = await panel.waitFor(
+    `document.getElementById("micEnabled").checked && !document.getElementById("micNoteSimul").hidden`
+  );
+  if (!ok) throw new Error("the side panel never came up with the microphone on and its voice muted");
+
+  // The direction the section is about is the opposite of every other picture
+  // here: out of the reader's language, not into it. A shot translating a
+  // presenter into the language they are presenting in illustrates nothing.
+  const audience = simulLanguageCode(lang === "en" ? "ja" : "en");
+  const picked = await panel.eval(`document.getElementById("micTarget").value`);
+  if (picked !== audience) throw new Error(`the panel will not translate the room into ${audience}: it picked ${picked}`);
+  await sleep(400);
+
+  // Down to the muted note rather than to the card's bottom edge: the note is
+  // the half of this step that is not a control, and what follows it is the
+  // line of links to the other two cards, which this section is not one of.
+  const clip = await panel.eval(`(() => {
+    const card = document.querySelectorAll("section.direction")[1].getBoundingClientRect();
+    const note = document.getElementById("micNoteSimul").getBoundingClientRect();
+    return { x: Math.round(card.left) - 6, y: Math.round(card.top) - 6,
+             width: Math.round(card.width) + 12, height: Math.round(note.bottom - card.top) + 12 };
+  })()`);
+  const rtl = await panel.eval(`document.documentElement.dir === "rtl"`);
+  await capture(panel, "slidemic", lang, { ...clip, scale: 2 }, await rect(panel, "micTarget"), rtl ? "left" : "right");
+  await panel.close();
+
+  const page = await chrome.newPage(`${origin}/options.html`, { width: 760, height: 900 });
+  await page.eval(`chrome.storage.local.set(${JSON.stringify(presentState(lang))})`);
+  await page.reload();
+  const sized = await page.waitFor(`document.getElementById("captionSize").value === "48"`);
+  if (!sized) throw new Error("the Options page never came up with the subtitle size it was given");
+  await sleep(300);
+
+  const size = await page.eval(`(() => {
+    const head = document.querySelector('[data-i18n="optSizeHeading"]').getBoundingClientRect();
+    const tail = document.getElementById("captionPreview").getBoundingClientRect();
+    return { x: 16, y: Math.round(head.top) - 14, width: 728,
+             height: Math.round(tail.bottom - head.top) + 28 };
+  })()`);
+  // The slider fills the card, so the only room is at its ends: the margin on
+  // the side the reading starts from, because the other end has the px value
+  // printed against it. Above is where an arrow would land on the sentence
+  // under the heading, which in some languages runs the width of the picture.
+  await capture(page, "slidesize", lang, { ...size, scale: 1.6 }, await rect(page, "captionSize"), rtl ? "right" : "left");
+  await page.close();
+}
+
+/**
  * The two pictures the guide's prose sits beside, on the store's own stage.
  *
  * Not crops, and not in `shots.yml`: no ring points at anything in them, and
@@ -660,19 +753,20 @@ function arrowSide(box, ratio, prefer) {
  */
 function writeShots() {
   const lines = [
-    "# Where each photographed picture in the guide's two slideshows is, and where the",
+    "# Where each photographed picture in the guide's three slideshows is, and where the",
     "# one thing it is about sits inside it — for every language the guide is written in.",
     "#",
     "# Written by `tests/guide-shots.mjs`, which takes the pictures. Edit that, not",
     "# this: the next run overwrites the file.",
     "#",
-    "# A picture per language because all six are localized: the store listing is",
+    "# A picture per language because all eight are localized: the store listing is",
     "# Google's, the rest are the extension's own UI. The numbers differ with the",
     "# words — a button called `Hinzufügen` is not where a button called `Add to",
     "# Chrome` is — which is why none of this is typed in by hand.",
     "#",
     "# `mark` is a rectangle in percentages of the picture, and it is what lets",
-    "# `_includes/install-steps.html` and `meet-steps.html` put a ring and an arrow on the right button",
+    "# `_includes/install-steps.html`, `meet-steps.html` and `slide-steps.html` put a ring",
+    "# and an arrow on the right button",
     "# without anybody measuring a screenshot by hand. Re-take a picture and the",
     "# ring moves with the button. `side` is where the arrow stands, which is",
     "# wherever it fits — see `arrowSide()`. `width` and `height` are the picture's own, and",
