@@ -8,8 +8,11 @@
       The alternates, which are how a search engine learns that these ten pages are
       one document and not ten competing ones. They have to be in `<head>`; the
       same markup in the body is ignored. `x-default` is the English page, which is
-      also the one that redirects, so a reader arriving from a search result in a
-      language we do not have lands where the choice is offered.
+      where a bare link to the site lands and where the other nine are offered, in
+      the language bar. Nothing sends a reader onwards on its own: a page that
+      bounces a crawler into another language is one Google reports as "Page with
+      redirect" and leaves out of the index, and these alternates are the supported
+      way to tell it the same thing.
     {%- endcomment -%}
     {%- for language in site.data.languages %}
     <link rel="alternate" hreflang="{{ language.code }}" href="{{ language.path | absolute_url }}">
@@ -531,15 +534,4 @@
       #slide-step-{{ i }}:checked ~ .install-panes .slide-pane--{{ i }} { display: block; }
       {%- endfor %}
     </style>
-    <script>
-{% include lang-redirect.js %}
-      interpretabLanguage(
-        {
-          home: {{ "/" | relative_url | jsonify }},
-          pages: {{ site.data.languages | map: "code" | jsonify }},
-          redirect: {% if page.url == "/" %}true{% else %}false{% endif %}
-        },
-        window
-      );
-    </script>
 {%- endif %}

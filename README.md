@@ -1377,7 +1377,7 @@ nothing else. It has no front matter, which is what keeps Jekyll copying it verb
 rendering it into the theme and burying the one line the checker reads.
 
 `docs/_data/languages.yml` is the list — code, name, path, and `dir` for the one that needs it. The
-language bar, the `hreflang` alternates and the redirect are all built from it, so an eleventh
+language bar and the `hreflang` alternates are both built from it, so an eleventh
 language is an entry there plus a directory with an `index.md` in it. The page directories are
 named for the picker's codes and not Chrome's, which is the same `zh`/`zh_CN` split as above,
 pointing the other way: nobody types `pt_BR` into an address bar. `tests/assets.test.js` is where
@@ -1392,18 +1392,22 @@ markdown, which worked and was in the wrong place. And the language bar, which w
 markdown repeated ten times with a different entry bold in each.
 
 `docs/_includes/head-custom.html` is the hook the theme leaves in `<head>`, and it holds the
-`hreflang` alternates — which have to be in the head, since the same markup in the body is ignored
-— and the routing script. The script is `docs/_includes/lang-redirect.js`, plain JavaScript with its
-window passed in so that `tests/site.test.js` can hand it a fake one.
+`hreflang` alternates, which have to be in the head since the same markup in the body is ignored.
+`x-default` is the English page, and the language bar on it is the whole of the routing: ten pages
+that link to each other and send nobody anywhere on their own.
 
-What it does is two things. Every page records an explicit choice: the bar tags its links with
-`?lang=`, which is stored and then wiped out of the address bar, so no reader copies a link with
-our bookkeeping in it. And the English page — the only one that redirects, which is what keeps
-this loop-free — sends a reader who has expressed no choice to the language `navigator.languages`
-asks for. That is the same setting `chrome.i18n` reads, so the guide and the extension's interface
-agree about a reader without being told to. The trap it is built around is the bar's English link:
-it points at the page that redirects, so without the stored choice a German reader could never
-reach English.
+It used to hold a script as well. On the English page that script read `navigator.languages` and
+sent a reader who had stated no choice to their own language, and the bar tagged its links with
+`?lang=` so a choice could be stored and honoured next time — otherwise the English link, which
+points at the page that redirects, would have bounced a German reader straight back. It agreed
+with the extension's own interface for free, since `navigator.languages` is what `chrome.i18n`
+reads, and for readers it worked. It also fired for the crawler: Chrome driven with Googlebot's
+user agent and `Accept-Language: ja` left `/interpretab/` for `/interpretab/ja/` on its own, and
+Search Console reported the English page as "Page with redirect" and left it out of the index. A
+page Google will not index is a page nobody arrives at, which costs more than the one click the
+bar asks for. So the script, the stored choice and the `?lang=` on the bar's links are all gone,
+and `hreflang` — which is what Google asks for in their place — carries the whole of what they
+were saying.
 
 The guide's install section — "Get started in 5 minutes" — is the one part of it that is markup
 rather than markdown: a slideshow of ten steps, a picture each, one showing at a time. It was a

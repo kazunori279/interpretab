@@ -47,7 +47,7 @@
       {% endif %}
 
       {%- if page.lang %}
-      <p>{% for language in languages %}{% unless forloop.first %} · {% endunless %}{% if language.code == page.lang %}<b lang="{{ language.code }}">{{ language.name }}</b>{% else %}<a href="{{ language.path | relative_url }}?lang={{ language.code }}" lang="{{ language.code }}" hreflang="{{ language.code }}">{{ language.name }}</a>{% endif %}{% endfor %}</p>
+      <p>{% for language in languages %}{% unless forloop.first %} · {% endunless %}{% if language.code == page.lang %}<b lang="{{ language.code }}">{{ language.name }}</b>{% else %}<a href="{{ language.path | relative_url }}" lang="{{ language.code }}" hreflang="{{ language.code }}">{{ language.name }}</a>{% endif %}{% endfor %}</p>
       {%- endif %}
 
       {{ content }}

@@ -848,10 +848,10 @@ test("the cost figure disclaims itself where the user can actually see it", () =
 });
 
 test("the site knows about every guide page, and every page declares its language", () => {
-  // `_data/languages.yml` is what the language bar, the `hreflang` alternates and
-  // the redirect on the English page are all built from. A page missing from it
-  // is a page nothing links to and no browser is ever sent to — reachable only by
-  // typing the URL, which is indistinguishable from not having translated it.
+  // `_data/languages.yml` is what the language bar and the `hreflang` alternates
+  // are both built from. A page missing from it is a page nothing links to and no
+  // search engine is told about — reachable only by typing the URL, which is
+  // indistinguishable from not having translated it.
   const yaml = fs.readFileSync(path.join(SITE, "_data", "languages.yml"), "utf8");
   const listed = [...yaml.matchAll(/^- code: ([a-z]{2})$/gm)].map(([, code]) => code);
   assert.deepEqual(
