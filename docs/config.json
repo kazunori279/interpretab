@@ -6,9 +6,9 @@
   },
   "rates": {
     "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21 },
-    "gemini-3.1-flash-live-preview": { "audioIn": 3, "audioOut": 12 }
+    "gemini-3.1-flash-live-preview": { "audioIn": 0.75, "audioOut": 4.5 }
   },
-  "ratesReadAt": "2026-09-07",
+  "ratesReadAt": "2026-09-08",
   "blockBelowVersion": "",
   "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
 }
