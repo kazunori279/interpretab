@@ -2,13 +2,17 @@
   "schemaVersion": 1,
   "models": {
     "simul": ["gemini-3.5-live-translate-preview"],
-    "conversation": ["gemini-3.1-flash-live-preview"]
+    "conversation": ["gemini-3.1-flash-live-preview", "gemini-3.8-live"]
+  },
+  "modelInfo": {
+    "gemini-3.8-live": { "since": "2026-09-16" }
   },
   "rates": {
     "gemini-3.5-live-translate-preview": { "audioIn": 3.5, "audioOut": 21 },
-    "gemini-3.1-flash-live-preview": { "audioIn": 3, "audioOut": 12 }
+    "gemini-3.1-flash-live-preview": { "audioIn": 3, "audioOut": 12 },
+    "gemini-3.8-live": { "audioIn": 3, "audioOut": 12 }
   },
-  "ratesReadAt": "2026-09-15",
+  "ratesReadAt": "2026-09-16",
   "blockBelowVersion": "",
   "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
 }
