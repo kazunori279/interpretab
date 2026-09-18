@@ -12,7 +12,7 @@
     "gemini-3.1-flash-live-preview": { "audioIn": 3, "audioOut": 12 },
     "gemini-3.8-live": { "audioIn": 3, "audioOut": 12 }
   },
-  "ratesReadAt": "2026-09-17",
+  "ratesReadAt": "2026-09-18",
   "blockBelowVersion": "",
   "learnMoreUrl": "https://kazunori279.github.io/interpretab/"
 }
